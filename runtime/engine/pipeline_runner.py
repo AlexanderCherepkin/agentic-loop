@@ -1,0 +1,736 @@
+from __future__ import annotations
+
+import asyncio
+import time
+import uuid
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from typing import Any
+
+from ..contracts.agent_spec import AgentSpec
+from ..contracts.message import Message, MessageType
+from .agent_loader import AgentLoader
+from .llm_engine import LLMEngine, LLMConfig, LLMProvider, LLMResponse
+from .message_bus import MessageBus
+from .state_manager import StateManager, OperationStatus
+
+# Optional MCP integration
+try:
+    from mcp_servers.bootstrap import create_registry
+    from mcp_servers.registry import MCPRegistry as _MCPRegistry
+    HAS_MCP = True
+except ImportError:
+    HAS_MCP = False
+
+# Optional Worker Pool for context isolation
+try:
+    from ..workers.worker_pool import WorkerPool, WorkerJob, WorkerResult
+    from ..workers.context_isolator import ContextIsolator
+    HAS_WORKER_POOL = True
+except ImportError:
+    HAS_WORKER_POOL = False
+
+# Optional Context Compression
+try:
+    from ..workers.context_compressor import ContextCompressor
+    HAS_CONTEXT_COMPRESSOR = True
+except ImportError:
+    HAS_CONTEXT_COMPRESSOR = False
+
+# Optional Memory Manager
+try:
+    from ..memory.memory_manager import MemoryManager
+    HAS_MEMORY = True
+except ImportError:
+    HAS_MEMORY = False
+
+# Optional Observability
+try:
+    from ..observability import get_logger, MetricsCollector
+    HAS_OBS = True
+except ImportError:
+    HAS_OBS = False
+
+
+class TerminationStatus(str, Enum):
+    SUCCESS = "success"
+    PARTIAL = "partial"
+    FAILURE = "failure"
+    ESCALATED_HUMAN = "escalated_human"
+
+
+class PipelineStatus(str, Enum):
+    RUNNING = "running"
+    PAUSED = "paused"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    STALLED = "stalled"
+
+
+@dataclass
+class IterationTrace:
+    iteration: int
+    phase: str
+    agent_path: str
+    inputs: dict[str, Any]
+    outputs: dict[str, Any] | None
+    latency_ms: float
+    success: bool
+    error: str | None = None
+
+
+@dataclass
+class SessionMetrics:
+    session_id: str
+    iterations: int = 0
+    tools_used: list[str] = field(default_factory=list)
+    time_elapsed_ms: float = 0
+    tokens_consumed: int = 0
+    safety_checks_passed: int = 0
+    safety_checks_failed: int = 0
+    agent_latencies: dict[str, list[float]] = field(default_factory=dict)  # agent_path -> [latencies]
+
+    def record_agent_latency(self, agent_path: str, latency_ms: float) -> None:
+        self.agent_latencies.setdefault(agent_path, []).append(latency_ms)
+
+    @property
+    def latency_summary(self) -> dict[str, dict[str, float]]:
+        """Return {agent: {count, avg_ms, max_ms, min_ms}} for all agents invoked."""
+        summary: dict[str, dict[str, float]] = {}
+        for path, times in self.agent_latencies.items():
+            if times:
+                summary[path] = {
+                    "count": len(times),
+                    "avg_ms": round(sum(times) / len(times), 2),
+                    "max_ms": round(max(times), 2),
+                    "min_ms": round(min(times), 2),
+                }
+        return summary
+
+
+@dataclass
+class PipelineResult:
+    final_response: str
+    termination_status: TerminationStatus
+    session_metrics: SessionMetrics
+    audit_anchor: str
+    trace: list[IterationTrace] = field(default_factory=list)
+
+
+class PipelineRunner:
+    FLOW_SEQUENCE = [
+        "tooll_subagents/user/request.md",
+        "tooll_subagents/user/context.md",
+        "safety-control/input_sanitizer.md",
+        "safety-control/threat_detector.md",
+        "control/scope_manager.md",
+        "tooll_subagents/planning/task_decomposition.md",
+        "tooll_subagents/planning/tool_plan_selection.md",
+    ]
+
+    SAFETY_AGENTS = [
+        "safety-control/input_sanitizer.md",
+        "safety-control/threat_detector.md",
+        "safety-control/permission_checker.md",
+        "control/scope_manager.md",
+        "control/policy_enforcer.md",
+    ]
+
+    MUTUAL_CHECK_AGENTS = [
+        "safety-control/mutual_check/consistency_checker.md",
+        "safety-control/mutual_check/result_validator.md",
+        "safety-control/mutual_check/quality_assessor.md",
+    ]
+
+    def __init__(self, loader: AgentLoader, llm: LLMEngine, bus: MessageBus, state: StateManager,
+                 workspace_root: str = ".", max_workers: int = 4):
+        self.loader = loader
+        self.llm = llm
+        self.bus = bus
+        self.state = state
+        self.workspace = workspace_root
+        self._agent_cache: dict[str, AgentSpec] = {}
+        self._mcp_registry = None
+        self._worker_pool = None
+        self._isolator = None
+        self._compressor = None
+
+        if HAS_MCP:
+            try:
+                self._mcp_registry = create_registry(workspace_root)
+            except Exception:
+                pass
+
+        if HAS_WORKER_POOL:
+            self._isolator = ContextIsolator()
+            self._worker_pool = WorkerPool(max_workers=max_workers, isolator=self._isolator)
+
+        if HAS_CONTEXT_COMPRESSOR:
+            self._compressor = ContextCompressor(llm_engine=llm, compress_every_n=5)
+            self._compressor_next_idx = 0
+        else:
+            self._compressor_next_idx = 0
+
+        self._memory: MemoryManager | None = None
+        if HAS_MEMORY and llm.config.provider != LLMProvider.MOCK:
+            try:
+                self._memory = MemoryManager(llm_engine=llm)
+            except Exception:
+                pass
+
+    @property
+    def mcp_enabled(self) -> bool:
+        return self._mcp_registry is not None
+
+    @property
+    def worker_pool_enabled(self) -> bool:
+        return self._worker_pool is not None
+
+    async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+        """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations."""
+        if not self._mcp_registry:
+            return {"error": "MCP not available", "is_error": True}
+
+        result = await self._mcp_registry.call_tool(tool_name, arguments)
+        return {"tool": tool_name, "result": result, "mcp_executed": True}
+
+    # Priority mapping: lower number = higher priority (safety first)
+    _TASK_PRIORITIES: dict[str, int] = {
+        "safety": 1,
+        "validation": 2,
+        "planning": 3,
+        "execution": 4,
+        "read": 5,
+        "search": 5,
+        "replace": 6,
+        "memory": 6,
+        "runcom": 7,
+        "runtest": 7,
+        "terminal": 7,
+        "database": 7,
+        "web": 7,
+        "manangr": 8,
+        "self_correction": 3,
+    }
+
+    async def execute_isolated(self, agent_path: str, inputs: dict[str, Any],
+                               task_category: str = "read") -> WorkerResult | None:
+        """Execute an agent in an isolated worker process.
+
+        The agent runs in a separate subprocess. Raw output stays there.
+        Only a JSON summary returns — the parent context window stays clean.
+        """
+        if not self._worker_pool:
+            return None
+
+        spec = self._get_agent(agent_path)
+        complexity = "heavy" if len(str(inputs)) > 5000 else "normal"
+        priority = self._TASK_PRIORITIES.get(task_category, 5)
+
+        job = WorkerJob(
+            agent_path=agent_path,
+            agent_spec={
+                "name": spec.name,
+                "role": spec.role,
+                "decision_flow": [
+                    {"number": s.number, "title": s.title, "description": s.description}
+                    for s in spec.decision_flow
+                ],
+                "failure_modes": [
+                    {"condition": f.condition, "response": f.response}
+                    for f in spec.failure_modes
+                ],
+                "contract": {
+                    "receives": [
+                        {"name": p.name, "type_hint": p.type_hint, "description": p.description}
+                        for p in spec.contract.receives
+                    ],
+                    "returns": [
+                        {"name": p.name, "type_hint": p.type_hint, "description": p.description}
+                        for p in spec.contract.returns
+                    ],
+                    "side_effects": spec.contract.side_effects,
+                },
+            },
+            inputs=inputs,
+            task_category=task_category,
+            complexity=complexity,
+            priority=priority,
+        )
+
+        return await self._worker_pool.dispatch(job)
+
+    def _get_agent(self, path: str) -> AgentSpec:
+        if path not in self._agent_cache:
+            self._agent_cache[path] = self.loader.load_agent(path)
+        return self._agent_cache[path]
+
+    async def run(self, user_input: str, session_id: str | None = None,
+                  max_iterations: int = 5) -> PipelineResult:
+        session_id = session_id or uuid.uuid4().hex
+        t_start = time.perf_counter()
+        metrics = SessionMetrics(session_id=session_id)
+        trace: list[IterationTrace] = []
+        audit_anchor = uuid.uuid4().hex
+
+        # Observability: mark session start
+        if HAS_OBS:
+            from ..observability import get_logger, MetricsCollector
+            _obs_log = get_logger("pipeline_runner")
+            _obs_metrics = MetricsCollector()
+        else:
+            _obs_log = None
+            _obs_metrics = None
+
+        if _obs_log:
+            _obs_log.info("Pipeline run started", session_id=session_id, max_iterations=max_iterations)
+        if _obs_metrics:
+            _obs_metrics.gauge("sessions.active").inc()
+
+        await self.bus.start()
+        if self._worker_pool:
+            await self._worker_pool.start()
+
+        try:
+            self.state.create(f"session:{session_id}", {
+                "user_input": user_input,
+                "status": PipelineStatus.RUNNING.value,
+                "started_at": t_start,
+            }, scope="session")
+
+            await self._publish_progress("phase.start", {"phase": "session_init", "session_id": session_id})
+
+            # Cross-session memory enrichment
+            memory_context: list[dict[str, Any]] = []
+            if self._memory:
+                memory_context = self._memory.get_relevant_memories(user_input, limit=5)
+                await self._publish_progress("memory.loaded", {
+                    "count": len(memory_context), "session_id": session_id,
+                })
+            augmented_input = self._augment_with_memory(user_input, memory_context)
+
+            # Phase 1: Safety pre-check
+            safety_passed = await self._run_safety_pre_check(augmented_input, session_id, trace, metrics)
+            if not safety_passed:
+                return PipelineResult(
+                    final_response="Request blocked by safety pre-check.",
+                    termination_status=TerminationStatus.ESCALATED_HUMAN,
+                    session_metrics=metrics,
+                    audit_anchor=audit_anchor,
+                    trace=trace,
+                )
+
+            await self._publish_progress("phase.end", {"phase": "safety_pre_check", "session_id": session_id})
+
+            # Phase 2: Plan
+            await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
+            plan = await self._run_planning(augmented_input, session_id, trace, metrics)
+            await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
+
+            # Phase 3: ReAct loop
+            result_text = ""
+            for iteration in range(1, max_iterations + 1):
+                metrics.iterations = iteration
+
+                # Execute
+                exec_result = await self._run_execution(plan, augmented_input, session_id, iteration, trace, metrics)
+                if exec_result is None:
+                    continue
+
+                # Observe
+                observation = await self._run_observation(exec_result, session_id, iteration, trace, metrics)
+
+                # Validate
+                validation = await self._run_validation(observation, augmented_input, session_id, iteration, trace, metrics)
+
+                # Decide: loop or terminate
+                decision = await self._run_termination_decision(validation, session_id, iteration, trace, metrics)
+
+                # Context Compression: feed new traces to compressor
+                if self._compressor:
+                    while self._compressor_next_idx < len(trace):
+                        self._compressor.add_trace(trace[self._compressor_next_idx].__dict__)
+                        self._compressor_next_idx += 1
+                    if self._compressor.should_compress(iteration):
+                        summary = await self._compressor.compress()
+                        if summary:
+                            trace.append(IterationTrace(
+                                iteration=iteration,
+                                phase="context_compression",
+                                agent_path="tools_memory/memory_store/context_compressor.md",
+                                inputs={"original_count": summary.original_count},
+                                outputs={
+                                    "summary": summary.summary,
+                                    "compressed_tokens": summary.compressed_tokens_estimate,
+                                    "fidelity": summary.fidelity_estimate,
+                                    "tokens_saved": self._compressor.stats.get("total_tokens_saved", 0),
+                                },
+                                latency_ms=0,
+                                success=True,
+                            ))
+                            await self._publish_progress("context.compression", {
+                                "iteration": iteration,
+                                "tokens_saved": self._compressor.stats.get("total_tokens_saved", 0),
+                                "session_id": session_id,
+                            })
+
+                if decision == "terminate_success":
+                    result_text = validation.get("result", observation.get("result", str(observation)))
+                    break
+                elif decision == "terminate_failure":
+                    return await self._finalize_and_return(
+                        user_input, str(observation), TerminationStatus.FAILURE,
+                        metrics, audit_anchor, trace, session_id,
+                    )
+                elif decision == "escalate_human":
+                    return await self._finalize_and_return(
+                        user_input, str(observation), TerminationStatus.ESCALATED_HUMAN,
+                        metrics, audit_anchor, trace, session_id,
+                    )
+                elif decision == "recurse":
+                    plan = observation.get("adjusted_plan", plan)
+                    continue
+            else:
+                return await self._finalize_and_return(
+                    user_input, result_text or "Max iterations reached.",
+                    TerminationStatus.PARTIAL, metrics, audit_anchor, trace, session_id,
+                )
+
+            # Phase 4: Safety post-check
+            await self._run_safety_post_check(result_text, session_id, trace, metrics)
+
+            # Phase 5: Final mutual check
+            await self._run_mutual_check(result_text, session_id, trace, metrics)
+
+            metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+            self.state.update(f"session:{session_id}", {
+                "status": PipelineStatus.COMPLETED.value,
+                "completed_at": time.time(),
+            }, scope="session")
+
+            if _obs_log:
+                _obs_log.info("Pipeline completed", session_id=session_id, status="success", time_ms=metrics.time_elapsed_ms)
+            if _obs_metrics:
+                _obs_metrics.gauge("sessions.active").dec()
+                _obs_metrics.histogram("session.duration_ms").observe(metrics.time_elapsed_ms)
+            return await self._finalize_and_return(
+                user_input, result_text, TerminationStatus.SUCCESS,
+                metrics, audit_anchor, trace, session_id,
+            )
+
+        except Exception as e:
+            metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+            if _obs_log:
+                _obs_log.error("Pipeline failed", session_id=session_id, error=str(e), time_ms=metrics.time_elapsed_ms)
+            if _obs_metrics:
+                _obs_metrics.gauge("sessions.active").dec()
+                _obs_metrics.histogram("session.duration_ms").observe(metrics.time_elapsed_ms)
+            return await self._finalize_and_return(
+                user_input, f"Pipeline failed: {e}", TerminationStatus.FAILURE,
+                metrics, audit_anchor, trace, session_id,
+            )
+        finally:
+            if self._worker_pool:
+                await self._worker_pool.stop()
+            await self.bus.stop()
+
+    def _augment_with_memory(self, user_input: str, memories: list[dict[str, Any]]) -> str:
+        if not memories:
+            return user_input
+        lines = ["[Relevant past memories]"]
+        for m in memories:
+            snippet = m.get("body", "") or m.get("title", "")
+            if snippet:
+                lines.append(f"  - [{m.get('type', 'mem')}] {snippet[:180]}")
+        lines.append("")
+        lines.append("[Current request]")
+        lines.append(user_input)
+        return "\n".join(lines)
+
+    async def _finalize_and_return(self, user_input: str, final_response: str,
+                                   termination_status: TerminationStatus,
+                                   metrics: SessionMetrics, audit_anchor: str,
+                                   trace: list[IterationTrace], session_id: str) -> PipelineResult:
+        result = PipelineResult(
+            final_response=final_response,
+            termination_status=termination_status,
+            session_metrics=metrics,
+            audit_anchor=audit_anchor,
+            trace=trace,
+        )
+        if self._memory:
+            try:
+                await asyncio.to_thread(
+                    self._memory.enrich_session,
+                    {
+                        "user_input": user_input,
+                        "final_response": final_response,
+                        "trace": [t.__dict__ for t in trace],
+                        "metrics": metrics.__dict__,
+                        "termination_status": termination_status.value,
+                    },
+                )
+                await self._publish_progress("memory.stored", {"session_id": session_id})
+            except Exception:
+                pass
+        return result
+
+    async def _run_safety_pre_check(self, user_input: str, session_id: str,
+                                    trace: list[IterationTrace], metrics: SessionMetrics) -> bool:
+        context: dict[str, Any] = {"raw_user_input": user_input, "session_id": session_id}
+
+        for agent_path in self.SAFETY_AGENTS:
+            result = await self._invoke_agent(agent_path, context, trace, "safety_pre_check", metrics)
+            if result and result.parsed:
+                blocked = result.parsed.get("blocked", result.parsed.get("status") == "blocked")
+                if blocked:
+                    metrics.safety_checks_failed += 1
+                    return False
+                metrics.safety_checks_passed += 1
+                context.update(result.parsed)
+        return True
+
+    async def _run_planning(self, user_input: str, session_id: str,
+                            trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any]:
+        plan = {"user_input": user_input, "session_id": session_id}
+        for agent_path in self.FLOW_SEQUENCE:
+            result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)
+            if result and result.parsed:
+                plan.update(result.parsed)
+        return plan
+
+    async def _run_execution(self, plan: dict[str, Any], user_input: str, session_id: str,
+                             iteration: int, trace: list[IterationTrace],
+                             metrics: SessionMetrics) -> dict[str, Any] | None:
+        exec_agents = [
+            "tooll_subagents/execution/tool_invocation.md",
+            "tooll_subagents/execution/safety_guardrails.md",
+        ]
+        result: dict[str, Any] = {"plan": plan, "user_input": user_input, "iteration": iteration}
+        for agent_path in exec_agents:
+            llm_result = await self._invoke_agent(agent_path, result, trace, "execution", metrics)
+            if llm_result and llm_result.parsed:
+                result.update(llm_result.parsed)
+        return result
+
+    async def _run_observation(self, exec_result: dict[str, Any], session_id: str,
+                               iteration: int, trace: list[IterationTrace],
+                               metrics: SessionMetrics) -> dict[str, Any]:
+        obs_agents = [
+            "tooll_subagents/observability/environment_result.md",
+            "tooll_subagents/observability/runtime_output.md",
+        ]
+        result: dict[str, Any] = dict(exec_result)
+        for agent_path in obs_agents:
+            llm_result = await self._invoke_agent(agent_path, result, trace, "observation", metrics)
+            if llm_result and llm_result.parsed:
+                result.update(llm_result.parsed)
+        return result
+
+    async def _run_validation(self, observation: dict[str, Any], user_input: str,
+                              session_id: str, iteration: int,
+                              trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any]:
+        result = await self._invoke_agent(
+            "tooll_subagents/self_correction/result_validation.md",
+            {"observation": observation, "original_request": user_input},
+            trace, "validation", metrics,
+        )
+        if result and result.parsed:
+            return {**observation, **result.parsed}
+        return observation
+
+    async def _run_termination_decision(self, validation: dict[str, Any], session_id: str,
+                                        iteration: int, trace: list[IterationTrace],
+                                        metrics: SessionMetrics) -> str:
+        result = await self._invoke_agent(
+            "tooll_subagents/self_correction/recursion_or_termination.md",
+            {"validation": validation, "iteration": iteration, "max_iterations": 5},
+            trace, "self_correction", metrics,
+        )
+        if result and result.parsed:
+            return result.parsed.get("decision", result.parsed.get("next_action", "terminate_success"))
+        return "terminate_success"
+
+    async def _run_safety_post_check(self, result_text: str, session_id: str,
+                                     trace: list[IterationTrace], metrics: SessionMetrics):
+        for agent_path in [
+            "safety-control/output_reviewer.md",
+            "safety-control/data_leak_preventer.md",
+            "safety-control/content_checker.md",
+        ]:
+            await self._invoke_agent(agent_path, {"output": result_text}, trace, "safety_post_check", metrics)
+
+    async def _run_mutual_check(self, result_text: str, session_id: str,
+                                trace: list[IterationTrace], metrics: SessionMetrics):
+        for agent_path in self.MUTUAL_CHECK_AGENTS:
+            await self._invoke_agent(agent_path, {"result": result_text, "session_id": session_id},
+                                     trace, "mutual_check", metrics)
+
+    def _is_tool_agent(self, agent_path: str) -> bool:
+        """Determine if agent is a tools_* agent that should run isolated."""
+        return agent_path.startswith("tools_")
+
+    def _extract_category(self, agent_path: str) -> str:
+        """Extract task category from agent path: tools_read/... -> read"""
+        if agent_path.startswith("tools_"):
+            parts = agent_path.replace("\\", "/").split("/")
+            if parts:
+                return parts[0].replace("tools_", "")
+        if "execution" in agent_path:
+            return "execution"
+        if "planning" in agent_path:
+            return "planning"
+        if "safety" in agent_path:
+            return "safety"
+        if "self_correction" in agent_path:
+            return "self_correction"
+        return "read"
+
+    async def _invoke_agent(self, agent_path: str, inputs: dict[str, Any],
+                            trace: list[IterationTrace], phase: str,
+                            metrics: SessionMetrics | None = None) -> LLMResponse | None:
+        t0 = time.perf_counter()
+
+        # Route tools_* agents through isolated worker processes
+        if self._worker_pool and self._is_tool_agent(agent_path):
+            return await self._invoke_isolated(agent_path, inputs, trace, phase, t0, metrics)
+
+        # Reasoning agents use LLM Engine directly
+        try:
+            spec = self._get_agent(agent_path)
+            result = await self.llm.execute(spec, inputs)
+            latency = (time.perf_counter() - t0) * 1000
+            if metrics:
+                metrics.record_agent_latency(agent_path, latency)
+            trace.append(IterationTrace(
+                iteration=len([t for t in trace if t.phase == phase]) + 1,
+                phase=phase,
+                agent_path=agent_path,
+                inputs=inputs,
+                outputs=result.parsed,
+                latency_ms=latency,
+                success=True,
+            ))
+            session_id = inputs.get("session_id", "")
+            iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
+            await self._publish_progress("agent.invoke", {
+                "iteration": iteration, "phase": phase, "agent_path": agent_path,
+                "session_id": session_id, "latency_ms": round(latency, 2), "success": True,
+            })
+            await self._publish_audit(agent_path, inputs, result.parsed, "success")
+            return result
+        except Exception as e:
+            latency = (time.perf_counter() - t0) * 1000
+            if metrics:
+                metrics.record_agent_latency(agent_path, latency)
+            trace.append(IterationTrace(
+                iteration=len([t for t in trace if t.phase == phase]) + 1,
+                phase=phase,
+                agent_path=agent_path,
+                inputs=inputs,
+                outputs=None,
+                latency_ms=latency,
+                success=False,
+                error=str(e),
+            ))
+            session_id = inputs.get("session_id", "")
+            iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
+            await self._publish_progress("agent.invoke", {
+                "iteration": iteration, "phase": phase, "agent_path": agent_path,
+                "session_id": session_id, "latency_ms": round(latency, 2), "success": False,
+            })
+            await self._publish_audit(agent_path, inputs, None, f"failed: {e}")
+            return None
+
+    async def _invoke_isolated(self, agent_path: str, inputs: dict[str, Any],
+                               trace: list[IterationTrace], phase: str,
+                               t0: float, metrics: SessionMetrics | None = None) -> LLMResponse | None:
+        """Invoke agent in isolated worker process. Returns summary only."""
+        category = self._extract_category(agent_path)
+        try:
+            worker_result = await self.execute_isolated(agent_path, inputs, category)
+
+            if worker_result and worker_result.is_success:
+                latency = (time.perf_counter() - t0) * 1000
+                if metrics:
+                    metrics.record_agent_latency(agent_path, latency)
+                # Build LLMResponse-compatible result from worker summary
+                parsed = worker_result.parsed_output or {}
+                parsed["_summary"] = worker_result.summary
+                parsed["_tokens_saved"] = self._worker_pool._estimate_saved_tokens(worker_result) if self._worker_pool else 0
+                parsed["_isolated"] = True
+                parsed["_worker_id"] = worker_result.worker_id
+                parsed["_model"] = worker_result.model
+
+                trace.append(IterationTrace(
+                    iteration=len([t for t in trace if t.phase == phase]) + 1,
+                    phase=phase,
+                    agent_path=agent_path,
+                    inputs=inputs,
+                    outputs=parsed,
+                    latency_ms=latency,
+                    success=True,
+                ))
+                session_id = inputs.get("session_id", "")
+                iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
+                await self._publish_progress("agent.invoke", {
+                    "iteration": iteration, "phase": phase, "agent_path": agent_path,
+                    "session_id": session_id, "latency_ms": round(latency, 2), "success": True, "isolated": True,
+                })
+                await self._publish_audit(agent_path, inputs, parsed, "success_isolated")
+
+                return LLMResponse(
+                    content=worker_result.summary,
+                    parsed=parsed,
+                    model=worker_result.model,
+                    tokens_used=worker_result.tokens_used,
+                    latency_ms=latency,
+                )
+            else:
+                error_msg = worker_result.error if worker_result else "Worker returned no result"
+                raise RuntimeError(error_msg)
+        except Exception as e:
+            latency = (time.perf_counter() - t0) * 1000
+            if metrics:
+                metrics.record_agent_latency(agent_path, latency)
+            trace.append(IterationTrace(
+                iteration=len([t for t in trace if t.phase == phase]) + 1,
+                phase=phase,
+                agent_path=agent_path,
+                inputs=inputs,
+                outputs=None,
+                latency_ms=latency,
+                success=False,
+                error=str(e),
+            ))
+            session_id = inputs.get("session_id", "")
+            iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
+            await self._publish_progress("agent.invoke", {
+                "iteration": iteration, "phase": phase, "agent_path": agent_path,
+                "session_id": session_id, "latency_ms": round(latency, 2), "success": False, "isolated": True,
+            })
+            await self._publish_audit(agent_path, inputs, None, f"isolated_failed: {e}")
+            return None
+
+    async def _publish_audit(self, agent_path: str, inputs: dict[str, Any],
+                             outputs: dict[str, Any] | None, status: str):
+        msg = Message(
+            message_type=MessageType.EVENT,
+            topic="audit",
+            payload={"agent": agent_path, "inputs": inputs, "outputs": outputs, "status": status},
+        )
+        await self.bus.publish(msg)
+
+    async def _publish_progress(self, event_type: str, payload: dict[str, Any]):
+        """Publish progress event for TUI and external observers."""
+        msg = Message(
+            message_type=MessageType.EVENT,
+            topic=event_type,
+            payload=payload,
+            sender="pipeline_runner",
+        )
+        try:
+            await self.bus.publish(msg)
+        except Exception:
+            pass

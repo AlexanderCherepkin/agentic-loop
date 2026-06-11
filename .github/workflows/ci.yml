@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Install Node.js dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r runtime/requirements.txt
+          pip install pytest pytest-asyncio
+
+      - name: Validate runtime
+        run: node cli.js validate
+
+      - name: Run integration tests (mock provider)
+        run: pytest tests/integration/ -v
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t agentic-loop .
+
+      - name: Validate inside container
+        run: docker run --rm agentic-loop validate
+
+      - name: Run mock pipeline inside container
+        run: docker run --rm agentic-loop run "ci test" --provider mock --max-iterations 2
