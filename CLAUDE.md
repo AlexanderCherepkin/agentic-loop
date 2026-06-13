@@ -36,7 +36,7 @@ No remaining stubs.
 | tools_read | 10 | Read-file pipeline (path→encoding→read→chunk→parse→extract→integrity→cache→format) | FILLED |
 | tools_replace | 10 | Replace-file pipeline (backup→pattern→edit→diff→rank→validate→write→verify→rollback) | FILLED |
 | tools_search | 10 | Search pipeline (scope→regex+semantic→relevance→dedup→snippet→diff) | FILLED |
-| tools_runcom | 11 | Command execution pipeline (build→optimize→env→execute→sandbox→output→timeout→error) | FILLED |
+| tools_runcom | 10 | Command execution pipeline (build→optimize→env→execute→sandbox→output→timeout→error) | FILLED |
 | tools_runtest | 10 | Test execution pipeline (discover→plan→optimize→execute→log→coverage→failure→flaky→fix→report) | FILLED |
 | tools_terminal | 10 | Terminal I/O pipeline (session→state→command→stream→ANSI→error→filter→history→optimizer) | FILLED |
 | tools_manangr | 10 | Project management pipeline (structure→dependency→impact→task→refactor→config→build→file→doc→optimizer) | FILLED |

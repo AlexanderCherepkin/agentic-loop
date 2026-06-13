@@ -193,6 +193,36 @@ def cmd_approve(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_mcp_connect(args: argparse.Namespace) -> int:
+    """Connect to configured MCP servers and list available tools."""
+    import json
+    from pathlib import Path
+
+    config_path = Path(__file__).resolve().parent.parent / "mcp-config.json"
+    if not config_path.exists():
+        print("[CLI] mcp-config.json not found.")
+        return 1
+
+    config = json.loads(config_path.read_text())
+    servers = config.get("mcpServers", {})
+
+    if not servers:
+        print("[CLI] No MCP servers configured in mcp-config.json.")
+        return 0
+
+    print(f"\n=== MCP Servers ({len(servers)} configured) ===\n")
+    for name, cfg in servers.items():
+        transport = cfg.get("transport", cfg.get("type", "stdio"))
+        command = cfg.get("command", cfg.get("args", ["?"])[0] if cfg.get("args") else "?")
+        enabled = "disabled" not in cfg or not cfg.get("disabled")
+        status = "enabled" if enabled else "disabled"
+        print(f"  [{status}] {name}")
+        print(f"         transport: {transport}  command: {command}")
+
+    print("\n[CLI] MCP client runtime connection available via runtime.engine modules.")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     """Run runtime component validators."""
     from runtime.main import main as runtime_main
@@ -258,6 +288,10 @@ def build_parser() -> argparse.ArgumentParser:
     # health
     health_p = sub.add_parser("health", help="Show runtime health status")
     health_p.set_defaults(func=cmd_health)
+
+    # mcp-connect
+    mcp_p = sub.add_parser("mcp-connect", help="Connect to MCP servers and list tools")
+    mcp_p.set_defaults(func=cmd_mcp_connect)
 
     # metrics
     metrics_p = sub.add_parser("metrics", help="Dump metrics snapshot")

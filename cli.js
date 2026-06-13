@@ -140,17 +140,11 @@ program
     }
 
     if (options.tui) {
-      const { render } = require('ink');
-      const React = require('react');
-      const { App } = require('./src/tui/app.js');
-      render(React.createElement(App, {
-        task: options.demo ? null : task,
-        maxIterations: options.maxIterations,
-        provider: options.provider,
-        model: effectiveModel,
-        sessionId: options.sessionId,
-        demo: options.demo,
-      }));
+      const tuiArgs = ['-m', 'runtime.tui'];
+      if (options.sessionId) tuiArgs.push('--session', options.sessionId);
+      const child = spawn('python', tuiArgs, { cwd: __dirname, stdio: 'inherit' });
+      child.on('close', (code) => process.exit(code));
+      child.on('error', (err) => { console.error(chalk.red(`TUI error: ${err.message}`)); process.exit(1); });
       return;
     }
 
@@ -250,55 +244,17 @@ program
   .command('mcp-connect')
   .description('Connect to all configured MCP servers and list tools')
   .action(async () => {
-    const { MCPClientManager } = require('./src/mcp/client.js');
-    const manager = new MCPClientManager();
-
-    console.log(chalk.bold.cyan('\nMCP Client — connecting to configured servers...\n'));
-
-    const results = await manager.connectAll();
-    let totalTools = 0;
-    let connected = 0;
-
-    for (const r of results) {
-      const status = r.ok ? chalk.green('● connected') : chalk.red('● failed');
-      const toolInfo = r.ok ? chalk.dim(`(${r.tools} tools)`) : chalk.red(r.error || '');
-      console.log(`  ${status} ${chalk.bold(r.name)} ${toolInfo}`);
-      if (r.ok) {
-        connected++;
-        totalTools += r.tools;
-      }
-    }
-
-    console.log(chalk.dim(`\nConnected: ${connected}/${results.length} servers, ${totalTools} total tools`));
-
-    const allTools = manager.getAllTools();
-    if (allTools.length > 0) {
-      console.log(chalk.bold('\nAvailable tools by server:\n'));
-      const byServer = {};
-      for (const t of allTools) {
-        if (!byServer[t.server]) byServer[t.server] = [];
-        byServer[t.server].push(t);
-      }
-      for (const [server, tools] of Object.entries(byServer)) {
-        console.log(chalk.bold(`  [${server}]`));
-        for (const t of tools) {
-          console.log(`    ${chalk.cyan('•')} ${t.name} ${chalk.dim('— ' + (t.description || '').slice(0, 60))}`);
-        }
-      }
-    }
-
-    await manager.disconnectAll();
-    console.log('');
+    console.log(chalk.yellow('[CLI] mcp-connect: delegating to Python runtime...'));
+    await runPythonCli(['mcp-connect']);
   });
 
 program
   .command('tui')
   .description('Launch TUI dashboard')
   .action(() => {
-    const { render } = require('ink');
-    const React = require('react');
-    const { App } = require('./src/tui/app.js');
-    render(React.createElement(App));
+    const child = spawn('python', ['-m', 'runtime.tui'], { cwd: __dirname, stdio: 'inherit' });
+    child.on('close', (code) => process.exit(code));
+    child.on('error', (err) => { console.error(chalk.red(`TUI error: ${err.message}`)); process.exit(1); });
   });
 
 program

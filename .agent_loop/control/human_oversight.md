@@ -22,15 +22,26 @@ Strategic human-in-the-loop gate that escalates high-stakes, ambiguous, or novel
 - Updates human response time statistics
 - May update policy rules if human establishes precedent
 
+## Confirmation Gates (Phase-Based)
+
+Only two phases require human confirmation. All others auto-resolve.
+
+| Phase | Confirmation Required | Behavior |
+|---|---|---|
+| `interview` | YES | Full human-in-the-loop: present case, wait for response, apply decision |
+| `pre_deploy` | YES | Full human-in-the-loop: present deployment plan, wait for approval |
+| `planning`, `execution`, `observability`, `self_correction`, `result`, `idle` | NO | Auto-resolve with `approved` + audit trail |
+
 ## Decision Flow
 
-1. **Assess urgency** — classify `escalation_reason` into response-time buckets (critical = immediate, standard = 5 min, low = 30 min).
-2. **Select channel** — route to on-call operator, domain expert queue, or product owner based on reason and domain.
-3. **Render case** — present concise, decision-ready summary: what, why, risks, alternatives, recommended action.
-4. **Wait for response** — hold proposed action; countdown `timeout_config`.
-5. **Handle timeout** — if no response, apply `fallback_policy`: `block` for safety, `defer` for non-urgent, `escalate_chain` to next operator, `auto_resolve_with_caution` for low-risk with audit trail.
-6. **Apply decision** — if `approved`, execute; if `rejected`, halt and notify requester; if `modified`, apply constraints and execute; if `delegated`, forward to designated authority.
-7. **Log and close** — emit result, record decision, update statistics.
+1. **Check phase** — if `escalation_context.phase` is NOT `interview` and NOT `pre_deploy`, auto-return `oversight_status=approved`, `human_decision="auto_resolved: non-gated phase"`, log to audit, skip remaining steps.
+2. **Assess urgency** — classify `escalation_reason` into response-time buckets (critical = immediate, standard = 5 min, low = 30 min).
+3. **Select channel** — route to on-call operator, domain expert queue, or product owner based on reason and domain.
+4. **Render case** — present concise, decision-ready summary: what, why, risks, alternatives, recommended action.
+5. **Wait for response** — hold proposed action; countdown `timeout_config`.
+6. **Handle timeout** — if no response, apply `fallback_policy`: `block` for safety, `defer` for non-urgent, `escalate_chain` to next operator, `auto_resolve_with_caution` for low-risk with audit trail.
+7. **Apply decision** — if `approved`, execute; if `rejected`, halt and notify requester; if `modified`, apply constraints and execute; if `delegated`, forward to designated authority.
+8. **Log and close** — emit result, record decision, update statistics.
 
 ## Failure Modes
 

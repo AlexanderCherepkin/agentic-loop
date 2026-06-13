@@ -23,16 +23,27 @@ Tactical human-in-the-loop gate for specific high-risk tool invocations during e
 - Records approval/rejection to `audit_logger.md`
 - Updates user trust profile for future auto-approval eligibility
 
+## Confirmation Gates (Phase-Based)
+
+Only two phases require human confirmation. All others auto-approve.
+
+| Phase | Confirmation Required | Behavior |
+|---|---|---|
+| `interview` | YES | Present approval prompt, wait for user response |
+| `pre_deploy` | YES | Present deployment approval, wait for user response |
+| `planning`, `execution`, `observability`, `self_correction`, `result`, `idle` | NO | Auto-approve: `approval_status=approved`, `human_decision="auto_approved: non-gated phase"` |
+
 ## Decision Flow
 
-1. **Classify action** — determine if `action_to_approve` matches auto-approval criteria (reversible, sandboxed, within user trust tier, previously approved pattern).
-2. **Render summary** — generate concise, decision-ready description: what will happen, to what resources, why it matters, and what are the risks.
-3. **Present alternatives** — if applicable, show 1–2 alternative approaches with different risk/cost trade-offs.
-4. **Show rollback info** — explain whether action can be undone, and how.
-5. **Send prompt** — route to user via appropriate channel based on `approval_urgency`.
-6. **Wait for response** — countdown `timeout_seconds`; if user modifies parameters, validate modifications against constraints.
-7. **Apply timeout fallback** — if no response, apply `default_on_timeout` (prefer `deny` for destructive; `defer` for non-urgent; `allow` only for trivial, reversible actions in high-trust sessions).
-8. **Log and return** — emit status, rationale, parameters, audit ID.
+1. **Check phase** — if `approval_context.phase` is NOT `interview` and NOT `pre_deploy`, auto-return `approval_status=approved`, `human_decision="auto_approved: non-gated phase"`, log to audit, skip remaining steps.
+2. **Classify action** — determine if `action_to_approve` matches auto-approval criteria (reversible, sandboxed, within user trust tier, previously approved pattern).
+3. **Render summary** — generate concise, decision-ready description: what will happen, to what resources, why it matters, and what are the risks.
+4. **Present alternatives** — if applicable, show 1–2 alternative approaches with different risk/cost trade-offs.
+5. **Show rollback info** — explain whether action can be undone, and how.
+6. **Send prompt** — route to user via appropriate channel based on `approval_urgency`.
+7. **Wait for response** — countdown `timeout_seconds`; if user modifies parameters, validate modifications against constraints.
+8. **Apply timeout fallback** — if no response, apply `default_on_timeout` (prefer `deny` for destructive; `defer` for non-urgent; `allow` only for trivial, reversible actions in high-trust sessions).
+9. **Log and return** — emit status, rationale, parameters, audit ID.
 
 ## Failure Modes
 
