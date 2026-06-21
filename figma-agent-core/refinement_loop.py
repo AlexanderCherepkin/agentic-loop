@@ -60,6 +60,12 @@ def _visual_qa_needs_refinement(report: Dict[str, Any], diff_threshold: float) -
     for assertion in report.get("dom_assertions", []):
         if not assertion.get("passed", True):
             return True
+    for check in report.get("layout_checks", []):
+        if not check.get("passed", True):
+            return True
+    bbox_comparison = report.get("bbox_comparison", {})
+    if bbox_comparison.get("failed", 0) > 0:
+        return True
     if report.get("discrepancies"):
         return True
     return False
@@ -124,7 +130,85 @@ def _apply_layout_adjustments(
             "reason": f"diff score {diff_score} above threshold",
         })
 
+    for check in report.get("layout_checks", []):
+        if check.get("passed", True):
+            continue
+        check_type = check.get("type")
+        figma_id = _extract_figma_id(check)
+        node = _find_node_by_figma_id(root, figma_id) if figma_id else root
+        classes = node.setdefault("classes", [])
+
+        if check_type == "overflow":
+            if check.get("overflow_y") and "overflow-y-hidden" not in classes and "overflow-hidden" not in classes:
+                classes.append("overflow-hidden")
+            if check.get("overflow_x") and "overflow-x-hidden" not in classes and "overflow-hidden" not in classes:
+                classes.append("overflow-hidden")
+            if "h-full" in classes:
+                classes.remove("h-full")
+                classes.append("h-auto")
+            adjustments.append({
+                "type": "overflow_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+            })
+        elif check_type == "clipped_text":
+            for cls in ("whitespace-normal", "break-words"):
+                if cls not in classes:
+                    classes.append(cls)
+            if "line-clamp-3" not in classes:
+                classes.append("line-clamp-3")
+            adjustments.append({
+                "type": "clipped_text_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+            })
+        elif check_type == "overlap":
+            if "flex-col" not in classes and "flex" not in classes:
+                classes.append("flex")
+                classes.append("flex-col")
+            if not any(c.startswith("gap-") for c in classes):
+                classes.append("gap-4")
+            adjustments.append({
+                "type": "overlap_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+            })
+        elif check_type in ("bbox_mismatch", "bbox_missing"):
+            page = check.get("page") or {}
+            figma = check.get("figma") or {}
+            page_w = page.get("width", 0)
+            figma_w = figma.get("width", 0)
+            if figma_w and page_w > figma_w + 8 and "w-full" in classes:
+                classes.remove("w-full")
+                classes.append(f"w-[{figma_w}px]")
+            if "p-4" not in classes and not any(c.startswith("p-") for c in classes):
+                classes.append("p-4")
+            adjustments.append({
+                "type": "bbox_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+            })
+
     return adjustments
+
+
+def _check_reason(check: Dict[str, Any]) -> str:
+    return check.get("discrepancy") or check.get("reason") or json.dumps(check, ensure_ascii=False)
+
+
+def _extract_figma_id(check: Dict[str, Any]) -> Optional[str]:
+    page = check.get("page") or {}
+    return page.get("figma_id") or check.get("figma_id")
+
+
+def _find_node_by_figma_id(node: Dict[str, Any], figma_id: str) -> Optional[Dict[str, Any]]:
+    if node.get("figma_id") == figma_id:
+        return node
+    for child in node.get("children", []):
+        found = _find_node_by_figma_id(child, figma_id)
+        if found:
+            return found
+    return None
 
 
 def _run_compose(

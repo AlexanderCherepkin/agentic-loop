@@ -94,6 +94,40 @@ def stage_bootstrap(
     return result.returncode == 0
 
 
+def stage_download_figma_reference(
+    file_key: Optional[str] = None,
+    url: Optional[str] = None,
+    node_id: Optional[str] = None,
+    output: str = ".tmp/browser/figma_reference.png",
+    scale: float = 2.0,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 1a: скачивание референсного скриншота Figma-фрейма через Images API."""
+    logger.info("=== STAGE: download_figma_reference ===")
+    if not node_id:
+        logger.warning("download_figma_reference requires --figma-reference-node-id. Skipping.")
+        return False
+
+    command = [
+        sys.executable,
+        "figma_reference_downloader.py",
+        "--node-id", node_id,
+        "--output", output,
+        "--scale", str(scale),
+    ]
+    if file_key:
+        command.extend(["--file-key", file_key])
+    if url:
+        command.extend(["--url", url])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def stage_component_registry(
     file: str = "figma_node.json",
     output: str = "component_registry.json",
@@ -682,7 +716,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "component_registry", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "download_figma_reference", "component_registry", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -698,6 +732,24 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             if not ok:
                 logger.error("Bootstrap stage failed. Stopping pipeline.")
                 break
+
+        elif stage == "download_figma_reference":
+            reference_node_id = config.get("figma_reference_node_id")
+            if not reference_node_id:
+                logger.info("No --figma-reference-node-id provided; skipping automatic reference download.")
+                report["stages"]["download_figma_reference"] = {"success": True, "skipped": True}
+            else:
+                ok = stage_download_figma_reference(
+                    file_key=config.get("figma_file_key"),
+                    url=config.get("figma_url"),
+                    node_id=reference_node_id,
+                    output=config.get("figma_reference_output", ".tmp/browser/figma_reference.png"),
+                    scale=config.get("figma_reference_scale", 2.0),
+                    dry_run=dry_run,
+                )
+                report["stages"]["download_figma_reference"] = {"success": ok}
+                if not ok:
+                    logger.warning("download_figma_reference failed; visual_qa will fall back to no reference.")
 
         elif stage == "component_registry":
             ok = stage_component_registry(
@@ -849,10 +901,15 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 logger.warning("visual_qa stage requires --visual-qa-url. Skipping.")
                 report["stages"]["visual_qa"] = {"success": False, "reason": "missing --visual-qa-url"}
             else:
+                reference_path = config.get("visual_qa_reference")
+                if not reference_path:
+                    reference_path = config.get("figma_reference_output", ".tmp/browser/figma_reference.png")
+                    if not Path(reference_path).exists():
+                        reference_path = None
                 ok = stage_visual_qa(
                     url=url,
                     ast_file=config.get("layout_output", "layout_ast.json"),
-                    reference_path=config.get("visual_qa_reference"),
+                    reference_path=reference_path,
                     output_dir=config.get("visual_qa_output_dir", ".tmp/browser/visual_qa"),
                     viewport=config.get("visual_qa_viewport"),
                     expected=config.get("visual_qa_expected"),
@@ -944,12 +1001,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, tokens, layout, extract, compose, compliance, visual_qa, refinement, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
+        help="Запустить только один этап: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -1204,6 +1261,27 @@ def main():
         help="Путь для backend_mapping.json."
     )
     parser.add_argument(
+        "--figma-file",
+        default=None,
+        help="Figma-URL или file key для скачивания референсного скриншота."
+    )
+    parser.add_argument(
+        "--figma-reference-node-id",
+        default=None,
+        help="Figma node id фрейма/страницы для референсного скриншота."
+    )
+    parser.add_argument(
+        "--figma-reference-scale",
+        type=float,
+        default=2.0,
+        help="Масштаб референсного скриншота (по умолчанию 2.0)."
+    )
+    parser.add_argument(
+        "--figma-reference-output",
+        default=".tmp/browser/figma_reference.png",
+        help="Путь для сохранения референсного скриншота."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -1284,6 +1362,11 @@ def main():
         "backend_spec_text_file": args.backend_spec_text,
         "backend_output_dir": args.backend_output_dir,
         "backend_mapping_file": args.backend_mapping_file,
+        "figma_file_key": args.figma_file or os.environ.get("FIGMA_URL"),
+        "figma_url": args.figma_file or os.environ.get("FIGMA_URL"),
+        "figma_reference_node_id": args.figma_reference_node_id,
+        "figma_reference_scale": args.figma_reference_scale,
+        "figma_reference_output": args.figma_reference_output,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,

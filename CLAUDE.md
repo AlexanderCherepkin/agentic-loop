@@ -89,6 +89,7 @@ Human-in-the-loop split: human_oversight.md (strategic, in control/) vs human_ap
 Lazy MCP gateway: `mcp_servers/gateway.py` exposes category metadata and materializes servers only on tool invocation (token budget saver).
 Headless browser: `tools_browser/headless_automation` via Playwright MCP server for dynamic pages and screenshots. Optional dependency: `runtime/requirements-browser.txt`.
 Backend Spec Bridge: `figma-agent-core/backend_bridge.py` parses OpenAPI/Prisma/text specs, maps UI forms to backend models, and generates `prisma/schema.prisma`, `app/api/*.ts` routes, and `app/actions/*Action.ts` Server Actions. MCP category `backend` registered in `mcp_servers/backend_server.py`.
+Visual QA V2: `figma-agent-core/figma_reference_downloader.py` fetches Figma reference screenshots; `figma-agent-core/visual_qa.py` runs stable Chromium (exact viewport, font/image loading wait, disabled animations), structural layout checks (overflow, clipped text, overlaps, bbox mismatch), and feeds structured reports into `figma-agent-core/refinement_loop.py` for deterministic AST adjustments.
 Conditional Edges: `runtime/engine/pipeline_runner.py` uses `PhaseTransitionManager` to route between ReAct phases based on agent outputs.
 `project_rules.md` in repo root is lightweight project context loaded by the runtime; updates require human approval.
 
@@ -121,10 +122,10 @@ Read memory when resuming work. Update memory when architecture changes or key d
    - `safety-control/` (9) — Input sanitization, permissions, threats, leaks, output review, bias, safety assessment, content checking
    - `mutual_check/` (10) — Audit, verification, consistency, validation, performance, quotas, anomalies, quality, feedback, compliance
    - `control/` (7) — File system, network, resources, human oversight, policy, scope, input aggregation
-   - `tooll_subagents/` (29) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `backend_spec_bridge.md`, `responsive_composer.md`, and `component_registry.md`
+   - `tooll_subagents/` (29) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, and Visual QA V2 refinements in `result_validation.md`
    - `tools_*` (110) — 11 categories × 10 tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
 2. **STUBS (0 agents)** — No remaining placeholders. All agents follow the Algorithmic template.
-3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Backend Spec Bridge, Responsive Composer, Component Registry, and conditional ReAct phase transitions.
+3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Backend Spec Bridge, Responsive Composer, Component Registry, automatic Figma reference download, stable Chromium Visual QA, structural layout checks, and conditional ReAct phase transitions.
 
 ## Active Skills
 

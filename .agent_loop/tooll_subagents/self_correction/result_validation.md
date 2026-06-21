@@ -9,7 +9,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `original_request`: parsed request descriptor from `user/request.md`
 - `execution_trace`: from `execution/tool_invocation.md`
 - `observation_artifacts`: combined outputs from `observability/` agents
-- `visual_qa_report`: optional structured report from `tools_browser/headless_automation/visual_qa_agent.md` containing `status`, `diff_score`, `dom_assertions`, `discrepancies`, `metrics`
+- `visual_qa_report`: optional structured report from `tools_browser/headless_automation/visual_qa_agent.md` containing `status`, `diff_score`, `dom_assertions`, `layout_checks`, `bbox_comparison`, `font_metrics`, `image_metrics`, `discrepancies`, `metrics`
 - `iteration_count`: integer — current refinement iteration
 - `max_iterations`: integer (default 3)
 - `success_criteria`: optional explicit criteria from user or inferred from request type
@@ -41,6 +41,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 9. **Visual QA verdict** — if `visual_qa_report` present:
    - `status=passed` and no `discrepancies` → contribution to `complete`.
    - DOM assertion failures or image diff above threshold → derive `refinement_actions` and set `needs_refinement`.
+   - `layout_checks` failures (overflow, clipped_text, overlap, bbox_mismatch) or `bbox_comparison.failed > 0` → derive structural `refinement_actions` and set `needs_refinement`.
    - blocked navigation or missing critical elements → set `needs_human` if `iteration_count >= max_iterations`, otherwise `needs_refinement`.
 10. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA still not passing, set `escalation_required=true` and `validation_status=needs_human`.
 11. **Determine retry recommendation** — `retry_recommended=true` if `partial` or `needs_refinement` and root cause appears addressable (missing dependency, typo, single test failure, layout tweak); `false` if `failed` due to fundamental mismatch or `inconclusive`.

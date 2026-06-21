@@ -1,8 +1,12 @@
 {
-  "started_at": "2026-06-21T15:26:32.315218+00:00",
+  "started_at": "2026-06-21T15:56:18.080834+00:00",
   "stages": {
     "bootstrap": {
       "success": true
+    },
+    "download_figma_reference": {
+      "success": true,
+      "skipped": true
     },
     "component_registry": {
       "success": true
@@ -121,10 +125,15 @@
     "backend_spec_text_file": null,
     "backend_output_dir": "backend_bridge_output",
     "backend_mapping_file": "backend_mapping.json",
+    "figma_file_key": "https://www.figma.com/design/F3RcVqyzEdC8N0S7RzUJzM/Fonte--Copy-?node-id=662-2&p=f&t=ju3v2F1z0YBzcYEt-0",
+    "figma_url": "https://www.figma.com/design/F3RcVqyzEdC8N0S7RzUJzM/Fonte--Copy-?node-id=662-2&p=f&t=ju3v2F1z0YBzcYEt-0",
+    "figma_reference_node_id": null,
+    "figma_reference_scale": 2.0,
+    "figma_reference_output": ".tmp/browser/figma_reference.png",
     "file": "figma_node.json",
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-21T15:26:32.317212+00:00",
+  "finished_at": "2026-06-21T15:56:18.082846+00:00",
   "duration_seconds": 0.0
 }

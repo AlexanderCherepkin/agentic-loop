@@ -7,6 +7,7 @@ All external module calls are injected via callbacks.
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -218,3 +219,48 @@ def test_dom_assertion_failure_triggers_refinement(tmp_path: Path) -> None:
     )
     assert result["status"] == "needs_human"
     assert any(a["type"] == "add_node" for a in result["adjustments"])
+
+
+def test_layout_checks_trigger_refinement(tmp_path: Path) -> None:
+    ast_file = tmp_path / "layout_ast.json"
+    ast_file.write_text(
+        '{"root": {"tag": "div", "figma_id": "1:1", "classes": ["h-full"], "children": []}}',
+        encoding="utf-8",
+    )
+
+    def fake_compose(mod: Any, ast: Path, out: Path, title: Any) -> bool:
+        return True
+
+    def fake_qa(i: int, url: str, ast: Path, out: Path, ref: Any, qa_dir: Path) -> dict:
+        return {
+            "status": "failed",
+            "diff_score": 0.01,
+            "dom_assertions": [],
+            "layout_checks": [
+                {
+                    "type": "overflow",
+                    "passed": False,
+                    "overflow_y": True,
+                    "page": {"figma_id": "1:1"},
+                }
+            ],
+            "discrepancies": [],
+        }
+
+    result = refinement.run_refinement_loop(
+        page_url="http://localhost:3000",
+        ast_path=str(ast_file),
+        compose_output=str(tmp_path / "page.tsx"),
+        max_iterations=1,
+        report_output=str(tmp_path / "refinement_report.json"),
+        on_compose=fake_compose,
+        on_visual_qa=fake_qa,
+    )
+    assert result["status"] == "needs_human"
+    adjustment = result["adjustments"][0]
+    assert adjustment["type"] == "overflow_fix"
+    saved = json.loads(ast_file.read_text(encoding="utf-8"))
+    assert "overflow-hidden" in saved["root"]["classes"]
+    assert "h-full" not in saved["root"]["classes"]
+
+

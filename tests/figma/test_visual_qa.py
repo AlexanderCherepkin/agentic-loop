@@ -67,6 +67,9 @@ def test_visual_qa_blocked_for_disallowed_url(tmp_path: Path) -> None:
 def _build_mock_page() -> MagicMock:
     page = MagicMock()
     page.query_selector_all.return_value = []
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.locator.return_value.first.count.return_value = 0
     return page
 
 
@@ -203,3 +206,169 @@ def test_visual_qa_navigation_warning_still_reports(tmp_path: Path) -> None:
 
     assert result["status"] == "failed"
     assert any("Navigation warning" in d for d in result["discrepancies"])
+
+
+def test_visual_qa_uses_figma_frame_viewport(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(
+                    viewport={"width": 1280, "height": 720},
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+                engine.run(
+                    "http://localhost:3000",
+                    figma_frame={"width": 1440, "height": 900},
+                )
+
+    context = browser.new_context
+    assert context.call_args
+    assert context.call_args.kwargs["viewport"]["width"] == 1440
+    assert context.call_args.kwargs["viewport"]["height"] == 900
+
+
+def test_visual_qa_injects_freeze_css(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                engine.run("http://localhost:3000")
+
+    page.add_style_tag.assert_called_once()
+    content = page.add_style_tag.call_args.kwargs.get("content", "")
+    assert "animation-duration: 0s" in content
+
+
+def test_visual_qa_waits_for_fonts_and_images(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                engine.run("http://localhost:3000")
+
+    page.evaluate.assert_any_call("document.fonts.ready")
+    page.wait_for_function.assert_called_once()
+    wait_script = page.wait_for_function.call_args.args[0]
+    assert "document.querySelectorAll('img, svg image')" in wait_script
+
+
+def test_visual_qa_detects_overflow(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [{"type": "overflow", "selector": "div", "overflow_y": True, "overflow_x": False}],
+        [],
+        [],
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                report = engine.run("http://localhost:3000")
+
+    assert report.status == "failed"
+    assert any(c.get("type") == "overflow" for c in report.layout_checks)
+
+
+def test_visual_qa_bbox_comparison_passes_within_tolerance(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page_bboxes = [{"tag": "section", "figma_id": "1:1", "x": 0, "y": 0, "width": 100, "height": 200}]
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        page_bboxes,
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    figma_bboxes = [{"id": "1:1", "width": 104, "height": 208}]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                    bbox_tolerance_px=8,
+                )
+                report = engine.run(
+                    "http://localhost:3000",
+                    figma_bboxes=figma_bboxes,
+                )
+
+    assert report.status == "passed"
+    assert report.bbox_comparison["passed"] == 1
+
+
+def test_visual_qa_bbox_comparison_fails_outside_tolerance(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page_bboxes = [{"tag": "section", "figma_id": "1:1", "x": 0, "y": 0, "width": 100, "height": 200}]
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        page_bboxes,
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    figma_bboxes = [{"id": "1:1", "width": 130, "height": 200}]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                    bbox_tolerance_px=8,
+                )
+                report = engine.run(
+                    "http://localhost:3000",
+                    figma_bboxes=figma_bboxes,
+                )
+
+    assert report.status == "failed"
+    assert report.bbox_comparison["failed"] == 1
