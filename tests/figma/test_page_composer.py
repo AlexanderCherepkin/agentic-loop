@@ -1,0 +1,164 @@
+"""Unit tests for figma-agent-core/page_composer.py.
+
+Loads the module via importlib because the directory name contains a hyphen.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+PAGE_COMPOSER_PATH = ROOT / "figma-agent-core" / "page_composer.py"
+
+
+def _load_page_composer() -> Any:
+    spec = importlib.util.spec_from_file_location("figma_page_composer", str(PAGE_COMPOSER_PATH))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["figma_page_composer"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+page_composer = _load_page_composer()
+
+
+def _minimal_ast(root_children: list) -> dict:
+    return {"root": {"tag": "div", "children": root_children}}
+
+
+def test_load_module() -> None:
+    assert hasattr(page_composer, "compose_page")
+    assert hasattr(page_composer, "write_page")
+
+
+def test_compose_empty_page() -> None:
+    code = page_composer.compose_page({"root": {"tag": "div", "children": []}})
+    assert "export default function Page()" in code
+    assert "</div>" in code
+
+
+def test_compose_single_section_with_text() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "section",
+            "classes": ["flex", "flex-col", "items-center"],
+            "children": [
+                {"tag": "h1", "text": "Hero Title", "classes": ["text-[40px]", "font-[700]"]},
+                {"tag": "p", "text": "Subtitle", "classes": ["text-[18px]"]},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "<section className=\"flex flex-col items-center\">" in code
+    assert "<h1 className=\"text-[40px] font-[700]\">\n        Hero Title\n      </h1>" in code
+    assert "<p className=\"text-[18px]\">Subtitle</p>" in code
+
+
+def test_compose_image_asset() -> None:
+    ast = _minimal_ast([
+        {"tag": "img", "classes": ["w-[600px]", "h-[400px]"], "src": "/images/hero.png", "alt": "Hero"},
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'src="/images/hero.png"' in code
+    assert 'alt="Hero"' in code
+    assert "<img className=\"w-[600px] h-[400px]\" src=\"/images/hero.png\" alt=\"Hero\" />" in code
+
+
+def test_compose_inline_styles() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "classes": ["absolute"],
+            "inline_styles": {"left": "120px", "top": "40px"},
+            "children": [],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'style={"left: 120px; top: 40px"}' in code
+    assert "<div className=\"absolute\" style={\"left: 120px; top: 40px\"} />" in code
+
+
+def test_compose_nested_children() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "header",
+            "classes": ["flex", "justify-between"],
+            "children": [
+                {"tag": "span", "text": "Logo", "classes": ["font-bold"]},
+                {
+                    "tag": "nav",
+                    "classes": ["flex", "gap-[16px]"],
+                    "children": [
+                        {"tag": "a", "text": "Home", "classes": ["text-[14px]"]},
+                        {"tag": "a", "text": "About", "classes": ["text-[14px]"]},
+                    ],
+                },
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "<header className=\"flex justify-between\">" in code
+    assert "<nav className=\"flex gap-[16px]\">" in code
+    assert "<a className=\"text-[14px]\">Home</a>" in code
+    assert "</header>" in code
+
+
+def test_title_inference_from_h1() -> None:
+    ast = _minimal_ast([
+        {"tag": "section", "children": [
+            {"tag": "h1", "text": "Build Fast", "classes": ["text-[40px]"]},
+        ]},
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'title: "Build Fast"' in code
+
+
+def test_title_override() -> None:
+    ast = _minimal_ast([
+        {"tag": "h1", "text": "Old", "classes": []},
+    ])
+    code = page_composer.compose_page(ast, title="Custom Title")
+    assert 'title: "Custom Title"' in code
+
+
+def test_font_import_detection() -> None:
+    ast = _minimal_ast([
+        {"tag": "p", "text": "Hello", "classes": ["font-[Inter]"]},
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'import { Inter } from "next/font/google"' in code or 'import { Inter } from \'next/font/google\'' in code
+
+
+def test_write_page_creates_file(tmp_path: Path) -> None:
+    output = tmp_path / "src" / "app" / "page.tsx"
+    code = "export default function Page() { return <div />; }"
+    result = page_composer.write_page(code, str(output), root_dir=str(tmp_path))
+    assert result == str(output.resolve())
+    assert output.exists()
+    assert output.read_text(encoding="utf-8") == code
+
+
+def test_write_page_blocks_path_traversal() -> None:
+    with pytest.raises(ValueError):
+        page_composer.write_page("code", "../outside/page.tsx")
+
+
+def test_compose_from_ast_file(tmp_path: Path) -> None:
+    ast_path = tmp_path / "layout_ast.json"
+    ast = _minimal_ast([{"tag": "section", "children": [{"tag": "h1", "text": "From file"}]}])
+    ast_path.write_text(json.dumps(ast), encoding="utf-8")
+    code = page_composer.compose_page_from_ast_file(str(ast_path))
+    assert "From file" in code
+    assert 'title: "From file"' in code
+
+
+def test_self_closing_for_empty_non_text() -> None:
+    ast = _minimal_ast([{"tag": "div", "classes": ["bg-white"], "children": []}])
+    code = page_composer.compose_page(ast)
+    assert "<div className=\"bg-white\" />" in code

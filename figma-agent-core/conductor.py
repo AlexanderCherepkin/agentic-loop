@@ -138,6 +138,26 @@ def stage_layout(
     return result.returncode == 0
 
 
+def stage_compose(
+    ast_file: str = "layout_ast.json",
+    output: str = "src/app/page.tsx",
+    title: Optional[str] = None,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3c: сборка Tailwind AST в Next.js page.tsx."""
+    logger.info("=== STAGE: compose ===")
+    command = [sys.executable, "page_composer.py", "--ast", ast_file, "--output", output]
+    if title:
+        command.extend(["--title", title])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def _to_pascal_case(name: str) -> str:
     """Превращает произвольное имя в PascalCase."""
     import re
@@ -291,7 +311,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -329,6 +349,15 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["layout"] = {"success": ok}
+
+        elif stage == "compose":
+            ok = stage_compose(
+                ast_file=config.get("layout_output", "layout_ast.json"),
+                output=config.get("compose_output", "src/app/page.tsx"),
+                title=config.get("compose_title"),
+                dry_run=dry_run,
+            )
+            report["stages"]["compose"] = {"success": ok}
 
         elif stage == "components":
             if config.get("all_sections", False):
@@ -382,12 +411,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -431,6 +460,16 @@ def main():
         help="Путь для сохранения Tailwind AST от Layout Engine."
     )
     parser.add_argument(
+        "--compose-output",
+        default="src/app/page.tsx",
+        help="Путь для сохранения Next.js-страницы от Section Composer."
+    )
+    parser.add_argument(
+        "--compose-title",
+        default=None,
+        help="Заголовок страницы для Section Composer."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -470,6 +509,8 @@ def main():
         "skip_assets": args.skip_assets,
         "spec_output": args.spec_output,
         "layout_output": args.layout_output,
+        "compose_output": args.compose_output,
+        "compose_title": args.compose_title,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,
