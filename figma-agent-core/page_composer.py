@@ -44,6 +44,10 @@ def _safe_name(name: Any) -> str:
     return re.sub(r"[^\w\-]", "_", str(name or "unnamed")).strip("_") or "unnamed"
 
 
+def _form_key(name: Any) -> str:
+    return re.sub(r"[^\w]", "_", str(name or "form").lower()).strip("_") or "form"
+
+
 def _escape_jsx_text(text: str) -> str:
     """Экранирует символы, которые ломают JSX-текст: <, >, &, {, }."""
     text = html.escape(text, quote=False)
@@ -225,6 +229,55 @@ def _build_state_hooks(nodes: List[Dict[str, Any]]) -> List[str]:
     return hooks
 
 
+def _collect_validated_forms(ast: Dict[str, Any]) -> List[Dict[str, Any]]:
+    root = ast.get("root", ast)
+    forms: List[Dict[str, Any]] = []
+    for node in _collect_all_nodes(root):
+        action = node.get("backend_action")
+        model = node.get("backend_model")
+        if not action or not model:
+            continue
+        has_field = any(n.get("backend_field") for n in _collect_all_nodes(node))
+        if has_field:
+            key = _safe_name(node.get("figma_name") or "form")
+            forms.append({
+                "key": key,
+                "action": action,
+                "model": model,
+                "schema_name": f"{model}Schema",
+                "type_name": f"{model}Values",
+                "node_id": node.get("figma_id"),
+            })
+    return forms
+
+
+def _build_form_hooks(forms: List[Dict[str, Any]]) -> List[str]:
+    hooks: List[str] = []
+    for form in forms:
+        key = form["key"]
+        hooks.append(f'const [{key}State, {key}Action] = useFormState({form["action"]}, {{ success: false }});')
+        hooks.append(
+            f'const {{ register: register_{key}, handleSubmit: handleSubmit_{key}, formState: {{ errors: errors_{key} }} }} = '
+            f'useForm<{form["type_name"]}>({{ resolver: zodResolver({form["schema_name"]}), mode: "onBlur" }});'
+        )
+    return hooks
+
+
+def _detect_form_imports(forms: List[Dict[str, Any]]) -> List[str]:
+    if not forms:
+        return []
+    imports = ['"use client"']
+    imports.append('import { useForm } from "react-hook-form"')
+    imports.append('import { zodResolver } from "@hookform/resolvers/zod"')
+    imports.append('import { useFormState } from "react-dom"')
+    schemas: set = set()
+    for form in forms:
+        schemas.add(form["schema_name"])
+        schemas.add(form["type_name"])
+    imports.append(f'import {{ {", ".join(sorted(schemas))} }} from "@/lib/schemas"')
+    return imports
+
+
 def _detect_interactive_imports(ast: Dict[str, Any]) -> tuple[List[str], bool]:
     root = ast.get("root", ast)
     needs_state = any(n.get("interactive") for n in _collect_all_nodes(root))
@@ -247,7 +300,7 @@ def _wrap_conditional(rendered: str, state_key: Optional[str], start_indent: str
     return f"{start_indent}{{{state_key}}} && (\n{rendered}\n{start_indent})"
 
 
-def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
+def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] = None) -> str:
     tag = node.get("tag", "div")
     classes = list(node.get("classes", []))
     variants = node.get("responsive_variants") or {}
@@ -277,16 +330,29 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
 
     if backend_action:
         tag = "form"
-        extra_attrs += f" action={{{backend_action}}}"
+        form_key = _form_key(node.get("figma_name") or "form")
+        extra_attrs += f" action={{{form_key}Action}}"
+        extra_attrs += f" onSubmit={{handleSubmit_{form_key}(() => {{}})}}"
 
     if backend_field:
-        tag = "input"
-        extra_attrs += f" name={_safe_prop(backend_field)} type={_safe_prop(input_type)}"
+        input_type = node.get("input_type", "text")
+        if input_type == "textarea":
+            tag = "textarea"
+        elif input_type == "select":
+            tag = "select"
+        else:
+            tag = "input"
+        extra_attrs += f" name={_safe_prop(backend_field)}"
+        if tag == "input":
+            extra_attrs += f" type={_safe_prop(input_type)}"
         if required:
             extra_attrs += " required"
         if text is not None:
-            extra_attrs += f" placeholder={_safe_prop(text)}"
-            text = None
+            if tag in ("input", "select"):
+                extra_attrs += f" placeholder={_safe_prop(text)}"
+                text = None
+        if form_key:
+            extra_attrs += f" {{...register_{form_key}({_safe_prop(backend_field)})}}"
 
     if tag == "img" and src:
         if asset_type == "raster" and asset_width and asset_height:
@@ -313,11 +379,53 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
             elif event == "on_mouse_leave":
                 extra_attrs += f" onMouseLeave={{{handler}}}"
 
+    if tag == "button" and form_key and "submit" not in extra_attrs:
+        extra_attrs += ' type="submit"'
+
     children = node.get("children", [])
 
     if tag == "input":
+        field_error = ""
+        if form_key and backend_field:
+            field_error = (
+                f"\n{start_indent}{{{{errors_{form_key}.{backend_field} && "
+                f"<span className=\"text-red-500 text-sm\">{{errors_{form_key}.{backend_field}.message}}</span>}}}}"
+            )
         return _wrap_conditional(
-            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs} />",
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs} />{field_error}",
+            conditional_state,
+            start_indent,
+        )
+
+    if tag == "textarea":
+        field_error = ""
+        if form_key and backend_field:
+            field_error = (
+                f"\n{start_indent}{{{{errors_{form_key}.{backend_field} && "
+                f"<span className=\"text-red-500 text-sm\">{{errors_{form_key}.{backend_field}.message}}</span>}}}}"
+            )
+        inner = _escape_jsx_text(str(text or ""))
+        return _wrap_conditional(
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{inner}</{tag}>{field_error}",
+            conditional_state,
+            start_indent,
+        )
+
+    if tag == "select":
+        field_error = ""
+        if form_key and backend_field:
+            field_error = (
+                f"\n{start_indent}{{{{errors_{form_key}.{backend_field} && "
+                f"<span className=\"text-red-500 text-sm\">{{errors_{form_key}.{backend_field}.message}}</span>}}}}"
+            )
+        options = ""
+        placeholder_option = ""
+        if text is not None:
+            placeholder_option = f'<option value="">{_escape_jsx_text(text)}</option>'
+        for value in node.get("enum_values", []):
+            options += f'<option value={_safe_prop(value)}>{_escape_jsx_text(value)}</option>'
+        return _wrap_conditional(
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{placeholder_option}{options}</{tag}>{field_error}",
             conditional_state,
             start_indent,
         )
@@ -382,12 +490,21 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
             )
 
     if children:
-        rendered_children = "\n".join(_node_to_tsx(child, depth + 1) for child in children)
+        child_form_key = form_key if form_key else (node.get("backend_action") and _form_key(node.get("figma_name") or "form"))
+        rendered_children = "\n".join(_node_to_tsx(child, depth + 1, child_form_key) for child in children)
+        form_status = ""
+        if tag == "form" and child_form_key:
+            form_status = (
+                f"\n{start_indent}{{{child_form_key}State?.success && "
+                f"<p className=\"text-green-600 text-sm\">Saved!</p>}}"
+                f"\n{start_indent}{{{child_form_key}State?.error && "
+                f"<p className=\"text-red-500 text-sm\">{{JSON.stringify({child_form_key}State.error)}}</p>}}"
+            )
         return _wrap_conditional(
             (
                 f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n"
                 f"{rendered_children}\n"
-                f"{start_indent}</{tag}>"
+                f"{form_status}{start_indent}</{tag}>"
             ),
             conditional_state,
             start_indent,
@@ -420,6 +537,7 @@ def _wrap_page(
     imports: List[str],
     sections: List[str],
     state_hooks: Optional[List[str]] = None,
+    form_hooks: Optional[List[str]] = None,
     needs_router: bool = False,
     is_client: bool = False,
 ) -> str:
@@ -431,6 +549,8 @@ def _wrap_page(
         hooks_lines.append("const router = useRouter();")
     if state_hooks:
         hooks_lines.extend(state_hooks)
+    if form_hooks:
+        hooks_lines.extend(form_hooks)
 
     hooks_block = ""
     if hooks_lines:
@@ -511,6 +631,9 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
     interactive_imports, needs_router = _detect_interactive_imports(ast)
     imports.extend(interactive_imports)
 
+    forms = _collect_validated_forms(ast)
+    imports.extend(_detect_form_imports(forms))
+
     if not imports:
         imports = ['import React from "react"']
 
@@ -536,12 +659,14 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
             sections.append(rendered)
 
     state_hooks = _build_state_hooks(interactive_nodes)
-    is_client = bool(interactive_nodes)
+    form_hooks = _build_form_hooks(forms)
+    is_client = bool(interactive_nodes) or bool(forms)
     return _wrap_page(
         page_title,
         imports,
         sections,
         state_hooks=state_hooks,
+        form_hooks=form_hooks,
         needs_router=needs_router,
         is_client=is_client,
     )

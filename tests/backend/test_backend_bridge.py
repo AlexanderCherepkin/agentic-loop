@@ -144,8 +144,10 @@ def test_action_generator_produces_server_action() -> None:
     action = backend_bridge.ActionGenerator().generate("Lead")
     assert '"use server"' in action
     assert "export async function createLeadAction" in action
-    assert "formData.forEach" in action
+    assert "import { LeadSchema }" in action
+    assert "LeadSchema.safeParse" in action
     assert "prisma.leads.create" in action
+    assert "return { success: false, error:" in action
 
 
 def test_backend_bridge_run_generates_artifacts(tmp_path: Path) -> None:

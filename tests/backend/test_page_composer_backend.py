@@ -26,14 +26,14 @@ def _sample_ast() -> dict[str, Any]:
     return {
         "root": {
             "figma_id": "10:1",
-            "figma_name": "Lead Form",
+            "figma_name": "Page",
             "tag": "section",
             "classes": ["p-4"],
             "children": [
                 {
                     "figma_id": "10:2",
-                    "figma_name": "name input",
-                    "tag": "input",
+                    "figma_name": "Lead Form",
+                    "tag": "form",
                     "classes": ["border", "rounded"],
                     "backend_action": "createLeadAction",
                     "backend_model": "Lead",
@@ -64,22 +64,27 @@ def test_node_to_tsx_renders_form_action() -> None:
     ast = _sample_ast()
     form = ast["root"]["children"][0]
     tsx = page_composer._node_to_tsx(form, depth=1)
-    assert 'action={createLeadAction}' in tsx
+    assert 'action={lead_formAction}' in tsx
+    assert 'onSubmit={handleSubmit_lead_form(() => {})}' in tsx
 
 
 def test_node_to_tsx_renders_backend_input() -> None:
     ast = _sample_ast()
     form = ast["root"]["children"][0]
     input_node = form["children"][0]
-    tsx = page_composer._node_to_tsx(input_node, depth=2)
+    tsx = page_composer._node_to_tsx(input_node, depth=2, form_key="lead_form")
     assert '<input' in tsx
     assert 'name="email"' in tsx
     assert 'type="email"' in tsx
     assert "required" in tsx
     assert 'placeholder="Enter your email"' in tsx
+    assert '{...register_lead_form("email")}' in tsx
 
 
 def test_compose_page_includes_backend_imports() -> None:
     page = page_composer.compose_page(_sample_ast())
     assert 'import { createLeadAction } from "@/app/actions/leadAction"' in page
-    assert "action={createLeadAction}" in page
+    assert 'action={lead_formAction}' in page
+    assert 'import { useForm } from "react-hook-form"' in page
+    assert 'import { zodResolver } from "@hookform/resolvers/zod"' in page
+    assert 'import { useFormState } from "react-dom"' in page

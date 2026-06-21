@@ -1630,13 +1630,13 @@
     "semantic_hash": ""
   },
   "figma-agent-core/layout_engine.py": {
-    "mtime": 1782059302.0583487,
-    "ast_hash": "3ce865ada7b07f99fa8880e52eb72e2b",
+    "mtime": 1782064470.2642353,
+    "ast_hash": "39e50e732ec020eab72d78df41e97a41",
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
-    "mtime": 1782058732.4981074,
-    "ast_hash": "94deaa501590207883d2ae0f7ee95749",
+    "mtime": 1782064880.7756305,
+    "ast_hash": "040a8800a7b9b54b70f4c3913e229f8a",
     "semantic_hash": ""
   },
   "figma-agent-core/refinement_loop.py": {
@@ -1730,18 +1730,18 @@
     "semantic_hash": ""
   },
   ".claude/plan.md": {
-    "mtime": 1782056136.9635866,
-    "ast_hash": "153aba0d005e628fff974fc269503be9",
+    "mtime": 1782064160.4291966,
+    "ast_hash": "86684e4f165e858ef9f3434eb398e9af",
     "semantic_hash": ""
   },
   "figma-agent-core/backend_bridge.py": {
-    "mtime": 1782037487.6855235,
-    "ast_hash": "e7c746f705ef5003ab3f38d805d55122",
+    "mtime": 1782064438.169488,
+    "ast_hash": "901a977d19126a5639858b1b8bf4ea94",
     "semantic_hash": ""
   },
   "mcp_servers/backend_server.py": {
-    "mtime": 1782036868.7460716,
-    "ast_hash": "d7a3b4699f78289bda3e0d3621f7dbe4",
+    "mtime": 1782064628.9126384,
+    "ast_hash": "e9147cad603a3ed86825512475014d81",
     "semantic_hash": ""
   },
   "tests/backend/fixtures/text_spec.json": {
@@ -1750,8 +1750,8 @@
     "semantic_hash": ""
   },
   "tests/backend/test_backend_bridge.py": {
-    "mtime": 1782037277.0113802,
-    "ast_hash": "d2f2205fd45354c9ce23f67ee02b64bd",
+    "mtime": 1782064660.546095,
+    "ast_hash": "8070ede913496fbe7181817af1ffcc1f",
     "semantic_hash": ""
   },
   "tests/backend/test_layout_engine_backend.py": {
@@ -1760,13 +1760,13 @@
     "semantic_hash": ""
   },
   "tests/backend/test_page_composer_backend.py": {
-    "mtime": 1782037502.110023,
-    "ast_hash": "5053b3d4e2f630020ea0b240459d3bd8",
+    "mtime": 1782064656.6285837,
+    "ast_hash": "5effc6ef2adf5dc2dc04ce867b334b77",
     "semantic_hash": ""
   },
   "tests/mcp/test_backend_server.py": {
-    "mtime": 1782037295.141788,
-    "ast_hash": "fe67c361bceabc661c0d5fbca06358ac",
+    "mtime": 1782064896.35602,
+    "ast_hash": "0db124a814f2008138cd11464d54a667",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/planning/backend_spec_bridge.md": {

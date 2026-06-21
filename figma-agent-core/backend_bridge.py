@@ -26,6 +26,12 @@ class ModelField:
     default: Optional[str] = None
     description: Optional[str] = None
     is_email: bool = False
+    min_length: Optional[int] = None
+    max_length: Optional[int] = None
+    min_value: Optional[float] = None
+    max_value: Optional[float] = None
+    pattern: Optional[str] = None
+    enum_values: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -103,6 +109,7 @@ class OpenApiParser:
         for field_name, field_schema in props.items():
             ftype = self._openapi_type_to_prisma(field_schema)
             is_email = "email" in field_name.lower() or "format" in field_schema and field_schema["format"] == "email"
+            enum_values = field_schema.get("enum", []) if isinstance(field_schema.get("enum"), list) else []
             fields.append(
                 ModelField(
                     name=field_name,
@@ -110,6 +117,12 @@ class OpenApiParser:
                     required=field_name in required,
                     description=field_schema.get("description"),
                     is_email=is_email,
+                    min_length=field_schema.get("minLength"),
+                    max_length=field_schema.get("maxLength"),
+                    min_value=field_schema.get("minimum"),
+                    max_value=field_schema.get("maximum"),
+                    pattern=field_schema.get("pattern"),
+                    enum_values=enum_values,
                 )
             )
         return Model(name=name, fields=fields)
@@ -168,11 +181,20 @@ class PrismaParser:
             body = model_match.group(2)
             spec.models.append(self._parse_model(name, body))
 
+        enum_values_by_name: Dict[str, List[str]] = {}
         for enum_match in re.finditer(r"^\s*enum\s+(\w+)\s*\{([^}]*)\}", text, re.MULTILINE | re.DOTALL):
             name = enum_match.group(1)
             body = enum_match.group(2)
             values = [v.strip() for v in re.findall(r"(\w+)", body)]
+            enum_values_by_name[name] = values
             spec.models.append(Model(name=name, fields=[ModelField(name=v, field_type="Enum") for v in values], is_enum=True))
+
+        for model in spec.models:
+            if model.is_enum:
+                continue
+            for field in model.fields:
+                if field.field_type in enum_values_by_name:
+                    field.enum_values = enum_values_by_name[field.field_type]
 
         return spec
 
@@ -214,6 +236,10 @@ class PrismaParser:
             if default_match:
                 default = default_match.group(1).strip().strip('"').strip("'")
             is_email = "email" in field_name.lower()
+            max_length = None
+            varchar_match = re.search(r"@db\.VarChar\((\d+)\)", attrs)
+            if varchar_match:
+                max_length = int(varchar_match.group(1))
             fields.append(
                 ModelField(
                     name=field_name,
@@ -223,6 +249,7 @@ class PrismaParser:
                     is_unique=is_unique,
                     default=default,
                     is_email=is_email,
+                    max_length=max_length,
                 )
             )
         return Model(name=name, fields=fields)
@@ -244,6 +271,12 @@ class TextSpecParser:
                         required=f.get("required", True),
                         description=f.get("description"),
                         is_email=f.get("is_email", False),
+                        min_length=f.get("min_length"),
+                        max_length=f.get("max_length"),
+                        min_value=f.get("min_value"),
+                        max_value=f.get("max_value"),
+                        pattern=f.get("pattern"),
+                        enum_values=f.get("enum_values", []),
                     )
                 )
             spec.models.append(Model(name=entity["name"], fields=fields))
@@ -293,6 +326,18 @@ class SemanticMapper:
                     input_node["backend_model"] = model.name
                     input_node["input_type"] = self._field_to_input_type(field)
                     input_node["required"] = field.required
+                    if field.min_length is not None:
+                        input_node["min_length"] = field.min_length
+                    if field.max_length is not None:
+                        input_node["max_length"] = field.max_length
+                    if field.min_value is not None:
+                        input_node["min_value"] = field.min_value
+                    if field.max_value is not None:
+                        input_node["max_value"] = field.max_value
+                    if field.pattern:
+                        input_node["pattern"] = field.pattern
+                    if field.enum_values:
+                        input_node["enum_values"] = field.enum_values
 
             if field_mappings:
                 form["backend_action"] = self._action_name(model.name)
@@ -451,6 +496,12 @@ class SemanticMapper:
                     "is_unique": f.is_unique,
                     "default": f.default,
                     "is_email": f.is_email,
+                    "min_length": f.min_length,
+                    "max_length": f.max_length,
+                    "min_value": f.min_value,
+                    "max_value": f.max_value,
+                    "pattern": f.pattern,
+                    "enum_values": f.enum_values,
                 }
                 for f in model.fields
             ],
@@ -553,18 +604,22 @@ class ActionGenerator:
     def generate(self, model_name: str, endpoint: Optional[Endpoint] = None) -> str:
         plural = self._pluralize(model_name.lower())
         action_name = f"create{model_name}Action"
+        schema_name = f"{model_name}Schema"
         return f""""use server";
 
 import {{ revalidatePath }} from "next/cache";
 import {{ prisma }} from "@/lib/prisma";
+import {{ {schema_name} }} from "@/lib/schemas";
 
-export async function {action_name}(formData: FormData) {{
-  const raw: Record<string, any> = {{}};
-  formData.forEach((value, key) => {{
-    raw[key] = value;
-  }});
+export async function {action_name}(prevState: any, formData: FormData) {{
+  const raw = Object.fromEntries(formData.entries());
+  const parsed = {schema_name}.safeParse(raw);
 
-  const item = await prisma.{plural}.create({{ data: raw }});
+  if (!parsed.success) {{
+    return {{ success: false, error: parsed.error.flatten().fieldErrors }};
+  }}
+
+  const item = await prisma.{plural}.create({{ data: parsed.data }});
   revalidatePath("/");
   return {{ success: true, id: item.id }};
 }}
@@ -576,6 +631,70 @@ export async function {action_name}(formData: FormData) {{
         if word.endswith("y"):
             return word[:-1] + "ies"
         return word + "s"
+
+
+class ZodSchemaGenerator:
+    """Генерирует Zod-схемы валидации из ModelField."""
+
+    def generate(self, models: List[Model]) -> str:
+        lines = ['import { z } from "zod";', ""]
+        for model in models:
+            if model.is_enum:
+                continue
+            schema_name = self._schema_name(model.name)
+            type_name = self._type_name(model.name)
+            lines.append(f"export const {schema_name} = z.object({{")
+            for f in model.fields:
+                if f.is_id:
+                    continue
+                lines.append(f"  {f.name}: {self._field_schema(f)},")
+            lines.append("});")
+            lines.append(f"export type {type_name} = z.infer<typeof {schema_name}>;")
+            lines.append("")
+        return "\n".join(lines)
+
+    def _schema_name(self, model_name: str) -> str:
+        return f"{model_name}Schema"
+
+    def _type_name(self, model_name: str) -> str:
+        return f"{model_name}Values"
+
+    def _field_schema(self, field: ModelField) -> str:
+        base = self._base_schema(field)
+        if field.is_email:
+            base += '.email()'
+        if field.enum_values:
+            values = ", ".join(json.dumps(v) for v in field.enum_values)
+            base = f"z.enum([{values}])"
+        if field.min_length is not None:
+            base += f'.min({field.min_length})'
+        if field.max_length is not None:
+            base += f'.max({field.max_length})'
+        if field.min_value is not None and field.field_type in ("Int", "Float"):
+            base += f'.min({field.min_value})'
+        if field.max_value is not None and field.field_type in ("Int", "Float"):
+            base += f'.max({field.max_value})'
+        if field.min_value is not None and field.field_type == "DateTime":
+            base += f'.min(new Date({json.dumps(str(field.min_value))}))'
+        if field.max_value is not None and field.field_type == "DateTime":
+            base += f'.max(new Date({json.dumps(str(field.max_value))}))'
+        if field.pattern:
+            base += f'.regex(new RegExp({json.dumps(field.pattern)}))'
+        if not field.required:
+            base += '.optional()'
+        return base
+
+    def _base_schema(self, field: ModelField) -> str:
+        ftype = field.field_type
+        if ftype == "Int":
+            return "z.coerce.number().int()"
+        if ftype == "Float":
+            return "z.coerce.number()"
+        if ftype == "Boolean":
+            return "z.boolean()"
+        if ftype == "DateTime":
+            return "z.coerce.date()"
+        return "z.string()"
 
 
 class BackendBridge:
@@ -592,6 +711,7 @@ class BackendBridge:
         self.prisma_generator = PrismaGenerator()
         self.route_generator = RouteGenerator()
         self.action_generator = ActionGenerator()
+        self.zod_schema_generator = ZodSchemaGenerator()
 
     def run(
         self,
@@ -610,18 +730,45 @@ class BackendBridge:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         (self.output_dir / "api").mkdir(exist_ok=True)
         (self.output_dir / "actions").mkdir(exist_ok=True)
+        (self.output_dir / "lib").mkdir(exist_ok=True)
 
         schema_path = self.output_dir / "schema.prisma"
         schema_path.write_text(self.prisma_generator.generate(spec), encoding="utf-8")
 
         generated_routes: List[str] = []
         generated_actions: List[str] = []
+        generated_schemas: List[str] = []
         seen_models: set = set()
+        mapped_models: List[Model] = []
+        zod_schemas: List[str] = []
+        validation_rules: List[Dict[str, Any]] = []
+
         for m in mapping["mappings"]:
             model_name = m["model"]
             if model_name in seen_models:
                 continue
             seen_models.add(model_name)
+            model = spec.model_by_name(model_name)
+            if model:
+                mapped_models.append(model)
+                zod_schemas.append(self.zod_schema_generator._schema_name(model_name))
+                for f in model.fields:
+                    if f.is_id:
+                        continue
+                    validation_rules.append({
+                        "model": model_name,
+                        "field": f.name,
+                        "type": f.field_type,
+                        "required": f.required,
+                        "is_email": f.is_email,
+                        "min_length": f.min_length,
+                        "max_length": f.max_length,
+                        "min_value": f.min_value,
+                        "max_value": f.max_value,
+                        "pattern": f.pattern,
+                        "enum_values": f.enum_values,
+                    })
+
             endpoint = next((e for e in spec.endpoints if e.request_model == model_name and e.method == "POST"), None)
             route_code = self.route_generator.generate(model_name, endpoint)
             route_path = self.output_dir / "api" / f"{self._slug(model_name)}.ts"
@@ -633,11 +780,22 @@ class BackendBridge:
             action_path.write_text(action_code, encoding="utf-8")
             generated_actions.append(str(action_path))
 
+        if mapped_models:
+            zod_schema_path = self.output_dir / "lib" / "schemas.ts"
+            zod_schema_path.write_text(
+                self.zod_schema_generator.generate(mapped_models),
+                encoding="utf-8",
+            )
+            generated_schemas.append(str(zod_schema_path))
+
         mapping["generated_files"] = {
             "schema": str(schema_path),
             "routes": generated_routes,
             "actions": generated_actions,
+            "schemas": generated_schemas,
         }
+        mapping["zod_schemas"] = zod_schemas
+        mapping["validation_rules"] = validation_rules
         self.mapping_file.write_text(json.dumps(mapping, ensure_ascii=False, indent=2), encoding="utf-8")
         return mapping
 

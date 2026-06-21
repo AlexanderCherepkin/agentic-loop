@@ -212,6 +212,12 @@ class TailwindNode:
     backend_field: Optional[str] = None
     input_type: Optional[str] = None
     required: Optional[bool] = None
+    min_length: Optional[int] = None
+    max_length: Optional[int] = None
+    min_value: Optional[float] = None
+    max_value: Optional[float] = None
+    pattern: Optional[str] = None
+    enum_values: List[str] = field(default_factory=list)
     children: List["TailwindNode"] = field(default_factory=list)
     rich_text: Optional[List[Dict[str, Any]]] = None
     figma_id: Optional[str] = None
@@ -287,6 +293,18 @@ class TailwindNode:
             result["input_type"] = self.input_type
         if self.required is not None:
             result["required"] = self.required
+        if self.min_length is not None:
+            result["min_length"] = self.min_length
+        if self.max_length is not None:
+            result["max_length"] = self.max_length
+        if self.min_value is not None:
+            result["min_value"] = self.min_value
+        if self.max_value is not None:
+            result["max_value"] = self.max_value
+        if self.pattern is not None:
+            result["pattern"] = self.pattern
+        if self.enum_values:
+            result["enum_values"] = self.enum_values
         return result
 
 
@@ -467,6 +485,8 @@ class FigmaLayoutEngine:
 
         if depth == 0:
             return "section"
+        if any(k in name_lower for k in ("form", "contact", "lead", "signup", "subscribe", "login")):
+            return "form"
         if node_type in ("COMPONENT", "INSTANCE") and "button" in name_words:
             return "button"
         if "image" in name_words or node.get("isAsset"):
@@ -975,6 +995,26 @@ class FigmaLayoutEngine:
             tw_node.backend_field = fm.get("field")
             tw_node.input_type = fm.get("type", "text")
             tw_node.required = fm.get("required", True)
+            if "min_length" in fm:
+                tw_node.min_length = fm["min_length"]
+            if "max_length" in fm:
+                tw_node.max_length = fm["max_length"]
+            if "min_value" in fm:
+                tw_node.min_value = fm["min_value"]
+            if "max_value" in fm:
+                tw_node.max_value = fm["max_value"]
+            if "pattern" in fm:
+                tw_node.pattern = fm["pattern"]
+            if "enum_values" in fm:
+                tw_node.enum_values = list(fm["enum_values"])
+            self._refine_input_type(tw_node, node)
+
+    def _refine_input_type(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        name_lower = (node.get("name") or "").lower()
+        if tw_node.input_type == "text" and any(k in name_lower for k in ("message", "comment", "bio", "description")):
+            tw_node.input_type = "textarea"
+        if tw_node.enum_values or any(k in name_lower for k in ("select", "country", "role", "status")):
+            tw_node.input_type = "select"
 
     def _text_style_classes(self, style: Dict[str, Any]) -> List[str]:
         """Возвращает Tailwind-классы для Figma TypeStyle (без side-эффектов)."""

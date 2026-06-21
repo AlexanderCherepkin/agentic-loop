@@ -85,6 +85,12 @@ class BackendMCPServer(MCPServer):
             }),
             self.backend_run_bridge,
         )
+        self.register(
+            "backend_generate_schemas",
+            "Generate Zod validation schemas for mapped backend models",
+            s({"layout_ast?": "string", "openapi?": "string", "prisma?": "string", "text_spec?": "string", "output_dir?": "string"}),
+            self.backend_generate_schemas,
+        )
 
     @staticmethod
     def _schema(props: dict[str, str]) -> dict[str, Any]:
@@ -265,6 +271,25 @@ class BackendMCPServer(MCPServer):
                 text_spec=text_spec,
                 output_dir=output_dir,
                 mapping_file=mapping_file,
+            ),
+        )
+
+    def backend_generate_schemas(
+        self,
+        layout_ast: str = "",
+        openapi: str = "",
+        prisma: str = "",
+        text_spec: str = "",
+        output_dir: str = "",
+    ) -> dict[str, Any]:
+        return self._run_core_script(
+            "backend_bridge.py",
+            self._bridge_args(
+                layout_ast=layout_ast,
+                openapi=openapi,
+                prisma=prisma,
+                text_spec=text_spec,
+                output_dir=output_dir,
             ),
         )
 

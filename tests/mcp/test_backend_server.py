@@ -42,7 +42,7 @@ def test_backend_server_initializes(backend_server: BackendMCPServer) -> None:
     assert backend_server.name == "backend"
     assert backend_server._initialized is True
     tools = backend_server.get_tools_list()
-    assert len(tools) == 6
+    assert len(tools) == 7
     names = {t["name"] for t in tools}
     expected = {
         "backend_analyze_spec",
@@ -51,6 +51,7 @@ def test_backend_server_initializes(backend_server: BackendMCPServer) -> None:
         "backend_generate_actions",
         "backend_sync_schema",
         "backend_run_bridge",
+        "backend_generate_schemas",
     }
     assert names == expected
 
