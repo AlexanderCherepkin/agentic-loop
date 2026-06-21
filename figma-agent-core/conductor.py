@@ -158,6 +158,45 @@ def stage_compose(
     return result.returncode == 0
 
 
+def stage_visual_qa(
+    url: str,
+    ast_file: str = "layout_ast.json",
+    reference_path: Optional[str] = None,
+    output_dir: str = ".tmp/browser/visual_qa",
+    viewport: Optional[str] = None,
+    expected: Optional[str] = None,
+    allowed_domains: Optional[str] = None,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3d: визуальная QA через Playwright screenshot + DOM assertions."""
+    logger.info("=== STAGE: visual_qa ===")
+    command = [
+        sys.executable,
+        "visual_qa.py",
+        "--url",
+        url,
+        "--ast",
+        ast_file,
+        "--output-dir",
+        output_dir,
+    ]
+    if reference_path:
+        command.extend(["--reference", reference_path])
+    if viewport:
+        command.extend(["--viewport", viewport])
+    if expected:
+        command.extend(["--expected", expected])
+    if allowed_domains:
+        command.extend(["--allowed-domains", allowed_domains])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=300)
+    return result.returncode == 0
+
+
 def _to_pascal_case(name: str) -> str:
     """Превращает произвольное имя в PascalCase."""
     import re
@@ -311,7 +350,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "visual_qa", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -358,6 +397,24 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["compose"] = {"success": ok}
+
+        elif stage == "visual_qa":
+            url = config.get("visual_qa_url")
+            if not url:
+                logger.warning("visual_qa stage requires --visual-qa-url. Skipping.")
+                report["stages"]["visual_qa"] = {"success": False, "reason": "missing --visual-qa-url"}
+            else:
+                ok = stage_visual_qa(
+                    url=url,
+                    ast_file=config.get("layout_output", "layout_ast.json"),
+                    reference_path=config.get("visual_qa_reference"),
+                    output_dir=config.get("visual_qa_output_dir", ".tmp/browser/visual_qa"),
+                    viewport=config.get("visual_qa_viewport"),
+                    expected=config.get("visual_qa_expected"),
+                    allowed_domains=config.get("visual_qa_allowed_domains"),
+                    dry_run=dry_run,
+                )
+                report["stages"]["visual_qa"] = {"success": ok}
 
         elif stage == "components":
             if config.get("all_sections", False):
@@ -411,12 +468,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, visual_qa, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, visual_qa, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -470,6 +527,36 @@ def main():
         help="Заголовок страницы для Section Composer."
     )
     parser.add_argument(
+        "--visual-qa-url",
+        default=None,
+        help="URL сгенерированного лендинга для Visual QA (этап visual_qa)."
+    )
+    parser.add_argument(
+        "--visual-qa-reference",
+        default=None,
+        help="Путь к референсному скриншоту Figma для сравнения."
+    )
+    parser.add_argument(
+        "--visual-qa-output-dir",
+        default=".tmp/browser/visual_qa",
+        help="Директория для скриншотов и отчёта Visual QA."
+    )
+    parser.add_argument(
+        "--visual-qa-viewport",
+        default=None,
+        help="Viewport для Visual QA, например 1280x720."
+    )
+    parser.add_argument(
+        "--visual-qa-expected",
+        default=None,
+        help='JSON-строка DOM-assertions, например [{"selector":"h1","expected_text":"Hero"}].'
+    )
+    parser.add_argument(
+        "--visual-qa-allowed-domains",
+        default=None,
+        help="Список разрешённых внешних доменов через запятую для URL-гарда Visual QA."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -511,6 +598,12 @@ def main():
         "layout_output": args.layout_output,
         "compose_output": args.compose_output,
         "compose_title": args.compose_title,
+        "visual_qa_url": args.visual_qa_url,
+        "visual_qa_reference": args.visual_qa_reference,
+        "visual_qa_output_dir": args.visual_qa_output_dir,
+        "visual_qa_viewport": args.visual_qa_viewport,
+        "visual_qa_expected": args.visual_qa_expected,
+        "visual_qa_allowed_domains": args.visual_qa_allowed_domains,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,

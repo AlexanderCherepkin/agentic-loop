@@ -1,0 +1,205 @@
+"""Unit tests for figma-agent-core/visual_qa.py.
+
+Loads the module via importlib because the directory name contains a hyphen.
+All Playwright and PIL interactions are mocked.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+from typing import Any
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+VISUAL_QA_PATH = ROOT / "figma-agent-core" / "visual_qa.py"
+
+
+def _load_visual_qa() -> Any:
+    spec = importlib.util.spec_from_file_location("figma_visual_qa", str(VISUAL_QA_PATH))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["figma_visual_qa"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+visual_qa = _load_visual_qa()
+
+
+def test_module_loads() -> None:
+    assert hasattr(visual_qa, "VisualQAEngine")
+    assert hasattr(visual_qa, "run_visual_qa")
+
+
+def test_allowed_url_localhost() -> None:
+    assert visual_qa._is_allowed_url("http://localhost:3000") is True
+    assert visual_qa._is_allowed_url("http://127.0.0.1:3000") is True
+
+
+def test_disallowed_file_outside_workspace(tmp_path: Path) -> None:
+    outside = "file:///C:/outside/page.html"
+    assert visual_qa._is_allowed_url(outside) is False
+
+
+def test_visual_qa_blocked_without_playwright() -> None:
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", False):
+        result = visual_qa.run_visual_qa("http://localhost:3000")
+        assert result["status"] == "blocked"
+        assert "Playwright is not installed" in result["discrepancies"][0]
+
+
+def test_visual_qa_blocked_for_disallowed_url(tmp_path: Path) -> None:
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch("figma_visual_qa.sync_playwright"):
+            result = visual_qa.run_visual_qa(
+                "http://evil.example.com",
+                output_dir=str(tmp_path / "qa"),
+                root_dir=str(tmp_path),
+            )
+            assert result["status"] == "blocked"
+            assert "not allowed" in result["discrepancies"][0].lower()
+
+
+def _build_mock_page() -> MagicMock:
+    page = MagicMock()
+    page.query_selector_all.return_value = []
+    return page
+
+
+def _build_mock_playwright(tmp_path: Path) -> Any:
+    page = _build_mock_page()
+    context = MagicMock()
+    context.new_page.return_value = page
+    browser = MagicMock()
+    browser.new_context.return_value = context
+    browser.close = MagicMock()
+    playwright_obj = MagicMock()
+    playwright_obj.chromium.launch.return_value = browser
+
+    class SyncPlaywrightContext:
+        def __enter__(self):
+            return playwright_obj
+        def __exit__(self, *args):
+            pass
+
+    sync_p = SyncPlaywrightContext()
+    return sync_p, page, browser
+
+
+def test_visual_qa_captures_screenshot_and_passes(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                report = engine.run("http://localhost:3000")
+
+    assert report.status == "passed"
+    assert report.screenshot_path is not None
+    assert Path(report.screenshot_path).parent == output_dir.resolve()
+    assert (output_dir / "report.json").exists()
+    page.screenshot.assert_called_once()
+    page.goto.assert_called_once_with("http://localhost:3000", wait_until="networkidle", timeout=30000)
+
+
+def test_visual_qa_dom_assertion_failure(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    el = MagicMock()
+    el.inner_text.return_value = "Wrong"
+    page.query_selector_all.return_value = [el]
+
+    expected = [{"selector": "h1", "exact_text": "Hero Title", "expected_count": 1}]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                result = visual_qa.run_visual_qa(
+                    "http://localhost:3000",
+                    expected_nodes=expected,
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+
+    assert result["status"] == "failed"
+    assertions = result["dom_assertions"]
+    assert len(assertions) == 1
+    assert assertions[0]["passed"] is False
+    assert "exact text" in " ".join(assertions[0]["discrepancies"]).lower()
+
+
+def test_expected_nodes_from_ast_extracts_headings_and_images() -> None:
+    ast = {
+        "root": {
+            "tag": "section",
+            "children": [
+                {"tag": "h1", "text": "Build fast"},
+                {"tag": "img", "src": "/images/hero.png"},
+                {"tag": "p", "text": "Body"},
+            ],
+        }
+    }
+    nodes = visual_qa._expected_nodes_from_ast(ast)
+    selectors = {n["selector"] for n in nodes}
+    assert "h1" in selectors
+    assert 'img[src="/images/hero.png"]' in selectors
+
+
+def test_visual_qa_with_ast_file(tmp_path: Path) -> None:
+    ast_path = tmp_path / "ast.json"
+    ast = {"root": {"tag": "section", "children": [{"tag": "h1", "text": "Hello"}]}}
+    ast_path.write_text(json.dumps(ast), encoding="utf-8")
+
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    el = MagicMock()
+    el.inner_text.return_value = "Hello"
+    page.query_selector_all.return_value = [el]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                result = visual_qa.run_visual_qa(
+                    "http://localhost:3000",
+                    ast_path=str(ast_path),
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+
+    assert result["status"] == "passed"
+    assert any(a["selector"] == "h1" for a in result["dom_assertions"])
+
+
+def test_visual_qa_navigation_warning_still_reports(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+    page.goto.side_effect = Exception("timeout")
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                result = visual_qa.run_visual_qa(
+                    "http://localhost:3000",
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+
+    assert result["status"] == "failed"
+    assert any("Navigation warning" in d for d in result["discrepancies"])

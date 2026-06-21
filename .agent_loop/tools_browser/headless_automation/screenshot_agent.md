@@ -23,6 +23,7 @@ Captures viewport, full-page, or element screenshots from a loaded browser page 
 - Writes image file to `<workspace_root>/.tmp/browser/<session_id>/<output_name>.<format>`
 - Invokes `safety-control/data_leak_preventer.md` to scan for sensitive pixels/metadata
 - Logs capture to `audit_logger.md`
+- Forwards capture metadata to `visual_qa_agent.md` when visual regression QA is requested
 
 ## Decision Flow
 
