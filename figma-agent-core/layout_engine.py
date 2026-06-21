@@ -1,9 +1,25 @@
+import importlib.util
 import json
 import re
 import argparse
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def _import_component_registry() -> Any:
+    if "component_registry" in sys.modules:
+        return sys.modules["component_registry"]
+    if "figma_component_registry" in sys.modules:
+        return sys.modules["figma_component_registry"]
+    spec = importlib.util.spec_from_file_location(
+        "component_registry", str(Path(__file__).with_name("component_registry.py"))
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["component_registry"] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 _SPACING_CACHE: Dict[int, str] = {}
@@ -200,6 +216,13 @@ class TailwindNode:
     figma_id: Optional[str] = None
     figma_name: Optional[str] = None
     figma_type: Optional[str] = None
+    component_ref: Optional[str] = None
+    component_set_id: Optional[str] = None
+    component_id: Optional[str] = None
+    variant_props: Dict[str, str] = field(default_factory=dict)
+    overrides: List[Dict[str, Any]] = field(default_factory=list)
+    is_instance: bool = False
+    component_context: Optional[str] = None
 
     def add_class(self, *classes: str) -> None:
         for cls in classes:
@@ -227,6 +250,20 @@ class TailwindNode:
             result["figma_name"] = self.figma_name
         if self.figma_type is not None:
             result["figma_type"] = self.figma_type
+        if self.component_ref is not None:
+            result["component_ref"] = self.component_ref
+        if self.component_set_id is not None:
+            result["component_set_id"] = self.component_set_id
+        if self.component_id is not None:
+            result["component_id"] = self.component_id
+        if self.variant_props:
+            result["variant_props"] = self.variant_props
+        if self.overrides:
+            result["overrides"] = self.overrides
+        if self.is_instance:
+            result["is_instance"] = self.is_instance
+        if self.component_context is not None:
+            result["component_context"] = self.component_context
         if self.asset_type is not None:
             result["asset_type"] = self.asset_type
         if self.asset_width is not None:
@@ -280,6 +317,17 @@ class FigmaLayoutEngine:
                 self._form_by_node_id[m.get("node_id", "")] = m
                 for fm in m.get("field_mappings", []):
                     self._field_by_node_id[fm.get("node_id", "")] = fm
+        self.component_registry: Optional[Any] = None
+        registry_path = self.config.get("component_registry")
+        if registry_path:
+            try:
+                mod = _import_component_registry()
+                if isinstance(registry_path, dict):
+                    self.component_registry = mod.ComponentRegistry(registry_path)
+                else:
+                    self.component_registry = mod.ComponentRegistry.load(registry_path)
+            except Exception as e:
+                print(f"[LAYOUT] could not load component registry: {e}")
 
     def _class_for_color(self, prefix: str, hex_color: Optional[str]) -> Optional[str]:
         token_name = _token_for_hex(hex_color, self.tokens.get("color_by_hex") if self.tokens else None)
@@ -393,6 +441,7 @@ class FigmaLayoutEngine:
         self._apply_effects(tw_node, node)
         self._apply_radius(tw_node, node)
         self._apply_backend_hints(tw_node, node)
+        self._apply_component_refs(tw_node, node)
         if node.get("clipContent"):
             tw_node.add_class("overflow-hidden")
 
@@ -789,6 +838,22 @@ class FigmaLayoutEngine:
         else:
             tw_node.add_class(_arbitrary("rounded", rounded))
 
+    def _apply_component_refs(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        node_type = node.get("type")
+        set_id = node.get("componentSetId")
+        comp_id = node.get("componentId")
+        tw_node.component_set_id = set_id
+        tw_node.component_id = comp_id
+        if node_type in ("COMPONENT", "COMPONENT_SET"):
+            tw_node.component_context = node.get("name")
+        if self.component_registry and node_type == "INSTANCE":
+            entry = self.component_registry.lookup_by_instance(node)
+            if entry:
+                tw_node.component_ref = entry.get("pascal_name")
+                tw_node.is_instance = True
+                tw_node.variant_props = node.get("variantProperties") or {}
+                tw_node.overrides = node.get("overrides") or []
+
     def _apply_backend_hints(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         node_id = node.get("id")
         if not node_id:
@@ -891,6 +956,11 @@ def main():
         default="backend_mapping.json",
         help="Путь к backend_mapping.json (опционально).",
     )
+    parser.add_argument(
+        "--components",
+        default="component_registry.json",
+        help="Путь к component_registry.json (опционально).",
+    )
     args = parser.parse_args()
 
     import analyzer
@@ -918,6 +988,8 @@ def main():
         config["assets"] = assets
     if backend_mapping:
         config["backend_mapping"] = backend_mapping
+    if args.components:
+        config["component_registry"] = args.components
     result = convert_figma_node(node, config=config)
     output_path = Path(args.output)
     with open(output_path, "w", encoding="utf-8") as f:

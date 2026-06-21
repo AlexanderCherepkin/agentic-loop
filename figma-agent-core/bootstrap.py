@@ -217,6 +217,14 @@ class FigmaExtractor:
             cleaned["reactions"] = node["reactions"]
         if node.get("variantProperties"):
             cleaned["variantProperties"] = node["variantProperties"]
+        if node.get("variantGroupProperties"):
+            cleaned["variantGroupProperties"] = node["variantGroupProperties"]
+        if node.get("componentSetId"):
+            cleaned["componentSetId"] = node["componentSetId"]
+        if node.get("componentId"):
+            cleaned["componentId"] = node["componentId"]
+        if node.get("overrides"):
+            cleaned["overrides"] = node["overrides"]
 
         if node_type in ("RECTANGLE", "ELLIPSE", "VECTOR", "IMAGE"):
             has_image_fill = any(f.get("type") == "IMAGE" for f in (node.get("fills") or []))

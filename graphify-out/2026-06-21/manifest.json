@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "mcp_servers/bootstrap.py": {
-    "mtime": 1782036885.0521314,
-    "ast_hash": "829a8b860f4060879d6b909df688169a",
+    "mtime": 1782052591.380259,
+    "ast_hash": "29259d335c6c4c777ea1558e447938cd",
     "semantic_hash": ""
   },
   "mcp_servers/database_server.py": {
@@ -490,8 +490,8 @@
     "semantic_hash": "6be3c85afec9a8a480ea2cb62cdbadf4"
   },
   ".agent_loop/ARCHITECTURE.md": {
-    "mtime": 1782037103.578646,
-    "ast_hash": "a68197cbad6e93f8d9c00270204c7ab2",
+    "mtime": 1782052551.4069376,
+    "ast_hash": "cf25e00399867f6eef33ebf6c581d96d",
     "semantic_hash": ""
   },
   ".agent_loop/TECHNICAL_ASSIGNMENT.md": {
@@ -720,8 +720,8 @@
     "semantic_hash": "2a39110d6970f5d07f80f35f689337b8"
   },
   ".agent_loop/tooll_subagents/planning/tool_plan_selection.md": {
-    "mtime": 1782037061.6664908,
-    "ast_hash": "57cc5a19e8fe097c6d178e78b12cb367",
+    "mtime": 1782052621.4623067,
+    "ast_hash": "c9f5cc4ab2a50d8f181a1ea22003870d",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/result/action_report.md": {
@@ -1410,8 +1410,8 @@
     "semantic_hash": "752aa83aa64361ac32860f882dcff932"
   },
   "CLAUDE.md": {
-    "mtime": 1782037780.7341118,
-    "ast_hash": "17ff2d192f85c3516983b198b256ca32",
+    "mtime": 1782052584.6416864,
+    "ast_hash": "c23a864e82ce2cb513daee2b708e5fbe",
     "semantic_hash": ""
   },
   "pnpm-workspace.yaml": {
@@ -1505,8 +1505,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/analyzer.py": {
-    "mtime": 1781988171.452411,
-    "ast_hash": "47504c76bbe4b023d1f11b5169f7aec1",
+    "mtime": 1782040175.7389522,
+    "ast_hash": "5196041e837efb336b1d3aa914cfefa9",
     "semantic_hash": ""
   },
   "figma-agent-core/asset_downloader.py": {
@@ -1515,8 +1515,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/bootstrap.py": {
-    "mtime": 1782031083.94866,
-    "ast_hash": "efe4b8d120646a49b73e7766d0919a30",
+    "mtime": 1782052258.4154627,
+    "ast_hash": "56a51f2cfe5f524455ce6cbd42901fec",
     "semantic_hash": ""
   },
   "figma-agent-core/components/BlockchainSection.tsx": {
@@ -1525,8 +1525,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/conductor.py": {
-    "mtime": 1782036925.9973774,
-    "ast_hash": "b2bd4a7cabb19de4c10a89d2249b450c",
+    "mtime": 1782052424.3210435,
+    "ast_hash": "79c50127e7589423bc2efe255932c782",
     "semantic_hash": ""
   },
   "figma-agent-core/conductor_report.json": {
@@ -1560,18 +1560,18 @@
     "semantic_hash": ""
   },
   "mcp_servers/figma_server.py": {
-    "mtime": 1782038936.2620008,
-    "ast_hash": "83f4c5862efba855889be65a79e11388",
+    "mtime": 1782052450.945122,
+    "ast_hash": "6a039634e38c84143f6b006ea0ad5d43",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/planning/design_to_code_planner.md": {
-    "mtime": 1782039134.8808093,
-    "ast_hash": "85faf6ab5c7a93e4365a2a224b6568bd",
+    "mtime": 1782052626.7633493,
+    "ast_hash": "432b5dfc3cc7f13c5bd51a23eb38257a",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/planning/figma_design_analyst.md": {
-    "mtime": 1782039141.5695693,
-    "ast_hash": "a76a9b7c2da18d2a0ddbcfecbce4f511",
+    "mtime": 1782052613.3284514,
+    "ast_hash": "4518601876b3f8b0391307b720ab916a",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/user/design_intake.md": {
@@ -1630,13 +1630,13 @@
     "semantic_hash": ""
   },
   "figma-agent-core/layout_engine.py": {
-    "mtime": 1782037578.4758606,
-    "ast_hash": "342adb0a39d92f8d1368193046349c9d",
+    "mtime": 1782052295.723167,
+    "ast_hash": "40bf3e42def94932f64f054e83d04e16",
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
-    "mtime": 1782036989.8364308,
-    "ast_hash": "fba6481a91b099e48a28a2b599e3821a",
+    "mtime": 1782052432.5534508,
+    "ast_hash": "32fd2659bb74e95faa2a257581952d6f",
     "semantic_hash": ""
   },
   "figma-agent-core/refinement_loop.py": {
@@ -1680,13 +1680,13 @@
     "semantic_hash": ""
   },
   "tests/figma/test_layout_engine.py": {
-    "mtime": 1782035531.5891166,
-    "ast_hash": "92bdf3d5f3fc697dc577a7ed55920705",
+    "mtime": 1782052489.59886,
+    "ast_hash": "b08428d2bf413d582d03eea024a314ff",
     "semantic_hash": ""
   },
   "tests/figma/test_page_composer.py": {
-    "mtime": 1782035541.6893737,
-    "ast_hash": "970bc7ec397f338e4ad1073a8ed87cad",
+    "mtime": 1782044287.753654,
+    "ast_hash": "87f552cc7f2d404414707233832f8909",
     "semantic_hash": ""
   },
   "tests/figma/test_refinement_loop.py": {
@@ -1700,8 +1700,8 @@
     "semantic_hash": ""
   },
   "tests/mcp/test_figma_server.py": {
-    "mtime": 1782039176.6372297,
-    "ast_hash": "b6b3a2f22ca1c386a6f6137c958deb67",
+    "mtime": 1782052643.8826947,
+    "ast_hash": "a93104503ac38316ce7c0c5b04e617e3",
     "semantic_hash": ""
   },
   "tests/runtime/test_pipeline_figma.py": {
@@ -1782,6 +1782,31 @@
   "tests/backend/fixtures/openapi.yaml": {
     "mtime": 1782037262.5523467,
     "ast_hash": "3d886b275bdb07e9cce10f9d76410baa",
+    "semantic_hash": ""
+  },
+  "figma-agent-core/interactive_layer_mapper.py": {
+    "mtime": 1782040203.6709764,
+    "ast_hash": "5ccb1a151923cbefa292eb9264b069fd",
+    "semantic_hash": ""
+  },
+  "figma-agent-core/responsive_composer.py": {
+    "mtime": 1782052500.018706,
+    "ast_hash": "d699a0a20c65a5fa719c57ec8ec742b4",
+    "semantic_hash": ""
+  },
+  "tests/figma/test_interactive_layer_mapper.py": {
+    "mtime": 1782044377.2370346,
+    "ast_hash": "5297f46a26fafec32ce5ca52c2fbf06c",
+    "semantic_hash": ""
+  },
+  "tests/figma/test_responsive_composer.py": {
+    "mtime": 1782052509.3245552,
+    "ast_hash": "7a1323bda5acd087e179dae9cfd9f19e",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/planning/responsive_composer.md": {
+    "mtime": 1782052071.948889,
+    "ast_hash": "ca6e1493f454bce13d49e07a1bf3c4dd",
     "semantic_hash": ""
   }
 }

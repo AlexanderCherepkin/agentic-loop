@@ -27,6 +27,8 @@ Planning agent that transforms a design descriptor into a structured code bluepr
     - `globals_css`: path to `globals.css`
     - `asset_registry`: path to `asset_registry.json`
     - `assets_dir`: path to `public/assets/figma/`
+  - `components_registry`: path to `component_registry.json`
+  - `ui_components`: list of `{ component_name, file_path, variant_properties, dependencies }` from real Figma Component Sets
   - `status`: enum (`complete`, `partial`, `failed`)
   - `diagnostics`: list of warnings or skipped steps
 - `next_phase_hint`: enum (`planning`, `execution`, `result`) — where the main loop should go next
@@ -48,7 +50,9 @@ Planning agent that transforms a design descriptor into a structured code bluepr
 4. **Generate specification** — if `output_mode` is `technical_assignment` or `both`, call `figma_generate_spec` via MCP and store `specification`.
 5. **Extract design tokens** — call `figma_extract_tokens` via MCP to produce `design_tokens.json`, `tailwind.config.ts`, and `globals.css`. Populate `design_tokens` with artifact paths and enrich `color_palette`/`typography` from the registry.
 6. **Compose responsive variants** — call `figma_responsive_compose` via MCP (or invoke `tooll_subagents/planning/responsive_composer.md`) to read sibling breakpoint frames and Figma constraints, producing `responsive_ast.json` with `responsive_variants` (`sm:` / `md:` / `lg:` / `xl:`) consumed by the Section Composer.
-7. **Map prototype interactions** — if the cached Figma node contains prototype `reactions` or `variantProperties`, call `figma_map_interactions` via MCP after `figma_extract_components` to produce `interactive_ast.json` and `interactive_registry.json`. Wire clicks, hovers, overlays, page navigation, and variant switches into the generated React code; mark any page that uses event handlers as a client component.
+7. **Build Component Registry** — call `figma_build_component_registry` via MCP (or invoke `tooll_subagents/planning/component_registry.md`) to collect `COMPONENT_SET`, `COMPONENT`, `INSTANCE`, `variantProperties`, and `overrides`; write `component_registry.json`; produce dependency DAG for bottom-up generation.
+8. **Generate real UI components** — call `figma_extract_components --generate-ui` via MCP to generate one strict TypeScript React component per Component Set into `src/components/ui/`; ensure nested dependencies are generated first.
+9. **Map prototype interactions** — if the cached Figma node contains prototype `reactions` or `variantProperties`, call `figma_map_interactions` via MCP after component extraction to produce `interactive_ast.json` and `interactive_registry.json`. Wire clicks, hovers, overlays, page navigation, and variant switches into the generated React code; mark any page that uses event handlers as a client component.
 8. **Generate components** — if `output_mode` is `full_code` or `both`:
    - Call `figma_extract_components` via MCP to deterministically extract reusable components from the Tailwind AST (repeated/ named / Figma COMPONENT or INSTANCE nodes).
    - Then call `figma_generate_component` or `figma_run_pipeline` via MCP for any remaining complex sections:

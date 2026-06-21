@@ -39,9 +39,18 @@ def _class_string(classes: List[str]) -> str:
     return " ".join(classes)
 
 
+def _safe_name(name: Any) -> str:
+    return re.sub(r"[^\w\-]", "_", str(name or "unnamed")).strip("_") or "unnamed"
+
+
 def _to_camel_case(kebab: str) -> str:
     parts = kebab.split("-")
     return parts[0] + "".join(p.capitalize() for p in parts[1:])
+
+
+def _to_camel_case_prop(name: Any) -> str:
+    parts = _safe_name(name).split("-")
+    return parts[0].lower() + "".join(p.capitalize() for p in parts[1:])
 
 
 def _render_inline_styles(styles: Dict[str, str]) -> str:
@@ -141,7 +150,10 @@ def _detect_component_imports(ast: Dict[str, Any]) -> List[str]:
     root = ast.get("root", ast)
     imports: set = set()
     for node in _collect_all_nodes(root):
-        if node.get("component"):
+        if node.get("component_ref"):
+            name = node["component_ref"]
+            imports.add(f'import {name} from "@/components/ui/{name}"')
+        elif node.get("component"):
             name = node.get("component_name", node.get("tag", "Unknown"))
             path = node.get("component_path", f"@/app/components/{name}")
             imports.add(f'import {name} from "{path}"')
@@ -297,6 +309,21 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
     if inline_svg and tag == "img":
         wrapper = f'{start_indent}<div{class_attr}{style_attr}>\n{inner_indent}{inline_svg}\n{start_indent}</div>'
         return _wrap_conditional(wrapper, conditional_state, start_indent)
+
+    if node.get("component_ref"):
+        name = node["component_ref"]
+        props: Dict[str, Any] = {}
+        for k, v in (node.get("variant_props") or {}).items():
+            safe_k = _to_camel_case_prop(k)
+            props[safe_k] = v
+        props_str = ""
+        if props:
+            props_str = " " + " ".join(f'{k}={_safe_prop(v)}' for k, v in props.items())
+        return _wrap_conditional(
+            f"{start_indent}<{name}{props_str} />",
+            conditional_state,
+            start_indent,
+        )
 
     if node.get("component"):
         name = node.get("component_name", tag)
@@ -457,6 +484,8 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
         top_level = [root]
 
     for section in top_level:
+        if section.get("component_context") and not section.get("is_instance"):
+            continue
         rendered = _node_to_tsx(section, depth=2)
         if rendered.strip():
             sections.append(rendered)

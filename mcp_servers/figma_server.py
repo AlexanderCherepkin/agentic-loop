@@ -55,6 +55,9 @@ class FigmaMCPServer(MCPServer):
                       s({"file?": "string", "node_id?": "string", "output_name?": "string",
                          "skip_assets?": "bool"}),
                       self.figma_generate_component)
+        self.register("figma_build_component_registry", "Build a Figma Component Registry from a Figma document (COMPONENT_SET, COMPONENT, INSTANCE, variants, overrides, dependency DAG)",
+                      s({"file?": "string", "output?": "string", "node_id?": "string"}),
+                      self.figma_build_component_registry)
         self.register("figma_extract_components", "Extract reusable React components from the Tailwind AST",
                       s({"ast_file?": "string", "output_dir?": "string", "page_ast_output?": "string",
                          "component_map_output?": "string", "patterns?": "string", "min_duplicates?": "int"}),
@@ -186,6 +189,15 @@ class FigmaMCPServer(MCPServer):
         if skip_assets:
             args.append("--skip-assets")
         return self._run_core_script("agent.py", args)
+
+    def figma_build_component_registry(self, file: str = "figma_node.json", output: str = "component_registry.json", node_id: str = "") -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = ["--file", file, "--output", output]
+        if node_id:
+            args.extend(["--node-id", node_id])
+        return self._run_core_script("component_registry.py", args)
 
     def figma_extract_components(self, ast_file: str = "layout_ast.json", output_dir: str = "src/app/components",
                                   page_ast_output: str = "page_ast.json",

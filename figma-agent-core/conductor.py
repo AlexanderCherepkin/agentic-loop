@@ -94,10 +94,53 @@ def stage_bootstrap(
     return result.returncode == 0
 
 
+def stage_component_registry(
+    file: str = "figma_node.json",
+    output: str = "component_registry.json",
+    node_id: Optional[str] = None,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instances, DAG)."""
+    logger.info("=== STAGE: component_registry ===")
+    command = [sys.executable, "component_registry.py", "--file", file, "--output", output]
+    if node_id:
+        command.extend(["--node-id", node_id])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def stage_analyze(file: str = "figma_node.json", dry_run: bool = False) -> bool:
     """Этап 2: анализ структуры Figma."""
     logger.info("=== STAGE: analyze ===")
     command = [sys.executable, "analyzer.py", "--file", file]
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_generate_components(
+    figma_file: str = "figma_node.json",
+    output_dir: str = "src/components/ui",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 2b: генерация React-компонентов из реальных Figma Component Sets."""
+    logger.info("=== STAGE: generate_components ===")
+    command = [
+        sys.executable,
+        "component_extractor.py",
+        "--generate-ui",
+        "--figma-file", figma_file,
+        "--output-dir", output_dir,
+    ]
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -167,6 +210,7 @@ def stage_layout(
     tokens_file: str = "design_tokens.json",
     assets_file: str = "asset_registry.json",
     backend_mapping_file: str = "backend_mapping.json",
+    components_registry_file: str = "component_registry.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 3b: детерминированная генерация Tailwind AST из Figma-ноды."""
@@ -180,6 +224,8 @@ def stage_layout(
         command.extend(["--assets", assets_file])
     if Path(backend_mapping_file).exists():
         command.extend(["--backend-mapping", backend_mapping_file])
+    if Path(components_registry_file).exists():
+        command.extend(["--components", components_registry_file])
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -636,7 +682,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "component_registry", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -652,6 +698,15 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             if not ok:
                 logger.error("Bootstrap stage failed. Stopping pipeline.")
                 break
+
+        elif stage == "component_registry":
+            ok = stage_component_registry(
+                file=file,
+                output=config.get("component_registry_output", "component_registry.json"),
+                node_id=node_id,
+                dry_run=dry_run,
+            )
+            report["stages"]["component_registry"] = {"success": ok}
 
         elif stage == "analyze":
             ok = stage_analyze(file=file, dry_run=dry_run)
@@ -695,6 +750,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 tokens_file=str(tokens_file),
                 assets_file=str(assets_file),
                 backend_mapping_file=backend_mapping_file,
+                components_registry_file=config.get("component_registry_output", "component_registry.json"),
                 dry_run=dry_run,
             )
             report["stages"]["layout"] = {"success": ok}
@@ -730,6 +786,14 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["responsive"] = {"success": ok}
+
+        elif stage == "generate_components":
+            ok = stage_generate_components(
+                figma_file=file,
+                output_dir=config.get("components_ui_output_dir", "src/components/ui"),
+                dry_run=dry_run,
+            )
+            report["stages"]["generate_components"] = {"success": ok}
 
         elif stage == "extract":
             ok = stage_extract_components(
@@ -885,7 +949,7 @@ def main():
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, tokens, layout, backend_bridge, responsive, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
+        help="Запустить только один этап: bootstrap, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -973,6 +1037,16 @@ def main():
         "--layout-output",
         default="layout_ast.json",
         help="Путь для сохранения Tailwind AST от Layout Engine."
+    )
+    parser.add_argument(
+        "--component-registry-output",
+        default="component_registry.json",
+        help="Путь для сохранения Component Registry."
+    )
+    parser.add_argument(
+        "--components-ui-output-dir",
+        default="src/components/ui",
+        help="Директория для компонентов, сгенерированных из Figma Component Sets."
     )
     parser.add_argument(
         "--responsive-output",
@@ -1180,6 +1254,8 @@ def main():
         "tokens_tailwind_config": args.tokens_tailwind_config,
         "tokens_globals_css": args.tokens_globals_css,
         "layout_output": args.layout_output,
+        "component_registry_output": args.component_registry_output,
+        "components_ui_output_dir": args.components_ui_output_dir,
         "responsive_output": args.responsive_output,
         "responsive_report": args.responsive_report,
         "compose_output": args.compose_output,

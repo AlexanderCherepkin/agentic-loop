@@ -1,7 +1,10 @@
 {
-  "started_at": "2026-06-21T14:42:03.376095+00:00",
+  "started_at": "2026-06-21T15:26:32.315218+00:00",
   "stages": {
     "bootstrap": {
+      "success": true
+    },
+    "component_registry": {
       "success": true
     },
     "analyze": {
@@ -20,6 +23,9 @@
       "success": true
     },
     "responsive": {
+      "success": true
+    },
+    "generate_components": {
       "success": true
     },
     "extract": {
@@ -85,6 +91,8 @@
     "tokens_tailwind_config": "tailwind.config.ts",
     "tokens_globals_css": "src/app/globals.css",
     "layout_output": "layout_ast.json",
+    "component_registry_output": "component_registry.json",
+    "components_ui_output_dir": "src/components/ui",
     "responsive_output": "responsive_ast.json",
     "responsive_report": "responsive_report.json",
     "compose_output": "src/app/page.tsx",
@@ -117,6 +125,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-21T14:42:03.378068+00:00",
+  "finished_at": "2026-06-21T15:26:32.317212+00:00",
   "duration_seconds": 0.0
 }

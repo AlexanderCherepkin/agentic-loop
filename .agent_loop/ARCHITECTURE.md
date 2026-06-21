@@ -54,7 +54,7 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
 │   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
-│   ├── planning/                         #   Planning layer (8 agents)
+│   ├── planning/                         #   Planning layer (9 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
@@ -62,7 +62,8 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── figma_design_analyst.md       #     Run Figma pipeline and produce a design_blueprint
 │   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
 │   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
-│   │   └── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
+│   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
+│   │   └── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
 │   ├── execution/                        #   Execution layer (4 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails

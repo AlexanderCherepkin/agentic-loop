@@ -1,10 +1,40 @@
+import importlib.util
 import json
 import os
 import re
 import argparse
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
+
+
+def _import_component_registry() -> Any:
+    if "component_registry" in sys.modules:
+        return sys.modules["component_registry"]
+    if "figma_component_registry" in sys.modules:
+        return sys.modules["figma_component_registry"]
+    spec = importlib.util.spec_from_file_location(
+        "component_registry", str(Path(__file__).with_name("component_registry.py"))
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["component_registry"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _import_layout_engine() -> Any:
+    if "layout_engine" in sys.modules:
+        return sys.modules["layout_engine"]
+    if "figma_layout_engine" in sys.modules:
+        return sys.modules["figma_layout_engine"]
+    spec = importlib.util.spec_from_file_location(
+        "layout_engine", str(Path(__file__).with_name("layout_engine.py"))
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["layout_engine"] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 DEFAULT_COMPONENT_PATTERNS: List[str] = [
@@ -112,9 +142,18 @@ def _style_to_string(styles: Dict[str, str]) -> str:
     return "; ".join(pairs)
 
 
+def _safe_name(name: Any) -> str:
+    return re.sub(r"[^\w\-]", "_", str(name or "unnamed")).strip("_") or "unnamed"
+
+
 def _to_camel_case(kebab: str) -> str:
     parts = kebab.split("-")
     return parts[0] + "".join(p.capitalize() for p in parts[1:])
+
+
+def _to_camel_case_prop(name: Any) -> str:
+    parts = _safe_name(name).split("-")
+    return parts[0].lower() + "".join(p.capitalize() for p in parts[1:])
 
 
 def _render_inline_styles(styles: Dict[str, str]) -> str:
@@ -155,6 +194,17 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
         extra_attrs += f' src={_safe_prop(src)} alt={_safe_prop(alt)}'
 
     children = node.get("children", [])
+
+    if node.get("component_ref"):
+        name = node["component_ref"]
+        props: Dict[str, Any] = {}
+        for k, v in (node.get("variant_props") or {}).items():
+            safe_k = _to_camel_case_prop(k)
+            props[safe_k] = v
+        props_str = ""
+        if props:
+            props_str = " " + " ".join(f'{k}={_safe_prop(v)}' for k, v in props.items())
+        return f"{start_indent}<{name}{props_str} />"
 
     if node.get("component"):
         name = node.get("component_name", tag)
@@ -256,6 +306,9 @@ def _collect_substantial_nodes(
     parent_is_candidate: bool = False,
 ) -> List[Tuple[Dict[str, Any], int]]:
     results: List[Tuple[Dict[str, Any], int]] = []
+    if node.get("component_ref"):
+        # Real Figma instances are rendered as typed components; do not extract them as local feature components.
+        return results
     is_candidate = False
     if depth > 0 and not parent_is_candidate:
         if _is_named_candidate(node, patterns) or _is_component_type(node) or _has_substance(node):
@@ -448,6 +501,171 @@ class ComponentExtractor:
         return page_ast, extracted
 
 
+class ComponentGenerator:
+    def __init__(
+        self,
+        figma_document: Dict[str, Any],
+        output_dir: str = "src/components/ui",
+        root_dir: str = ".",
+        layout_config: Optional[Dict[str, Any]] = None,
+    ):
+        self.figma_document = figma_document
+        self.output_dir = _validate_target_dir(output_dir, root_dir)
+        self.layout_config = layout_config or {}
+        self._registry_data: Optional[Dict[str, Any]] = None
+        self._generated: List[ExtractedComponent] = []
+
+    @property
+    def registry(self) -> Dict[str, Any]:
+        if self._registry_data is None:
+            mod = _import_component_registry()
+            self._registry_data = mod.RegistryBuilder(self.figma_document).build()
+        return self._registry_data
+
+    def generate(self) -> Tuple[Dict[str, Any], List[ExtractedComponent]]:
+        registry_mod = _import_component_registry()
+        layout_mod = _import_layout_engine()
+
+        registry = self.registry
+        wrapper = registry_mod.ComponentRegistry(registry)
+        config = {**self.layout_config, "component_registry": registry}
+        engine = layout_mod.FigmaLayoutEngine(config)
+
+        generated: List[ExtractedComponent] = []
+        for entry_id in registry.get("dependency_order", []):
+            entry = registry["components"].get(entry_id)
+            if not entry or entry.get("is_library"):
+                continue
+            node = self._resolve_component_node(entry)
+            if not node:
+                continue
+            result = engine.convert(node)
+            ast = result.root.to_dict()
+            code = self._generate_component_source(entry, ast)
+            file_path = self.output_dir / f"{entry['pascal_name']}.tsx"
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_text(code, encoding="utf-8")
+            generated.append(ExtractedComponent(name=entry["pascal_name"], node=ast, file_path=file_path, imports=[]))
+
+        self._generated = generated
+        return registry, generated
+
+    def _find_node_by_id(self, node: Dict[str, Any], target_id: str) -> Optional[Dict[str, Any]]:
+        if node.get("id") == target_id:
+            return node
+        for child in node.get("children", []):
+            found = self._find_node_by_id(child, target_id)
+            if found:
+                return found
+        return None
+
+    def _resolve_component_node(self, entry: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if entry["node_type"] == "COMPONENT":
+            return self._find_node_by_id(self.figma_document, entry["id"])
+        default_id = entry.get("default_variant_id")
+        if default_id:
+            set_node = self._find_node_by_id(self.figma_document, entry["id"])
+            if set_node:
+                for child in set_node.get("children", []):
+                    if child.get("id") == default_id:
+                        return child
+        return self._find_node_by_id(self.figma_document, entry["id"])
+
+    def _generate_component_source(self, entry: Dict[str, Any], ast: Dict[str, Any]) -> str:
+        name = entry["pascal_name"]
+        override_props = self._apply_text_overrides(ast)
+        interface_lines = self._build_interface(entry, override_props)
+        imports = self._collect_imports(entry)
+        body = self._render_component_body(ast)
+        import_block = "\n".join(imports)
+        return f"""{import_block}
+{interface_lines}
+
+export default function {name}(props: {name}Props) {{
+  return (
+{body}
+  );
+}}
+"""
+
+    def _build_interface(self, entry: Dict[str, Any], override_props: Dict[str, Any]) -> str:
+        name = entry["pascal_name"]
+        lines: List[str] = []
+        for prop_name, info in entry.get("variant_properties", {}).items():
+            safe = _to_camel_case_prop(prop_name)
+            values = info.get("values", [])
+            if values:
+                type_str = " | ".join(json.dumps(v) for v in values)
+            else:
+                type_str = "string"
+            default = info.get("default")
+            optional = default is not None
+            marker = "?" if optional else ""
+            lines.append(f"  {safe}{marker}: {type_str};")
+        for prop_name in sorted(override_props):
+            lines.append(f"  {prop_name}?: string;")
+        lines.append("  className?: string;")
+        lines.append("  children?: React.ReactNode;")
+        if not lines:
+            return f"export interface {name}Props {{}}"
+        return f"export interface {name}Props {{\n" + "\n".join(lines) + "\n}}"
+
+    def _collect_imports(self, entry: Dict[str, Any]) -> List[str]:
+        imports = ['import React from "react"']
+        registry = self.registry
+        for dep_id in entry.get("dependencies", []):
+            dep_entry = registry.get("components", {}).get(dep_id)
+            if dep_entry:
+                imports.append(f'import {{ {dep_entry["pascal_name"]} }} from "./{dep_entry["pascal_name"]}";')
+        return imports
+
+    def _apply_text_overrides(self, ast: Dict[str, Any]) -> Dict[str, Any]:
+        override_props: Dict[str, Any] = {}
+        seen: Set[str] = set()
+
+        def walk(node: Dict[str, Any]) -> None:
+            text = node.get("text")
+            figma_name = node.get("figma_name")
+            if text is not None and figma_name:
+                base = _to_camel_case_prop(figma_name)
+                if not base or base in ("text", "unnamed"):
+                    return
+                prop_name = base
+                counter = 2
+                while prop_name in seen:
+                    prop_name = f"{base}{counter}"
+                    counter += 1
+                seen.add(prop_name)
+                override_props[prop_name] = {"type": "string", "default": text}
+                node["text"] = f'{{props.{prop_name} ?? {json.dumps(text)}}}'
+            for child in node.get("children", []):
+                walk(child)
+
+        walk(ast)
+        return override_props
+
+    def _render_component_body(self, ast: Dict[str, Any]) -> str:
+        tag = ast.get("tag", "div")
+        classes = ast.get("classes", [])
+        class_expr = self._class_name_expression(classes)
+        style_attr = _render_inline_styles(ast.get("inline_styles", {}))
+        children = ast.get("children", [])
+        rendered_children = "\n".join(_node_to_tsx(child, depth=2) for child in children)
+        start_indent = "  "
+        if rendered_children:
+            return f'{start_indent}<{tag} className={{{class_expr}}}{style_attr}>\n{rendered_children}\n{start_indent}  {{props.children}}\n{start_indent}</{tag}>'
+        text = ast.get("text")
+        if text is not None:
+            return f'{start_indent}<{tag} className={{{class_expr}}}{style_attr}>{text}</{tag}>'
+        return f'{start_indent}<{tag} className={{{class_expr}}}{style_attr} />'
+
+    def _class_name_expression(self, classes: List[str]) -> str:
+        base = _class_string(classes)
+        if base:
+            return f'"{base}" + (props.className ? " " + props.className : "")'
+        return 'props.className || ""'
+
+
 def run_extraction(
     ast_path: str,
     output_dir: str = "src/app/components",
@@ -541,7 +759,34 @@ def main():
         default=".",
         help="Корень рабочего пространства для проверки path traversal.",
     )
+    parser.add_argument(
+        "--generate-ui",
+        action="store_true",
+        help="Сгенерировать src/components/ui/*.tsx из реальных Figma Component Sets.",
+    )
+    parser.add_argument(
+        "--figma-file",
+        default="figma_node.json",
+        help="Путь к JSON-файлу Figma-структуры для --generate-ui.",
+    )
     args = parser.parse_args()
+
+    if args.generate_ui:
+        figma_path = Path(args.figma_file)
+        if not figma_path.exists():
+            print(f"[ERROR] Figma file not found: {figma_path}")
+            raise SystemExit(1)
+        doc = json.loads(figma_path.read_text(encoding="utf-8"))
+        gen = ComponentGenerator(
+            doc,
+            output_dir=args.output_dir,
+            root_dir=args.workspace_root,
+        )
+        registry, components = gen.generate()
+        print(f"[GENERATE-UI] {len(components)} component(s) written to {args.output_dir}")
+        for c in components:
+            print(f"  - {c.name} -> {c.file_path}")
+        return
 
     patterns: Optional[List[str]] = None
     if args.patterns:

@@ -57,10 +57,10 @@
 - **scope_manager** — предотвращение scope creep; отслеживание авторизованных ресурсов/тем/инструментов.
 - **input_aggregation** — консолидация сигналов безопасности, политических решений и состояний ресурсов в единый control directive.
 
-### 2.6 Подагенты цикла ReAct (tooll_subagents) — 27 агентов
+### 2.6 Подагенты цикла ReAct (tooll_subagents) — 29 агентов
 Цикл разбит на 6 фаз:
 1. **user** (4): request — парсинг и классификация; context — сбор контекста; limitations — каталог ограничений; design_intake — распознавание дизайн-проектов (Figma URL, node ID, локальный JSON, дизайн-бриф) и формирование `design_descriptor`.
-2. **planning** (7): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя.
+2. **planning** (9): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя; responsive_composer — генерация breakpoint-вариантов и constraint-классов Tailwind; component_registry — построение реестра Figma-компонентов (Component Sets, Variants, Instances) и генерация `src/components/ui/*.tsx`.
 3. **execution** (4): tool_invocation — диспетчеризация; safety_guardrails — live runtime safety; human_approval — тактическое одобрение; action_logging — неизменяемый журнал выполнения.
 4. **observability** (4): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти.
 5. **self_correction** (4): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку.
@@ -79,7 +79,7 @@
 - **tools_web** — web_request pipeline (request-lifecycle): request_builder, auth_manager, network_checker, rate_limiter, response_parser, content_extractor, caching_agent, retry_manager, error_handler, web_optimizer.
 - **tools_memory** — memory_store pipeline (store-lifecycle): memory_writer, memory_reader, context_compressor, index_manager, eviction_policy, summarizer, embedding_agent, recall_optimizer, consistency_checker, memory_optimizer.
 - **tools_browser** — headless_automation pipeline (browser-lifecycle): session_manager, navigation_engine, screenshot_agent, dom_extractor, selector_resolver, interaction_agent, network_interceptor, cookie_storage_agent, captcha_challenge_agent, error_handler, browser_optimizer.
-- **figma (MCP)** — Figma-to-code pipeline: figma_bootstrap, figma_analyze, figma_generate_spec, figma_extract_tokens, figma_extract_components, figma_generate_component, figma_download_assets, figma_run_pipeline. Реализован в `mcp_servers/figma_server.py`, лениво загружается и работает с `figma-agent-core/`.
+- **figma (MCP)** — Figma-to-code pipeline: figma_bootstrap, figma_analyze, figma_generate_spec, figma_extract_tokens, figma_responsive_compose, figma_build_component_registry, figma_extract_components, figma_generate_component, figma_map_interactions, figma_download_assets, figma_run_pipeline. Реализован в `mcp_servers/figma_server.py`, лениво загружается и работает с `figma-agent-core/`.
 
 ### 2.8 MCP gateway (lazy loading)
 - `mcp_servers/gateway.py` exposes category metadata to the planner without constructing server instances.
