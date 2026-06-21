@@ -77,8 +77,12 @@ class MCPServer:
                     pass
 
     async def ping(self) -> bool:
-        """Health check: return True if server is responsive."""
-        return self._initialized
+        """Health check: return True if server is responsive.
+
+        Servers that register tools during construction are considered healthy
+        even before an explicit initialize handshake (e.g. direct registry use).
+        """
+        return self._initialized or bool(self._tools)
 
     async def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> MCPToolResult:
         tool = self._tools.get(tool_name)

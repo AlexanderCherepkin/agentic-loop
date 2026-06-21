@@ -24,9 +24,8 @@ Privacy and compliance gate that scans outgoing content for sensitive data leaka
 
 ## Decision Flow
 
-1. **Select detector set** — based on `classification_level` and `recipient_scope`, load appropriate rule set (PII, credentials, IP addresses, internal hostnames, proprietary markers).
-2. **Entity extraction** — scan for known patterns (email, phone, SSN, credit card, API keys, tokens, passwords, database connection strings).
-3. **Entropy analysis** — flag high-entropy strings matching secret-like distributions.
+1. **Select detector set** — based on `classification_level` and `recipient_scope`, load appropriate rule set (PII, credentials, IP addresses, internal hostnames, proprietary markers). For browser-generated content (`screenshot_path`, `cookies`, `localStorage`, `network_intercept`), add browser-specific rules: auth tokens in URLs, session cookies, cached credentials.
+2. **Entity extraction** — scan for known patterns (email, phone, SSN, credit card, API keys, tokens, passwords, database connection strings). Also detect `Set-Cookie`, `Authorization`, and browser-storage key/value pairs.
 4. **Contextual scoring** — reduce false positives by checking surrounding tokens (`key=`, `token=`, `password:`).
 5. **Aggregate severity** — `critical` for plaintext credentials to `public_channel`; `high` for PII; `medium` for internal hostnames; `low` for vague mentions.
 6. **Determine action** — `block` if `severity=critical`; `redact` if `severity=high` or `medium` and `recipient_scope=third_party_api`; `pass` if `severity=low` or none.
@@ -41,4 +40,5 @@ Privacy and compliance gate that scans outgoing content for sensitive data leaka
 | Output exceeds scan buffer | Stream-scan in chunks; if boundary split obscures entity, `action=escalate` to `mutual_check/result_validator.md` |
 | Redaction corrupts structured format (JSON) | Switch to token-preserving mask (`"key": "[REDACTED]"`) |
 | Entropy classifier false-negative on short secret | Compensate by checking against known-prefix database (AWS AKIA, GitHub ghp_) |
+| Browser screenshot or network traffic contains unredacted secrets | `action=block`, `severity=critical`; route to `tools_browser/headless_automation/error_handler.md` for cleanup |
 | Alert channel failure | Buffer alert in local queue; retry 3× before escalating to `control/human_oversight.md` |

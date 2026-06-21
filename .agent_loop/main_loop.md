@@ -30,8 +30,15 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 1. **Initialize session** — call `orchestrator/state_manager.md` to create or resume session; load `session_context` and `system_wide_policies`.
 2. **Ingest user input** — pass `raw_user_input` to `tooll_subagents/user/request.md` for parsing, `context.md` for enrichment, and `limitations.md` for capability gap analysis.
 3. **Safety pre-check** — route parsed request through `safety-control/` (input_sanitizer, threat_detector, bias_detector) and `control/` (scope_manager, policy_enforcer). If blocked, halt with `termination_status=escalated_human` or `failure`.
-4. **Plan phase** — invoke `tooll_subagents/planning/` (task_decomposition, cost_risk_assessment, tool_plan_selection, internal_monologue) to produce initial task graph and tool plan.
-5. **Enter ReAct loop** — for each iteration up to `max_iterations`:
+4. **Design-intake branch (conditional)** — pass parsed request to `tooll_subagents/user/design_intake.md`:
+   - If `request_type != design_project`, continue to Plan phase unchanged.
+   - If `request_type == design_project`:
+     a. Invoke `tooll_subagents/planning/figma_design_analyst.md` with the `design_descriptor` to produce a `design_blueprint` (Figma structure, spec, components, assets).
+     b. Invoke `tooll_subagents/planning/design_to_code_planner.md` with the `design_blueprint` to produce a `handoff_package`.
+     c. If `handoff_type == technical_assignment`, treat the package as the task definition and continue to the Plan phase with `design_blueprint` attached.
+     d. If `handoff_type == full_code` or `mixed`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`.
+5. **Plan phase** — invoke `tooll_subagents/planning/` (task_decomposition, cost_risk_assessment, tool_plan_selection, internal_monologue) to produce initial task graph and tool plan. If a design blueprint is present, `tool_plan_selection` must include Figma MCP tools.
+6. **Enter ReAct loop** — for each iteration up to `max_iterations`:
    a. **Check budget** — if `token_budget` exhausted, break and set `termination_status=partial`.
    b. **Mutual pre-check** — pass plan through `mutual_check/` (consistency_checker, quota_manager, anomaly_detector) and `control/` (resource_monitor, permission_checker). If rejected, attempt `tooll_subagents/self_correction/plan_adjustment.md`.
    c. **Execute phase** — invoke `tooll_subagents/execution/` (tool_invocation, safety_guardrails, human_approval, action_logging) to run the selected tool pipeline.
@@ -48,11 +55,11 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
       - Invoke `tools_memory/memory_store/eviction_policy.md` (action=`evict`) to remove raw compressed steps from active context, retaining only the summary.
       - Feed `condensed_history` into next iteration's context via `tooll_subagents/user/context.md`.
       - If compaction fidelity drops below 0.6, log warning to `mutual_check/quality_assessor.md` and retain original steps for one more iteration.
-6. **Synthesize result** — invoke `tooll_subagents/result/` (solution, modified_files, action_report, summary_recommendations) to compose final deliverables.
-7. **Safety post-check** — route final output through `safety-control/output_reviewer.md`, `data_leak_preventer.md`, and `content_checker.md`.
-8. **Final mutual check** — pass through `mutual_check/quality_assessor.md` and `result_validator.md`.
-9. **Deliver** — return `final_response`, `termination_status`, `session_metrics`, and `audit_anchor`.
-10. **Cleanup** — archive session state, release quota locks, and log completion to `audit_logger.md`.
+7. **Synthesize result** — invoke `tooll_subagents/result/` (solution, modified_files, action_report, summary_recommendations) to compose final deliverables. If a design handoff package is present, include generated files, assets, and `next_phase_hint` in the output.
+8. **Safety post-check** — route final output through `safety-control/output_reviewer.md`, `data_leak_preventer.md`, and `content_checker.md`.
+9. **Final mutual check** — pass through `mutual_check/quality_assessor.md` and `result_validator.md`.
+10. **Deliver** — return `final_response`, `termination_status`, `session_metrics`, and `audit_anchor`.
+11. **Cleanup** — archive session state, release quota locks, and log completion to `audit_logger.md`.
 
 ## Failure Modes
 

@@ -17,6 +17,7 @@ Loop-control agent that decides whether the ReAct cycle should continue with a r
 - `termination_reason`: human-readable rationale for the decision
 - `deliverable`: pointer to the result payload to return (may be best-effort partial result)
 - `next_action`: if `recurse`, pointer to `adjusted_plan` to execute; if `escalate_human`, escalation request descriptor
+- `next_phase_hint`: enum (`execution`, `planning`, `result`) — suggested next ReAct phase (default `result` for terminate/escalate decisions)
 
 ### Side Effects
 - Updates session iteration counter

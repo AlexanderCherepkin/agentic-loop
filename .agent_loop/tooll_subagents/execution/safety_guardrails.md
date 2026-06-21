@@ -16,6 +16,7 @@ Tactical safety layer applied during execution to catch runtime-specific risks t
 - `triggered_rules`: list of rules that fired with severity and evidence
 - `mitigation_applied`: list of automatic actions taken (throttled, truncated, blocked)
 - `recommendation`: enum (`proceed`, `resume_with_limits`, `abort_and_report`, `escalate_to_human`)
+- `next_phase_hint`: enum (`observability`, `execution`, `result`) — suggested next ReAct phase after guardrail verdict
 
 ### Side Effects
 - Can send pause/abort signals to running tool execution

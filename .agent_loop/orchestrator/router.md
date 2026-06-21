@@ -7,7 +7,7 @@ Traffic-direction agent that determines which layer and which agent within the l
 
 ### Receives
 - `payload`: the message, command, or artifact to route
-- `payload_type`: enum (`user_request`, `safety_check`, `tool_call`, `observation`, `control_signal`, `mutual_validation`, `system_alert`)
+- `payload_type`: enum (`user_request`, `safety_check`, `tool_call`, `mcp_call`, `observation`, `control_signal`, `mutual_validation`, `system_alert`)
 - `origin_layer`: enum (`main_loop`, `user_input`, `safety_control`, `mutual_check`, `control`, `tooll_subagents`, `tools_*`, `result`)
 - `routing_policy`: enum (`direct`, `load_balanced`, `priority_queue`, `failover`)
 
@@ -24,7 +24,7 @@ Traffic-direction agent that determines which layer and which agent within the l
 ## Decision Flow
 
 1. **Classify payload** — inspect `payload_type` and schema to identify handling domain (read vs write vs safety vs validation).
-2. **Select primary layer** — map `payload_type` to default layer: `user_request` → `tooll_subagents/user/`; `safety_check` → `safety-control/`; `tool_call` → `tooll_subagents/execution/`; `observation` → `tooll_subagents/observability/`; `control_signal` → `control/`; `mutual_validation` → `mutual_check/`; `system_alert` → `control/resource_monitor.md` + `human_oversight.md`.
+2. **Select primary layer** — map `payload_type` to default layer: `user_request` → `tooll_subagents/user/`; `safety_check` → `safety-control/`; `tool_call` → `tooll_subagents/execution/`; `mcp_call` → `tooll_subagents/execution/tool_invocation.md` → `mcp_servers/gateway.py`; `observation` → `tooll_subagents/observability/`; `control_signal` → `control/`; `mutual_validation` → `mutual_check/`; `system_alert` → `control/resource_monitor.md` + `human_oversight.md`.
 3. **Select agent within layer** — use capability matrix and current agent health to choose specific agent (e.g., `read` tool call → `tools_read/read_file/`).
 4. **Apply routing policy** — `direct` → single hop; `load_balanced` → distribute across healthy replicas; `priority_queue` → jump queue for urgent; `failover` → route to fallback if primary fails health check.
 5. **Check health** — verify destination agent or layer is responsive and not throttled by `quota_manager.md` or `resource_monitor.md`.

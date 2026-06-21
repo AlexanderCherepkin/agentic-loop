@@ -15,7 +15,7 @@ Specialized safety agent that intercepts and evaluates system-level command stri
 - `verdict`: enum (`allow`, `rewrite`, `block`)
 - `safe_command`: string or null — rewritten command if `verdict=rewrite`
 - `block_reason`: string or null
-- `risk_flags`: list of triggered risk categories (`destructive`, `irreversible`, `network`, `privilege`, `data_exfil`)
+- `risk_flags`: list of triggered risk categories (`destructive`, `irreversible`, `network`, `privilege`, `data_exfil`, `browser_risk`)
 
 ### Side Effects
 - None (pure analysis; execution happens downstream in `tools_runcom`)
@@ -23,7 +23,7 @@ Specialized safety agent that intercepts and evaluates system-level command stri
 ## Decision Flow
 
 1. **Parse command tokens** — split `command_string` into executable and arguments; resolve aliases if possible.
-2. **Match against prohibited list** — check exact matches and regex patterns for dangerous commands (`rm -rf /`, `mkfs`, `dd if=/dev/zero`, `format`, `> /dev/sda`, recursive deletes without path validation).
+2. **Match against prohibited list** — check exact matches and regex patterns for dangerous commands (`rm -rf /`, `mkfs`, `dd if=/dev/zero`, `format`, `> /dev/sda`, recursive deletes without path validation). Also detect browser-hazardous URL schemes (`file://`, `javascript:`, `data:text/html`) in any command argument.
 3. **Match against allowed list** — if `allowed_commands` provided, verify every token is within allowed set.
 4. **Detect destructive flags** — identify flags implying force, recursive deletion on root, in-place overwrite without backup.
 5. **Assess scope violation** — check if command targets paths outside approved working directory (via `execution_context`).
@@ -39,4 +39,5 @@ Specialized safety agent that intercepts and evaluates system-level command stri
 | Command targets outside allowed scope | `verdict=block`, `block_reason="SCOPE_VIOLATION"` |
 | Command parser fails (ambiguous quoting) | `verdict=block`, `block_reason="UNPARSABLE_COMMAND"` |
 | Rewrite attempt produces different semantics | `verdict=block`, `block_reason="REWRITE_UNSAFE"` |
+| Browser-hazardous URL scheme in command argument | `verdict=block`, `block_reason="BROWSER_URL_RISK"`, `risk_flags` includes `browser_risk` |
 | Internal pattern database corrupted | Escalate to `mutual_check/audit_logger.md` and `control/policy_enforcer.md` |

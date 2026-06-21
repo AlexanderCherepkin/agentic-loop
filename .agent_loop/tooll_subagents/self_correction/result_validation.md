@@ -17,6 +17,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `gap_analysis`: list of unmet requirements or unexpected deviations with severity
 - `confidence`: float — certainty in validation verdict
 - `retry_recommended`: boolean — whether another iteration could succeed
+- `next_phase_hint`: enum (`self_correction`, `execution`, `planning`, `result`) — suggested next ReAct phase based on validation verdict
 
 ### Side Effects
 - Writes validation record to session memory for future reference

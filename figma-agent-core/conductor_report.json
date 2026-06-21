@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-06-20T21:03:25.232928+00:00",
+  "stages": {
+    "bootstrap": {
+      "success": true
+    },
+    "analyze": {
+      "success": true
+    },
+    "spec": {
+      "success": true
+    },
+    "components": {
+      "success": true,
+      "sections": [
+        {
+          "id": "662:809",
+          "name": "Title",
+          "output_name": "Title",
+          "success": true
+        },
+        {
+          "id": "662:810",
+          "name": "Description",
+          "output_name": "Description",
+          "success": true
+        }
+      ]
+    },
+    "assets": {
+      "success": true
+    }
+  },
+  "config": {
+    "all": true,
+    "only": null,
+    "node_id": "662:808",
+    "output_name": null,
+    "all_sections": true,
+    "force_refresh": false,
+    "api_depth": 2,
+    "skip_assets": false,
+    "spec_output": "spec.md",
+    "file": "figma_node.json",
+    "dry_run": true,
+    "verbose": false
+  },
+  "finished_at": "2026-06-20T21:03:25.234932+00:00",
+  "duration_seconds": 0.0
+}

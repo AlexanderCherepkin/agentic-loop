@@ -50,8 +50,12 @@ class RuntestMCPServer(MCPServer):
             "go": (r"_test\.go$", r"func (Test\w+)"),
         }
 
+        skip_dirs = {"node_modules", ".venv", "venv", "__pycache__", ".git", "dist", "build", ".tox", ".pytest_cache"}
+
         for filepath in search_path.rglob("*"):
             if not filepath.is_file():
+                continue
+            if any(part in skip_dirs for part in filepath.parts):
                 continue
             fname = str(filepath)
             for lang, (file_pattern, func_pattern) in test_patterns.items():

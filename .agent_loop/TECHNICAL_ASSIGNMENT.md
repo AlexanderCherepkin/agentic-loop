@@ -3,9 +3,9 @@
 ## 1. Общие сведения
 
 **Название системы:** Agentic Loop — многоагентная AI-система с иерархической архитектурой «безопасность прежде всего».  
-**Цель:** Создать расширяемую систему оркестрации из 156 специализированных агентов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
+**Цель:** Создать расширяемую систему оркестрации из 169 специализированных агентов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
 **Язык реализации:** Markdown-спецификации (алгоритмические шаблоны агентов).  
-**Масштаб:** 156 агентов, 6 слоёв, 10 категорий инструментов.
+**Масштаб:** 169 агентов, 6 слоёв, 11 категорий инструментов + Figma-to-code MCP сервер.
 
 ---
 
@@ -13,8 +13,9 @@
 
 ### 2.1 Головной цикл (main_loop)
 - Система должна иметь единую точку входа — агент `main_loop.md`.
-- Головной цикл реализует полный цикл ReAct: инициализация → приём запроса → предварительная проверка безопасности → планирование → цикл выполнения (план/выполнение/наблюдение/валидация/коррекция) → синтез результата → пост-проверка безопасности → финальная взаимная проверка → доставка → очистка.
+- Головной цикл реализует полный цикл ReAct: инициализация → приём запроса → предварительная проверка безопасности → ветка design_intake (для дизайн-проектов) → планирование → цикл выполнения (план/выполнение/наблюдение/валидация/коррекция) → синтез результата → пост-проверка безопасности → финальная взаимная проверка → доставка → очистка.
 - Цикл должен поддерживать бюджет итераций и автоматическое завершение при исчерпании бюджета или при достижении цели.
+- При обнаружении дизайн-проекта (`request_type=design_project`) головной цикл маршрутизирует запрос в `figma_design_analyst.md` и `design_to_code_planner.md`, после чего либо продолжает обычное планирование (для технического задания), либо сразу передаёт результат в слой `result/` (для полного кода).
 
 ### 2.2 Оркестратор (orchestrator) — 6 агентов
 - **router** — маршрутизация запросов между слоями на основе типа payload, слоя-источника и политики маршрутизации (direct/load_balanced/priority_queue/failover).
@@ -56,17 +57,17 @@
 - **scope_manager** — предотвращение scope creep; отслеживание авторизованных ресурсов/тем/инструментов.
 - **input_aggregation** — консолидация сигналов безопасности, политических решений и состояний ресурсов в единый control directive.
 
-### 2.6 Подагенты цикла ReAct (tooll_subagents) — 23 агента
+### 2.6 Подагенты цикла ReAct (tooll_subagents) — 26 агентов
 Цикл разбит на 6 фаз:
-1. **user** (3): request — парсинг и классификация; context — сбор контекста; limitations — каталог ограничений.
-2. **planning** (4): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение.
+1. **user** (4): request — парсинг и классификация; context — сбор контекста; limitations — каталог ограничений; design_intake — распознавание дизайн-проектов (Figma URL, node ID, локальный JSON, дизайн-бриф) и формирование `design_descriptor`.
+2. **planning** (6): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; design_to_code_planner — принятие решения о выдаче технического задания или готового кода.
 3. **execution** (4): tool_invocation — диспетчеризация; safety_guardrails — live runtime safety; human_approval — тактическое одобрение; action_logging — неизменяемый журнал выполнения.
 4. **observability** (4): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти.
 5. **self_correction** (4): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку.
 6. **result** (4): solution — финальное решение; modified_files — инвентарь изменений; action_report — отчёт о действиях; summary_recommendations — рекомендации.
 
-### 2.7 Инструментальные агенты (tools_*) — 100 агентов
-10 категорий по 10 агентов + cross-cutting optimizer на категорию:
+### 2.7 Инструментальные агенты (tools_*) — 110 агентов
+11 категорий по 10 агентов + cross-cutting optimizer на категорию. Кроме того, `mcp_servers/figma_server.py` предоставляет MCP-обёртку вокруг `figma-agent-core/` для приёма дизайн-проектов:
 - **tools_read** — read_file pipeline (linear): path_resolver, permission_agent, encoding_agent, chunking_agent, parser_agent, content_extractor, integrity_checker, cache_agent, result_formatter, read_optimizer.
 - **tools_search** — search_code pipeline (diamond): scope_detector, permission_agent, indexer_agent, regex_searcher, semantic_searcher, relevance_scorer, deduplicator, snippet_builder, diff_generator, search_optimizer.
 - **tools_replace** — replace_in_file pipeline (safety-gated): pattern_matcher, change_validator, conflict_resolver, backup_agent, diff_generator, verify_agent, write_executor, rollback_agent, result_ranker, edit_optimizer.
@@ -77,6 +78,21 @@
 - **tools_database** — database_query pipeline (query-lifecycle): query_builder, schema_analyzer, connection_manager, query_executor, result_mapper, transaction_manager, cache_manager, error_analyzer, migration_helper, db_optimizer.
 - **tools_web** — web_request pipeline (request-lifecycle): request_builder, auth_manager, network_checker, rate_limiter, response_parser, content_extractor, caching_agent, retry_manager, error_handler, web_optimizer.
 - **tools_memory** — memory_store pipeline (store-lifecycle): memory_writer, memory_reader, context_compressor, index_manager, eviction_policy, summarizer, embedding_agent, recall_optimizer, consistency_checker, memory_optimizer.
+- **tools_browser** — headless_automation pipeline (browser-lifecycle): session_manager, navigation_engine, screenshot_agent, dom_extractor, selector_resolver, interaction_agent, network_interceptor, cookie_storage_agent, captcha_challenge_agent, error_handler, browser_optimizer.
+- **figma (MCP)** — Figma-to-code pipeline: figma_bootstrap, figma_analyze, figma_generate_spec, figma_generate_component, figma_download_assets, figma_run_pipeline. Реализован в `mcp_servers/figma_server.py`, лениво загружается и работает с `figma-agent-core/`.
+
+### 2.8 MCP gateway (lazy loading)
+- `mcp_servers/gateway.py` exposes category metadata to the planner without constructing server instances.
+- `mcp_servers/registry.py` supports lazy server factories; servers materialize only when a tool is invoked.
+- `mcp_servers/bootstrap.py` defaults to lazy mode; `--eager` is used for `--test`/`--serve`.
+- `runtime/engine/llm_engine.py` provides `LLMConfig.mcp_enabled` to include/exclude MCP categories from the planner context.
+- `mcp_servers/browser_server.py` provides optional Playwright-based dynamic page automation; it is lazy-loaded and degrades gracefully if Playwright is not installed.
+- `runtime/requirements-browser.txt` lists the optional Playwright dependency so the core `runtime/requirements.txt` remains lightweight; install with `pip install -r runtime/requirements.txt -r runtime/requirements-browser.txt && playwright install`.
+
+### 2.9 Project rules context
+- `project_rules.md` in the workspace root is a lightweight project-level context artifact.
+- `tooll_subagents/user/context.md` loads it at session start; `tooll_subagents/planning/tool_plan_selection.md` uses it to rank tools; `control/policy_enforcer.md` uses it as a fallback policy source.
+- Updates to `project_rules.md` require explicit human approval via `tooll_subagents/execution/human_approval.md` (`action_type=project_rules_update`).
 
 ---
 
@@ -113,8 +129,11 @@ User Request
 ### 3.4 Декомпозиция ReAct
 Каждая фаза цикла ReAct разбита на атомарные под-шаги, каждый со своим агентом. Фаза не может начаться до завершения предыдущей (инварианты pipeline_coordinator).
 
-### 3.5 Инструменты как микросервисы
-Каждая категория `tools_*` — независимый pipeline из 10 агентов с оптимизатором. Pipeline типы: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory).
+### 3.5 Условные переходы (Conditional Edges)
+Переходы между фазами ReAct управляются runtime-конструктом `PhaseTransitionManager` в `runtime/engine/pipeline_runner.py`. Менеджер читает enum-выходы агентов (`cost_risk_assessment.recommendation`, `tool_invocation.next_action`, `safety_guardrails.recommendation`, `result_validation.validation_status`, `recursion_or_termination.decision`) и выбирает следующую фазу. При отсутствии специфических условий используется default sequence: user → planning → execution → observability → self_correction → result. Safety-before-execution инвариант сохраняется: любой safety abort или escalation направляется напрямую в `result`, минуя `execution`.
+
+### 3.6 Инструменты как микросервисы
+Каждая категория `tools_*` — независимый pipeline из 10 агентов с оптимизатором. Pipeline типы: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory), headless-automation (browser).
 
 ---
 
@@ -253,13 +272,13 @@ User Request
 
 ## 10. Критерии приёмки
 
-- [ ] Все 156 агентов реализованы по Algorithmic template.
+- [ ] Все 166 агентов реализованы по Algorithmic template.
 - [ ] 0 заглушек (stub'ов).
-- [ ] Все 156 агентов связаны в единый граф ссылок (0 изолированных).
+- [ ] Все 166 агентов связаны в единый граф ссылок (0 изолированных).
 - [ ] 0 битых ссылок (после фильтрации документационных целей).
 - [ ] Трёхконтурная безопасность соблюдена: safety-control → mutual_check → control.
-- [ ] ReAct цикл декомпозирован на 23 подагента в 6 фазах.
-- [ ] 10 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
+- [ ] ReAct цикл декомпозирован на 23 подагента в 6 фазах с условными переходами (Conditional Edges).
+- [ ] 11 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
 - [ ] Скрипт валидации проходит без ошибок.
 - [ ] ARCHITECTURE.md и CLAUDE.md отражают текущее состояние системы.
 - [ ] Скрипт консистентности (`validate_consistency.js`) показывает 0 errors (warnings допустимы).
@@ -268,13 +287,14 @@ User Request
 
 ## 11. Статус реализации
 
-**Статус: ВЫПОЛНЕНО** (2026-06-10)
+**Статус: ВЫПОЛНЕНО** (2026-06-18)
 
-- 156/156 агентов реализованы.
+- 166/166 агентов реализованы.
 - 0 stubs.
 - 0 изолированных агентов.
 - 0 битых ссылок (валидатор `validate_cross_references.js` пройден).
-- 0 ошибок консистентности (валидатор `validate_consistency.js` пройден: 0 errors, 37 warnings — циклы и safety-refs как warnings).
+- 0 ошибок консистентности (валидатор `validate_consistency.js` пройден: 0 errors, warnings допустимы).
 - Все агенты следуют Algorithmic template (Role, Contract, Decision Flow, Failure Modes).
+- Добавлены `tools_browser/headless_automation` (Playwright) и Conditional Edges (PhaseTransitionManager).
 - Архитектурная документация актуальна.
 - Валидационные скрипты созданы и проверены.

@@ -46,7 +46,7 @@ class TestCircuitBreaker(unittest.TestCase):
         cb.record_failure()
         self.assertEqual(cb.state, CircuitState.CLOSED)
 
-    async def test_call_wrapper(self):
+    def test_call_wrapper(self):
         cb = CircuitBreaker(config=CircuitBreakerConfig(failure_threshold=2))
 
         async def good():
@@ -55,16 +55,19 @@ class TestCircuitBreaker(unittest.TestCase):
         async def bad():
             raise RuntimeError("fail")
 
-        self.assertEqual(await cb.call(good), "ok")
-        with self.assertRaises(RuntimeError):
-            await cb.call(bad)
-        with self.assertRaises(RuntimeError):
-            await cb.call(bad)
-        with self.assertRaises(CircuitBreakerOpenError):
-            await cb.call(good)
+        async def _run():
+            self.assertEqual(await cb.call(good), "ok")
+            with self.assertRaises(RuntimeError):
+                await cb.call(bad)
+            with self.assertRaises(RuntimeError):
+                await cb.call(bad)
+            with self.assertRaises(CircuitBreakerOpenError):
+                await cb.call(good)
+
+        asyncio.run(_run())
 
     def test_async_wrapper(self):
-        asyncio.run(self.test_call_wrapper())
+        self.test_call_wrapper()
 
 
 class TestWorkerPoolBackpressure(unittest.TestCase):

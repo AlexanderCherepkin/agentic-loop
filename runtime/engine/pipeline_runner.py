@@ -18,6 +18,7 @@ from .state_manager import StateManager, OperationStatus
 # Optional MCP integration
 try:
     from mcp_servers.bootstrap import create_registry
+    from mcp_servers.gateway import MCPGateway
     from mcp_servers.registry import MCPRegistry as _MCPRegistry
     HAS_MCP = True
 except ImportError:
@@ -66,6 +67,200 @@ class PipelineStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     STALLED = "stalled"
+
+
+@dataclass
+class PhaseTransition:
+    next_phase: str
+    reason: str
+    safety_override: TerminationStatus | None = None
+
+
+class PhaseTransitionManager:
+    """Routes the ReAct loop between phases based on agent outputs.
+
+    Default sequence: planning → execution → observability → self_correction → result.
+    Agent outputs can override the next phase (e.g., skip replanning, escalate to result).
+    """
+
+    DEFAULT_SEQUENCE = ["planning", "execution", "observability", "self_correction", "result"]
+
+    def __init__(self, max_iterations: int = 5):
+        self.max_iterations = max_iterations
+        self._phase_history: list[str] = []
+
+    def next_phase(self, current_phase: str, state: dict[str, Any], iteration: int) -> PhaseTransition:
+        """Decide the next ReAct phase and optional safety override."""
+        self._phase_history.append(current_phase)
+
+        # Cycle detection: if a phase repeats too often, force termination
+        if self._phase_history.count(current_phase) > 3:
+            return PhaseTransition(
+                next_phase="result",
+                reason=f"Phase '{current_phase}' visited 4 times — possible loop",
+                safety_override=TerminationStatus.PARTIAL,
+            )
+
+        if current_phase == "planning":
+            return self._from_planning(state)
+        if current_phase == "execution":
+            return self._from_execution(state)
+        if current_phase == "observability":
+            return PhaseTransition(next_phase="self_correction", reason="Observation complete; proceed to validation")
+        if current_phase == "self_correction":
+            return self._from_self_correction(state, iteration)
+
+        return PhaseTransition(next_phase="result", reason="Unknown phase — terminating safely")
+
+    def _from_planning(self, state: dict[str, Any]) -> PhaseTransition:
+        recommendation = self._get(state, "cost_risk_assessment.recommendation", "cost_risk_assessment", "recommendation")
+        if recommendation == "escalate":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Cost/risk assessment recommends escalation",
+                safety_override=TerminationStatus.ESCALATED_HUMAN,
+            )
+        if recommendation == "reduce_scope":
+            return PhaseTransition(next_phase="planning", reason="Scope reduced; replan before execution")
+        hint = self._get(state, "cost_risk_assessment.next_phase_hint")
+        if hint in ("execution", "planning", "result"):
+            return PhaseTransition(next_phase=hint, reason="Explicit next_phase_hint from cost_risk_assessment")
+        return PhaseTransition(next_phase="execution", reason="Planning complete; proceed to execution")
+
+    def _from_execution(self, state: dict[str, Any]) -> PhaseTransition:
+        next_action = self._get(state, "execution.next_action", "tool_invocation", "next_action")
+        if next_action == "abort":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Tool invocation aborted",
+                safety_override=TerminationStatus.FAILURE,
+            )
+        if next_action == "escalate":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Tool invocation requires escalation",
+                safety_override=TerminationStatus.ESCALATED_HUMAN,
+            )
+
+        guardrail_status = self._get(state, "execution.guardrail_status", "safety_guardrails", "guardrail_status")
+        if guardrail_status == "aborted":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Safety guardrails aborted execution",
+                safety_override=TerminationStatus.FAILURE,
+            )
+
+        recommendation = self._get(state, "execution.recommendation", "safety_guardrails", "recommendation")
+        if recommendation == "escalate_to_human":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Safety guardrails requested human escalation",
+                safety_override=TerminationStatus.ESCALATED_HUMAN,
+            )
+        if recommendation == "resume_with_limits":
+            return PhaseTransition(next_phase="execution", reason="Resume execution with adjusted limits")
+
+        hint = self._get(state, "execution.next_phase_hint")
+        if hint in ("observability", "execution", "result"):
+            return PhaseTransition(next_phase=hint, reason="Explicit next_phase_hint from execution")
+        return PhaseTransition(next_phase="observability", reason="Execution complete; proceed to observation")
+
+    def _from_self_correction(self, state: dict[str, Any], iteration: int) -> PhaseTransition:
+        validation_status = self._get(state, "validation.validation_status", "result_validation", "validation_status")
+        retry_recommended = self._get(state, "validation.retry_recommended", "result_validation", "retry_recommended")
+        decision = self._get(state, "validation.decision", "recursion_or_termination", "decision")
+
+        # First honor the explicit recursion/termination decision if present
+        if decision == "terminate_success":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Termination decision: success",
+                safety_override=TerminationStatus.SUCCESS,
+            )
+        if decision == "terminate_failure":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Termination decision: failure",
+                safety_override=TerminationStatus.FAILURE,
+            )
+        if decision == "terminate_partial":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Termination decision: partial",
+                safety_override=TerminationStatus.PARTIAL,
+            )
+        if decision == "escalate_human":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Termination decision: escalate to human",
+                safety_override=TerminationStatus.ESCALATED_HUMAN,
+            )
+        if decision == "recurse":
+            adjusted_plan = state.get("adjusted_plan")
+            if adjusted_plan:
+                return PhaseTransition(next_phase="execution", reason="Recurse with adjusted plan")
+            return PhaseTransition(next_phase="planning", reason="Recurse without adjusted plan — replan")
+
+        # Then evaluate validation status
+        if validation_status == "complete":
+            return PhaseTransition(
+                next_phase="result",
+                reason="Validation complete",
+                safety_override=TerminationStatus.SUCCESS,
+            )
+        if validation_status in ("partial", "failed") and retry_recommended:
+            return PhaseTransition(next_phase="planning", reason=f"Validation={validation_status}; retry recommended")
+        if validation_status == "inconclusive":
+            if iteration < self.max_iterations / 2:
+                return PhaseTransition(next_phase="execution", reason="Inconclusive early — gather more data")
+            return PhaseTransition(
+                next_phase="result",
+                reason="Inconclusive late — escalate",
+                safety_override=TerminationStatus.ESCALATED_HUMAN,
+            )
+
+        hint = self._get(state, "validation.next_phase_hint", "result_validation", "next_phase_hint")
+        if hint in ("self_correction", "execution", "planning", "result"):
+            return PhaseTransition(next_phase=hint, reason="Explicit next_phase_hint from validation")
+
+        # Default: if we still have budget, try one more execution; otherwise result partial
+        if iteration < self.max_iterations:
+            return PhaseTransition(next_phase="execution", reason="Default continue to execution")
+        return PhaseTransition(
+            next_phase="result",
+            reason="Max iterations reached",
+            safety_override=TerminationStatus.PARTIAL,
+        )
+
+    @staticmethod
+    def _get(state: dict[str, Any], dotted_key: str, *fallback_keys: str) -> Any:
+        """Resolve a value from the state dict.
+
+        Tries the dotted path first, then treats fallback_keys as an alternate
+        dotted path under each common prefix (e.g. ``tool_invocation.next_action``).
+        """
+
+        def _resolve(obj: Any, path: list[str]) -> Any:
+            for k in path:
+                if isinstance(obj, dict):
+                    obj = obj.get(k)
+                else:
+                    return None
+            return obj
+
+        value = _resolve(state, dotted_key.split("."))
+        if value is not None:
+            return value
+
+        if fallback_keys:
+            fallback_path = ".".join(str(k) for k in fallback_keys).split(".")
+            for prefix in ["", "execution", "validation"]:
+                root = state.get(prefix, {}) if prefix else state
+                value = _resolve(root, fallback_path)
+                if value is not None:
+                    return value
+
+        return None
 
 
 @dataclass
@@ -144,21 +339,25 @@ class PipelineRunner:
     ]
 
     def __init__(self, loader: AgentLoader, llm: LLMEngine, bus: MessageBus, state: StateManager,
-                 workspace_root: str = ".", max_workers: int = 4):
+                 workspace_root: str = ".", max_workers: int = 4, max_iterations: int = 5):
         self.loader = loader
         self.llm = llm
         self.bus = bus
         self.state = state
         self.workspace = workspace_root
+        self._max_iterations = max_iterations
         self._agent_cache: dict[str, AgentSpec] = {}
+        self._project_rules = self._load_project_rules()
         self._mcp_registry = None
         self._worker_pool = None
         self._isolator = None
         self._compressor = None
 
+        self._mcp_gateway = None
         if HAS_MCP:
             try:
-                self._mcp_registry = create_registry(workspace_root)
+                registry = create_registry(workspace_root, eager=False)
+                self._mcp_gateway = MCPGateway(registry)
             except Exception:
                 pass
 
@@ -179,9 +378,39 @@ class PipelineRunner:
             except Exception:
                 pass
 
+    def _load_project_rules(self) -> dict[str, Any] | None:
+        """Load lightweight project rules from workspace root."""
+        path = Path(self.workspace) / "project_rules.md"
+        if not path.exists():
+            return None
+        try:
+            text = path.read_text(encoding="utf-8")
+            return {
+                "source": str(path),
+                "content_hash": hash(text) & 0xFFFFFFFF,
+                "sections": self._parse_project_rules(text),
+            }
+        except Exception:
+            return None
+
+    @staticmethod
+    def _parse_project_rules(text: str) -> dict[str, list[str]]:
+        """Parse project_rules.md into sections."""
+        sections: dict[str, list[str]] = {}
+        current: str | None = None
+        for line in text.splitlines():
+            if line.startswith("# "):
+                continue
+            if line.startswith("## "):
+                current = line[3:].strip()
+                sections[current] = []
+            elif current and line.strip():
+                sections[current].append(line.strip())
+        return sections
+
     @property
     def mcp_enabled(self) -> bool:
-        return self._mcp_registry is not None
+        return self._mcp_gateway is not None and self.llm.config.mcp_enabled
 
     @property
     def worker_pool_enabled(self) -> bool:
@@ -189,11 +418,17 @@ class PipelineRunner:
 
     async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations."""
-        if not self._mcp_registry:
+        if not self._mcp_gateway:
             return {"error": "MCP not available", "is_error": True}
 
-        result = await self._mcp_registry.call_tool(tool_name, arguments)
+        result = await self._mcp_gateway.execute(tool_name, arguments)
         return {"tool": tool_name, "result": result, "mcp_executed": True}
+
+    def get_mcp_categories(self) -> list[str]:
+        """Return MCP category metadata without loading servers."""
+        if not self._mcp_gateway:
+            return []
+        return self._mcp_gateway.categories()
 
     # Priority mapping: lower number = higher priority (safety first)
     _TASK_PRIORITIES: dict[str, int] = {
@@ -210,6 +445,7 @@ class PipelineRunner:
         "terminal": 7,
         "database": 7,
         "web": 7,
+        "browser": 7,
         "manangr": 8,
         "self_correction": 3,
     }
@@ -268,6 +504,7 @@ class PipelineRunner:
 
     async def run(self, user_input: str, session_id: str | None = None,
                   max_iterations: int = 5) -> PipelineResult:
+        self._max_iterations = max_iterations
         session_id = session_id or uuid.uuid4().hex
         t_start = time.perf_counter()
         metrics = SessionMetrics(session_id=session_id)
@@ -328,35 +565,66 @@ class PipelineRunner:
             plan = await self._run_planning(augmented_input, session_id, trace, metrics)
             await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
 
-            # Phase 3: ReAct loop
+            # Phase 3: ReAct loop with conditional edges
+            transition_manager = PhaseTransitionManager(max_iterations=max_iterations)
+            state: dict[str, Any] = {
+                "plan": plan,
+                "user_input": augmented_input,
+                "session_id": session_id,
+                "iteration": 0,
+            }
+            current_phase = "execution"
             result_text = ""
-            for iteration in range(1, max_iterations + 1):
-                metrics.iterations = iteration
 
-                # Execute
-                exec_result = await self._run_execution(plan, augmented_input, session_id, iteration, trace, metrics)
-                if exec_result is None:
+            while current_phase != "result":
+                # Handle replanning requests from conditional edges
+                if current_phase == "planning":
+                    await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
+                    plan = await self._run_planning(augmented_input, session_id, trace, metrics)
+                    state["plan"] = plan
+                    await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
+                    # After replanning, always move to execution unless overridden
+                    current_phase = "execution"
                     continue
 
-                # Observe
-                observation = await self._run_observation(exec_result, session_id, iteration, trace, metrics)
+                state["iteration"] += 1
+                metrics.iterations = state["iteration"]
 
-                # Validate
-                validation = await self._run_validation(observation, augmented_input, session_id, iteration, trace, metrics)
+                if state["iteration"] > max_iterations:
+                    return await self._finalize_and_return(
+                        user_input, result_text or "Max iterations reached.",
+                        TerminationStatus.PARTIAL, metrics, audit_anchor, trace, session_id,
+                    )
 
-                # Decide: loop or terminate
-                decision = await self._run_termination_decision(validation, session_id, iteration, trace, metrics)
+                await self._publish_progress("phase.start", {"phase": current_phase, "session_id": session_id})
+                await self._run_phase(current_phase, state, trace, metrics)
+                await self._publish_progress("phase.end", {"phase": current_phase, "session_id": session_id})
+
+                transition = transition_manager.next_phase(current_phase, state, state["iteration"])
+
+                # Safety override: hard-terminate to result with a specific status
+                if transition.safety_override:
+                    return await self._finalize_and_return(
+                        user_input,
+                        state.get("result", transition.reason),
+                        transition.safety_override,
+                        metrics, audit_anchor, trace, session_id,
+                    )
+
+                # Preserve result text if we are about to finish successfully
+                if transition.next_phase == "result":
+                    result_text = state.get("result", state.get("observation", {}).get("result", transition.reason))
 
                 # Context Compression: feed new traces to compressor
                 if self._compressor:
                     while self._compressor_next_idx < len(trace):
                         self._compressor.add_trace(trace[self._compressor_next_idx].__dict__)
                         self._compressor_next_idx += 1
-                    if self._compressor.should_compress(iteration):
+                    if self._compressor.should_compress(state["iteration"]):
                         summary = await self._compressor.compress()
                         if summary:
                             trace.append(IterationTrace(
-                                iteration=iteration,
+                                iteration=state["iteration"],
                                 phase="context_compression",
                                 agent_path="tools_memory/memory_store/context_compressor.md",
                                 inputs={"original_count": summary.original_count},
@@ -370,32 +638,12 @@ class PipelineRunner:
                                 success=True,
                             ))
                             await self._publish_progress("context.compression", {
-                                "iteration": iteration,
+                                "iteration": state["iteration"],
                                 "tokens_saved": self._compressor.stats.get("total_tokens_saved", 0),
                                 "session_id": session_id,
                             })
 
-                if decision == "terminate_success":
-                    result_text = validation.get("result", observation.get("result", str(observation)))
-                    break
-                elif decision == "terminate_failure":
-                    return await self._finalize_and_return(
-                        user_input, str(observation), TerminationStatus.FAILURE,
-                        metrics, audit_anchor, trace, session_id,
-                    )
-                elif decision == "escalate_human":
-                    return await self._finalize_and_return(
-                        user_input, str(observation), TerminationStatus.ESCALATED_HUMAN,
-                        metrics, audit_anchor, trace, session_id,
-                    )
-                elif decision == "recurse":
-                    plan = observation.get("adjusted_plan", plan)
-                    continue
-            else:
-                return await self._finalize_and_return(
-                    user_input, result_text or "Max iterations reached.",
-                    TerminationStatus.PARTIAL, metrics, audit_anchor, trace, session_id,
-                )
+                current_phase = transition.next_phase
 
             # Phase 4: Safety post-check
             await self._run_safety_post_check(result_text, session_id, trace, metrics)
@@ -478,7 +726,11 @@ class PipelineRunner:
 
     async def _run_safety_pre_check(self, user_input: str, session_id: str,
                                     trace: list[IterationTrace], metrics: SessionMetrics) -> bool:
-        context: dict[str, Any] = {"raw_user_input": user_input, "session_id": session_id}
+        context: dict[str, Any] = {
+            "raw_user_input": user_input,
+            "session_id": session_id,
+            "project_rules": self._project_rules,
+        }
 
         for agent_path in self.SAFETY_AGENTS:
             result = await self._invoke_agent(agent_path, context, trace, "safety_pre_check", metrics)
@@ -493,64 +745,101 @@ class PipelineRunner:
 
     async def _run_planning(self, user_input: str, session_id: str,
                             trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any]:
-        plan = {"user_input": user_input, "session_id": session_id}
+        plan = {
+            "user_input": user_input,
+            "session_id": session_id,
+            "project_rules": self._project_rules,
+            "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
+        }
         for agent_path in self.FLOW_SEQUENCE:
             result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)
             if result and result.parsed:
                 plan.update(result.parsed)
         return plan
 
-    async def _run_execution(self, plan: dict[str, Any], user_input: str, session_id: str,
-                             iteration: int, trace: list[IterationTrace],
-                             metrics: SessionMetrics) -> dict[str, Any] | None:
+
+    async def _run_phase(self, phase: str, state: dict[str, Any],
+                         trace: list[IterationTrace], metrics: SessionMetrics) -> None:
+        """Execute one ReAct phase and store results in the shared state."""
+        if phase == "execution":
+            await self._run_execution(state, trace, metrics)
+        elif phase == "observability":
+            await self._run_observation(state, trace, metrics)
+        elif phase == "self_correction":
+            await self._run_validation(state, trace, metrics)
+            await self._run_termination_decision(state, trace, metrics)
+
+    async def _run_execution(self, state: dict[str, Any],
+                             trace: list[IterationTrace],
+                             metrics: SessionMetrics) -> None:
         exec_agents = [
             "tooll_subagents/execution/tool_invocation.md",
             "tooll_subagents/execution/safety_guardrails.md",
         ]
-        result: dict[str, Any] = {"plan": plan, "user_input": user_input, "iteration": iteration}
+        result: dict[str, Any] = {
+            "plan": state.get("plan"),
+            "user_input": state.get("user_input"),
+            "iteration": state.get("iteration"),
+            "session_id": state.get("session_id"),
+        }
         for agent_path in exec_agents:
             llm_result = await self._invoke_agent(agent_path, result, trace, "execution", metrics)
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
-        return result
+        state["execution"] = result
+        if "result" in result:
+            state["result"] = result["result"]
 
-    async def _run_observation(self, exec_result: dict[str, Any], session_id: str,
-                               iteration: int, trace: list[IterationTrace],
-                               metrics: SessionMetrics) -> dict[str, Any]:
+    async def _run_observation(self, state: dict[str, Any],
+                               trace: list[IterationTrace],
+                               metrics: SessionMetrics) -> None:
         obs_agents = [
             "tooll_subagents/observability/environment_result.md",
             "tooll_subagents/observability/runtime_output.md",
         ]
+        exec_result = state.get("execution", {})
         result: dict[str, Any] = dict(exec_result)
         for agent_path in obs_agents:
             llm_result = await self._invoke_agent(agent_path, result, trace, "observation", metrics)
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
-        return result
+        state["observation"] = result
+        if "result" in result:
+            state["result"] = result["result"]
 
-    async def _run_validation(self, observation: dict[str, Any], user_input: str,
-                              session_id: str, iteration: int,
-                              trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any]:
+    async def _run_validation(self, state: dict[str, Any],
+                              trace: list[IterationTrace], metrics: SessionMetrics) -> None:
+        observation = state.get("observation", {})
         result = await self._invoke_agent(
             "tooll_subagents/self_correction/result_validation.md",
-            {"observation": observation, "original_request": user_input},
+            {"observation": observation, "original_request": state.get("user_input")},
             trace, "validation", metrics,
         )
+        validation: dict[str, Any] = dict(observation)
         if result and result.parsed:
-            return {**observation, **result.parsed}
-        return observation
+            validation.update(result.parsed)
+        state["validation"] = validation
+        if "result" in validation:
+            state["result"] = validation["result"]
 
-    async def _run_termination_decision(self, validation: dict[str, Any], session_id: str,
-                                        iteration: int, trace: list[IterationTrace],
-                                        metrics: SessionMetrics) -> str:
+    async def _run_termination_decision(self, state: dict[str, Any],
+                                        trace: list[IterationTrace],
+                                        metrics: SessionMetrics) -> None:
+        validation = state.get("validation", {})
         result = await self._invoke_agent(
             "tooll_subagents/self_correction/recursion_or_termination.md",
-            {"validation": validation, "iteration": iteration, "max_iterations": 5},
+            {"validation": validation, "iteration": state.get("iteration", 1), "max_iterations": self._max_iterations},
             trace, "self_correction", metrics,
         )
         if result and result.parsed:
-            return result.parsed.get("decision", result.parsed.get("next_action", "terminate_success"))
-        return "terminate_success"
+            validation["decision"] = result.parsed.get("decision", result.parsed.get("next_action", "terminate_success"))
+            if "next_phase_hint" in result.parsed:
+                validation["next_phase_hint"] = result.parsed["next_phase_hint"]
+            if "adjusted_plan" in result.parsed:
+                state["adjusted_plan"] = result.parsed["adjusted_plan"]
+        else:
+            validation["decision"] = "terminate_success"
+        state["validation"] = validation
 
     async def _run_safety_post_check(self, result_text: str, session_id: str,
                                      trace: list[IterationTrace], metrics: SessionMetrics):

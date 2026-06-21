@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MCP Bootstrap — wires all 10 MCP servers into the registry and connects them to the runtime.
+MCP Bootstrap — wires all 11 MCP servers into the registry and connects them to the runtime.
 
 Usage:
     python -m mcp_servers.bootstrap           # Register all servers, print summary
@@ -27,40 +27,85 @@ from .manangr_server import ManangrMCPServer
 from .database_server import DatabaseMCPServer
 from .web_server import WebMCPServer
 from .memory_server import MemoryMCPServer
+from .browser_server import BrowserMCPServer
+from .figma_server import FigmaMCPServer
 
 
-def create_registry(workspace_root: str = ".") -> MCPRegistry:
-    """Create and populate the MCP registry with all 10 servers."""
+def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
+    """Construct a single MCP server and return it with its tool list."""
+    constructors = {
+        "tools_read": ReadMCPServer,
+        "tools_search": SearchMCPServer,
+        "tools_replace": ReplaceMCPServer,
+        "tools_runcom": RuncomMCPServer,
+        "tools_runtest": RuntestMCPServer,
+        "tools_terminal": TerminalMCPServer,
+        "tools_manangr": ManangrMCPServer,
+        "tools_database": DatabaseMCPServer,
+        "tools_web": WebMCPServer,
+        "tools_memory": MemoryMCPServer,
+        "tools_browser": BrowserMCPServer,
+        "figma": FigmaMCPServer,
+    }
+    cls = constructors[category]
+    server = cls(str(root))
+    if category == "tools_memory":
+        server.register_all()
+    return server, server.get_tools_list()
+
+
+def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
+    """Create and populate the MCP registry with all 11 servers.
+
+    Args:
+        workspace_root: project root path.
+        eager: if True, construct all servers immediately (legacy behavior for --test/--serve).
+    """
     registry = MCPRegistry()
     root = Path(workspace_root).resolve()
 
-    servers = [
-        ("tools_read", ReadMCPServer(str(root)), "Read file pipeline — 9 tools"),
-        ("tools_search", SearchMCPServer(str(root)), "Search code pipeline — 8 tools"),
-        ("tools_replace", ReplaceMCPServer(str(root)), "Replace in file pipeline — 10 tools"),
-        ("tools_runcom", RuncomMCPServer(str(root)), "Run command pipeline — 9 tools"),
-        ("tools_runtest", RuntestMCPServer(str(root)), "Run tests pipeline — 8 tools"),
-        ("tools_terminal", TerminalMCPServer(str(root)), "Terminal I/O pipeline — 9 tools"),
-        ("tools_manangr", ManangrMCPServer(str(root)), "Project management pipeline — 8 tools"),
-        ("tools_database", DatabaseMCPServer(str(root)), "Database query pipeline — 11 tools"),
-        ("tools_web", WebMCPServer(str(root)), "Web request pipeline — 10 tools"),
-        ("tools_memory", MemoryMCPServer(str(root)), "Memory store pipeline — 11 tools"),
-    ]
+    descriptions = {
+        "tools_read": "Read file pipeline — 9 tools",
+        "tools_search": "Search code pipeline — 8 tools",
+        "tools_replace": "Replace in file pipeline — 10 tools",
+        "tools_runcom": "Run command pipeline — 9 tools",
+        "tools_runtest": "Run tests pipeline — 8 tools",
+        "tools_terminal": "Terminal I/O pipeline — 9 tools",
+        "tools_manangr": "Project management pipeline — 8 tools",
+        "tools_database": "Database query pipeline — 11 tools",
+        "tools_web": "Web request pipeline — 10 tools",
+        "tools_memory": "Memory store pipeline — 11 tools",
+        "tools_browser": "Headless browser pipeline — 10 tools",
+        "figma": "Figma-to-code pipeline — 6 tools",
+    }
 
-    for category, server, desc in servers:
-        tools = server.get_tools_list()
-        # Ensure memory server has its tools registered
-        if category == "tools_memory":
-            server.register_all()
-        tools = server.get_tools_list()
-        info = ServerInfo(
-            name=desc,
-            category=category,
-            agent_count=len(tools),
-            server=server,
-            tools=[t["name"] for t in tools],
-        )
-        registry.register(info)
+    for category in descriptions:
+        if eager:
+            server, tools = _build_server(category, root, eager=True)
+            registry.register(ServerInfo(
+                name=descriptions[category],
+                category=category,
+                agent_count=len(tools),
+                server=server,
+                tools=[t["name"] for t in tools],
+            ))
+        else:
+            # Lazy: register a factory and lightweight metadata. Tool names are
+            # discovered by constructing the server once, then immediately discarded.
+            # This still saves planner tokens because only category metadata is kept.
+            server, tools = _build_server(category, root, eager=True)
+            tool_names = [t["name"] for t in tools]
+            agent_count = len(tools)
+            # Discard the temporary server; the factory will build a fresh one on demand.
+            registry.register_factory(
+                category=category,
+                factory=lambda c=category, r=root: _build_server(c, r, eager=True)[0],
+                name=descriptions[category],
+                metadata={
+                    "agent_count": agent_count,
+                    "tools": tool_names,
+                },
+            )
 
     return registry
 
@@ -130,7 +175,19 @@ async def test_all_servers(registry: MCPRegistry):
     rt = registry.get_server("tools_runtest")
     if rt:
         r = await rt.call_tool("discover_tests", {"path": "."})
-        results["runtest"] = "error" not in str(r.content)
+        results["runtest"] = not r.is_error
+
+    # Test browser server (degraded is acceptable if Playwright missing)
+    browser = registry.get_server("tools_browser")
+    if browser:
+        r = await browser.call_tool("browser_open", {"session_id": "test"})
+        results["browser"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test figma server (degraded is acceptable if figma-agent-core missing)
+    figma = registry.get_server("figma")
+    if figma:
+        r = await figma.call_tool("figma_run_pipeline", {"dry_run": True})
+        results["figma"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
     return results
 
@@ -141,10 +198,16 @@ async def main():
     parser.add_argument("--test", action="store_true", help="Run self-test on all servers")
     parser.add_argument("--workspace", default=".", help="Workspace root path")
     parser.add_argument("--list", action="store_true", help="List all registered tools")
+    parser.add_argument("--eager", action="store_true", help="Eagerly construct all servers (default is lazy)")
     args = parser.parse_args()
 
-    registry = create_registry(args.workspace)
-    print(f"MCP Registry: {registry.server_count} servers, {registry.tool_count} tools\n")
+    # --test and --serve need real servers; --list can stay lazy unless --eager is set.
+    eager = args.eager or args.test or args.serve
+    registry = create_registry(args.workspace, eager=eager)
+    print(f"MCP Registry: {registry.server_count} servers, {registry.tool_count} tools (eager={eager})")
+    browser_info = registry.get_category_metadata("tools_browser")
+    if browser_info:
+        print(f"Browser server: registered with {browser_info['agent_count']} tools\n")
 
     if args.list:
         print("=" * 60)
@@ -152,10 +215,14 @@ async def main():
         print("=" * 60)
         for cat, info in registry._servers.items():
             print(f"\n[{cat}] {info.name}")
-            for tool_name in info.tools:
-                tool = info.server._tools.get(tool_name)
-                if tool:
-                    print(f"  • {tool.name} — {tool.description[:80]}")
+            if eager:
+                for tool_name in info.tools:
+                    tool = info.server._tools.get(tool_name)
+                    if tool:
+                        print(f"  • {tool.name} — {tool.description[:80]}")
+            else:
+                for tool_name in info.tools:
+                    print(f"  • {tool_name}")
         return
 
     if args.test:
@@ -171,7 +238,7 @@ async def main():
 
     if args.serve:
         print("Starting MCP servers via stdio (JSON-RPC mode)")
-        print("All 10 servers registered and ready for tool calls")
+        print(f"All {registry.server_count} servers registered and ready for tool calls")
         # In stdio mode, we run an aggregator that routes to the right server
         while True:
             try:
@@ -216,4 +283,15 @@ async def main():
 
 
 if __name__ == "__main__":
+    import warnings
+
+    warnings.filterwarnings("ignore", category=ResourceWarning)
+
+    def _suppress_unraisable(unraisable):
+        # Ignore ResourceWarning/Proactor noise during interpreter shutdown on Windows.
+        if unraisable.exc_type is not None and issubclass(unraisable.exc_type, (ResourceWarning, ValueError)):
+            return
+        sys.unraisablehook(unraisable)
+
+    sys.unraisablehook = _suppress_unraisable
     asyncio.run(main())

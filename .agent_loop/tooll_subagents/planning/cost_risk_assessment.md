@@ -16,6 +16,7 @@ Pre-execution estimator that evaluates token cost, latency, failure probability,
 - `risk_score`: float 0.0–1.0 — composite probability of failure or deviation
 - `risk_breakdown`: per-sub-task risk contributions (execution, safety, dependency, environment)
 - `recommendation`: enum (`proceed`, `optimize`, `reduce_scope`, `escalate`)
+- `next_phase_hint`: enum (`execution`, `planning`, `result`) — suggested next ReAct phase based on risk verdict
 - `optimization_suggestions`: list of concrete ways to reduce cost or risk
 
 ### Side Effects

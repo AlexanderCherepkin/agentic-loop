@@ -1,9 +1,9 @@
 # CLAUDE.md — Agentic Loop
 
 This is a **multi-agent AI system** with hierarchical safety-first architecture.
-156 agents across 6 layers. The 100 tool-category agents (`tools_*`) are fully implemented
+166 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
 following the Algorithmic template (Role + Contract + Decision Flow + Failure Modes).
-All 156 agents across all 6 layers are fully implemented with the Algorithmic template.
+All 166 agents across all 6 layers are fully implemented with the Algorithmic template.
 No remaining stubs.
 
 ## First Action (always)
@@ -20,8 +20,37 @@ No remaining stubs.
    - Are there existing systems to integrate with or migrate from?
    Ask control questions that can only be answered if the assignment was understood correctly.
    Do NOT proceed to architecture until the user confirms the interview is complete.
+
+   **Gate 1 — Start-of-project confirmation**
+   - After the interview, explicitly ask: **"Interview complete. Proceed with development?"**
+   - Do not write code, edit files, or run generators until the user answers yes/proceed/continue.
+
 3. **Read `.agent_loop/ARCHITECTURE.md`** — the definitive architecture reference.
    Contains the full directory tree, data flow diagram, agent counts, and naming conventions.
+
+## Approval Gates (autonomous-bot configuration)
+
+This project runs as an autonomous bot. Only the following two gates require human confirmation; all other operations are auto-approved and must not interrupt execution.
+
+1. **Gate 1 — Interview confirmation**
+   - Ask **"Interview complete. Proceed with development?"** only when a structured interview is explicitly required.
+   - If the user has already directed development (e.g., issued a concrete task), the gate is satisfied; do not ask again.
+
+2. **Gate 2 — Pre-preview / pre-deployment / local-hosting**
+   - Before build, preview, publish, deploy, `git push`, hosting exposure, or any action that makes the project reachable on the internet or local hosting for visualization, stop and ask: **"Project is ready for preview/deployment. Proceed?"**
+
+Auto-approved operations (non-exhaustive):
+- File reads, glob, grep, directory listings.
+- Searches for PRD/specification files and discovery tasks.
+- Running tests, linters, validators, and local dev servers that do not expose the project externally.
+- Internal reasoning, planning, and architecture review.
+- File edits, code generation, command execution, agent creation, and documentation updates inside the workspace.
+- Network egress to configured allow-list destinations.
+- Browser automation on trusted domains.
+
+Never auto-approve (still require confirmation):
+- Deployment, push, production publish, or exposure to the internet/local hosting.
+- Updates to `project_rules.md` or `CLAUDE.md` unless the change is directly ordered by the user.
 
 ## Quick Reference
 
@@ -43,7 +72,8 @@ No remaining stubs.
 | tools_database | 10 | Database query pipeline (connection→schema→query→transaction→executor→mapper→cache→error→migration→optimizer) | FILLED |
 | tools_web | 10 | Web request pipeline (auth→request→network→rate→retry→response→content→cache→error→web_optimizer) | FILLED |
 | tools_memory | 10 | Memory store pipeline (read→write→index→embedding→compress→evict→summarize→recall→consistency→optimizer) | FILLED |
-| **Total** | **156** | | **156 filled, 0 stubs** |
+| tools_browser | 10 | Headless browser pipeline (session→navigation→screenshot→dom→selector→interaction→network→cookies→captcha→error→optimizer) | FILLED |
+| **Total** | **166** | | **166 filled, 0 stubs** |
 
 ## Core Architecture
 
@@ -56,13 +86,17 @@ User Request → main_loop.md
 
 Three-circuit safety: safety-control → mutual_check → control.
 Human-in-the-loop split: human_oversight.md (strategic, in control/) vs human_approval.md (tactical, in execution/).
+Lazy MCP gateway: `mcp_servers/gateway.py` exposes category metadata and materializes servers only on tool invocation (token budget saver).
+Headless browser: `tools_browser/headless_automation` via Playwright MCP server for dynamic pages and screenshots. Optional dependency: `runtime/requirements-browser.txt`.
+Conditional Edges: `runtime/engine/pipeline_runner.py` uses `PhaseTransitionManager` to route between ReAct phases based on agent outputs.
+`project_rules.md` in repo root is lightweight project context loaded by the runtime; updates require human approval.
 
 ## Conventions
 
 - **Naming**: snake_case filenames
 - **Directory quirks preserved**: `tooll_subagents` (double "l"), `tools_manangr` (typo in "manager")
 - **Algorithmic template** for all agents: `# Agent Name`, `## Role`, `## Contract` (Receives/Returns/Side effects), `## Decision Flow` (numbered steps), `## Failure Modes` (Condition→Response table)
-- **Pipeline architecture** varies by category: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory)
+- **Pipeline architecture** varies by category: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory), headless-automation (browser)
 - **No comments** in code unless the WHY is non-obvious
 - **No new files** unless the architecture requires it — prefer editing existing agents
 - **Safety first** — any change to execution, control, or safety layers must respect the three-circuit flow
@@ -80,16 +114,16 @@ Read memory when resuming work. Update memory when architecture changes or key d
 
 ## Current Progress & Next Steps
 
-1. **FILLED (156 agents)** — All layers fully implemented:
+1. **FILLED (166 agents)** — All layers fully implemented:
    - `main_loop.md` (1) — ReAct head agent
    - `orchestrator/` (6) — Router, dispatcher, pipeline coordinator, state manager, API gateway, message bus
    - `safety-control/` (9) — Input sanitization, permissions, threats, leaks, output review, bias, safety assessment, content checking
    - `mutual_check/` (10) — Audit, verification, consistency, validation, performance, quotas, anomalies, quality, feedback, compliance
    - `control/` (7) — File system, network, resources, human oversight, policy, scope, input aggregation
    - `tooll_subagents/` (23) — Full ReAct cycle: user→planning→execution→observability→self_correction→result
-   - `tools_*` (100) — 10 categories × 10 tool agents each with cross-cutting optimizers
+   - `tools_*` (110) — 11 categories × 10 tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
 2. **STUBS (0 agents)** — No remaining placeholders. All agents follow the Algorithmic template.
-3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety and full ReAct decomposition.
+3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, and conditional ReAct phase transitions.
 
 ## Active Skills
 

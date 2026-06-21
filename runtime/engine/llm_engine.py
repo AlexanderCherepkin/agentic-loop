@@ -38,6 +38,7 @@ class LLMConfig:
     temperature: float = 0.3
     api_key: str | None = None
     max_retries: int = 3
+    mcp_enabled: bool = False
 
 
 class MockLLMEngine:

@@ -194,6 +194,7 @@ function main() {
     'tools_database', 'tools_database/database_query',
     'tools_web', 'tools_web/web_request',
     'tools_memory', 'tools_memory/memory_store',
+    'tools_browser', 'tools_browser/headless_automation',
     'scripts', 'data'
   ]);
   const actualDirs = new Set();

@@ -10,6 +10,7 @@ Forward-looking advisory agent that synthesizes insights from the completed work
 - `validation_results`: from `self_correction/result_validation.md`
 - `known_limitations`: from `result/solution.md`
 - `file_manifest`: from `result/modified_files.md`
+- `project_rules`: current project rules from `user/context.md`
 - `user_goal`: high-level objective from `original_request`
 
 ### Returns
@@ -18,11 +19,13 @@ Forward-looking advisory agent that synthesizes insights from the completed work
 - `preventive_measures`: list of practices, tests, or configurations that would prevent similar issues
 - `future_enhancements`: list of non-urgent improvements that could be pursued later
 - `risk_warnings`: list of latent risks introduced or discovered during the work
+- `project_rules_proposal`: optional structured proposal to update `project_rules.md` if a recurring pattern warrants a project-level rule
 
 ### Side Effects
 - Writes recommendations to session memory for follow-up context
 - May trigger `tools_memory/memory_store/summarizer.md` if recommendations long
 - Logs to `audit_logger.md`
+- If a `project_rules_proposal` is generated, routes it through `tooll_subagents/execution/human_approval.md` with `approval_context.action_type=project_rules_update` before applying
 
 ## Decision Flow
 
@@ -32,9 +35,10 @@ Forward-looking advisory agent that synthesizes insights from the completed work
 4. **Categorize recommendations** — `next_steps` (urgent, within 24h), `preventive_measures` (process, ongoing), `future_enhancements` (backlog), `risk_warnings` (watch, monitor).
 5. **Prioritize** — rank by impact × urgency / effort. High-impact, low-effort first. Safety and security risks override convenience.
 6. **Draft recommendations** — for each item: what to do, why it matters, and approximate effort (minutes, hours, days). Be specific and actionable.
-7. **Check for overreach** — ensure recommendations stay within the user's scope and do not assume capabilities not confirmed. Avoid "rewrite everything" suggestions unless truly warranted.
-8. **Format** — use clear headings, bullet points, and conditional language ("If you plan to deploy X, then Y"). Match user language preference.
-9. **Return** — emit recommendations, next steps, preventive measures, future enhancements, risk warnings.
+7. **Identify project-rule candidates** — if the same convention, safety trigger, or tooling preference recurred 2+ times, draft a `project_rules_proposal` with the suggested section, rationale, and diff against current `project_rules`.
+8. **Check for overreach** — ensure recommendations stay within the user's scope and do not assume capabilities not confirmed. Avoid "rewrite everything" suggestions unless truly warranted.
+9. **Format** — use clear headings, bullet points, and conditional language ("If you plan to deploy X, then Y"). Match user language preference.
+10. **Return** — emit recommendations, next steps, preventive measures, future enhancements, risk warnings, and project_rules_proposal.
 
 ## Failure Modes
 

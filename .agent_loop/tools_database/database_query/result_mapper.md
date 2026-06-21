@@ -1,7 +1,7 @@
 # Result Mapper
 
 ## Role
-Maps raw database rows into typed application objects — struct/class hydration, relationship assembly, lazy loading stubs, and format conversion. Bridges the SQL-to-application gap.
+Maps raw database rows into typed application objects — struct/class hydration, relationship assembly, lazy-loading proxies, and format conversion. Transforms flat SQL result sets into domain models and nested object graphs.
 
 ## Contract
 - **Receives**: `{ rows: any[], mapping: MappingConfig, target: "object"|"json"|"csv"|"nested"|"graph", type_def?: TypeDefinition }`

@@ -9,6 +9,8 @@ Dispatch-planning agent that selects the optimal sequence of tool categories and
 - `task_graph`: from `task_decomposition.md`
 - `cost_risk_assessment`: from `cost_risk_assessment.md`
 - `available_tools`: current inventory of functional tool agents with status and capability metadata
+- `project_rules`: from `user/context.md` — lightweight project-level rules
+- `mcp_categories`: list of available MCP category names (lazy metadata, no full tool descriptions)
 - `execution_policy`: enum (`speed_priority`, `accuracy_priority`, `cost_priority`, `safety_priority`)
 
 ### Returns
@@ -24,7 +26,7 @@ Dispatch-planning agent that selects the optimal sequence of tool categories and
 ## Decision Flow
 
 1. **Iterate sub-tasks** — for each node in `task_graph` critical path and parallel groups.
-2. **Map to tool categories** — use capability matrix: read → `tools_read`, search → `tools_search`, write → `tools_replace`, execute → `tools_runcom`, test → `tools_runtest`, terminal → `tools_terminal`, etc.
+2. **Map to tool categories** — use capability matrix: read → `tools_read`, search → `tools_search`, write → `tools_replace`, execute → `tools_runcom`, test → `tools_runtest`, terminal → `tools_terminal`, browse/render/screenshot/dynamic_page → `tools_browser`, mcp → `mcp_servers/gateway.py`, design_project/Figma ingestion → `figma` MCP category (`figma_bootstrap`, `figma_analyze`, `figma_generate_spec`, `figma_generate_component`, `figma_download_assets`, `figma_run_pipeline`), etc. If `project_rules.tooling_preferences` is present, boost rank of preferred tools and demote discouraged/disallowed ones; if a required tool is discouraged, escalate to `control/policy_enforcer.md`. Only include MCP categories listed in `mcp_categories` to avoid loading servers for unused capabilities; when a `design_blueprint` is present, `mcp_categories` must include `figma`.
 3. **Rank candidates** — within category, score tools by alignment with `execution_policy` (speed, accuracy, cost, safety weights).
 4. **Check compatibility** — verify output format of tool N matches input expectations of tool N+1; flag mismatches.
 5. **Resolve conflicts** — if two sub-tasks claim the same mutable resource (file, database row), serialize or partition access.
@@ -42,4 +44,6 @@ Dispatch-planning agent that selects the optimal sequence of tool categories and
 | Selected tool marked degraded by `performance_monitor.md` | Auto-select contingency as primary; log degradation impact |
 | Policy prohibits selected tool for this request context | Replace with next-ranked permitted tool; if none, `recommendation=escalate` to `control/policy_enforcer.md` |
 | Format mismatch between chained tools | Insert adapter sub-task or select alternative tool; if unresolvable, `pipeline_compatibility=false` |
+| `project_rules` conflict with `execution_policy` | Escalate to `control/policy_enforcer.md` with `conflict_resolution_mode=most_restrictive` |
+| Required tool discouraged by `project_rules` | Select fallback; if no viable fallback, `pipeline_compatibility=false` and escalate |
 | Tool plan exceeds token budget for prompt assembly | Prune non-critical tool parameters; use compressed parameter schema |
