@@ -704,33 +704,45 @@ class FigmaLayoutEngine:
         else:
             tw_node.add_class("flex-row")
 
+        is_wrap = node.get("layoutWrap") == "WRAP"
+        spacing_mode = node.get("spacingMode")
+        if is_wrap:
+            tw_node.add_class("flex-wrap")
+
         spacing = _px(node.get("itemSpacing"))
-        if spacing is not None and spacing > 0:
-            tw_node.add_class(_arbitrary("gap", int(round(spacing))))
-        elif spacing is not None and spacing == 0:
-            tw_node.add_class("gap-0")
+        if spacing_mode == "SPACE_BETWEEN":
+            tw_node.add_class("justify-between")
+        else:
+            if spacing is not None and spacing > 0:
+                tw_node.add_class(_arbitrary("gap", int(round(spacing))))
+            elif spacing is not None and spacing == 0:
+                tw_node.add_class("gap-0")
 
-        primary = node.get("primaryAxisAlignItems")
+            primary = node.get("primaryAxisAlignItems")
+            justify_map = {
+                "MIN": "justify-start",
+                "CENTER": "justify-center",
+                "MAX": "justify-end",
+                "SPACE_BETWEEN": "justify-between",
+            }
+            if primary in justify_map:
+                tw_node.add_class(justify_map[primary])
+
         counter = node.get("counterAxisAlignItems")
-
-        justify_map = {
-            "MIN": "justify-start",
-            "CENTER": "justify-center",
-            "MAX": "justify-end",
-            "SPACE_BETWEEN": "justify-between",
-        }
-        items_map = {
-            "MIN": "items-start",
-            "CENTER": "items-center",
-            "MAX": "items-end",
-            "BASELINE": "items-baseline",
-            "STRETCH": "items-stretch",
-        }
-
-        if primary in justify_map:
-            tw_node.add_class(justify_map[primary])
-        if counter in items_map:
-            tw_node.add_class(items_map[counter])
+        if counter == "SPACE_BETWEEN":
+            tw_node.add_class("content-between")
+            if not is_wrap:
+                tw_node.add_class("flex-wrap")
+        else:
+            items_map = {
+                "MIN": "items-start",
+                "CENTER": "items-center",
+                "MAX": "items-end",
+                "BASELINE": "items-baseline",
+                "STRETCH": "items-stretch",
+            }
+            if counter in items_map:
+                tw_node.add_class(items_map[counter])
 
         self._apply_padding(tw_node, node)
 

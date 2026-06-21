@@ -3568,7 +3568,7 @@
       "label": "._apply_padding()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L737",
+      "source_location": "L749",
       "_origin": "ast"
     },
     {
@@ -3576,7 +3576,7 @@
       "label": "._apply_position()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L764",
+      "source_location": "L776",
       "_origin": "ast"
     },
     {
@@ -3584,7 +3584,7 @@
       "label": "._apply_fills()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L800",
+      "source_location": "L812",
       "_origin": "ast"
     },
     {
@@ -3592,7 +3592,7 @@
       "label": "._build_gradient()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L829",
+      "source_location": "L841",
       "_origin": "ast"
     },
     {
@@ -3600,7 +3600,7 @@
       "label": "._apply_strokes()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L837",
+      "source_location": "L849",
       "_origin": "ast"
     },
     {
@@ -3608,7 +3608,7 @@
       "label": "._apply_effects()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L852",
+      "source_location": "L864",
       "_origin": "ast"
     },
     {
@@ -3616,7 +3616,7 @@
       "label": "._apply_radius()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L875",
+      "source_location": "L887",
       "_origin": "ast"
     },
     {
@@ -3624,7 +3624,7 @@
       "label": "._apply_component_refs()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L895",
+      "source_location": "L907",
       "_origin": "ast"
     },
     {
@@ -3632,7 +3632,7 @@
       "label": "._apply_backend_hints()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L911",
+      "source_location": "L923",
       "_origin": "ast"
     },
     {
@@ -3640,7 +3640,7 @@
       "label": "._text_style_classes()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L926",
+      "source_location": "L938",
       "_origin": "ast"
     },
     {
@@ -3648,7 +3648,7 @@
       "label": "._apply_text_style()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L991",
+      "source_location": "L1003",
       "_origin": "ast"
     },
     {
@@ -3656,7 +3656,7 @@
       "label": "convert_figma_node()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L996",
+      "source_location": "L1008",
       "_origin": "ast"
     },
     {
@@ -3664,7 +3664,7 @@
       "label": "_load_tokens()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1001",
+      "source_location": "L1013",
       "_origin": "ast"
     },
     {
@@ -3672,7 +3672,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1009",
+      "source_location": "L1021",
       "_origin": "ast"
     },
     {
@@ -3716,11 +3716,11 @@
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_layout_engine_rationale_927",
+      "id": "figma_agent_core_layout_engine_rationale_939",
       "label": "Возвращает Tailwind-классы для Figma TypeStyle (без side-эффектов).",
       "file_type": "rationale",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L927",
+      "source_location": "L939",
       "_origin": "ast"
     },
     {
@@ -17689,6 +17689,54 @@
       "file_type": "code",
       "source_file": "tests/figma/test_layout_engine.py",
       "source_location": "L786",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_padding_per_side_all_different",
+      "label": "test_padding_per_side_all_different()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L805",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_counter_axis_space_between_emits_content_between_and_flex_wrap",
+      "label": "test_counter_axis_space_between_emits_content_between_and_flex_wrap()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L829",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_counter_axis_space_between_without_wrap_forces_flex_wrap",
+      "label": "test_counter_axis_space_between_without_wrap_forces_flex_wrap()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L848",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_layout_wrap_adds_flex_wrap_and_keeps_counter_items",
+      "label": "test_layout_wrap_adds_flex_wrap_and_keeps_counter_items()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L864",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_spacing_mode_packed_uses_gap",
+      "label": "test_spacing_mode_packed_uses_gap()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L883",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_layout_engine_test_spacing_mode_space_between_ignores_item_spacing_gap",
+      "label": "test_spacing_mode_space_between_ignores_item_spacing_gap()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L901",
       "_origin": "ast"
     },
     {
@@ -41469,7 +41517,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L737",
+      "source_location": "L749",
       "weight": 1.0
     },
     {
@@ -41479,7 +41527,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L737",
+      "source_location": "L749",
       "weight": 1.0
     },
     {
@@ -41489,7 +41537,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L737",
+      "source_location": "L749",
       "weight": 1.0
     },
     {
@@ -41498,7 +41546,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L764",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -41508,7 +41556,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L764",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -41518,7 +41566,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L764",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -41527,7 +41575,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L800",
+      "source_location": "L812",
       "weight": 1.0
     },
     {
@@ -41537,7 +41585,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L800",
+      "source_location": "L812",
       "weight": 1.0
     },
     {
@@ -41547,7 +41595,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L800",
+      "source_location": "L812",
       "weight": 1.0
     },
     {
@@ -41556,7 +41604,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L829",
+      "source_location": "L841",
       "weight": 1.0
     },
     {
@@ -41566,7 +41614,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L829",
+      "source_location": "L841",
       "weight": 1.0
     },
     {
@@ -41575,7 +41623,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L837",
+      "source_location": "L849",
       "weight": 1.0
     },
     {
@@ -41585,7 +41633,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L837",
+      "source_location": "L849",
       "weight": 1.0
     },
     {
@@ -41595,7 +41643,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L837",
+      "source_location": "L849",
       "weight": 1.0
     },
     {
@@ -41604,7 +41652,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L852",
+      "source_location": "L864",
       "weight": 1.0
     },
     {
@@ -41614,7 +41662,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L852",
+      "source_location": "L864",
       "weight": 1.0
     },
     {
@@ -41624,7 +41672,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L852",
+      "source_location": "L864",
       "weight": 1.0
     },
     {
@@ -41633,7 +41681,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L875",
+      "source_location": "L887",
       "weight": 1.0
     },
     {
@@ -41643,7 +41691,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L875",
+      "source_location": "L887",
       "weight": 1.0
     },
     {
@@ -41653,7 +41701,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L875",
+      "source_location": "L887",
       "weight": 1.0
     },
     {
@@ -41662,7 +41710,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L895",
+      "source_location": "L907",
       "weight": 1.0
     },
     {
@@ -41672,7 +41720,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L895",
+      "source_location": "L907",
       "weight": 1.0
     },
     {
@@ -41682,7 +41730,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L895",
+      "source_location": "L907",
       "weight": 1.0
     },
     {
@@ -41691,7 +41739,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L911",
+      "source_location": "L923",
       "weight": 1.0
     },
     {
@@ -41701,7 +41749,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L911",
+      "source_location": "L923",
       "weight": 1.0
     },
     {
@@ -41711,7 +41759,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L911",
+      "source_location": "L923",
       "weight": 1.0
     },
     {
@@ -41720,7 +41768,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L926",
+      "source_location": "L938",
       "weight": 1.0
     },
     {
@@ -41730,7 +41778,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L926",
+      "source_location": "L938",
       "weight": 1.0
     },
     {
@@ -41739,7 +41787,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L991",
+      "source_location": "L1003",
       "weight": 1.0
     },
     {
@@ -41749,7 +41797,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L991",
+      "source_location": "L1003",
       "weight": 1.0
     },
     {
@@ -41759,7 +41807,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L991",
+      "source_location": "L1003",
       "weight": 1.0
     },
     {
@@ -41768,7 +41816,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L996",
+      "source_location": "L1008",
       "weight": 1.0
     },
     {
@@ -41778,7 +41826,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L996",
+      "source_location": "L1008",
       "weight": 1.0
     },
     {
@@ -41788,7 +41836,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L996",
+      "source_location": "L1008",
       "weight": 1.0
     },
     {
@@ -41797,7 +41845,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1001",
+      "source_location": "L1013",
       "weight": 1.0
     },
     {
@@ -41807,7 +41855,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1001",
+      "source_location": "L1013",
       "weight": 1.0
     },
     {
@@ -41816,7 +41864,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1009",
+      "source_location": "L1021",
       "weight": 1.0
     },
     {
@@ -42406,7 +42454,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L707",
+      "source_location": "L712",
       "weight": 1.0
     },
     {
@@ -42416,7 +42464,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L709",
+      "source_location": "L717",
       "weight": 1.0
     },
     {
@@ -42426,7 +42474,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L735",
+      "source_location": "L747",
       "weight": 1.0
     },
     {
@@ -42436,7 +42484,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L738",
+      "source_location": "L750",
       "weight": 1.0
     },
     {
@@ -42446,7 +42494,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L745",
+      "source_location": "L757",
       "weight": 1.0
     },
     {
@@ -42456,7 +42504,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L745",
+      "source_location": "L757",
       "weight": 1.0
     },
     {
@@ -42466,42 +42514,12 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L784",
+      "source_location": "L796",
       "weight": 1.0
     },
     {
       "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_position",
       "target": "figma_agent_core_layout_engine_tailwindnode_add_class",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L795",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
-      "target": "figma_agent_core_layout_engine_color_to_hex",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L805",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
-      "target": "figma_agent_core_layout_engine_has_alpha",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L806",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
-      "target": "figma_agent_core_layout_engine_hex_to_rgba",
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -42511,12 +42529,42 @@
     },
     {
       "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
+      "target": "figma_agent_core_layout_engine_color_to_hex",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/layout_engine.py",
+      "source_location": "L817",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
+      "target": "figma_agent_core_layout_engine_has_alpha",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/layout_engine.py",
+      "source_location": "L818",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
+      "target": "figma_agent_core_layout_engine_hex_to_rgba",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/layout_engine.py",
+      "source_location": "L819",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_layout_engine_figmalayoutengine_apply_fills",
       "target": "figma_agent_core_layout_engine_figmalayoutengine_class_for_color",
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L811",
+      "source_location": "L823",
       "weight": 1.0
     },
     {
@@ -42526,7 +42574,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L813",
+      "source_location": "L825",
       "weight": 1.0
     },
     {
@@ -42536,7 +42584,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L820",
+      "source_location": "L832",
       "weight": 1.0
     },
     {
@@ -42546,7 +42594,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L824",
+      "source_location": "L836",
       "weight": 1.0
     },
     {
@@ -42556,7 +42604,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L832",
+      "source_location": "L844",
       "weight": 1.0
     },
     {
@@ -42566,7 +42614,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L843",
+      "source_location": "L855",
       "weight": 1.0
     },
     {
@@ -42576,7 +42624,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L844",
+      "source_location": "L856",
       "weight": 1.0
     },
     {
@@ -42586,7 +42634,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L846",
+      "source_location": "L858",
       "weight": 1.0
     },
     {
@@ -42596,7 +42644,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L847",
+      "source_location": "L859",
       "weight": 1.0
     },
     {
@@ -42606,7 +42654,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L849",
+      "source_location": "L861",
       "weight": 1.0
     },
     {
@@ -42616,7 +42664,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L860",
+      "source_location": "L872",
       "weight": 1.0
     },
     {
@@ -42626,7 +42674,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L876",
+      "source_location": "L888",
       "weight": 1.0
     },
     {
@@ -42636,7 +42684,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L891",
+      "source_location": "L903",
       "weight": 1.0
     },
     {
@@ -42646,7 +42694,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L893",
+      "source_location": "L905",
       "weight": 1.0
     },
     {
@@ -42656,7 +42704,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L929",
+      "source_location": "L941",
       "weight": 1.0
     },
     {
@@ -42666,7 +42714,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L931",
+      "source_location": "L943",
       "weight": 1.0
     },
     {
@@ -42676,7 +42724,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L935",
+      "source_location": "L947",
       "weight": 1.0
     },
     {
@@ -42686,7 +42734,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L939",
+      "source_location": "L951",
       "weight": 1.0
     },
     {
@@ -42696,7 +42744,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L954",
+      "source_location": "L966",
       "weight": 1.0
     },
     {
@@ -42706,7 +42754,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L958",
+      "source_location": "L970",
       "weight": 1.0
     },
     {
@@ -42716,7 +42764,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L963",
+      "source_location": "L975",
       "weight": 1.0
     },
     {
@@ -42726,7 +42774,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L964",
+      "source_location": "L976",
       "weight": 1.0
     },
     {
@@ -42736,7 +42784,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L992",
+      "source_location": "L1004",
       "weight": 1.0
     },
     {
@@ -42746,7 +42794,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L993",
+      "source_location": "L1005",
       "weight": 1.0
     },
     {
@@ -42756,7 +42804,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L997",
+      "source_location": "L1009",
       "weight": 1.0
     },
     {
@@ -42766,7 +42814,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L998",
+      "source_location": "L1010",
       "weight": 1.0
     },
     {
@@ -42776,7 +42824,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1063",
+      "source_location": "L1075",
       "weight": 1.0
     },
     {
@@ -42786,7 +42834,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1075",
+      "source_location": "L1087",
       "weight": 1.0
     },
     {
@@ -42796,7 +42844,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L1078",
+      "source_location": "L1090",
       "weight": 1.0
     },
     {
@@ -42845,12 +42893,12 @@
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_layout_engine_rationale_927",
+      "source": "figma_agent_core_layout_engine_rationale_939",
       "target": "figma_agent_core_layout_engine_figmalayoutengine_text_style_classes",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/layout_engine.py",
-      "source_location": "L927",
+      "source_location": "L939",
       "weight": 1.0
     },
     {
@@ -75199,6 +75247,60 @@
       "confidence": "EXTRACTED",
       "source_file": "tests/figma/test_layout_engine.py",
       "source_location": "L786",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_padding_per_side_all_different",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L805",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_counter_axis_space_between_emits_content_between_and_flex_wrap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L829",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_counter_axis_space_between_without_wrap_forces_flex_wrap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L848",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_layout_wrap_adds_flex_wrap_and_keeps_counter_items",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L864",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_spacing_mode_packed_uses_gap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L883",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_layout_engine",
+      "target": "figma_test_layout_engine_test_spacing_mode_space_between_ignores_item_spacing_gap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_layout_engine.py",
+      "source_location": "L901",
       "weight": 1.0
     },
     {

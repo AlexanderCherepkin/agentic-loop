@@ -800,3 +800,118 @@ def test_min_max_width_height_emits_arbitrary_classes() -> None:
     assert "max-w-[600px]" in result.root.classes
     assert "min-h-[40px]" in result.root.classes
     assert "max-h-[300px]" in result.root.classes
+
+
+def test_padding_per_side_all_different() -> None:
+    node = {
+        "id": "306:1",
+        "name": "Card",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "paddingTop": 8,
+        "paddingRight": 16,
+        "paddingBottom": 24,
+        "paddingLeft": 32,
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "pt-[8px]" in classes
+    assert "pr-[16px]" in classes
+    assert "pb-[24px]" in classes
+    assert "pl-[32px]" in classes
+    assert "p-[8px]" not in classes
+    assert "py-[8px]" not in classes
+    assert "px-[16px]" not in classes
+
+
+def test_counter_axis_space_between_emits_content_between_and_flex_wrap() -> None:
+    node = {
+        "id": "307:1",
+        "name": "Wrapped grid",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "layoutWrap": "WRAP",
+        "counterAxisAlignItems": "SPACE_BETWEEN",
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "flex-wrap" in classes
+    assert "content-between" in classes
+    assert "items-between" not in classes
+    assert "items-start" not in classes
+
+
+def test_counter_axis_space_between_without_wrap_forces_flex_wrap() -> None:
+    node = {
+        "id": "307:2",
+        "name": "Stack",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "counterAxisAlignItems": "SPACE_BETWEEN",
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "flex-wrap" in classes
+    assert "content-between" in classes
+
+
+def test_layout_wrap_adds_flex_wrap_and_keeps_counter_items() -> None:
+    node = {
+        "id": "308:1",
+        "name": "Tags",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "layoutWrap": "WRAP",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 12,
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "flex-wrap" in classes
+    assert "items-center" in classes
+    assert "gap-[12px]" in classes
+
+
+def test_spacing_mode_packed_uses_gap() -> None:
+    node = {
+        "id": "309:1",
+        "name": "List",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "spacingMode": "PACKED",
+        "itemSpacing": 16,
+        "primaryAxisAlignItems": "MIN",
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "gap-[16px]" in classes
+    assert "justify-start" in classes
+
+
+def test_spacing_mode_space_between_ignores_item_spacing_gap() -> None:
+    node = {
+        "id": "309:2",
+        "name": "Distributed",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "spacingMode": "SPACE_BETWEEN",
+        "itemSpacing": 32,
+        "primaryAxisAlignItems": "CENTER",
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.classes
+    assert "justify-between" in classes
+    assert "gap-[32px]" not in classes
+    assert "justify-center" not in classes

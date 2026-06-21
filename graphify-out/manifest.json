@@ -1630,8 +1630,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/layout_engine.py": {
-    "mtime": 1782058852.9435952,
-    "ast_hash": "c081a4f8e99820eaf8a40bc7119b39c2",
+    "mtime": 1782059026.4576745,
+    "ast_hash": "1feaddfa189a81c92bc7a5326c8fe3af",
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
@@ -1680,8 +1680,8 @@
     "semantic_hash": ""
   },
   "tests/figma/test_layout_engine.py": {
-    "mtime": 1782058830.8299851,
-    "ast_hash": "ab749e08eb60cf2a137e7b807aefcbfe",
+    "mtime": 1782059039.070989,
+    "ast_hash": "d7d7d2f2a452d31f0d40a1dd222d1498",
     "semantic_hash": ""
   },
   "tests/figma/test_page_composer.py": {
