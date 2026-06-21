@@ -148,6 +148,106 @@ def test_text_tag_fallback_to_paragraph() -> None:
     assert result.root.tag == "p"
 
 
+def test_rich_text_bold_span_keeps_base_text() -> None:
+    node = {
+        "id": "32:1",
+        "name": "Mixed",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Hello world",
+        "style": {"fontSize": 16, "fontWeight": 400},
+        "characterStyleOverrides": ["", "", "", "", "", "", "bold", "bold", "bold", "bold", "bold"],
+        "styleOverrideTable": {
+            "bold": {"fontWeight": 700},
+        },
+    }
+    result = layout_engine.convert_figma_node(node)
+    root = result.root
+    assert root.text == "Hello world"
+    assert root.rich_text
+    assert len(root.rich_text) == 2
+    assert root.rich_text[1]["text"] == "world"
+    assert "font-[700]" in root.rich_text[1]["classes"]
+
+
+def test_rich_text_italic_and_color_span() -> None:
+    node = {
+        "id": "32:2",
+        "name": "Styled",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Start middle end",
+        "style": {"fontSize": 16, "fontWeight": 400},
+        "characterStyleOverrides": ["", "", "", "", "", "", "em", "em", "em", "em", "em", "em", "", "", ""],
+        "styleOverrideTable": {
+            "em": {"italic": True, "fills": [{"type": "SOLID", "hex": "#ef4444"}]},
+        },
+    }
+    result = layout_engine.convert_figma_node(node)
+    root = result.root
+    spans = root.rich_text or []
+    middle = [s for s in spans if s["text"] == "middle"]
+    assert middle
+    assert "italic" in middle[0]["classes"]
+    assert any("text-red-500" in c for c in middle[0]["classes"])
+
+
+def test_rich_text_link_span() -> None:
+    node = {
+        "id": "32:3",
+        "name": "Link",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Click here",
+        "style": {"fontSize": 16, "fontWeight": 400},
+        "characterStyleOverrides": ["", "", "", "", "", "", "link", "link", "link", "link"],
+        "styleOverrideTable": {
+            "link": {"hyperlink": {"type": "URL", "url": "https://example.com"}, "fontWeight": 700},
+        },
+    }
+    result = layout_engine.convert_figma_node(node)
+    spans = result.root.rich_text or []
+    link_span = [s for s in spans if s.get("tag") == "a"]
+    assert link_span
+    assert link_span[0]["href"] == "https://example.com"
+    assert link_span[0]["text"] == "here"
+
+
+def test_rich_text_newlines_emit_br_markers() -> None:
+    node = {
+        "id": "32:4",
+        "name": "Multiline",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Line1\nLine2",
+        "style": {"fontSize": 16, "fontWeight": 400},
+        "characterStyleOverrides": ["", "", "", "", "", "", "bold", "bold", "bold", "bold", "bold"],
+        "styleOverrideTable": {
+            "bold": {"fontWeight": 700},
+        },
+    }
+    result = layout_engine.convert_figma_node(node)
+    spans = result.root.rich_text or []
+    assert len(spans) == 3
+    assert spans[1]["text"] == ""
+    assert spans[1]["newline_before"] is True
+    assert spans[2]["text"] == "Line2"
+    assert "font-[700]" in spans[2]["classes"]
+
+
+def test_text_node_italic_base_style() -> None:
+    node = {
+        "id": "32:5",
+        "name": "Italic",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Italic text",
+        "style": {"fontSize": 16, "fontWeight": 400, "italic": True},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "italic" in result.root.classes
+
+
 def test_asset_node_becomes_image() -> None:
     node = {
         "id": "40:1",

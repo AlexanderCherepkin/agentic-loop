@@ -356,3 +356,61 @@ def test_compose_hover_event() -> None:
     ])
     code = page_composer.compose_page(ast)
     assert "onMouseEnter={() => router.push(\"/hover-target\")}" in code
+
+
+def test_compose_rich_text_spans() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "p",
+            "rich_text": [
+                {"text": "Plain "},
+                {"text": "bold", "classes": ["font-[700]"]},
+                {"text": " text"},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "<p>" in code
+    assert "<span>Plain </span>" in code
+    assert 'className="font-[700]"' in code
+    assert "<span className=\"font-[700]\">bold</span>" in code
+
+
+def test_compose_rich_text_link() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "p",
+            "rich_text": [
+                {"text": "Visit "},
+                {"text": "site", "tag": "a", "href": "https://example.com", "classes": ["font-[700]"]},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'href="https://example.com"' in code
+    assert "<a className=\"font-[700]\" href=\"https://example.com\">site</a>" in code
+
+
+def test_compose_rich_text_newline_br() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "p",
+            "rich_text": [
+                {"text": "Line1"},
+                {"text": "Line2", "newline_before": True},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "<br />" in code
+    assert "<span>Line2</span>" in code
+
+
+def test_compose_escapes_jsx_special_chars() -> None:
+    ast = _minimal_ast([
+        {"tag": "p", "text": "Use {config} <script>"},
+    ])
+    code = page_composer.compose_page(ast)
+    assert "{'{'" in code
+    assert "{'}'}" in code
+    assert "&lt;script&gt;" in code

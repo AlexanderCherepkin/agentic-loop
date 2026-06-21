@@ -1,3 +1,4 @@
+import html
 import json
 import re
 import argparse
@@ -43,6 +44,12 @@ def _safe_name(name: Any) -> str:
     return re.sub(r"[^\w\-]", "_", str(name or "unnamed")).strip("_") or "unnamed"
 
 
+def _escape_jsx_text(text: str) -> str:
+    """Экранирует символы, которые ломают JSX-текст: <, >, &, {, }."""
+    text = html.escape(text, quote=False)
+    return text.replace("{", "{'{'").replace("}", "{'}'}")
+
+
 def _to_camel_case(kebab: str) -> str:
     parts = kebab.split("-")
     return parts[0] + "".join(p.capitalize() for p in parts[1:])
@@ -71,8 +78,17 @@ def _sanitize_path(path: str, root_dir: Optional[str] = None) -> Path:
     return target
 
 
-def _extract_text_nodes(node: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _node_text(node: Dict[str, Any]) -> str:
+    """Возвращает полный текст ноды (plain или rich) для title inference."""
     if node.get("text") is not None:
+        return str(node["text"])
+    if node.get("rich_text"):
+        return "".join(seg.get("text", "") for seg in node["rich_text"])
+    return ""
+
+
+def _extract_text_nodes(node: Dict[str, Any]) -> List[Dict[str, Any]]:
+    if node.get("text") is not None or node.get("rich_text"):
         return [node]
     results: List[Dict[str, Any]] = []
     for child in node.get("children", []):
@@ -337,6 +353,34 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
             start_indent,
         )
 
+    rich_text = node.get("rich_text")
+    if rich_text:
+        rendered_spans: List[str] = []
+        for span in rich_text:
+            if not span.get("text") and not span.get("newline_before"):
+                continue
+            span_inner = _indent(depth + 1)
+            if span.get("newline_before"):
+                rendered_spans.append(f"{span_inner}<br />")
+            if span.get("text"):
+                span_tag = span.get("tag", "span")
+                span_classes = list(span.get("classes", []))
+                span_class_attr = f' className="{_class_string(span_classes)}"' if span_classes else ""
+                span_extra = ""
+                if span_tag == "a":
+                    span_extra += f' href={_safe_prop(span.get("href", "#"))}'
+                span_text = _escape_jsx_text(span["text"])
+                rendered_spans.append(
+                    f"{span_inner}<{span_tag}{span_class_attr}{span_extra}>{span_text}</{span_tag}>"
+                )
+        if rendered_spans:
+            body = "\n".join(rendered_spans)
+            return _wrap_conditional(
+                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n{body}\n{start_indent}</{tag}>",
+                conditional_state,
+                start_indent,
+            )
+
     if children:
         rendered_children = "\n".join(_node_to_tsx(child, depth + 1) for child in children)
         return _wrap_conditional(
@@ -350,10 +394,11 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
         )
 
     if text is not None:
+        escaped_text = _escape_jsx_text(str(text))
         if tag in ("span", "p", "a", "label"):
-            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{text}</{tag}>"
+            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{escaped_text}</{tag}>"
         else:
-            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n{inner_indent}{text}\n{start_indent}</{tag}>"
+            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n{inner_indent}{escaped_text}\n{start_indent}</{tag}>"
         return _wrap_conditional(rendered, conditional_state, start_indent)
 
     if tag == "img":
@@ -443,11 +488,11 @@ def _infer_page_title(ast: Dict[str, Any]) -> str:
     root = ast.get("root", ast)
     nodes = _collect_all_nodes(root)
     for node in nodes:
-        text = node.get("text", "")
+        text = _node_text(node)
         if node.get("tag") in ("h1", "h2") and text:
             return text.strip()
     for node in nodes:
-        text = node.get("text", "")
+        text = _node_text(node)
         if text:
             return text.strip()
     return "Landing"

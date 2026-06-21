@@ -104,8 +104,8 @@ def extract_effects(effects: Optional[List[Dict[str, Any]]]) -> Optional[List[Di
 
 
 def extract_text_style(style: Dict[str, Any]) -> Dict[str, Any]:
-    """Извлекает ключевые параметры шрифта."""
-    return {
+    """Извлекает ключевые параметры шрифта, включая декорации и гиперссылки."""
+    result: Dict[str, Any] = {
         "fontFamily": style.get("fontFamily"),
         "fontSize": style.get("fontSize"),
         "fontWeight": style.get("fontWeight"),
@@ -115,6 +115,10 @@ def extract_text_style(style: Dict[str, Any]) -> Dict[str, Any]:
         "textAlignVertical": style.get("textAlignVertical"),
         "fills": extract_fills(style.get("fills")),
     }
+    for key in ("italic", "textCase", "textDecoration", "hyperlink"):
+        if key in style:
+            result[key] = style[key]
+    return result
 
 
 class FigmaExtractor:
@@ -211,6 +215,13 @@ class FigmaExtractor:
             cleaned["characters"] = node.get("characters", "")
             if "style" in node:
                 cleaned["style"] = extract_text_style(node["style"])
+            if node.get("styleOverrideTable"):
+                cleaned["styleOverrideTable"] = {
+                    k: extract_text_style(v)
+                    for k, v in node["styleOverrideTable"].items()
+                }
+            if node.get("characterStyleOverrides"):
+                cleaned["characterStyleOverrides"] = list(node["characterStyleOverrides"])
 
         # Preserve interaction data from Figma prototype
         if node.get("reactions"):

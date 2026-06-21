@@ -213,6 +213,7 @@ class TailwindNode:
     input_type: Optional[str] = None
     required: Optional[bool] = None
     children: List["TailwindNode"] = field(default_factory=list)
+    rich_text: Optional[List[Dict[str, Any]]] = None
     figma_id: Optional[str] = None
     figma_name: Optional[str] = None
     figma_type: Optional[str] = None
@@ -238,6 +239,8 @@ class TailwindNode:
             result["inline_styles"] = self.inline_styles
         if self.text is not None:
             result["text"] = self.text
+        if self.rich_text:
+            result["rich_text"] = self.rich_text
         if self.src is not None:
             result["src"] = self.src
         if self.alt is not None:
@@ -386,7 +389,7 @@ class FigmaLayoutEngine:
 
     def _collect_stats(self, node: TailwindNode) -> Dict[str, int]:
         stats = {"nodes": 1, "texts": 0, "assets": 0}
-        if node.text is not None:
+        if node.text is not None or node.rich_text:
             stats["texts"] += 1
         if node.src is not None:
             stats["assets"] += 1
@@ -481,9 +484,10 @@ class FigmaLayoutEngine:
         return "div"
 
     def _convert_text(self, node: Dict[str, Any]) -> TailwindNode:
+        characters = node.get("characters", "")
         tw_node = TailwindNode(
             tag=self._text_tag(node),
-            text=node.get("characters", ""),
+            text=characters,
             figma_id=node.get("id"),
             figma_name=_safe_name(node.get("name")),
         )
@@ -493,7 +497,57 @@ class FigmaLayoutEngine:
         self._apply_text_style(tw_node, style)
         self._apply_position(tw_node, node, None)
         self._apply_backend_hints(tw_node, node)
+
+        override_table = node.get("styleOverrideTable") or {}
+        char_overrides = node.get("characterStyleOverrides") or []
+        if override_table and char_overrides and any(o for o in char_overrides):
+            tw_node.rich_text = self._build_rich_text(characters, char_overrides, override_table, style)
+
         return tw_node
+
+    def _build_rich_text(
+        self,
+        characters: str,
+        char_overrides: List[Any],
+        override_table: Dict[str, Any],
+        base_style: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        """Группирует символы по override-id и собирает span-описания."""
+        base_classes = set(self._text_style_classes(base_style))
+
+        raw_spans: List[Dict[str, Any]] = []
+        i = 0
+        n = len(characters)
+        while i < n:
+            override_id = char_overrides[i] if i < len(char_overrides) else ""
+            j = i
+            while j < n and j < len(char_overrides) and char_overrides[j] == override_id:
+                j += 1
+            if j == i:
+                j = i + 1
+            text = characters[i:j]
+            override_style = override_table.get(str(override_id), {}) if override_id else {}
+            merged_style = {**base_style, **override_style}
+            classes = [c for c in self._text_style_classes(merged_style) if c not in base_classes]
+            span: Dict[str, Any] = {"text": text, "classes": classes}
+            hyperlink = merged_style.get("hyperlink")
+            if hyperlink and hyperlink.get("type") == "URL":
+                span["tag"] = "a"
+                span["href"] = hyperlink.get("url", "#")
+            raw_spans.append(span)
+            i = j
+
+        final_spans: List[Dict[str, Any]] = []
+        for span in raw_spans:
+            parts = span["text"].split("\n")
+            common = {k: v for k, v in span.items() if k not in ("text", "newline_before")}
+            for idx, part in enumerate(parts):
+                newline_before = idx > 0
+                if not part and not newline_before:
+                    continue
+                seg = {"text": part, "newline_before": newline_before, **common}
+                final_spans.append(seg)
+        return final_spans
 
     def _text_tag(self, node: Dict[str, Any]) -> str:
         name = (node.get("name") or "").lower()
@@ -869,18 +923,20 @@ class FigmaLayoutEngine:
             tw_node.input_type = fm.get("type", "text")
             tw_node.required = fm.get("required", True)
 
-    def _apply_text_style(self, tw_node: TailwindNode, style: Dict[str, Any]) -> None:
+    def _text_style_classes(self, style: Dict[str, Any]) -> List[str]:
+        """Возвращает Tailwind-классы для Figma TypeStyle (без side-эффектов)."""
+        classes: List[str] = []
         font_size = _px(style.get("fontSize"))
         if font_size is not None and font_size > 0:
-            tw_node.add_class(self._font_size_class(font_size))
+            classes.append(self._font_size_class(font_size))
 
         weight = style.get("fontWeight")
         if weight is not None:
-            tw_node.add_class(self._font_weight_class(int(weight)))
+            classes.append(self._font_weight_class(int(weight)))
 
         family = style.get("fontFamily")
         if family:
-            tw_node.add_class(self._font_class(family))
+            classes.append(self._font_class(family))
 
         align = style.get("textAlignHorizontal")
         align_map = {
@@ -890,16 +946,16 @@ class FigmaLayoutEngine:
             "JUSTIFIED": "text-justify",
         }
         if align in align_map:
-            tw_node.add_class(align_map[align])
+            classes.append(align_map[align])
 
         line_height_px = _px(style.get("lineHeightPx"))
         if line_height_px is not None and font_size:
             ratio = round(line_height_px / font_size, 3)
-            tw_node.add_class(self._line_height_class(ratio))
+            classes.append(self._line_height_class(ratio))
 
         letter_spacing = _px(style.get("letterSpacing"))
         if letter_spacing is not None:
-            tw_node.add_class(_arbitrary("tracking", int(round(letter_spacing))))
+            classes.append(_arbitrary("tracking", int(round(letter_spacing))))
 
         fills = style.get("fills") or []
         for fill in fills:
@@ -907,8 +963,34 @@ class FigmaLayoutEngine:
                 hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
                 cls = self._class_for_color("text", hex_color)
                 if cls:
-                    tw_node.add_class(cls)
+                    classes.append(cls)
                 break
+
+        if style.get("italic"):
+            classes.append("italic")
+
+        case = style.get("textCase")
+        case_map = {
+            "UPPER": "uppercase",
+            "LOWER": "lowercase",
+            "TITLE": "capitalize",
+        }
+        if case in case_map:
+            classes.append(case_map[case])
+
+        decoration = style.get("textDecoration")
+        decoration_map = {
+            "UNDERLINE": "underline",
+            "STRIKETHROUGH": "line-through",
+        }
+        if decoration in decoration_map:
+            classes.append(decoration_map[decoration])
+
+        return classes
+
+    def _apply_text_style(self, tw_node: TailwindNode, style: Dict[str, Any]) -> None:
+        for cls in self._text_style_classes(style):
+            tw_node.add_class(cls)
 
 
 def convert_figma_node(node: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> LayoutResult:
