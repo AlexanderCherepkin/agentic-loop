@@ -22,3 +22,7 @@ runtime/safety/safety_chain.py
 
 # Documentation examples
 .agent_loop/tools_terminal/terminal_io/io_handler.md
+
+# Figma compliance checker (contains detection patterns for generated code)
+figma-agent-core/compliance_checker.py
+tests/figma/test_compliance_checker.py

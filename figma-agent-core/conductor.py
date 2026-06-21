@@ -197,6 +197,43 @@ def stage_visual_qa(
     return result.returncode == 0
 
 
+def stage_compliance(
+    files: List[str],
+    rules_path: str = "project_rules.md",
+    workspace_root: Optional[str] = None,
+    output: str = "compliance_report.json",
+    severity_threshold: str = "low",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3e: проверка сгенерированного кода на соответствие project_rules.md и отсутствие placeholder-контента."""
+    logger.info("=== STAGE: compliance ===")
+    if not files:
+        logger.warning("No files provided for compliance check. Skipping.")
+        return True
+
+    command = [
+        sys.executable,
+        "compliance_checker.py",
+        "--files",
+        *files,
+        "--rules",
+        rules_path,
+        "--output",
+        output,
+        "--severity-threshold",
+        severity_threshold,
+    ]
+    if workspace_root:
+        command.extend(["--workspace-root", workspace_root])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def _to_pascal_case(name: str) -> str:
     """Превращает произвольное имя в PascalCase."""
     import re
@@ -350,7 +387,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "visual_qa", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "compliance", "visual_qa", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -397,6 +434,20 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["compose"] = {"success": ok}
+
+        elif stage == "compliance":
+            files = config.get("compliance_files") or []
+            if not files:
+                files = [config.get("compose_output", "src/app/page.tsx")]
+            ok = stage_compliance(
+                files=files,
+                rules_path=config.get("compliance_rules_path", "project_rules.md"),
+                workspace_root=config.get("compliance_workspace_root"),
+                output=config.get("compliance_output", "compliance_report.json"),
+                severity_threshold=config.get("compliance_severity_threshold", "low"),
+                dry_run=dry_run,
+            )
+            report["stages"]["compliance"] = {"success": ok}
 
         elif stage == "visual_qa":
             url = config.get("visual_qa_url")
@@ -468,12 +519,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, visual_qa, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, visual_qa, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -557,6 +608,28 @@ def main():
         help="Список разрешённых внешних доменов через запятую для URL-гарда Visual QA."
     )
     parser.add_argument(
+        "--compliance-files",
+        nargs="+",
+        default=None,
+        help="Список сгенерированных файлов для проверки соответствия project_rules.md (по умолчанию --compose-output)."
+    )
+    parser.add_argument(
+        "--compliance-rules-path",
+        default="project_rules.md",
+        help="Путь к project_rules.md для compliance checker."
+    )
+    parser.add_argument(
+        "--compliance-output",
+        default="compliance_report.json",
+        help="Путь для сохранения отчёта compliance checker."
+    )
+    parser.add_argument(
+        "--compliance-severity-threshold",
+        default="low",
+        choices=["low", "medium", "high", "critical"],
+        help="Минимальный уровень severity, который блокирует compliance."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -604,6 +677,10 @@ def main():
         "visual_qa_viewport": args.visual_qa_viewport,
         "visual_qa_expected": args.visual_qa_expected,
         "visual_qa_allowed_domains": args.visual_qa_allowed_domains,
+        "compliance_files": args.compliance_files,
+        "compliance_rules_path": args.compliance_rules_path,
+        "compliance_output": args.compliance_output,
+        "compliance_severity_threshold": args.compliance_severity_threshold,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,
