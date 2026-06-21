@@ -164,6 +164,7 @@ class FigmaExtractor:
 
         if "layoutMode" in node:
             cleaned["layoutMode"] = node.get("layoutMode")
+            cleaned["layoutPositioning"] = node.get("layoutPositioning")
             cleaned["itemSpacing"] = node.get("itemSpacing")
             cleaned["paddingTop"] = node.get("paddingTop", 0)
             cleaned["paddingRight"] = node.get("paddingRight", 0)
@@ -171,6 +172,8 @@ class FigmaExtractor:
             cleaned["paddingLeft"] = node.get("paddingLeft", 0)
             cleaned["primaryAxisAlignItems"] = node.get("primaryAxisAlignItems")
             cleaned["counterAxisAlignItems"] = node.get("counterAxisAlignItems")
+            cleaned["primaryAxisSizingMode"] = node.get("primaryAxisSizingMode")
+            cleaned["counterAxisSizingMode"] = node.get("counterAxisSizingMode")
 
         if "absoluteBoundingBox" in node:
             box = node["absoluteBoundingBox"]

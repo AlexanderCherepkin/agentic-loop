@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-06-20T21:03:25.232928+00:00",
+  "started_at": "2026-06-21T08:41:07.492626+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -9,6 +9,26 @@
     },
     "spec": {
       "success": true
+    },
+    "layout": {
+      "success": true
+    },
+    "extract": {
+      "success": true
+    },
+    "compose": {
+      "success": true
+    },
+    "compliance": {
+      "success": true
+    },
+    "visual_qa": {
+      "success": false,
+      "reason": "missing --visual-qa-url"
+    },
+    "refinement": {
+      "success": false,
+      "reason": "missing --visual-qa-url"
     },
     "components": {
       "success": true,
@@ -41,10 +61,31 @@
     "api_depth": 2,
     "skip_assets": false,
     "spec_output": "spec.md",
+    "layout_output": "layout_ast.json",
+    "compose_output": "src/app/page.tsx",
+    "compose_title": null,
+    "components_output_dir": "src/app/components",
+    "page_ast_output": "page_ast.json",
+    "component_map_output": "component_map.json",
+    "component_patterns": null,
+    "component_min_duplicates": 2,
+    "visual_qa_url": null,
+    "visual_qa_reference": null,
+    "visual_qa_output_dir": ".tmp/browser/visual_qa",
+    "visual_qa_viewport": null,
+    "visual_qa_expected": null,
+    "visual_qa_allowed_domains": null,
+    "compliance_files": null,
+    "compliance_rules_path": "project_rules.md",
+    "compliance_output": "compliance_report.json",
+    "compliance_severity_threshold": "low",
+    "refinement_max_iterations": 3,
+    "refinement_diff_threshold": 0.05,
+    "refinement_report_output": "refinement_report.json",
     "file": "figma_node.json",
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-20T21:03:25.234932+00:00",
+  "finished_at": "2026-06-21T08:41:07.494599+00:00",
   "duration_seconds": 0.0
 }

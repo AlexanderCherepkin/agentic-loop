@@ -417,3 +417,66 @@ def test_absolute_bounding_box_fallback_for_size() -> None:
     result = layout_engine.convert_figma_node(node)
     assert "w-[100px]" in result.root.classes
     assert "h-[200px]" in result.root.classes
+
+
+def test_complex_layout_absolute_badge() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data)
+    card_stack = result.root.children[0].children[1]
+    card = card_stack.children[0]
+    assert "relative" in card.classes
+    badge = card.children[0]
+    assert badge.figma_name == "Badge"
+    assert "absolute" in badge.classes
+    assert badge.inline_styles.get("left") == "312px"
+    assert badge.inline_styles.get("top") == "-16px"
+
+
+def test_complex_layout_auto_sized_card_skips_fixed_size() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data)
+    card_stack = result.root.children[0].children[1]
+    auto_card = card_stack.children[2]
+    assert auto_card.figma_name == "Auto_Card"
+    assert "w-[352px]" not in auto_card.classes
+    assert "h-[244px]" not in auto_card.classes
+    assert "flex" in auto_card.classes
+    assert "flex-col" in auto_card.classes
+
+
+def test_complex_layout_mask_card_has_overflow_hidden() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data)
+    card_stack = result.root.children[0].children[1]
+    mask_card = card_stack.children[1]
+    assert mask_card.figma_name == "Mask_Card"
+    assert "overflow-hidden" in mask_card.classes
+    assert "rounded-2xl" in mask_card.classes
+
+
+def test_complex_layout_nested_autolayout_rows() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data)
+    grid = result.root.children[1]
+    nested = grid.children[1]
+    assert nested.figma_name == "Nested_Auto_Layout"
+    assert "flex-col" in nested.classes
+    assert "gap-[16px]" in nested.classes
+    assert len(nested.children) == 2
+    row_a, row_b = nested.children
+    assert "flex-row" in row_a.classes
+    assert "gap-[16px]" in row_a.classes
+    assert "items-center" in row_a.classes
+    text_stack = row_a.children[1]
+    assert "flex-col" in text_stack.classes
+    assert "gap-[4px]" in text_stack.classes
+
+
+def test_complex_layout_overlay_alpha_renders_rgba_inline() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data)
+    overlay = result.root.children[2]
+    assert overlay.figma_name == "Modal_Overlay"
+    assert "bg-[#1a1a1f99]" not in overlay.classes
+    assert overlay.inline_styles.get("backgroundColor") == "rgba(26, 26, 31, 0.60)"
+    assert overlay.inline_styles.get("opacity") == "0.6"

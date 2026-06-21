@@ -119,6 +119,45 @@ def _color_to_hex(color: Optional[Dict[str, float]]) -> Optional[str]:
         return None
 
 
+def _hex_to_rgba(hex_color: Optional[str]) -> Optional[str]:
+    """Превращает HEX с альфа или без в CSS rgba()/rgb() строку."""
+    if not hex_color:
+        return None
+    hex_color = hex_color.lower().strip().lstrip("#")
+    if not re.match(r"^[0-9a-f]{3,8}$", hex_color):
+        return None
+    if len(hex_color) == 3:
+        r = int(hex_color[0] * 2, 16)
+        g = int(hex_color[1] * 2, 16)
+        b = int(hex_color[2] * 2, 16)
+        return f"rgb({r}, {g}, {b})"
+    if len(hex_color) == 4:
+        r = int(hex_color[0] * 2, 16)
+        g = int(hex_color[1] * 2, 16)
+        b = int(hex_color[2] * 2, 16)
+        a = int(hex_color[3] * 2, 16) / 255
+        return f"rgba({r}, {g}, {b}, {a:.2f})"
+    if len(hex_color) == 6:
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+        return f"rgb({r}, {g}, {b})"
+    if len(hex_color) == 8:
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+        a = int(hex_color[6:8], 16) / 255
+        return f"rgba({r}, {g}, {b}, {a:.2f})"
+    return None
+
+
+def _has_alpha(hex_color: Optional[str]) -> bool:
+    if not hex_color:
+        return False
+    hex_color = hex_color.strip().lstrip("#")
+    return len(hex_color) in (4, 8)
+
+
 def _px(value: Any) -> Optional[float]:
     if value is None:
         return None
@@ -197,6 +236,7 @@ class FigmaLayoutEngine:
 
     def convert(self, node: Dict[str, Any]) -> LayoutResult:
         root = self._convert_node(node, parent_box=node.get("box"))
+        self._ensure_relative_for_absolute_children(root)
         stats = self._collect_stats(root)
         return LayoutResult(
             root=root,
@@ -204,6 +244,15 @@ class FigmaLayoutEngine:
             text_node_count=stats["texts"],
             asset_count=stats["assets"],
         )
+
+    def _ensure_relative_for_absolute_children(self, node: TailwindNode) -> None:
+        has_absolute_child = any(
+            "absolute" in child.classes for child in node.children
+        )
+        if has_absolute_child:
+            node.add_class("relative")
+        for child in node.children:
+            self._ensure_relative_for_absolute_children(child)
 
     def _collect_stats(self, node: TailwindNode) -> Dict[str, int]:
         stats = {"nodes": 1, "texts": 0, "assets": 0}
@@ -253,16 +302,20 @@ class FigmaLayoutEngine:
         )
 
         box = node.get("box") or node.get("absoluteBoundingBox")
-        self._apply_size(tw_node, box)
+        absolute_box = node.get("absoluteBoundingBox") or box
+        self._apply_size(tw_node, box, node)
         self._apply_layout(tw_node, node)
         self._apply_position(tw_node, node, parent_box)
         self._apply_fills(tw_node, node)
         self._apply_strokes(tw_node, node)
         self._apply_effects(tw_node, node)
         self._apply_radius(tw_node, node)
+        if node.get("clipContent"):
+            tw_node.add_class("overflow-hidden")
 
         for child in node.get("children", []):
-            converted = self._convert_node(child, parent_box=box, depth=depth + 1)
+            child_parent_box = absolute_box if absolute_box else box
+            converted = self._convert_node(child, parent_box=child_parent_box, depth=depth + 1)
             if converted:
                 tw_node.children.append(converted)
 
@@ -303,7 +356,7 @@ class FigmaLayoutEngine:
             figma_name=_safe_name(node.get("name")),
         )
         box = node.get("box") or node.get("absoluteBoundingBox")
-        self._apply_size(tw_node, box)
+        self._apply_size(tw_node, box, node)
         style = node.get("style", {})
         self._apply_text_style(tw_node, style)
         self._apply_position(tw_node, node, None)
@@ -339,7 +392,7 @@ class FigmaLayoutEngine:
             figma_name=_safe_name(node.get("name")),
         )
         box = node.get("box") or node.get("absoluteBoundingBox")
-        self._apply_size(tw_node, box)
+        self._apply_size(tw_node, box, node)
         self._apply_position(tw_node, node, None)
         return tw_node
 
@@ -350,7 +403,7 @@ class FigmaLayoutEngine:
             figma_name=_safe_name(node.get("name")),
         )
         box = node.get("box") or node.get("absoluteBoundingBox")
-        self._apply_size(tw_node, box)
+        self._apply_size(tw_node, box, node)
         self._apply_position(tw_node, node, None)
         self._apply_fills(tw_node, node)
         self._apply_strokes(tw_node, node)
@@ -358,9 +411,21 @@ class FigmaLayoutEngine:
         self._apply_radius(tw_node, node)
         return tw_node
 
-    def _apply_size(self, tw_node: TailwindNode, box: Optional[Dict[str, Any]]) -> None:
+    def _apply_size(
+        self,
+        tw_node: TailwindNode,
+        box: Optional[Dict[str, Any]],
+        node: Optional[Dict[str, Any]] = None,
+    ) -> None:
         if not box:
             return
+
+        if node and self.config.get("skip_fixed_size_when_auto", True):
+            primary_axis = node.get("primaryAxisSizingMode")
+            counter_axis = node.get("counterAxisSizingMode")
+            if primary_axis == "AUTO" and counter_axis == "AUTO":
+                return
+
         width = _px(box.get("width"))
         height = _px(box.get("height"))
         if width is not None and width > 0:
@@ -442,11 +507,14 @@ class FigmaLayoutEngine:
         node: Dict[str, Any],
         parent_box: Optional[Dict[str, Any]],
     ) -> None:
-        if node.get("layoutMode"):
-            return
-
         node_type = node.get("type")
         if node_type == "TEXT":
+            return
+
+        positioning = node.get("layoutPositioning")
+        if positioning == "ABSOLUTE":
+            pass
+        elif node.get("layoutMode"):
             return
 
         box = node.get("box") or node.get("absoluteBoundingBox")
@@ -468,15 +536,21 @@ class FigmaLayoutEngine:
         tw_node.inline_styles["left"] = f"{rel_x}px"
         tw_node.inline_styles["top"] = f"{rel_y}px"
 
+
     def _apply_fills(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         fills = node.get("fills") or []
         for fill in fills:
             fill_type = fill.get("type")
             if fill_type == "SOLID":
                 hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
-                cls = _class_for_color("bg", hex_color)
-                if cls:
-                    tw_node.add_class(cls)
+                if _has_alpha(hex_color):
+                    rgba = _hex_to_rgba(hex_color)
+                    if rgba:
+                        tw_node.inline_styles["backgroundColor"] = rgba
+                else:
+                    cls = _class_for_color("bg", hex_color)
+                    if cls:
+                        tw_node.add_class(cls)
                 opacity = fill.get("opacity")
                 if opacity is not None and opacity < 1.0:
                     tw_node.inline_styles["opacity"] = str(opacity)

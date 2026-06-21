@@ -1,19 +1,25 @@
-# Graph Report - Agentic_Loop_Graph  (2026-06-19)
+# Graph Report - Agentic_Loop_Graph  (2026-06-21)
 
 ## Corpus Check
-- 297 files · ~144,184 words
+- 317 files · ~155,044 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3086 nodes · 4938 edges · 288 communities (264 shown, 24 thin omitted)
-- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 674 edges (avg confidence: 0.6)
+- 3275 nodes · 5027 edges · 317 communities (285 shown, 32 thin omitted)
+- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 606 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `b7e19e49`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_MCP WebSearchDB Servers|MCP Web/Search/DB Servers]]
 - [[_COMMUNITY_Memory Store Pipeline|Memory Store Pipeline]]
 - [[_COMMUNITY_Graphify AddWatchExportsHooks|Graphify Add/Watch/Exports/Hooks]]
 - [[_COMMUNITY_Runtime Engine Core|Runtime Engine Core]]
+- [[_COMMUNITY_Replace File Pipeline|Replace File Pipeline]]
 - [[_COMMUNITY_Agent Loop Architecture|Agent Loop Architecture]]
 - [[_COMMUNITY_Message Bus Contracts|Message Bus Contracts]]
 - [[_COMMUNITY_Safety Audit Logger|Safety Audit Logger]]
@@ -25,6 +31,9 @@
 - [[_COMMUNITY_Agent Loop Tools Replace|Agent Loop Tools Replace]]
 - [[_COMMUNITY_Agent Loop Tools Runcom|Agent Loop Tools Runcom]]
 - [[_COMMUNITY_Agent Loop Tools Runtest|Agent Loop Tools Runtest]]
+- [[_COMMUNITY_Agent Loop Tools Database|Agent Loop Tools Database]]
+- [[_COMMUNITY_Agent Loop Tools Memory|Agent Loop Tools Memory]]
+- [[_COMMUNITY_Agent Loop Tools Terminal|Agent Loop Tools Terminal]]
 - [[_COMMUNITY_Agent Spec Contracts|Agent Spec Contracts]]
 - [[_COMMUNITY_Agent Loop Tools Manangr|Agent Loop Tools Manangr]]
 - [[_COMMUNITY_Agent Loop Tools Web|Agent Loop Tools Web]]
@@ -43,6 +52,7 @@
 - [[_COMMUNITY_MCP Base Server|MCP Base Server]]
 - [[_COMMUNITY_MCP Registry|MCP Registry]]
 - [[_COMMUNITY_Runtime Memory Manager|Runtime Memory Manager]]
+- [[_COMMUNITY_Observability Environment Result|Observability Environment Result]]
 - [[_COMMUNITY_Observability Lifecycle|Observability Lifecycle]]
 - [[_COMMUNITY_Graphify Query Reference|Graphify Query Reference]]
 - [[_COMMUNITY_Memory Store Consistency|Memory Store Consistency]]
@@ -53,6 +63,7 @@
 - [[_COMMUNITY_Memory Recall Optimizer|Memory Recall Optimizer]]
 - [[_COMMUNITY_Memory Embedding Batch|Memory Embedding Batch]]
 - [[_COMMUNITY_Worker Context Isolator|Worker Context Isolator]]
+- [[_COMMUNITY_Memory Eviction Policy|Memory Eviction Policy]]
 - [[_COMMUNITY_Memory Index Manager|Memory Index Manager]]
 - [[_COMMUNITY_Memory Summarizer|Memory Summarizer]]
 - [[_COMMUNITY_MCP Runcom Server|MCP Runcom Server]]
@@ -74,8 +85,11 @@
 - [[_COMMUNITY_Worker Pool Dispatch|Worker Pool Dispatch]]
 - [[_COMMUNITY_Message Bus Delivery Receipt|Message Bus Delivery Receipt]]
 - [[_COMMUNITY_Observability Metrics|Observability Metrics]]
+- [[_COMMUNITY_State Manager Session Create|State Manager Session Create]]
 - [[_COMMUNITY_Graph Pilot Token Guards|Graph Pilot Token Guards]]
+- [[_COMMUNITY_Community 72|Community 72]]
 - [[_COMMUNITY_Runtime Python Requirements|Runtime Python Requirements]]
+- [[_COMMUNITY_MCP Filesystem TSConfig|MCP Filesystem TSConfig]]
 - [[_COMMUNITY_MCP Commander TSConfig|MCP Commander TSConfig]]
 - [[_COMMUNITY_Post Merge Git Hook|Post Merge Git Hook]]
 - [[_COMMUNITY_Pre Push Git Hook|Pre Push Git Hook]]
@@ -87,6 +101,8 @@
 - [[_COMMUNITY_MCP Web Auth Headers|MCP Web Auth Headers]]
 - [[_COMMUNITY_MCP Replace Edit File Tool|MCP Replace Edit File Tool]]
 - [[_COMMUNITY_MCP Github PR Diff|MCP Github PR Diff]]
+- [[_COMMUNITY_MCP Filesystem Package|MCP Filesystem Package]]
+- [[_COMMUNITY_MCP Commander Package|MCP Commander Package]]
 - [[_COMMUNITY_MCP Commander Package Duplicate|MCP Commander Package Duplicate]]
 - [[_COMMUNITY_MCP Database Sqlite Types|MCP Database Sqlite Types]]
 - [[_COMMUNITY_MCP Filesystem Package Duplicate|MCP Filesystem Package Duplicate]]
@@ -103,7 +119,6 @@
 - [[_COMMUNITY_MCP Database Transaction Tool|MCP Database Transaction Tool]]
 - [[_COMMUNITY_MCP Database Sqlite Statement|MCP Database Sqlite Statement]]
 - [[_COMMUNITY_MCP Database Sqlite Statement Duplicate|MCP Database Sqlite Statement Duplicate]]
-- [[_COMMUNITY_Tests Init|Tests Init]]
 - [[_COMMUNITY_Tests Integration Init|Tests Integration Init]]
 - [[_COMMUNITY_Community 106|Community 106]]
 - [[_COMMUNITY_Community 107|Community 107]]
@@ -113,6 +128,7 @@
 - [[_COMMUNITY_Community 111|Community 111]]
 - [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
+- [[_COMMUNITY_Community 114|Community 114]]
 - [[_COMMUNITY_Community 115|Community 115]]
 - [[_COMMUNITY_Community 116|Community 116]]
 - [[_COMMUNITY_Community 117|Community 117]]
@@ -130,10 +146,12 @@
 - [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
 - [[_COMMUNITY_Community 131|Community 131]]
+- [[_COMMUNITY_Community 132|Community 132]]
 - [[_COMMUNITY_Community 133|Community 133]]
 - [[_COMMUNITY_Community 134|Community 134]]
 - [[_COMMUNITY_Community 135|Community 135]]
 - [[_COMMUNITY_Community 136|Community 136]]
+- [[_COMMUNITY_Community 137|Community 137]]
 - [[_COMMUNITY_Community 138|Community 138]]
 - [[_COMMUNITY_Community 139|Community 139]]
 - [[_COMMUNITY_Community 140|Community 140]]
@@ -142,6 +160,7 @@
 - [[_COMMUNITY_Community 143|Community 143]]
 - [[_COMMUNITY_Community 144|Community 144]]
 - [[_COMMUNITY_Community 145|Community 145]]
+- [[_COMMUNITY_Community 146|Community 146]]
 - [[_COMMUNITY_Community 147|Community 147]]
 - [[_COMMUNITY_Community 148|Community 148]]
 - [[_COMMUNITY_Community 149|Community 149]]
@@ -165,6 +184,7 @@
 - [[_COMMUNITY_Community 167|Community 167]]
 - [[_COMMUNITY_Community 168|Community 168]]
 - [[_COMMUNITY_Community 169|Community 169]]
+- [[_COMMUNITY_Community 170|Community 170]]
 - [[_COMMUNITY_Community 171|Community 171]]
 - [[_COMMUNITY_Community 172|Community 172]]
 - [[_COMMUNITY_Community 173|Community 173]]
@@ -271,6 +291,8 @@
 - [[_COMMUNITY_Community 274|Community 274]]
 - [[_COMMUNITY_Community 275|Community 275]]
 - [[_COMMUNITY_Community 276|Community 276]]
+- [[_COMMUNITY_Community 277|Community 277]]
+- [[_COMMUNITY_Community 278|Community 278]]
 - [[_COMMUNITY_Community 279|Community 279]]
 - [[_COMMUNITY_Community 280|Community 280]]
 - [[_COMMUNITY_Community 281|Community 281]]
@@ -285,17 +307,39 @@
 - [[_COMMUNITY_Community 290|Community 290]]
 - [[_COMMUNITY_Community 291|Community 291]]
 - [[_COMMUNITY_Community 292|Community 292]]
+- [[_COMMUNITY_Community 293|Community 293]]
+- [[_COMMUNITY_Community 294|Community 294]]
+- [[_COMMUNITY_Community 295|Community 295]]
+- [[_COMMUNITY_Community 296|Community 296]]
+- [[_COMMUNITY_Community 297|Community 297]]
+- [[_COMMUNITY_Community 298|Community 298]]
+- [[_COMMUNITY_Community 299|Community 299]]
+- [[_COMMUNITY_Community 300|Community 300]]
+- [[_COMMUNITY_Community 301|Community 301]]
+- [[_COMMUNITY_Community 302|Community 302]]
+- [[_COMMUNITY_Community 303|Community 303]]
+- [[_COMMUNITY_Community 304|Community 304]]
+- [[_COMMUNITY_Community 305|Community 305]]
+- [[_COMMUNITY_Community 306|Community 306]]
+- [[_COMMUNITY_Community 307|Community 307]]
+- [[_COMMUNITY_Community 309|Community 309]]
+- [[_COMMUNITY_Community 310|Community 310]]
+- [[_COMMUNITY_Community 311|Community 311]]
+- [[_COMMUNITY_Community 312|Community 312]]
+- [[_COMMUNITY_Community 313|Community 313]]
+- [[_COMMUNITY_Community 314|Community 314]]
+- [[_COMMUNITY_Community 315|Community 315]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `MCPRegistry` - 63 edges
-2. `MCPServer` - 54 edges
-3. `PhaseTransitionManager` - 50 edges
-4. `StateManager` - 48 edges
-5. `MessageBus` - 45 edges
-6. `PipelineRunner` - 45 edges
-7. `AgentLoader` - 44 edges
-8. `getDb()` - 42 edges
-9. `LLMEngine` - 41 edges
+1. `MCPServer` - 66 edges
+2. `MCPRegistry` - 63 edges
+3. `StateManager` - 52 edges
+4. `PhaseTransitionManager` - 49 edges
+5. `MessageBus` - 48 edges
+6. `PipelineRunner` - 48 edges
+7. `AgentLoader` - 47 edges
+8. `LLMEngine` - 43 edges
+9. `getDb()` - 42 edges
 10. `BrowserMCPServer` - 35 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -303,12 +347,12 @@
   .codex/hooks.json → .claude/skills/graph-pilot/SKILL.md
 - `MemoryMCPServer` --semantically_similar_to--> `checkConsistency()`  [INFERRED] [semantically similar]
   mcp_servers/memory_server.py → memory/consistency_checker.js
+- `MemoryMCPServer` --semantically_similar_to--> `compress()`  [INFERRED] [semantically similar]
+  mcp_servers/memory_server.py → memory/context_compressor.js
 - `MemoryMCPServer` --semantically_similar_to--> `embed()`  [INFERRED] [semantically similar]
   mcp_servers/memory_server.py → memory/embedding_agent.js
 - `MemoryMCPServer` --semantically_similar_to--> `evict()`  [INFERRED] [semantically similar]
   mcp_servers/memory_server.py → memory/eviction_policy.js
-- `MemoryMCPServer` --semantically_similar_to--> `processWrite()`  [INFERRED] [semantically similar]
-  mcp_servers/memory_server.py → memory/memory_writer.js
 
 ## Import Cycles
 - None detected.
@@ -352,43 +396,43 @@
 - **LLM Provider SDK Dependencies** — runtime_requirements_anthropic, runtime_requirements_openai [INFERRED 0.85]
 - **Video transcription pipeline** — references_transcribe_detect_video_files, references_transcribe_whisper_prompt, references_transcribe_transcribe_all, references_transcribe_graphify_transcripts_json [EXTRACTED 1.00]
 
-## Communities (288 total, 24 thin omitted)
+## Communities (317 total, 32 thin omitted)
 
 ### Community 0 - "MCP Web/Search/DB Servers"
-Cohesion: 0.20
-Nodes (4): mcp-database — Node.js MCP server for SQLite database queries, DatabaseMCPServer, Any, MCP server for tools_database — database query pipeline (query-lifecycle).
+Cohesion: 0.21
+Nodes (3): DatabaseMCPServer, Any, MCP server for tools_database — database query pipeline (query-lifecycle).
 
 ### Community 1 - "Memory Store Pipeline"
-Cohesion: 0.09
-Nodes (19): MemoryMCPServer, Any, Path, MCP server for tools_memory — memory store pipeline (store-lifecycle)., compress(), countTokens(), extractSalient(), FILLER_PATTERNS (+11 more)
+Cohesion: 0.19
+Nodes (4): MemoryMCPServer, Any, Path, MCP server for tools_memory — memory store pipeline (store-lifecycle).
 
 ### Community 2 - "Graphify Add/Watch/Exports/Hooks"
-Cohesion: 0.23
-Nodes (16): add-watch.md reference, arXiv ingestion, code-only AST update on watch, code vs docs watcher behavior rationale, debounce, debounce rationale, /graphify add command, --watch background watcher (+8 more)
+Cohesion: 0.26
+Nodes (15): add-watch.md reference, arXiv ingestion, code-only AST update on watch, code vs docs watcher behavior rationale, debounce, debounce rationale, /graphify add command, --watch background watcher (+7 more)
 
 ### Community 3 - "Runtime Engine Core"
 Cohesion: 0.29
 Nodes (4): Any, Return lightweight metadata for a category without materializing it., Return full tool descriptors for a category; loads the server if needed., Execute a single MCP tool, loading its server on demand.
 
-### Community 5 - "Agent Loop Architecture"
-Cohesion: 0.27
-Nodes (4): Aggregation Policies (unanimous, weighted_majority, safety_first, override_with_human), Confirmation Gates (interview and pre_deploy phases require human confirmation), Control Directive (proceed / proceed_with_constraints / halt / escalate_human / retry_safety), Message Delivery Guarantees (at_most_once, at_least_once, exactly_once)
+### Community 4 - "Replace File Pipeline"
+Cohesion: 0.14
+Nodes (25): CompletedProcess, _collect_top_level_sections(), main(), Any, Этап 3: генерация технического задания., Превращает произвольное имя в PascalCase., Собирает топ-уровневые секции из figma_node.json., Этап 4: генерация React-компонента для одной ноды. (+17 more)
 
 ### Community 6 - "Message Bus Contracts"
 Cohesion: 0.11
 Nodes (4): PhaseTransitionManager, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
 
 ### Community 7 - "Safety Audit Logger"
-Cohesion: 0.07
-Nodes (36): ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope, runtime.contracts Package Initializer (+28 more)
+Cohesion: 0.17
+Nodes (10): Any, Path, AuditEvent, AuditLogger, GuardrailRule, SafetyChain, SafetyLevel, SafetyResult (+2 more)
 
 ### Community 8 - "Engine Circuit Breaker"
-Cohesion: 0.15
-Nodes (23): AgentLoader, ContractSpec, AgentLoader, LLMConfig, LLMProvider, MessageBus, PipelineResult, PipelineStatus (+15 more)
+Cohesion: 0.16
+Nodes (18): cache_age_minutes(), check_figma_connection(), extract_effects(), extract_fills(), extract_text_style(), FigmaExtractor, find_node_by_id(), load_existing_cache() (+10 more)
 
 ### Community 9 - "Control Human Oversight"
-Cohesion: 0.12
-Nodes (16): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Tool Invocation (+8 more)
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Tool Invocation
 
 ### Community 10 - "Pipeline Runner"
 Cohesion: 0.13
@@ -399,40 +443,52 @@ Cohesion: 0.07
 Nodes (28): bin, agentic-loop, dependencies, chalk, commander, ink, @modelcontextprotocol/sdk, ora (+20 more)
 
 ### Community 12 - "Agent Loop Tools Search"
-Cohesion: 0.15
-Nodes (20): build_parser(), cmd_approve(), cmd_demo(), cmd_health(), cmd_mcp_connect(), cmd_metrics(), cmd_run(), cmd_status() (+12 more)
+Cohesion: 0.14
+Nodes (21): build_parser(), cmd_approve(), cmd_demo(), cmd_health(), cmd_mcp_connect(), cmd_metrics(), cmd_run(), cmd_status() (+13 more)
 
 ### Community 13 - "Agent Loop Tools Replace"
-Cohesion: 0.12
-Nodes (13): Any, CompressionSummary, ContextCompressor, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+5 more)
+Cohesion: 0.13
+Nodes (12): Any, CompressionSummary, ContextCompressor, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+4 more)
 
 ### Community 14 - "Agent Loop Tools Runcom"
-Cohesion: 0.08
-Nodes (28): Message, MessageType, StateManager, StateResult, Panel, Any, main(), parse_args() (+20 more)
+Cohesion: 0.09
+Nodes (31): DeliveryGuarantee, DeliveryReceipt, Message, MessageStatus, MessageType, MessageBus, OperationStatus, StateManager (+23 more)
 
 ### Community 15 - "Agent Loop Tools Runtest"
 Cohesion: 0.22
 Nodes (13): End-to-end integration tests for Agentic Loop runtime.  Runs the full ReAct pipe, Recursion/termination agent should terminate on iteration >= 2., Full ReAct pipeline with mock provider should finish in <1s., Safety pre-check agents should all pass with mock responses., Every trace entry must have required fields., StateManager should persist session data., _resolve_root(), _run_pipeline() (+5 more)
 
+### Community 16 - "Agent Loop Tools Database"
+Cohesion: 0.18
+Nodes (12): _download_assets_for_context(), FigmaAgent, _inject_asset_paths(), main(), _maybe_bootstrap(), Any, Path, Рекурсивно добавляет publicPath в ассет-ноды для передачи в LLM. (+4 more)
+
+### Community 17 - "Agent Loop Tools Memory"
+Cohesion: 0.18
+Nodes (11): ExecutionMode, MemoryType, StateScope, Topic, ConsistencyLevel, StateRecord, StateResult, Enum (+3 more)
+
+### Community 18 - "Agent Loop Tools Terminal"
+Cohesion: 0.32
+Nodes (3): FigmaMCPServer, Any, MCP server that wraps the figma-agent-core Figma-to-code pipeline.      The wrap
+
 ### Community 19 - "Agent Spec Contracts"
-Cohesion: 0.23
-Nodes (4): DecisionStep, FailureMode, AgentSpec, Path
+Cohesion: 0.14
+Nodes (13): AgentSpec, ContractSpec, DecisionStep, FailureMode, Parameter, ContractSpec, DecisionStep, AgentLoader (+5 more)
 
 ### Community 20 - "Agent Loop Tools Manangr"
-Cohesion: 0.13
-Nodes (14): LogRecord, _JSONFormatter — logging.Formatter that emits JSON lines with timestamp, level, message, extras, add_file_handler(), configure_log_level(), get_logger(), _JSONFormatter, Set root log level by name ('DEBUG', 'INFO', etc.) or int., Add a rotating file handler emitting JSON lines. (+6 more)
+Cohesion: 0.20
+Nodes (9): add_file_handler(), configure_log_level(), get_logger(), Set root log level by name ('DEBUG', 'INFO', etc.) or int., Add a rotating file handler emitting JSON lines., _setup_root(), Logger + metrics + health work together end-to-end., TestObservabilityIntegration (+1 more)
 
 ### Community 21 - "Agent Loop Tools Web"
-Cohesion: 0.10
-Nodes (10): Counter, Gauge, Histogram, MetricsCollector, MetricsSnapshot, Thread-safe (in asyncio single-thread sense) metrics registry., TestCounter, TestGauge (+2 more)
+Cohesion: 0.16
+Nodes (6): Counter, MetricsCollector, MetricsSnapshot, Thread-safe (in asyncio single-thread sense) metrics registry., TestCounter, TestMetricsCollector
 
 ### Community 22 - "Agent Loop Orchestrator"
 Cohesion: 0.11
 Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
 
 ### Community 23 - "Agent Loop Safety Control"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.13
+Nodes (15): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+7 more)
 
 ### Community 24 - "Agent Loop Mutual Check"
 Cohesion: 0.11
@@ -447,32 +503,32 @@ Cohesion: 0.11
 Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
 
 ### Community 27 - "Agent Loop ReAct Planning"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.13
+Nodes (15): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+7 more)
 
 ### Community 28 - "Agent Loop ReAct Execution"
 Cohesion: 0.11
 Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
 
 ### Community 29 - "Agent Loop ReAct Observability"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.13
+Nodes (15): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+7 more)
 
 ### Community 30 - "Agent Loop ReAct Self Correction"
 Cohesion: 0.11
 Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
 
 ### Community 31 - "Agent Loop ReAct Result"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.13
+Nodes (15): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+7 more)
 
 ### Community 32 - "Agent Loop Main Loop"
 Cohesion: 0.23
 Nodes (17): Any, build_result_summary(), build_system_prompt(), build_user_message(), call_llm_api(), execute_agent(), execute_locally(), extract_json() (+9 more)
 
 ### Community 33 - "MCP Servers Bootstrap"
-Cohesion: 0.16
-Nodes (10): MCP Servers Package Init — Exports MCPServer, MCPTool, MCPRegistry, ServerInfo, MCPServer, MCPServer._handle_request — JSON-RPC method router, MCPTool, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive. (+2 more)
+Cohesion: 0.13
+Nodes (8): MCP Servers Package Init — Exports MCPServer, MCPTool, MCPRegistry, ServerInfo, MCPServer, MCPServer._handle_request — JSON-RPC method router, MCPTool, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe
 
 ### Community 34 - "MCP Base Server"
 Cohesion: 0.25
@@ -480,11 +536,15 @@ Nodes (5): MCPToolResult, Any, Path, MCP server for tools_read — file reading 
 
 ### Community 35 - "MCP Registry"
 Cohesion: 0.13
-Nodes (10): MCPRegistry, MCPRegistry.CATEGORY_MAP, MCPRegistry, Any, MCPServer, Health check one or all servers. Returns {name: bool}., Quick check if the server owning a tool is healthy., Registry and discovery for all MCP servers across tools_* categories.      Suppo (+2 more)
+Nodes (11): MCPRegistry.CATEGORY_MAP, MCPRegistry, Any, MCPServer, Health check one or all servers. Returns {name: bool}., Quick check if the server owning a tool is healthy., Registry and discovery for all MCP servers across tools_* categories.      Suppo, Eager registration: server is already constructed. (+3 more)
 
 ### Community 36 - "Runtime Memory Manager"
 Cohesion: 0.18
 Nodes (8): MemoryManager, Store multiple entries efficiently., Hybrid retrieval: semantic + keyword via Reciprocal Rank Fusion (RRF).         R, Load relevant memories before a new session starts., Extract facts from a completed session and persist them.         Accepts either, Cross-session memory coordinator., Store a single memory entry.         Entry keys: id, type, title, body, tags, pr, Any
+
+### Community 37 - "Observability Environment Result"
+Cohesion: 0.30
+Nodes (14): _build_page_tree(), _collect_assets(), _collect_components(), _collect_fills(), _collect_typography(), _collect_unique_values(), _extract_layout_rules(), generate_spec() (+6 more)
 
 ### Community 38 - "Observability Lifecycle"
 Cohesion: 0.14
@@ -495,12 +555,12 @@ Cohesion: 0.08
 Nodes (32): BFS traversal, Constrained query expansion, DFS traversal, Graph vocabulary, graphify explain command, graphify path command, graphify query command, graphify query CLI (+24 more)
 
 ### Community 40 - "Memory Store Consistency"
-Cohesion: 0.17
-Nodes (10): CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, Exception, Any, TestCircuitBreaker, TestMCPHealthCheck (+2 more)
+Cohesion: 0.22
+Nodes (9): CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, Exception, Any, TestCircuitBreaker, TestMCPHealthCheck (+1 more)
 
 ### Community 41 - "MCP Replace Server"
-Cohesion: 0.29
-Nodes (4): Any, Path, MCP server for tools_replace — file editing pipeline (safety-gated)., ReplaceMCPServer
+Cohesion: 0.27
+Nodes (5): Any, Path, MCP server for tools_replace — file editing pipeline (safety-gated)., ReplaceMCPServer, MCPServer
 
 ### Community 42 - "Memory Embedding Agent"
 Cohesion: 0.15
@@ -515,24 +575,28 @@ Cohesion: 0.12
 Nodes (17): Graph-Pilot Cheatsheet (Task→Command), Graph-Pilot Installation Guide (ИНСТРУКЦИЯ), Graph-Pilot README Overview, 🧭 graph-pilot, 📋 АЛГОРИТМ РАБОТЫ, Гард 1 — Стоит ли вообще строить граф, Гард 2 — `--mode deep` только осознанно, Гард 3 — Always-on хук НЕ ставить вслепую (+9 more)
 
 ### Community 45 - "Memory Recall Optimizer"
-Cohesion: 0.21
+Cohesion: 0.26
 Nodes (3): HealthCheck, HealthStatus, TestHealthCheck
 
 ### Community 46 - "Memory Embedding Batch"
-Cohesion: 0.25
+Cohesion: 0.23
 Nodes (6): Return simple embeddings, initializing lazily if needed., Return a single normalized embedding vector (float32)., Return N×D matrix of normalized embeddings., Lightweight TF-like fallback when no model or API is available., _SimpleEmbedding, ndarray
 
 ### Community 47 - "Worker Context Isolator"
-Cohesion: 0.08
-Nodes (10): ContextIsolator, Any, Path, ContextBudget, ContextIsolator, IsolatedContext, Rough token estimation: ~4 chars per token for English text., Token budget for an isolated worker context window. (+2 more)
+Cohesion: 0.09
+Nodes (12): ContextIsolator, Path, ContextBudget, ContextIsolator, IsolatedContext, ModelTier, Rough token estimation: ~4 chars per token for English text., Token budget for an isolated worker context window. (+4 more)
+
+### Community 48 - "Memory Eviction Policy"
+Cohesion: 0.24
+Nodes (13): find_node_by_id(), get_node_details(), inspect_node(), list_top_level_nodes(), load_figma_json(), main(), Any, Собирает краткую статистику по дереву. (+5 more)
 
 ### Community 49 - "Memory Index Manager"
 Cohesion: 0.14
 Nodes (13): dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, main, name (+5 more)
 
 ### Community 50 - "Memory Summarizer"
-Cohesion: 0.14
-Nodes (13): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution, outDir, rootDir (+5 more)
+Cohesion: 0.17
+Nodes (12): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution, outDir, rootDir (+4 more)
 
 ### Community 51 - "MCP Runcom Server"
 Cohesion: 0.26
@@ -543,12 +607,12 @@ Cohesion: 0.25
 Nodes (3): Any, MCP server for tools_terminal — terminal I/O pipeline (session-stateful)., TerminalMCPServer
 
 ### Community 53 - "Memory Enrichment"
-Cohesion: 0.23
+Cohesion: 0.22
 Nodes (6): MemoryEnrichment, Optional LLM-based fact extraction., Extracts MemoryEntry records from a completed session., Given session result dict, return a list of memory entries.         Each entry:, TestMemoryEnrichment, Any
 
 ### Community 54 - "Graphify Transcribe Reference"
-Cohesion: 0.05
-Nodes (44): 10. Критерии приёмки, 11. Статус реализации, 1. Общие сведения, 2.1 Головной цикл (main_loop), 2.2 Оркестратор (orchestrator) — 6 агентов, 2.3 Безопасность (safety-control) — 9 агентов, 2.4 Взаимная проверка (mutual_check) — 10 агентов, 2.5 Контроль (control) — 7 агентов (+36 more)
+Cohesion: 0.20
+Nodes (10): 10. Критерии приёмки, 11. Статус реализации, 1. Общие сведения, 4. Требования к шаблону агента, 9.1 Архитектурная документация, 9.2 Валидационные скрипты, 9. Требования к документации, Именование (+2 more)
 
 ### Community 55 - "Worker Pool"
 Cohesion: 0.08
@@ -567,16 +631,16 @@ Cohesion: 0.12
 Nodes (15): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Run a quick self-test on every registered server. (+7 more)
 
 ### Community 59 - "Memory Vector Store"
-Cohesion: 0.19
+Cohesion: 0.16
 Nodes (5): Store a single normalized vector., Brute-force cosine similarity search. Returns sorted results., VectorStore, Any, ndarray
 
 ### Community 60 - "Worker Context Compressor"
-Cohesion: 0.07
+Cohesion: 0.06
 Nodes (32): Anomaly Detector, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects (+24 more)
 
 ### Community 62 - "Agent Loop Result Solution"
-Cohesion: 0.13
-Nodes (13): AgentSpec, LLMEngine, LLMResponse, MockLLMEngine, LLM execution engine with circuit breaker and provider fallback.      Fallback c, Build ordered list of fallback providers based on available API keys., Direct API call without AgentSpec wrapping. Returns raw text., Deterministic mock LLM engine for integration testing without API keys.      Ret (+5 more)
+Cohesion: 0.10
+Nodes (29): AgentLoader, LLMConfig, LLMEngine, LLMProvider, LLMResponse, MockLLMEngine, LLM execution engine with circuit breaker and provider fallback.      Fallback c, Build ordered list of fallback providers based on available API keys. (+21 more)
 
 ### Community 63 - "Graphify Add URL"
 Cohesion: 0.11
@@ -595,7 +659,7 @@ Cohesion: 0.38
 Nodes (3): Thin wrapper over logging.Logger with structured extras., StructuredLogger, Any
 
 ### Community 67 - "Worker Pool Dispatch"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (25): Confirmation Gates (Phase-Based), Contract, Decision Flow, Failure Modes, Human Oversight, Receives, Returns, Role (+17 more)
 
 ### Community 68 - "Message Bus Delivery Receipt"
@@ -606,25 +670,37 @@ Nodes (25): For /graphify add and --watch, For /graphify query, For the commit h
 Cohesion: 0.19
 Nodes (11): mcp-web npm package, server, TOOLS, checkRateLimit(), handleHttpRequest(), HTTP_REQUEST_TOOL, HttpResult, main (mcp-web TS entry) (+3 more)
 
+### Community 70 - "State Manager Session Create"
+Cohesion: 0.18
+Nodes (6): Any, Dispatch a job to a worker. Returns summary when done.          Backpressure: if, Run a job in a specific worker process., Estimate how many tokens were kept OUT of the parent context., Summary returned by worker — parent sees ONLY this, not raw data., WorkerResult
+
 ### Community 71 - "Graph Pilot Token Guards"
 Cohesion: 0.29
 Nodes (7): Guard 2: --mode deep Token Guard, Semantic Extraction via Parallel Subagents (Part B, LLM), Confidence Score Rubric (EXTRACTED/INFERRED/AMBIGUOUS), Hyperedge Rules (3+ node group relationships), Node ID Format Rules ({parent_dir}_{filename}_{entity}), Semantic Similarity Edge Rules, Extraction Subagent Prompt Template
+
+### Community 72 - "Community 72"
+Cohesion: 0.21
+Nodes (11): collect_assets_from_tree(), download_asset(), get_image_urls_from_figma(), Path, Превращает имя ноды в безопасное имя файла., Скачивает ассет по URL и сохраняет в dest_path., Скачивает ассет и сохраняет его в public/images/.     Возвращает путь, который м, Запрашивает URL'ы экспорта ассетов через Figma Images API.     Возвращает {node_ (+3 more)
 
 ### Community 73 - "Runtime Python Requirements"
 Cohesion: 0.38
 Nodes (7): Runtime Python Requirements, anthropic package, numpy package, openai package, pytest package, pytest-asyncio package, rich package
 
+### Community 74 - "MCP Filesystem TSConfig"
+Cohesion: 0.17
+Nodes (11): 1. Установка зависимостей, 2. Настройка окружения, 3. Запуск полного пайплайна, Figma Agent Core, Безопасность, Быстрый старт, Дизайн-токены и ассеты, Работа с конкретной секцией (+3 more)
+
 ### Community 75 - "MCP Commander TSConfig"
-Cohesion: 0.33
-Nodes (6): MCP Commander TypeScript Configuration, MCP Database TypeScript Configuration, MCP Filesystem TypeScript Configuration, MCP GitHub TypeScript Configuration, MCP Replace TypeScript Configuration, MCP Web TypeScript Configuration
+Cohesion: 0.14
+Nodes (9): exclude, include, exclude, include, include, exclude, include, exclude (+1 more)
 
 ### Community 76 - "Post Merge Git Hook"
 Cohesion: 0.50
 Nodes (4): Agentic Loop Post-Merge Conflict Scanner, Agentic Loop Pre-Commit Safety Check, safety_check.js (Secret Detection, Blocked Files, File Size), validate_cross_references.js (Cross-Reference Validation)
 
 ### Community 77 - "Pre Push Git Hook"
-Cohesion: 0.40
-Nodes (4): Pre-Push Safety Gate Hook, graphify, Three-Circuit Safety Gate — safety-control → mutual_check → control validation pipeline, CI Workflow — Validate, Test, Docker
+Cohesion: 0.67
+Nodes (3): Pre-Push Safety Gate Hook, Three-Circuit Safety Gate — safety-control → mutual_check → control validation pipeline, CI Workflow — Validate, Test, Docker
 
 ### Community 83 - "MCP Web Auth Headers"
 Cohesion: 0.26
@@ -633,6 +709,30 @@ Nodes (11): server, TOOLS, authHeaders(), githubFetch(), handleIssueList(), hand
 ### Community 84 - "MCP Replace Edit File Tool"
 Cohesion: 0.08
 Nodes (24): Contract, Decision Flow, Failure Modes, Policy Enforcer, Receives, Returns, Role, Side Effects (+16 more)
+
+### Community 86 - "MCP Filesystem Package"
+Cohesion: 0.20
+Nodes (10): 2.1 Головной цикл (main_loop), 2.2 Оркестратор (orchestrator) — 6 агентов, 2.3 Безопасность (safety-control) — 9 агентов, 2.4 Взаимная проверка (mutual_check) — 10 агентов, 2.5 Контроль (control) — 7 агентов, 2.6 Подагенты цикла ReAct (tooll_subagents) — 26 агентов, 2.7 Инструментальные агенты (tools_*) — 110 агентов, 2.8 MCP gateway (lazy loading) (+2 more)
+
+### Community 87 - "MCP Commander Package"
+Cohesion: 0.20
+Nodes (9): 10. Рекомендуемые следующие шаги, 1. Общее описание, 2. Структура страницы, 3. Цветовая палитра, 4. Типографика, 5. Layout и отступы, 8. Требования к фронтенду, 9. Предполагаемые требования к бэкенду (+1 more)
+
+### Community 88 - "MCP Commander Package Duplicate"
+Cohesion: 0.27
+Nodes (5): LogRecord, _JSONFormatter — logging.Formatter that emits JSON lines with timestamp, level, message, extras, _JSONFormatter, TestJSONFormatter, TestStructuredLogger
+
+### Community 90 - "MCP Filesystem Package Duplicate"
+Cohesion: 0.29
+Nodes (9): calculateHealth(), checkConsistency(), checkLogicalConsistency(), checkReferences(), checkSchema(), crypto, fs, { getDb } (+1 more)
+
+### Community 91 - "MCP Github Package Duplicate"
+Cohesion: 0.29
+Nodes (8): compress(), countTokens(), extractSalient(), FILLER_PATTERNS, MARKER_LABELS, MARKERS, process(), splitIntoSegments()
+
+### Community 92 - "MCP Replace Package Duplicate"
+Cohesion: 0.42
+Nodes (4): DeliveryReceipt, DeadLetterEntry, Subscriber, Message
 
 ### Community 93 - "Agent Loop Result Action Report Duplicate"
 Cohesion: 0.22
@@ -655,16 +755,16 @@ Cohesion: 0.08
 Nodes (23): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+15 more)
 
 ### Community 99 - "MCP Database Query Tool"
-Cohesion: 0.18
-Nodes (21): calculateHealth(), checkConsistency(), checkDuplicates(), checkLogicalConsistency(), checkReferences(), checkSchema(), crypto, fs (+13 more)
+Cohesion: 0.29
+Nodes (10): optimizeIndexes(), applyOptimizations(), { checkConsistency }, { getDb }, healthAnalytics(), optimizeIndex(), optimizeRetrieval(), optimizeStorage() (+2 more)
 
 ### Community 101 - "MCP Database Transaction Tool"
 Cohesion: 0.11
 Nodes (16): Contract, Data Leak Preventer, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects (+8 more)
 
 ### Community 103 - "MCP Database Sqlite Statement Duplicate"
-Cohesion: 0.11
-Nodes (15): Caching Agent, Contract, Decision Flow, Failure Modes, Role, Content Extractor, Contract, Decision Flow (+7 more)
+Cohesion: 0.33
+Nodes (5): Caching Agent, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 106 - "Community 106"
 Cohesion: 0.08
@@ -675,55 +775,59 @@ Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Safety Guardrails, Side Effects
 
 ### Community 108 - "Community 108"
-Cohesion: 0.24
-Nodes (16): checkDuplicates(), contentHash(), create(), crypto, { embed, vectorToBuffer }, generateId(), generateSlug(), { getDb } (+8 more)
+Cohesion: 0.22
+Nodes (17): checkDuplicates(), checkDuplicates(), contentHash(), create(), crypto, { embed, vectorToBuffer }, generateId(), generateSlug() (+9 more)
 
 ### Community 109 - "Community 109"
-Cohesion: 0.14
-Nodes (10): Contract, Decision Flow, Failure Modes, Network Checker, Role, Contract, Decision Flow, Failure Modes (+2 more)
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Network Checker, Role
 
 ### Community 110 - "Community 110"
-Cohesion: 0.25
-Nodes (5): Any, Path, MCP server for tools_search — code search pipeline (diamond)., SearchMCPServer, MCPServer
+Cohesion: 0.28
+Nodes (4): Any, Path, MCP server for tools_search — code search pipeline (diamond)., SearchMCPServer
 
 ### Community 111 - "Community 111"
 Cohesion: 0.25
 Nodes (3): Any, MCP server for tools_web — web request pipeline (request-lifecycle)., WebMCPServer
 
 ### Community 112 - "Community 112"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (13): Contract, Decision Flow, Failure Modes, Memory Writer, Role, Contract, Decision Flow, Failure Modes (+5 more)
 
 ### Community 113 - "Community 113"
-Cohesion: 0.19
+Cohesion: 0.17
 Nodes (13): Command Builder, Contract, Decision Flow, Failure Modes, Role, extractReferences(), findCycles(), fs (+5 more)
+
+### Community 114 - "Community 114"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Dispatcher, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 115 - "Community 115"
 Cohesion: 0.22
 Nodes (9): closeDb(), { DatabaseSync }, initSchema(), path, SCHEMA_SQL (memory store DDL), { initSchema, closeDb }, path, runTests() (+1 more)
 
 ### Community 116 - "Community 116"
-Cohesion: 0.29
-Nodes (12): { embed, bufferToVector, cosineSimilarity }, enrichEntry(), findLinks(), getById(), { getDb }, getFacets(), hybridSearch(), keywordSearch() (+4 more)
+Cohesion: 0.34
+Nodes (13): getDb(), { embed, bufferToVector, cosineSimilarity }, enrichEntry(), findLinks(), getById(), { getDb }, getFacets(), hybridSearch() (+5 more)
 
 ### Community 117 - "Community 117"
-Cohesion: 0.15
-Nodes (10): Contract, Decision Flow, Failure Modes, Integrity Checker, Role, Contract, Decision Flow, Failure Modes (+2 more)
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Integrity Checker, Role
 
 ### Community 118 - "Community 118"
-Cohesion: 0.17
-Nodes (10): Contract, Decision Flow, Failure Modes, Role, Test Discovery, Contract, Decision Flow, Failure Modes (+2 more)
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Role, Test Discovery
 
 ### Community 119 - "Community 119"
-Cohesion: 0.33
-Nodes (11): bufferToVector(), vectorToBuffer(), { embed, vectorToBuffer, bufferToVector, cosineSimilarity, tokenize }, { getDb }, getStats(), handleAction(), indexEntry(), indexEntryBoth() (+3 more)
+Cohesion: 0.19
+Nodes (20): batchEmbed(), bufferToVector(), cleanText(), compare(), cosineSimilarity(), embed(), embedWithContext(), extractTrigrams() (+12 more)
 
 ### Community 120 - "Community 120"
 Cohesion: 0.26
 Nodes (10): checkDependency(), DEFAULT_TTL_BY_TYPE, evaluateCapacity(), evaluateTtl(), evict(), generateCandidates(), { getDb }, getEvictionStats() (+2 more)
 
 ### Community 121 - "Community 121"
-Cohesion: 0.36
+Cohesion: 0.35
 Nodes (9): Agentic Loop — Multi-agent AI system (156 agents, 6 layers), AGENTS.md — Graphify agent instructions, Algorithmic Template (Role + Contract + Decision Flow + Failure Modes), CLAUDE.md — Project instructions for Claude Code, Cross-Cutting Optimizer Pattern (one strategist per tools_* category), Human-in-the-Loop Split (strategic oversight vs tactical approval), Pipeline Architecture Types (linear, diamond, safety-gated, sandboxed, etc.), ReAct Cycle (Reasoning + Acting decomposition) (+1 more)
 
 ### Community 122 - "Community 122"
@@ -731,31 +835,31 @@ Cohesion: 0.18
 Nodes (11): Agent Counts, Agent Loop Architecture, Cross-Reference Integrity, Directory Tree, Flow, Implementation Status, Key Decisions, Naming Convention (+3 more)
 
 ### Community 123 - "Community 123"
-Cohesion: 0.35
-Nodes (9): batchEmbed(), cleanText(), compare(), cosineSimilarity(), embed(), embedWithContext(), extractTrigrams(), hashToDim() (+1 more)
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Failure Modes, File Context, Receives, Returns, Role, Side Effects
 
 ### Community 124 - "Community 124"
 Cohesion: 0.27
 Nodes (9): { embed, bufferToVector, cosineSimilarity }, entrySimilarity(), expandQuery(), { getDb }, mmrDiversify(), parseIntent(), processRecall(), rankResults() (+1 more)
 
 ### Community 125 - "Community 125"
-Cohesion: 0.11
-Nodes (16): Contract, Decision Flow, Environment Result, Failure Modes, Receives, Returns, Role, Side Effects (+8 more)
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Environment Result, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 126 - "Community 126"
-Cohesion: 0.20
-Nodes (9): Active Skills, CLAUDE.md — Agentic Loop, Conventions, Core Architecture, Cross-Session Memory, Current Progress & Next Steps, First Action (always), graphify (+1 more)
+Cohesion: 0.18
+Nodes (10): Active Skills, Approval Gates (autonomous-bot configuration), CLAUDE.md — Agentic Loop, Conventions, Core Architecture, Cross-Session Memory, Current Progress & Next Steps, First Action (always) (+2 more)
 
 ### Community 127 - "Community 127"
 Cohesion: 0.20
 Nodes (9): Confirmation Gates (Phase-Based), Contract, Decision Flow, Failure Modes, Human Approval, Receives, Returns, Role (+1 more)
 
 ### Community 128 - "Community 128"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (5): BrowserMCPServer, Any, MCP server for tools_browser — headless browser automation via Playwright., Graceful async shutdown; use this instead of atexit on Windows., Suppress asyncio/Playwright Windows shutdown noise. Use async shutdown() for rea
 
 ### Community 129 - "Community 129"
-Cohesion: 0.27
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Embedding Agent, Failure Modes, Role
 
 ### Community 130 - "Community 130"
@@ -782,8 +886,12 @@ Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Runt
 Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Modified Files, Receives, Returns, Role, Side Effects
 
+### Community 137 - "Community 137"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Design to Code Planner, Failure Modes, Receives, Returns, Role, Side effects
+
 ### Community 138 - "Community 138"
-Cohesion: 0.28
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Analyzer, Failure Modes, Role
 
 ### Community 139 - "Community 139"
@@ -791,19 +899,19 @@ Cohesion: 0.25
 Nodes (8): Contract, Decision Flow, Failure Modes, Main Loop, Receives, Returns, Role, Side Effects
 
 ### Community 140 - "Community 140"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, File System Guard, Receives, Returns, Role, Side Effects
 
 ### Community 141 - "Community 141"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Input Aggregation, Receives, Returns, Role, Side Effects
 
 ### Community 142 - "Community 142"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Network Guard, Receives, Returns, Role, Side Effects
 
 ### Community 143 - "Community 143"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Scope Manager, Side Effects
 
 ### Community 144 - "Community 144"
@@ -811,39 +919,43 @@ Cohesion: 0.25
 Nodes (7): 🧭 Graphify — шпаргалка «задача → команда», 🔍 ГЛАВНОЕ: спрашивать проект (вместо слепого поиска по файлам), 🛠 КОГДА ГРАФ «КРИВОЙ», ⚠️ ОПАСНАЯ ЗОНА — три способа выстрелить себе в ногу, 🧠 ПРАВИЛО ПРО ЭКОНОМИЮ (чтобы не разочароваться), 🟢 СНАЧАЛА: построить граф (один раз), 📚 ЭКСПОРТ (если нужна база знаний)
 
 ### Community 145 - "Community 145"
-Cohesion: 0.11
-Nodes (11): Dispatch a job to a worker. Returns summary when done.          Backpressure: if, Main loop: pick jobs from queue, assign to free workers or spawn new ones., Run a job in a specific worker process., A job dispatched to an isolated worker., Spawn a new worker slot., Estimate how many tokens were kept OUT of the parent context., Summary returned by worker — parent sees ONLY this, not raw data., Pool of isolated worker processes for agent execution.      Each worker runs in (+3 more)
+Cohesion: 0.21
+Nodes (5): Context Isolation Architecture, Main loop: pick jobs from queue, assign to free workers or spawn new ones., Spawn a new worker slot., Pool of isolated worker processes for agent execution.      Each worker runs in, WorkerPool
+
+### Community 146 - "Community 146"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Failure Modes, Figma Design Analyst, Receives, Returns, Role, Side effects
 
 ### Community 147 - "Community 147"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Memory Enrichment, Receives, Returns, Role, Side Effects
 
 ### Community 148 - "Community 148"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): API Gateway, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 149 - "Community 149"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Message Bus, Receives, Returns, Role, Side Effects
 
 ### Community 150 - "Community 150"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Pipeline Coordinator, Receives, Returns, Role, Side Effects
 
 ### Community 151 - "Community 151"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Router, Side Effects
 
 ### Community 152 - "Community 152"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Cost Risk Assessment, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 153 - "Community 153"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Internal Monologue, Receives, Returns, Role, Side Effects
 
 ### Community 154 - "Community 154"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Task Decomposition
 
 ### Community 155 - "Community 155"
@@ -855,47 +967,47 @@ Cohesion: 0.25
 Nodes (8): Graphify MCP Server (stdio, query_graph tools), get_community MCP tool, get_neighbors MCP tool, get_node MCP tool, god_nodes MCP tool, graph_stats MCP tool, query_graph MCP tool, shortest_path MCP tool
 
 ### Community 157 - "Community 157"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Solution
 
 ### Community 158 - "Community 158"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Summary Recommendations
 
 ### Community 159 - "Community 159"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Bias Detector, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 160 - "Community 160"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Command Guard, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 161 - "Community 161"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Content Checker, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 162 - "Community 162"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Assistance Request, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 163 - "Community 163"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Recursion or Termination, Returns, Role, Side Effects
 
 ### Community 164 - "Community 164"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Result Validation, Returns, Role, Side Effects
 
 ### Community 165 - "Community 165"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Context, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
 
 ### Community 166 - "Community 166"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Limitations, Receives, Returns, Role, Side Effects
 
 ### Community 167 - "Community 167"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Request, Returns, Role, Side Effects
 
 ### Community 168 - "Community 168"
@@ -903,8 +1015,12 @@ Cohesion: 0.29
 Nodes (6): 🧭 graph-pilot — Graphify без зубрёжки 40 команд, Зачем это, Как поставить (2 минуты), Когда Graphify тебе НЕ нужен, Три грабли Graphify, которые скилл снимает, Что внутри
 
 ### Community 169 - "Community 169"
-Cohesion: 0.29
-Nodes (6): Conventions, Human-in-the-Loop Triggers, Project Rules — Agentic Loop, Safety Defaults, Scope, Tooling Preferences
+Cohesion: 0.25
+Nodes (7): Conventions, Human-in-the-Loop Triggers, Project Rules — Agentic Loop, Review & Deployment Approval Gates, Safety Defaults, Scope, Tooling Preferences
+
+### Community 170 - "Community 170"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Design Intake, Failure Modes, Receives, Returns, Role, Side effects
 
 ### Community 171 - "Community 171"
 Cohesion: 0.33
@@ -947,331 +1063,331 @@ Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Permission Agent, Role
 
 ### Community 181 - "Community 181"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Cache Manager, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 182 - "Community 182"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Connection Manager, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 183 - "Community 183"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, DB Optimizer, Decision Flow, Failure Modes, Role
 
 ### Community 184 - "Community 184"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Error Analyzer, Failure Modes, Role
 
 ### Community 185 - "Community 185"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Migration Helper, Role
 
 ### Community 186 - "Community 186"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Query Builder, Role
 
 ### Community 187 - "Community 187"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Query Executor, Role
 
 ### Community 188 - "Community 188"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Result Mapper, Role
 
 ### Community 189 - "Community 189"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Schema Analyzer
 
 ### Community 190 - "Community 190"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Transaction Manager
 
 ### Community 191 - "Community 191"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Consistency Checker, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 192 - "Community 192"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Context Compressor, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 193 - "Community 193"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Eviction Policy, Failure Modes, Role
 
 ### Community 194 - "Community 194"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Index Manager, Role
 
 ### Community 195 - "Community 195"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Memory Optimizer, Role
 
 ### Community 196 - "Community 196"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Memory Reader, Role
 
 ### Community 197 - "Community 197"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Recall Optimizer, Role
 
 ### Community 198 - "Community 198"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Summarizer
 
 ### Community 199 - "Community 199"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Build Manager, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 200 - "Community 200"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Config Manager, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 201 - "Community 201"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Dependency Mapper, Failure Modes, Role
 
 ### Community 202 - "Community 202"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Doc Generator, Failure Modes, Role
 
 ### Community 203 - "Community 203"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, File Organizer, Role
 
 ### Community 204 - "Community 204"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Impact Analyzer, Role
 
 ### Community 205 - "Community 205"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Project Optimizer, Role
 
 ### Community 206 - "Community 206"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Refactor Planner, Role
 
 ### Community 207 - "Community 207"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Structure Analyzer
 
 ### Community 208 - "Community 208"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Task Planner
 
 ### Community 209 - "Community 209"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Cache Agent, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 210 - "Community 210"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Chunking Agent, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 211 - "Community 211"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Content Extractor, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 212 - "Community 212"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Encoding Agent, Failure Modes, Role
 
 ### Community 213 - "Community 213"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Parser Agent, Role
 
 ### Community 214 - "Community 214"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Path Resolver, Role
 
 ### Community 215 - "Community 215"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Permission Agent, Role
 
 ### Community 216 - "Community 216"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Read Optimizer, Role
 
 ### Community 217 - "Community 217"
-Cohesion: 0.60
-Nodes (5): hooks.md reference, graphify claude CLI command, graphify hook CLI command, native CLAUDE.md integration, Post-Commit Auto-Rebuild Git Hook
+Cohesion: 0.53
+Nodes (6): hooks.md reference, hook ignores doc/image changes rationale, graphify claude CLI command, graphify hook CLI command, native CLAUDE.md integration, Post-Commit Auto-Rebuild Git Hook
 
 ### Community 218 - "Community 218"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Backup Agent, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 219 - "Community 219"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Change Validator, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 220 - "Community 220"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Conflict Resolver, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 221 - "Community 221"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Diff Generator, Failure Modes, Role
 
 ### Community 222 - "Community 222"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Edit Optimizer, Failure Modes, Role
 
 ### Community 223 - "Community 223"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Pattern Matcher, Role
 
 ### Community 224 - "Community 224"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Result Ranker, Role
 
 ### Community 225 - "Community 225"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Rollback Agent
 
 ### Community 226 - "Community 226"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Verify Agent
 
 ### Community 227 - "Community 227"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Write Executor
 
 ### Community 228 - "Community 228"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Command Optimizer, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 229 - "Community 229"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Env Manager, Failure Modes, Role
 
 ### Community 230 - "Community 230"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Error Analyzer, Failure Modes, Role
 
 ### Community 231 - "Community 231"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Executor Agent, Failure Modes, Role
 
 ### Community 232 - "Community 232"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Output Collector, Role
 
 ### Community 233 - "Community 233"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Sandbox Agent
 
 ### Community 234 - "Community 234"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Timeout Watcher
 
 ### Community 235 - "Community 235"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Write Planner
 
 ### Community 236 - "Community 236"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Fix Suggestor, Role
 
 ### Community 237 - "Community 237"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Report Generator, Role
 
 ### Community 238 - "Community 238"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Test Executor
 
 ### Community 239 - "Community 239"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Test Optimizer
 
 ### Community 240 - "Community 240"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Deduplicator, Failure Modes, Role
 
 ### Community 241 - "Community 241"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Indexer Agent, Role
 
 ### Community 242 - "Community 242"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Regex Searcher, Role
 
 ### Community 243 - "Community 243"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Relevance Scorer, Role
 
 ### Community 244 - "Community 244"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Scope Detector
 
 ### Community 245 - "Community 245"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Search Optimizer
 
 ### Community 246 - "Community 246"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Semantic Searcher
 
 ### Community 247 - "Community 247"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Snippet Builder
 
 ### Community 248 - "Community 248"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): ANSI Parser, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 249 - "Community 249"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Command History, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 250 - "Community 250"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Error Detector, Failure Modes, Role
 
 ### Community 251 - "Community 251"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, IO Handler, Role
 
 ### Community 252 - "Community 252"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Output Filter, Role
 
 ### Community 253 - "Community 253"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Session Manager
 
 ### Community 254 - "Community 254"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Stream Reader
 
 ### Community 255 - "Community 255"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Stream Writer
 
 ### Community 256 - "Community 256"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Terminal Optimizer
 
 ### Community 257 - "Community 257"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Terminal State
 
 ### Community 258 - "Community 258"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Auth Manager, Contract, Decision Flow, Failure Modes, Role
 
 ### Community 259 - "Community 259"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Error Handler, Failure Modes, Role
 
 ### Community 260 - "Community 260"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Rate Limiter, Role
 
 ### Community 261 - "Community 261"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Retry Manager, Role
 
 ### Community 262 - "Community 262"
-Cohesion: 0.40
+Cohesion: 0.33
 Nodes (5): Contract, Decision Flow, Failure Modes, Role, Web Optimizer
 
 ### Community 263 - "Community 263"
@@ -1301,6 +1417,14 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 ### Community 276 - "Community 276"
 Cohesion: 0.43
 Nodes (3): PhaseTransition, Resolve a value from the state dict.          Tries the dotted path first, then, Decide the next ReAct phase and optional safety override.
+
+### Community 277 - "Community 277"
+Cohesion: 0.32
+Nodes (7): Path, Защита от Path Traversal: целевая директория должна находиться внутри root_dir., Безопасно записывает код React/Next.js компонента в .tsx файл., Проверяет и нормализует имя компонента для безопасного сохранения., _sanitize_component_name(), _validate_target_dir(), write_component()
+
+### Community 278 - "Community 278"
+Cohesion: 0.50
+Nodes (7): detectType(), extractKeywords(), extractPhrases(), generateEntrySummary(), generateSummary(), generateTitle(), STOP_WORDS_FOR_KEYWORDS
 
 ### Community 279 - "Community 279"
 Cohesion: 0.22
@@ -1347,36 +1471,80 @@ Cohesion: 0.22
 Nodes (8): Browser Session Manager, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side effects
 
 ### Community 290 - "Community 290"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, State Manager
 
 ### Community 291 - "Community 291"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects, Tool Plan Selection
 
 ### Community 292 - "Community 292"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Plan Adjustment, Receives, Returns, Role, Side Effects
 
+### Community 294 - "Community 294"
+Cohesion: 0.25
+Nodes (3): TestWorkerPoolBackpressure, A job dispatched to an isolated worker., WorkerJob
+
+### Community 295 - "Community 295"
+Cohesion: 0.29
+Nodes (7): 3.1 Иерархия слоёв, 3.2 Трёхконтурная безопасность, 3.3 Human-in-the-loop, 3.4 Декомпозиция ReAct, 3.5 Условные переходы (Conditional Edges), 3.6 Инструменты как микросервисы, 3. Архитектурные требования
+
+### Community 296 - "Community 296"
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Result Formatter, Role
+
+### Community 297 - "Community 297"
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Role, Test Planner
+
+### Community 298 - "Community 298"
+Cohesion: 0.33
+Nodes (5): Content Extractor, Contract, Decision Flow, Failure Modes, Role
+
+### Community 299 - "Community 299"
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Request Builder, Role
+
+### Community 300 - "Community 300"
+Cohesion: 0.33
+Nodes (5): Contract, Decision Flow, Failure Modes, Response Parser, Role
+
+### Community 301 - "Community 301"
+Cohesion: 0.40
+Nodes (5): 5.1 Входная защита, 5.2 Исходящая защита, 5.3 Аудит, 5.4 Compliance, 5. Требования к безопасности
+
+### Community 303 - "Community 303"
+Cohesion: 0.50
+Nodes (4): 6.1 Внутренние связи, 6.2 Внешний API, 6.3 Память, 6. Требования к интеграции
+
+### Community 304 - "Community 304"
+Cohesion: 0.50
+Nodes (4): 7.1 Целостность графа ссылок, 7.2 Полнота шаблона, 7.3 Кросс-ссылки, 7. Требования к качеству и валидации
+
+### Community 305 - "Community 305"
+Cohesion: 0.50
+Nodes (4): 8.1 Масштабируемость, 8.2 Отказоустойчивость, 8.3 Таймауты, 8. Требования к производительности
+
 ## Knowledge Gaps
-- **1342 isolated node(s):** `fs`, `path`, `ROOT`, `fs`, `path` (+1337 more)
+- **1377 isolated node(s):** `fs`, `path`, `ROOT`, `fs`, `path` (+1372 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `main()` connect `Community 113` to `Community 160`, `Community 161`, `Worker Pool Dispatch`, `MCP Database Transaction Tool`, `Control Human Oversight`, `Community 178`, `Worker Context Compressor`, `Community 159`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
-- **Why does `Command Builder` connect `Community 113` to `Community 137`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `MCPRegistry` connect `MCP Registry` to `MCP Servers Bootstrap`, `Memory Store Pipeline`, `Runtime Engine Core`, `MCP Base Server`, `Message Bus Contracts`, `Engine Circuit Breaker`, `MCP Replace Server`, `Pipeline Runner`, `Memory Store Consistency`, `Community 110`, `Community 111`, `MCP Runcom Server`, `Community 276`, `MCP Terminal Server`, `MCP Runtest Server`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `MCPRegistry` connect `MCP Registry` to `MCP Servers Bootstrap`, `Memory Store Pipeline`, `Runtime Engine Core`, `MCP Base Server`, `Message Bus Contracts`, `Community 294`, `Memory Store Consistency`, `MCP Replace Server`, `Pipeline Runner`, `Community 110`, `Community 111`, `MCP Runcom Server`, `Community 276`, `MCP Terminal Server`, `MCP Runtest Server`, `Agent Loop Result Solution`?**
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `MemoryManager` connect `Runtime Memory Manager` to `Pipeline Runner`, `Memory Embedding Agent`, `Memory FTS Index`, `Agent Loop Tools Runcom`, `Community 302`, `Memory Enrichment`, `Memory Vector Store`, `Agent Loop Result Action Report`, `Agent Loop Result Solution`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Why does `MemoryMCPServer` connect `Memory Store Pipeline` to `MCP Servers Bootstrap`, `MCP Registry`, `MCP Filesystem Package Duplicate`, `MCP Replace Server`, `Community 108`, `Community 278`, `Community 119`, `Community 120`, `MCP Runtest Server`, `MCP Github Package Duplicate`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+- **Are the 36 inferred relationships involving `MCPServer` (e.g. with `BrowserMCPServer` and `Any`) actually correct?**
+  _`MCPServer` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 38 inferred relationships involving `MCPRegistry` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
   _`MCPRegistry` has 38 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 34 inferred relationships involving `MCPServer` (e.g. with `BrowserMCPServer` and `Any`) actually correct?**
-  _`MCPServer` has 34 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 11 inferred relationships involving `PhaseTransitionManager` (e.g. with `AgentLoader` and `LLMConfig`) actually correct?**
-  _`PhaseTransitionManager` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 29 inferred relationships involving `StateManager` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
   _`StateManager` has 29 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 11 inferred relationships involving `PhaseTransitionManager` (e.g. with `AgentLoader` and `LLMConfig`) actually correct?**
+  _`PhaseTransitionManager` has 11 INFERRED edges - model-reasoned connections that need verification._
