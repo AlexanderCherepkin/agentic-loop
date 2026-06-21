@@ -7,11 +7,23 @@ from typing import Optional
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
-
 _FIGMA_FILE_KEY_RE = re.compile(r"/(?:file|design)/([^/?#]+)")
 _FIGMA_NODE_ID_RE = re.compile(r"[?&]node-id=([^&]+)")
+
+
+_DOTENV_LOADED = False
+
+
+def _ensure_dotenv() -> None:
+    global _DOTENV_LOADED
+    if _DOTENV_LOADED:
+        return
+    env_path = Path(__file__).resolve().parent / ".env"
+    if env_path.exists():
+        load_dotenv(str(env_path))
+    else:
+        load_dotenv()
+    _DOTENV_LOADED = True
 
 
 @dataclass(frozen=True)
@@ -46,7 +58,9 @@ def _resolve_node_id(node_id: Optional[str], url: Optional[str]) -> Optional[str
 
 
 def load_figma_config(env: Optional[dict] = None) -> FigmaConfig:
-    env = env or os.environ
+    if env is None:
+        _ensure_dotenv()
+        env = os.environ
     token = env.get("FIGMA_TOKEN", "").strip()
     file_key = _resolve_file_key(
         env.get("FIGMA_FILE_KEY", "").strip() or None,

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import asyncio
+import importlib.util
+import sys
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -23,6 +25,24 @@ try:
     HAS_MCP = True
 except ImportError:
     HAS_MCP = False
+
+# Optional Figma integration
+def _load_figma_config_module():
+    """Load figma-agent-core/config.py without requiring a valid Python package name."""
+    core_dir = Path(__file__).resolve().parent.parent.parent / "figma-agent-core"
+    config_path = core_dir / "config.py"
+    if not config_path.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("figma_config", str(config_path))
+    if not spec or not spec.loader:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_figma_config_mod = _load_figma_config_module()
+HAS_FIGMA_CONFIG = _figma_config_mod is not None
 
 # Optional Worker Pool for context isolation
 try:
@@ -413,6 +433,18 @@ class PipelineRunner:
         return self._mcp_gateway is not None and self.llm.config.mcp_enabled
 
     @property
+    def figma_available(self) -> bool:
+        """True when figma-agent-core is present and Figma credentials are configured."""
+        if not self.mcp_enabled:
+            return False
+        if not HAS_FIGMA_CONFIG or _figma_config_mod is None:
+            return False
+        core_dir = Path(self.workspace) / "figma-agent-core"
+        if not core_dir.exists():
+            return False
+        return _figma_config_mod.is_figma_configured()
+
+    @property
     def worker_pool_enabled(self) -> bool:
         return self._worker_pool is not None
 
@@ -425,10 +457,17 @@ class PipelineRunner:
         return {"tool": tool_name, "result": result, "mcp_executed": True}
 
     def get_mcp_categories(self) -> list[str]:
-        """Return MCP category metadata without loading servers."""
+        """Return MCP category metadata without loading servers.
+
+        Filters out the Figma category if Figma is not configured so the planner
+        does not waste tokens on tools that cannot execute.
+        """
         if not self._mcp_gateway:
             return []
-        return self._mcp_gateway.categories()
+        categories = self._mcp_gateway.categories()
+        if "figma" in categories and not self.figma_available:
+            categories = [c for c in categories if c != "figma"]
+        return categories
 
     # Priority mapping: lower number = higher priority (safety first)
     _TASK_PRIORITIES: dict[str, int] = {
@@ -446,6 +485,7 @@ class PipelineRunner:
         "database": 7,
         "web": 7,
         "browser": 7,
+        "figma": 5,
         "manangr": 8,
         "self_correction": 3,
     }
@@ -781,11 +821,25 @@ class PipelineRunner:
             "user_input": state.get("user_input"),
             "iteration": state.get("iteration"),
             "session_id": state.get("session_id"),
+            "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
         }
         for agent_path in exec_agents:
             llm_result = await self._invoke_agent(agent_path, result, trace, "execution", metrics)
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
+
+        # If the planner selected a Figma MCP tool, execute it directly here.
+        tool_call = result.get("tool_call") or result.get("tool")
+        if isinstance(tool_call, dict) and tool_call.get("name", "").startswith("figma_"):
+            tool_output = await self.execute_mcp_tool(
+                tool_call["name"], tool_call.get("arguments", {})
+            )
+            result["tool_output"] = tool_output
+            result["tool_result"] = tool_output.get("result")
+            result["success"] = not tool_output.get("result", {}).get("is_error", False)
+            if "result" in tool_output.get("result", {}):
+                result["result"] = tool_output["result"]["result"]
+
         state["execution"] = result
         if "result" in result:
             state["result"] = result["result"]
@@ -866,6 +920,8 @@ class PipelineRunner:
             parts = agent_path.replace("\\", "/").split("/")
             if parts:
                 return parts[0].replace("tools_", "")
+        if agent_path.startswith("figma_"):
+            return "figma"
         if "execution" in agent_path:
             return "execution"
         if "planning" in agent_path:
