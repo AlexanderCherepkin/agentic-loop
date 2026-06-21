@@ -100,6 +100,8 @@ def extract_effects(effects: Optional[List[Dict[str, Any]]]) -> Optional[List[Di
             })
         elif e_type == "LAYER_BLUR":
             result.append({"type": "LAYER_BLUR", "radius": effect.get("radius")})
+        elif e_type == "BACKGROUND_BLUR":
+            result.append({"type": "BACKGROUND_BLUR", "radius": effect.get("radius")})
     return result or None
 
 
@@ -210,6 +212,21 @@ class FigmaExtractor:
             cleaned["effects"] = effects
         if node.get("cornerRadius"):
             cleaned["cornerRadius"] = node.get("cornerRadius")
+
+        opacity = node.get("opacity")
+        if opacity is not None and opacity < 1.0:
+            cleaned["opacity"] = opacity
+
+        if node.get("blendMode"):
+            cleaned["blendMode"] = node.get("blendMode")
+
+        if node.get("isMask"):
+            cleaned["isMask"] = True
+            if node.get("maskType"):
+                cleaned["maskType"] = node.get("maskType")
+
+        if node.get("booleanOperation"):
+            cleaned["booleanOperation"] = node.get("booleanOperation")
 
         if node_type == "TEXT":
             cleaned["characters"] = node.get("characters", "")

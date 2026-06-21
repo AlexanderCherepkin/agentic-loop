@@ -432,7 +432,7 @@ def test_shadow_effect_maps_to_inline_style() -> None:
         ],
     }
     result = layout_engine.convert_figma_node(node)
-    assert result.root.inline_styles.get("box-shadow") == "0px 4px 16px rgba(0, 0, 0, 0.15)"
+    assert result.root.inline_styles.get("box-shadow") == "0px 4px 16px 0px rgba(0, 0, 0, 0.15)"
 
 
 def test_stats_counters() -> None:
@@ -800,6 +800,143 @@ def test_min_max_width_height_emits_arbitrary_classes() -> None:
     assert "max-w-[600px]" in result.root.classes
     assert "min-h-[40px]" in result.root.classes
     assert "max-h-[300px]" in result.root.classes
+
+
+def test_drop_shadow_with_spread_maps_to_box_shadow() -> None:
+    node = {
+        "id": "400:1",
+        "name": "Shadow card",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 200, "height": 100},
+        "effects": [
+            {
+                "type": "DROP_SHADOW",
+                "hex": "rgba(0, 0, 0, 0.15)",
+                "offset": {"x": 0, "y": 4},
+                "radius": 16,
+                "spread": 0,
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("box-shadow") == "0px 4px 16px 0px rgba(0, 0, 0, 0.15)"
+
+
+def test_inner_shadow_adds_isolate() -> None:
+    node = {
+        "id": "401:1",
+        "name": "Inner shadow card",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 200, "height": 100},
+        "effects": [
+            {
+                "type": "INNER_SHADOW",
+                "hex": "rgba(0, 0, 0, 0.20)",
+                "offset": {"x": 0, "y": 2},
+                "radius": 8,
+                "spread": 1,
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "isolate" in result.root.classes
+    assert "inset" in result.root.inline_styles.get("box-shadow", "")
+
+
+def test_layer_blur_maps_to_filter() -> None:
+    node = {
+        "id": "402:1",
+        "name": "Blur layer",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 200, "height": 100},
+        "effects": [{"type": "LAYER_BLUR", "radius": 12}],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("filter") == "blur(12px)"
+
+
+def test_background_blur_maps_to_backdrop_filter() -> None:
+    node = {
+        "id": "403:1",
+        "name": "Backdrop blur",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 200, "height": 100},
+        "effects": [{"type": "BACKGROUND_BLUR", "radius": 20}],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("backdrop-filter") == "blur(20px)"
+
+
+def test_node_opacity_maps_to_inline_opacity() -> None:
+    node = {
+        "id": "404:1",
+        "name": "Semi transparent",
+        "type": "FRAME",
+        "visible": True,
+        "opacity": 0.5,
+        "box": {"x": 0, "y": 0, "width": 100, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("opacity") == "0.5"
+
+
+def test_blend_mode_maps_to_mix_blend_mode() -> None:
+    node = {
+        "id": "405:1",
+        "name": "Blend",
+        "type": "FRAME",
+        "visible": True,
+        "blendMode": "MULTIPLY",
+        "box": {"x": 0, "y": 0, "width": 100, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("mix-blend-mode") == "multiply"
+
+
+def test_mask_adds_overflow_hidden_and_mask_image() -> None:
+    node = {
+        "id": "406:1",
+        "name": "Mask group",
+        "type": "FRAME",
+        "visible": True,
+        "isMask": True,
+        "maskType": "ALPHA",
+        "box": {"x": 0, "y": 0, "width": 100, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "overflow-hidden" in result.root.classes
+    assert result.root.inline_styles.get("mask-image") == "linear-gradient(#000 0 0)"
+
+
+def test_vector_mask_adds_clip_path() -> None:
+    node = {
+        "id": "407:1",
+        "name": "Vector mask",
+        "type": "FRAME",
+        "visible": True,
+        "isMask": True,
+        "maskType": "VECTOR",
+        "box": {"x": 0, "y": 0, "width": 100, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("clip-path") == "inset(0 0 0 0)"
+
+
+def test_boolean_operation_adds_clip_rule() -> None:
+    node = {
+        "id": "408:1",
+        "name": "Boolean group",
+        "type": "BOOLEAN",
+        "visible": True,
+        "booleanOperation": "SUBTRACT",
+        "box": {"x": 0, "y": 0, "width": 100, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("clip-rule") == "subtract"
 
 
 def test_padding_per_side_all_different() -> None:

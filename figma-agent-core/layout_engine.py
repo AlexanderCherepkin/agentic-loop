@@ -443,6 +443,10 @@ class FigmaLayoutEngine:
         self._apply_strokes(tw_node, node)
         self._apply_effects(tw_node, node)
         self._apply_radius(tw_node, node)
+        self._apply_opacity(tw_node, node)
+        self._apply_blend_mode(tw_node, node)
+        self._apply_mask(tw_node, node)
+        self._apply_boolean(tw_node, node)
         self._apply_backend_hints(tw_node, node)
         self._apply_component_refs(tw_node, node)
         if node.get("clipContent"):
@@ -863,6 +867,8 @@ class FigmaLayoutEngine:
 
     def _apply_effects(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         effects = node.get("effects") or []
+        shadows: List[str] = []
+        filters: List[str] = []
         for effect in effects:
             e_type = effect.get("type")
             if e_type in ("DROP_SHADOW", "INNER_SHADOW"):
@@ -874,15 +880,50 @@ class FigmaLayoutEngine:
                 )
                 offset = effect.get("offset", {"x": 0, "y": 0})
                 radius = effect.get("radius", 0)
+                spread = _px(effect.get("spread")) or 0
                 x = int(round(offset.get("x", 0)))
                 y = int(round(offset.get("y", 0)))
                 inset = "inset " if e_type == "INNER_SHADOW" else ""
-                tw_node.inline_styles["box-shadow"] = (
-                    f"{inset}{x}px {y}px {int(round(radius))}px {color}"
+                shadows.append(
+                    f"{inset}{x}px {y}px {int(round(radius))}px {int(round(spread))}px {color}"
                 )
+                if e_type == "INNER_SHADOW":
+                    tw_node.add_class("isolate")
             elif e_type == "LAYER_BLUR":
-                radius = effect.get("radius", 0)
-                tw_node.inline_styles["filter"] = f"blur({int(round(radius))}px)"
+                filters.append(f"blur({int(round(effect.get("radius", 0)))}px)")
+            elif e_type == "BACKGROUND_BLUR":
+                tw_node.inline_styles["backdrop-filter"] = f"blur({int(round(effect.get("radius", 0)))}px)"
+
+        if shadows:
+            tw_node.inline_styles["box-shadow"] = ", ".join(shadows)
+        if filters:
+            tw_node.inline_styles["filter"] = " ".join(filters)
+
+    def _apply_opacity(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        opacity = node.get("opacity")
+        if opacity is not None and opacity < 1.0:
+            tw_node.inline_styles["opacity"] = str(opacity)
+
+    def _apply_blend_mode(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        blend = node.get("blendMode")
+        if not blend:
+            return
+        css_blend = blend.lower().replace("_", "-")
+        tw_node.inline_styles["mix-blend-mode"] = css_blend
+
+    def _apply_mask(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        if node.get("isMask") or node.get("maskType"):
+            tw_node.add_class("overflow-hidden")
+            mask_type = node.get("maskType") or "ALPHA"
+            if mask_type == "VECTOR":
+                tw_node.inline_styles["clip-path"] = "inset(0 0 0 0)"
+            else:
+                tw_node.inline_styles["mask-image"] = "linear-gradient(#000 0 0)"
+
+    def _apply_boolean(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        op = node.get("booleanOperation")
+        if op and op in ("UNION", "SUBTRACT", "INTERSECT", "EXCLUDE"):
+            tw_node.inline_styles["clip-rule"] = op.lower()
 
     def _apply_radius(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         radius = _px(node.get("cornerRadius"))

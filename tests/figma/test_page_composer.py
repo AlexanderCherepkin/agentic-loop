@@ -414,3 +414,39 @@ def test_compose_escapes_jsx_special_chars() -> None:
     assert "{'{'" in code
     assert "{'}'}" in code
     assert "&lt;script&gt;" in code
+
+
+def test_compose_backdrop_filter_inline_style() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "classes": ["fixed", "inset-0"],
+            "inline_styles": {"backdrop-filter": "blur(20px)"},
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'style={{backdropFilter: "blur(20px)"}}' in code
+
+
+def test_compose_mix_blend_mode_inline_style() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "classes": ["absolute"],
+            "inline_styles": {"mix-blend-mode": "multiply"},
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'style={{mixBlendMode: "multiply"}}' in code
+
+
+def test_compose_opacity_inline_style() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "classes": ["bg-white"],
+            "inline_styles": {"opacity": "0.5"},
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'style={{opacity: "0.5"}}' in code

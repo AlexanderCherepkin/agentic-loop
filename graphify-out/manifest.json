@@ -1515,8 +1515,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/bootstrap.py": {
-    "mtime": 1782058668.5911324,
-    "ast_hash": "77adc3e19ed9e5c86b5e2c2b77e32122",
+    "mtime": 1782059284.806526,
+    "ast_hash": "43a3138c15b177c91c5692a87a2d60e6",
     "semantic_hash": ""
   },
   "figma-agent-core/components/BlockchainSection.tsx": {
@@ -1630,8 +1630,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/layout_engine.py": {
-    "mtime": 1782059026.4576745,
-    "ast_hash": "1feaddfa189a81c92bc7a5326c8fe3af",
+    "mtime": 1782059302.0583487,
+    "ast_hash": "3ce865ada7b07f99fa8880e52eb72e2b",
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
@@ -1680,13 +1680,13 @@
     "semantic_hash": ""
   },
   "tests/figma/test_layout_engine.py": {
-    "mtime": 1782059039.070989,
-    "ast_hash": "d7d7d2f2a452d31f0d40a1dd222d1498",
+    "mtime": 1782059342.6319375,
+    "ast_hash": "ca4e5f7700b7654daa39a42ae4334a9d",
     "semantic_hash": ""
   },
   "tests/figma/test_page_composer.py": {
-    "mtime": 1782058757.7870877,
-    "ast_hash": "43f2ef14249e629518700a6807eba195",
+    "mtime": 1782059329.2342951,
+    "ast_hash": "6f43a0e80b2510fbbf37344cc9d51f5f",
     "semantic_hash": ""
   },
   "tests/figma/test_refinement_loop.py": {
