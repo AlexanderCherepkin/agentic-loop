@@ -234,6 +234,60 @@ def stage_compliance(
     return result.returncode == 0
 
 
+def stage_refinement(
+    url: str,
+    ast_file: str = "layout_ast.json",
+    compose_output: str = "src/app/page.tsx",
+    reference_path: Optional[str] = None,
+    visual_qa_output_dir: str = ".tmp/browser/visual_qa",
+    max_iterations: int = 3,
+    diff_threshold: float = 0.05,
+    viewport: Optional[str] = None,
+    expected: Optional[str] = None,
+    allowed_domains: Optional[str] = None,
+    compose_title: Optional[str] = None,
+    report_output: str = "refinement_report.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3f: refinement loop — перезапуск compose+visual QA до успеха или эскалации human."""
+    logger.info("=== STAGE: refinement ===")
+    command = [
+        sys.executable,
+        "refinement_loop.py",
+        "--url",
+        url,
+        "--ast",
+        ast_file,
+        "--compose-output",
+        compose_output,
+        "--visual-qa-output-dir",
+        visual_qa_output_dir,
+        "--max-iterations",
+        str(max_iterations),
+        "--diff-threshold",
+        str(diff_threshold),
+        "--report-output",
+        report_output,
+    ]
+    if reference_path:
+        command.extend(["--reference", reference_path])
+    if viewport:
+        command.extend(["--viewport", viewport])
+    if expected:
+        command.extend(["--expected", expected])
+    if allowed_domains:
+        command.extend(["--allowed-domains", allowed_domains])
+    if compose_title:
+        command.extend(["--compose-title", compose_title])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=600)
+    return result.returncode == 0
+
+
 def _to_pascal_case(name: str) -> str:
     """Превращает произвольное имя в PascalCase."""
     import re
@@ -387,7 +441,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "compliance", "visual_qa", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -467,6 +521,29 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 )
                 report["stages"]["visual_qa"] = {"success": ok}
 
+        elif stage == "refinement":
+            url = config.get("visual_qa_url")
+            if not url:
+                logger.warning("refinement stage requires --visual-qa-url. Skipping.")
+                report["stages"]["refinement"] = {"success": False, "reason": "missing --visual-qa-url"}
+            else:
+                ok = stage_refinement(
+                    url=url,
+                    ast_file=config.get("layout_output", "layout_ast.json"),
+                    compose_output=config.get("compose_output", "src/app/page.tsx"),
+                    reference_path=config.get("visual_qa_reference"),
+                    visual_qa_output_dir=config.get("visual_qa_output_dir", ".tmp/browser/visual_qa"),
+                    max_iterations=config.get("refinement_max_iterations", 3),
+                    diff_threshold=config.get("refinement_diff_threshold", 0.05),
+                    viewport=config.get("visual_qa_viewport"),
+                    expected=config.get("visual_qa_expected"),
+                    allowed_domains=config.get("visual_qa_allowed_domains"),
+                    compose_title=config.get("compose_title"),
+                    report_output=config.get("refinement_report_output", "refinement_report.json"),
+                    dry_run=dry_run,
+                )
+                report["stages"]["refinement"] = {"success": ok}
+
         elif stage == "components":
             if config.get("all_sections", False):
                 results = stage_components_all(
@@ -519,12 +596,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, refinement, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, refinement, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -630,6 +707,23 @@ def main():
         help="Минимальный уровень severity, который блокирует compliance."
     )
     parser.add_argument(
+        "--refinement-max-iterations",
+        type=int,
+        default=3,
+        help="Максимальное число итераций refinement loop (по умолчанию 3)."
+    )
+    parser.add_argument(
+        "--refinement-diff-threshold",
+        type=float,
+        default=0.05,
+        help="Порог diff score, выше которого visual QA требует корректировки."
+    )
+    parser.add_argument(
+        "--refinement-report-output",
+        default="refinement_report.json",
+        help="Путь для сохранения отчёта refinement loop."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -681,6 +775,9 @@ def main():
         "compliance_rules_path": args.compliance_rules_path,
         "compliance_output": args.compliance_output,
         "compliance_severity_threshold": args.compliance_severity_threshold,
+        "refinement_max_iterations": args.refinement_max_iterations,
+        "refinement_diff_threshold": args.refinement_diff_threshold,
+        "refinement_report_output": args.refinement_report_output,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,

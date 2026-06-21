@@ -9,15 +9,20 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `original_request`: parsed request descriptor from `user/request.md`
 - `execution_trace`: from `execution/tool_invocation.md`
 - `observation_artifacts`: combined outputs from `observability/` agents
+- `visual_qa_report`: optional structured report from `tools_browser/headless_automation/visual_qa_agent.md` containing `status`, `diff_score`, `dom_assertions`, `discrepancies`, `metrics`
+- `iteration_count`: integer — current refinement iteration
+- `max_iterations`: integer (default 3)
 - `success_criteria`: optional explicit criteria from user or inferred from request type
 
 ### Returns
-- `validation_status`: enum (`complete`, `partial`, `failed`, `inconclusive`)
+- `validation_status`: enum (`complete`, `partial`, `failed`, `inconclusive`, `needs_refinement`, `needs_human`)
 - `criteria_checklist`: list of success criteria with pass/fail status and evidence
 - `gap_analysis`: list of unmet requirements or unexpected deviations with severity
 - `confidence`: float — certainty in validation verdict
 - `retry_recommended`: boolean — whether another iteration could succeed
 - `next_phase_hint`: enum (`self_correction`, `execution`, `planning`, `result`) — suggested next ReAct phase based on validation verdict
+- `escalation_required`: boolean — true when `iteration_count` reaches `max_iterations` and issues remain
+- `refinement_actions`: list of concrete corrective actions for `plan_adjustment.md` when visual QA discrepancies are found
 
 ### Side Effects
 - Writes validation record to session memory for future reference
@@ -26,15 +31,20 @@ Post-execution verification agent that checks whether the observed outcomes matc
 ## Decision Flow
 
 1. **Load criteria** — if `success_criteria` provided, use it; otherwise infer from `request_type` and domain patterns (e.g., code_change: tests pass, no syntax errors, files modified as intended; question: answer addresses all parts, sources cited).
-2. **Map to observations** — for each criterion, identify which `observation_artifacts` provide evidence.
+2. **Map to observations** — for each criterion, identify which `observation_artifacts` or `visual_qa_report` fields provide evidence.
 3. **Check completeness** — verify all expected outputs were produced (files created, commands executed, answers generated).
 4. **Check correctness** — verify outputs meet quality standards (syntax valid, tests pass, no errors in logs, no contradictions in answer).
 5. **Check scope** — verify that only intended resources were modified; no unintended side effects.
 6. **Check user constraints** — verify that hard constraints from `original_request` were respected (e.g., "do not use regex", "must keep backward compatibility").
 7. **Score each criterion** — `pass` if fully satisfied; `fail` if violated or missing; `partial` if mostly satisfied but with minor gaps.
 8. **Aggregate verdict** — `complete` if all criteria pass; `partial` if some pass and no critical failures; `failed` if critical criterion fails or majority fail; `inconclusive` if insufficient evidence to judge.
-9. **Determine retry recommendation** — `retry_recommended=true` if `partial` and root cause appears addressable (missing dependency, typo, single test failure); `false` if `failed` due to fundamental mismatch or `inconclusive`.
-10. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation.
+9. **Visual QA verdict** — if `visual_qa_report` present:
+   - `status=passed` and no `discrepancies` → contribution to `complete`.
+   - DOM assertion failures or image diff above threshold → derive `refinement_actions` and set `needs_refinement`.
+   - blocked navigation or missing critical elements → set `needs_human` if `iteration_count >= max_iterations`, otherwise `needs_refinement`.
+10. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA still not passing, set `escalation_required=true` and `validation_status=needs_human`.
+11. **Determine retry recommendation** — `retry_recommended=true` if `partial` or `needs_refinement` and root cause appears addressable (missing dependency, typo, single test failure, layout tweak); `false` if `failed` due to fundamental mismatch or `inconclusive`.
+12. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation, escalation flag, and refinement actions.
 
 ## Failure Modes
 
@@ -45,3 +55,6 @@ Post-execution verification agent that checks whether the observed outcomes matc
 | Validation contradicts user's explicit approval | Honor user approval; `validation_status=complete`; log override and rationale |
 | Circular validation (result validates itself) | Break loop by requiring external evidence (test, file diff, third-party output); flag to `audit_logger.md` |
 | Gap analysis identifies security regression | `validation_status=failed`; `retry_recommended=false`; escalate to `safety-control/content_checker.md` |
+| Visual QA discrepancies remain after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `tooll_subagents/execution/human_approval.md` |
+| Visual QA report is blocked or missing | If `iteration_count < max_iterations`, `validation_status=needs_refinement`; otherwise `needs_human` |
+| Visual QA module unavailable (Playwright not installed) | `validation_status=needs_human`; `escalation_required=true`; include environment remediation in `actionable_feedback` |
