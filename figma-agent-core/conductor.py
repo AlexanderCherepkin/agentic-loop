@@ -138,15 +138,55 @@ def stage_layout(
     return result.returncode == 0
 
 
-def stage_compose(
+def stage_extract_components(
     ast_file: str = "layout_ast.json",
+    output_dir: str = "src/app/components",
+    page_ast_output: str = "page_ast.json",
+    component_map_output: str = "component_map.json",
+    patterns: Optional[str] = None,
+    min_duplicates: int = 2,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3b-alt: извлечение повторяющихся/именованных нод в React-компоненты."""
+    logger.info("=== STAGE: extract ===")
+    command = [
+        sys.executable,
+        "component_extractor.py",
+        "--ast",
+        ast_file,
+        "--output-dir",
+        output_dir,
+        "--page-ast-output",
+        page_ast_output,
+        "--component-map-output",
+        component_map_output,
+        "--min-duplicates",
+        str(min_duplicates),
+    ]
+    if patterns:
+        command.extend(["--patterns", patterns])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_compose(
+    ast_file: str = "page_ast.json",
+    fallback_ast_file: str = "layout_ast.json",
     output: str = "src/app/page.tsx",
     title: Optional[str] = None,
     dry_run: bool = False,
 ) -> bool:
     """Этап 3c: сборка Tailwind AST в Next.js page.tsx."""
     logger.info("=== STAGE: compose ===")
-    command = [sys.executable, "page_composer.py", "--ast", ast_file, "--output", output]
+    target_ast = ast_file
+    if not Path(target_ast).exists():
+        target_ast = fallback_ast_file
+    command = [sys.executable, "page_composer.py", "--ast", target_ast, "--output", output]
     if title:
         command.extend(["--title", title])
 
@@ -441,7 +481,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "extract", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -480,9 +520,22 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             )
             report["stages"]["layout"] = {"success": ok}
 
+        elif stage == "extract":
+            ok = stage_extract_components(
+                ast_file=config.get("layout_output", "layout_ast.json"),
+                output_dir=config.get("components_output_dir", "src/app/components"),
+                page_ast_output=config.get("page_ast_output", "page_ast.json"),
+                component_map_output=config.get("component_map_output", "component_map.json"),
+                patterns=config.get("component_patterns"),
+                min_duplicates=config.get("component_min_duplicates", 2),
+                dry_run=dry_run,
+            )
+            report["stages"]["extract"] = {"success": ok}
+
         elif stage == "compose":
             ok = stage_compose(
-                ast_file=config.get("layout_output", "layout_ast.json"),
+                ast_file=config.get("page_ast_output", "page_ast.json"),
+                fallback_ast_file=config.get("layout_output", "layout_ast.json"),
                 output=config.get("compose_output", "src/app/page.tsx"),
                 title=config.get("compose_title"),
                 dry_run=dry_run,
@@ -590,18 +643,18 @@ def save_report(report: Dict[str, Any], path: str = "conductor_report.json") -> 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, components, assets.",
+        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, layout, extract, compose, components, assets.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, refinement, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, extract, compose, compliance, visual_qa, refinement, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, compose, compliance, visual_qa, refinement, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, extract, compose, compliance, visual_qa, refinement, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -653,6 +706,32 @@ def main():
         "--compose-title",
         default=None,
         help="Заголовок страницы для Section Composer."
+    )
+    parser.add_argument(
+        "--components-output-dir",
+        default="src/app/components",
+        help="Директория для извлечённых React-компонентов."
+    )
+    parser.add_argument(
+        "--page-ast-output",
+        default="page_ast.json",
+        help="Путь для урезанного AST страницы после извлечения компонентов."
+    )
+    parser.add_argument(
+        "--component-map-output",
+        default="component_map.json",
+        help="Путь для реестра извлечённых компонентов."
+    )
+    parser.add_argument(
+        "--component-patterns",
+        default=None,
+        help='JSON-список паттернов имён для извлечения, например ["card","hero"].'
+    )
+    parser.add_argument(
+        "--component-min-duplicates",
+        type=int,
+        default=2,
+        help="Минимальное число структурных дубликатов для извлечения компонента."
     )
     parser.add_argument(
         "--visual-qa-url",
@@ -765,6 +844,11 @@ def main():
         "layout_output": args.layout_output,
         "compose_output": args.compose_output,
         "compose_title": args.compose_title,
+        "components_output_dir": args.components_output_dir,
+        "page_ast_output": args.page_ast_output,
+        "component_map_output": args.component_map_output,
+        "component_patterns": args.component_patterns,
+        "component_min_duplicates": args.component_min_duplicates,
         "visual_qa_url": args.visual_qa_url,
         "visual_qa_reference": args.visual_qa_reference,
         "visual_qa_output_dir": args.visual_qa_output_dir,

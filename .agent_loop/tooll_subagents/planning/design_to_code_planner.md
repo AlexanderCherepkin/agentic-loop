@@ -15,7 +15,7 @@ Handoff agent that decides what the Figma design analyst's output should become:
 - `handoff_package`: structured object:
   - `handoff_type`: enum (`technical_assignment`, `full_code`, `mixed`)
   - `technical_assignment`: markdown spec (present when type is `technical_assignment` or `mixed`)
-  - `generated_code`: list of `{ file_path, content }` (present when type is `full_code` or `mixed`)
+  - `generated_code`: list of `{ file_path, content }` (present when type is `full_code` or `mixed`), including `app/components/*.tsx` from `figma_extract_components`
   - `summary`: human-readable summary of what was produced
   - `next_phase_hint`: enum (`planning`, `execution`, `result`)
   - `execution_plan`: optional ordered tool plan when `handoff_type=technical_assignment`

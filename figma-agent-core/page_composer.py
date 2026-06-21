@@ -86,6 +86,17 @@ def _detect_font_imports(ast: Dict[str, Any]) -> List[str]:
     return imports
 
 
+def _detect_component_imports(ast: Dict[str, Any]) -> List[str]:
+    root = ast.get("root", ast)
+    imports: set = set()
+    for node in _collect_all_nodes(root):
+        if node.get("component"):
+            name = node.get("component_name", node.get("tag", "Unknown"))
+            path = node.get("component_path", f"@/app/components/{name}")
+            imports.add(f'import {name} from "{path}"')
+    return sorted(imports)
+
+
 def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
     tag = node.get("tag", "div")
     classes = node.get("classes", [])
@@ -104,6 +115,14 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1) -> str:
         extra_attrs += f' src={_safe_prop(src)} alt={_safe_prop(alt)}'
 
     children = node.get("children", [])
+
+    if node.get("component"):
+        name = node.get("component_name", tag)
+        props = node.get("props", {})
+        props_str = ""
+        if props:
+            props_str = " " + " ".join(f'{k}={_safe_prop(v)}' for k, v in props.items())
+        return f"{start_indent}<{name}{props_str} />"
 
     if children:
         rendered_children = "\n".join(_node_to_tsx(child, depth + 1) for child in children)
@@ -161,6 +180,7 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
     """Превращает Tailwind AST в Next.js page.tsx."""
     page_title = title or _infer_page_title(ast)
     imports = _detect_font_imports(ast)
+    imports.extend(_detect_component_imports(ast))
 
     if not imports:
         imports = ['import React from "react"']

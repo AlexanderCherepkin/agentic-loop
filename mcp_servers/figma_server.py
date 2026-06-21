@@ -51,10 +51,14 @@ class FigmaMCPServer(MCPServer):
                       s({"file?": "string", "node_id?": "string", "output_name?": "string",
                          "skip_assets?": "bool"}),
                       self.figma_generate_component)
+        self.register("figma_extract_components", "Extract reusable React components from the Tailwind AST",
+                      s({"ast_file?": "string", "output_dir?": "string", "page_ast_output?": "string",
+                         "component_map_output?": "string", "patterns?": "string", "min_duplicates?": "int"}),
+                      self.figma_extract_components)
         self.register("figma_download_assets", "Download image/SVG assets referenced by the cached Figma structure",
                       s({"file?": "string"}),
                       self.figma_download_assets)
-        self.register("figma_run_pipeline", "Run the full Figma-to-code pipeline (bootstrap, analyze, spec, components, assets)",
+        self.register("figma_run_pipeline", "Run the full Figma-to-code pipeline (bootstrap, analyze, spec, layout, extract, compose, components, assets)",
                       s({"force_refresh?": "bool", "node_id?": "string", "all_sections?": "bool",
                          "skip_assets?": "bool", "api_depth?": "int", "spec_output?": "string",
                          "output_name?": "string", "dry_run?": "bool"}),
@@ -150,6 +154,24 @@ class FigmaMCPServer(MCPServer):
             args.append("--skip-assets")
         return self._run_core_script("agent.py", args)
 
+    def figma_extract_components(self, ast_file: str = "layout_ast.json", output_dir: str = "src/app/components",
+                                  page_ast_output: str = "page_ast.json",
+                                  component_map_output: str = "component_map.json",
+                                  patterns: str = "", min_duplicates: int = 2) -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = [
+            "--ast", ast_file,
+            "--output-dir", output_dir,
+            "--page-ast-output", page_ast_output,
+            "--component-map-output", component_map_output,
+            "--min-duplicates", str(min_duplicates),
+        ]
+        if patterns:
+            args.extend(["--patterns", patterns])
+        return self._run_core_script("component_extractor.py", args)
+
     def figma_download_assets(self, file: str = "figma_node.json") -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
@@ -178,6 +200,8 @@ class FigmaMCPServer(MCPServer):
         if dry_run:
             args.append("--dry-run")
         return self._run_core_script("conductor.py", args)
+
+
 
     async def ping(self) -> bool:
         return True

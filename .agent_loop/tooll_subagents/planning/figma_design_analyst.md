@@ -39,10 +39,12 @@ Planning agent that transforms a design descriptor into a structured code bluepr
    - `design_brief`: warn that direct brief input cannot be analyzed as Figma; return `status=failed` with guidance.
 3. **Run analysis stage** — call `figma_analyze` via MCP to produce `analysis_report.txt` and semantic tree.
 4. **Generate specification** — if `output_mode` is `technical_assignment` or `both`, call `figma_generate_spec` via MCP and store `specification`.
-5. **Generate components** — if `output_mode` is `full_code` or `both`, call `figma_generate_component` or `figma_run_pipeline` via MCP:
-   - `single_section` → one component for the selected node.
-   - `all_sections` → batch component generation for every top-level section.
-   - `whole_page` → generate a page-level component wrapping top-level sections.
+5. **Generate components** — if `output_mode` is `full_code` or `both`:
+   - Call `figma_extract_components` via MCP to deterministically extract reusable components from the Tailwind AST (repeated/ named / Figma COMPONENT or INSTANCE nodes).
+   - Then call `figma_generate_component` or `figma_run_pipeline` via MCP for any remaining complex sections:
+     - `single_section` → one component for the selected node.
+     - `all_sections` → batch component generation for every top-level section.
+     - `whole_page` → generate a page-level component wrapping top-level sections.
 6. **Collect assets** — call `figma_download_assets` via MCP; map returned public paths into the blueprint.
 7. **Build structure map** — derive tree from analyzer output: frames, components, text nodes, and AutoLayout rules.
 8. **Assess completeness** — mark `complete` if all requested artifacts produced; `partial` if some assets/components failed; `failed` if bootstrap or core generation failed.

@@ -126,6 +126,7 @@ class TailwindNode:
     children: List["TailwindNode"] = field(default_factory=list)
     figma_id: Optional[str] = None
     figma_name: Optional[str] = None
+    figma_type: Optional[str] = None
 
     def add_class(self, *classes: str) -> None:
         for cls in classes:
@@ -151,6 +152,8 @@ class TailwindNode:
             result["figma_id"] = self.figma_id
         if self.figma_name is not None:
             result["figma_name"] = self.figma_name
+        if self.figma_type is not None:
+            result["figma_type"] = self.figma_type
         return result
 
 
@@ -223,6 +226,7 @@ class FigmaLayoutEngine:
             tag=self._semantic_tag(node, depth),
             figma_id=node.get("id"),
             figma_name=name,
+            figma_type=node.get("type"),
         )
 
         box = node.get("box")

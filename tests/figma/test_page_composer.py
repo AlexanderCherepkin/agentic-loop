@@ -162,3 +162,53 @@ def test_self_closing_for_empty_non_text() -> None:
     ast = _minimal_ast([{"tag": "div", "classes": ["bg-white"], "children": []}])
     code = page_composer.compose_page(ast)
     assert "<div className=\"bg-white\" />" in code
+
+
+def test_compose_component_reference() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "HeroSection",
+            "component": True,
+            "component_name": "HeroSection",
+            "component_path": "@/app/components/HeroSection",
+            "props": {},
+            "children": [],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'import HeroSection from "@/app/components/HeroSection"' in code
+    assert "<HeroSection />" in code
+
+
+def test_compose_component_with_props() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "CTAButton",
+            "component": True,
+            "component_name": "CTAButton",
+            "component_path": "@/app/components/CTAButton",
+            "props": {"label": "Get started"},
+            "children": [],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'import CTAButton from "@/app/components/CTAButton"' in code
+    assert 'label="Get started"' in code
+
+
+def test_compose_mixed_nodes_and_components() -> None:
+    ast = _minimal_ast([
+        {"tag": "h1", "text": "Title", "classes": ["text-[40px]"]},
+        {
+            "tag": "FeatureCard",
+            "component": True,
+            "component_name": "FeatureCard",
+            "component_path": "@/app/components/FeatureCard",
+            "props": {},
+            "children": [],
+        },
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'import FeatureCard from "@/app/components/FeatureCard"' in code
+    assert "<h1 className=\"text-[40px]\">\n      Title\n    </h1>" in code
+    assert "<FeatureCard />" in code
