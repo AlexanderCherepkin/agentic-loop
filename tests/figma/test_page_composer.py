@@ -80,8 +80,8 @@ def test_compose_inline_styles() -> None:
         }
     ])
     code = page_composer.compose_page(ast)
-    assert 'style={"left: 120px; top: 40px"}' in code
-    assert "<div className=\"absolute\" style={\"left: 120px; top: 40px\"} />" in code
+    assert 'style={left: "120px", top: "40px"}' in code
+    assert '<div className="absolute" style={left: "120px", top: "40px"} />' in code
 
 
 def test_compose_nested_children() -> None:

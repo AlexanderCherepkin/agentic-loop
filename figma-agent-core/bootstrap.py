@@ -232,9 +232,17 @@ class FigmaExtractor:
     def clean_node_data(self, node: Dict[str, Any], max_depth: int = 8) -> Dict[str, Any]:
         return self.compress_node(node, depth=0, max_depth=max_depth) or {}
 
-    def _fetch_with_retry(self, url: str, retries: int = 3) -> requests.Response:
+    def _fetch_with_retry(
+        self, url: str, retries: int = 3, timeout: int = 60
+    ) -> requests.Response:
         for attempt in range(retries):
-            response = requests.get(url, headers=self.headers)
+            try:
+                response = requests.get(url, headers=self.headers, timeout=timeout)
+            except requests.Timeout:
+                print(f"Лог: Figma API timeout. Попытка {attempt + 1}/{retries}.")
+                if attempt == retries - 1:
+                    raise
+                continue
             if response.status_code == 200:
                 return response
             elif response.status_code == 429:
@@ -244,6 +252,23 @@ class FigmaExtractor:
             else:
                 response.raise_for_status()
         raise requests.HTTPError(f"Max retries ({retries}) exceeded for Figma API")
+
+    def get_rate_limit_status(self) -> Dict[str, Any]:
+        """Возвращает текущий статус rate limit по одному тестовому запросу."""
+        if not self.file_key:
+            return {"ok": False, "error": "file_key not set"}
+        url = f"{self.base_url}/files/{self.file_key}/nodes?ids=0:1&depth=1"
+        try:
+            response = requests.get(url, headers=self.headers, timeout=30)
+            return {
+                "ok": response.status_code == 200,
+                "status": response.status_code,
+                "retry_after": response.headers.get("Retry-After"),
+                "plan_tier": response.headers.get("X-Figma-Plan-Tier"),
+                "rate_limit_type": response.headers.get("X-Figma-Rate-Limit-Type"),
+            }
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
 
     def get_component_data(
         self,
@@ -345,6 +370,32 @@ def check_figma_connection(
 
     print(f"Проверка подключения к Figma по адресу: {url}\n")
     extractor = FigmaExtractor(token)
+    parsed = extractor.parse_url(url)
+    if parsed:
+        extractor.file_key = parsed["file_key"]
+
+    status = extractor.get_rate_limit_status()
+    if not status.get("ok"):
+        retry_after = status.get("retry_after")
+        plan_tier = status.get("plan_tier", "unknown")
+        rate_type = status.get("rate_limit_type", "unknown")
+        if retry_after:
+            minutes = int(retry_after) // 60
+            print(f"[RATE LIMIT] Figma API временно недоступен ({status.get('status')} 429).")
+            print(f"  Plan tier: {plan_tier}, rate limit type: {rate_type}")
+            print(f"  Retry-After: {retry_after}s (~{minutes} мин)")
+            print(f"  Рекомендация: подожди сброса лимита или используй экспортированный JSON-файл.")
+        else:
+            print(f"[ERROR] Не удалось проверить статус Figma API: {status}")
+
+        cached = load_existing_cache()
+        if cached and not force_refresh:
+            print(f"Лог: не удалось обновить данные, но есть кеш. Продолжаем работу с {OUTPUT_FILE}.")
+            return True
+
+        print("Не удалось получить данные и нет актуального кеша. Проверь токен/URL или предоставь JSON-файл.")
+        return False
+
     data = extractor.get_component_data(url, node_id=node_id, depth=depth)
 
     if data:

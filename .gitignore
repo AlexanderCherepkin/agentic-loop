@@ -23,3 +23,8 @@ venv/
 conductor_report.json
 spec.md
 layout_ast.json
+page_ast.json
+component_map.json
+.tmp/
+src/app/page.tsx
+src/app/components/

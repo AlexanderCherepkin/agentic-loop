@@ -6,6 +6,7 @@ Loads the module via importlib because the directory name contains a hyphen.
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from typing import Any, Dict
@@ -298,3 +299,121 @@ def test_stats_counters() -> None:
     assert result.node_count == 4
     assert result.text_node_count == 1
     assert result.asset_count == 1
+
+
+def _load_fixture(name: str) -> Dict[str, Any]:
+    path = Path(__file__).resolve().parent / "fixtures" / name
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def test_raw_color_computed_when_hex_missing() -> None:
+    node = {
+        "id": "110:1",
+        "name": "Button",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "absoluteBoundingBox": {"x": 0, "y": 0, "width": 120, "height": 40},
+        "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "bg-[#3b82f5]" in result.root.classes
+
+
+def test_gradient_stops_from_raw_figma() -> None:
+    node = {
+        "id": "120:1",
+        "name": "Hero Section",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "absoluteBoundingBox": {"x": 0, "y": 0, "width": 1440, "height": 600},
+        "fills": [
+            {
+                "type": "GRADIENT_LINEAR",
+                "gradientStops": [
+                    {"position": 0, "color": {"r": 1, "g": 1, "b": 1, "a": 1}},
+                    {"position": 1, "color": {"r": 0, "g": 0, "b": 0, "a": 1}},
+                ],
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.inline_styles.get("background") == "linear-gradient(180deg, #ffffff 0%, #000000 100%)"
+
+
+def test_vector_without_image_fill_becomes_shape() -> None:
+    node = {
+        "id": "130:1",
+        "name": "Icon",
+        "type": "VECTOR",
+        "visible": True,
+        "absoluteBoundingBox": {"x": 0, "y": 0, "width": 48, "height": 48},
+        "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.tag == "div"
+    assert result.root.src is None
+    assert "bg-[#3b82f5]" in result.root.classes
+
+
+def test_counter_axis_stretch_maps_to_items_stretch() -> None:
+    node = {
+        "id": "140:1",
+        "name": "Row",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "counterAxisAlignItems": "STRETCH",
+        "children": [],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "items-stretch" in result.root.classes
+
+
+def test_semantic_tags_on_saas_landing_fixture() -> None:
+    data = _load_fixture("saas_landing.json")
+    result = layout_engine.convert_figma_node(data)
+    root = result.root
+
+    navbar = root.children[0]
+    assert navbar.tag == "header"
+    assert "w-[1440px]" in navbar.classes
+    assert "h-[72px]" in navbar.classes
+
+    hero = root.children[1]
+    assert hero.tag == "section"
+    assert hero.inline_styles.get("background", "").startswith("linear-gradient")
+
+    hero_buttons = hero.children[2]
+    assert hero_buttons.tag == "div"
+
+    features = root.children[2]
+    cards_row = features.children[1]
+    assert "items-stretch" in cards_row.classes
+
+    card = cards_row.children[0]
+    assert card.tag == "article"
+    assert "bg-[#f7faff]" in card.classes
+    assert card.inline_styles.get("box-shadow", "").startswith("0px 4px 24px")
+
+    card_title = card.children[1]
+    assert card_title.tag == "h3"
+
+    footer = root.children[3]
+    assert footer.tag == "footer"
+    assert "bg-[#0d0d14]" in footer.classes
+
+
+def test_absolute_bounding_box_fallback_for_size() -> None:
+    node = {
+        "id": "150:1",
+        "name": "Box",
+        "type": "FRAME",
+        "visible": True,
+        "absoluteBoundingBox": {"x": 0, "y": 0, "width": 100, "height": 200},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "w-[100px]" in result.root.classes
+    assert "h-[200px]" in result.root.classes

@@ -102,6 +102,23 @@ def _class_for_color(prefix: str, hex_color: Optional[str]) -> Optional[str]:
     return f"{prefix}-{mapped}"
 
 
+def _color_to_hex(color: Optional[Dict[str, float]]) -> Optional[str]:
+    """Конвертирует raw Figma RGBA в HEX, если в ноде нет precomputed hex."""
+    if not color:
+        return None
+    try:
+        r = int(round(color.get("r", 0) * 255))
+        g = int(round(color.get("g", 0) * 255))
+        b = int(round(color.get("b", 0) * 255))
+        a = color.get("a", 1.0)
+        if a < 1.0:
+            a_int = int(round(a * 255))
+            return f"#{r:02x}{g:02x}{b:02x}{a_int:02x}"
+        return f"#{r:02x}{g:02x}{b:02x}"
+    except Exception:
+        return None
+
+
 def _px(value: Any) -> Optional[float]:
     if value is None:
         return None
@@ -216,11 +233,17 @@ class FigmaLayoutEngine:
         if node_type == "TEXT":
             return self._convert_text(node)
 
-        if node.get("isAsset") or node_type in ("IMAGE", "VECTOR"):
+        if node_type == "IMAGE" or node.get("isAsset"):
             return self._convert_asset(node)
 
         if node_type in ("RECTANGLE", "ELLIPSE"):
             return self._convert_shape(node)
+
+        if node_type == "VECTOR":
+            has_image_fill = any(f.get("type") == "IMAGE" for f in (node.get("fills") or []))
+            if not has_image_fill:
+                return self._convert_shape(node)
+            return self._convert_asset(node)
 
         tw_node = TailwindNode(
             tag=self._semantic_tag(node, depth),
@@ -229,7 +252,7 @@ class FigmaLayoutEngine:
             figma_type=node.get("type"),
         )
 
-        box = node.get("box")
+        box = node.get("box") or node.get("absoluteBoundingBox")
         self._apply_size(tw_node, box)
         self._apply_layout(tw_node, node)
         self._apply_position(tw_node, node, parent_box)
@@ -246,19 +269,30 @@ class FigmaLayoutEngine:
         return tw_node
 
     def _semantic_tag(self, node: Dict[str, Any], depth: int) -> str:
-        name = (node.get("name") or "").lower()
+        name_lower = (node.get("name") or "").lower()
+        name_words = set(re.split(r"[^\w]+", name_lower))
+        node_type = node.get("type", "")
+
         if depth == 0:
             return "section"
-        if "button" in name or node.get("type") == "COMPONENT":
+        if node_type in ("COMPONENT", "INSTANCE") and "button" in name_words:
             return "button"
-        if "image" in name or node.get("isAsset"):
+        if "image" in name_words or node.get("isAsset"):
             return "div"
-        if "hero" in name or "header" in name or "nav" in name:
-            return "header" if depth <= 1 else "div"
-        if "footer" in name:
+        if "nav" in name_words or "navbar" in name_words:
+            return "header"
+        if "footer" in name_words:
             return "footer"
-        if "article" in name or "card" in name:
+        if "article" in name_words or "card" in name_words:
             return "article"
+        if "section" in name_words:
+            return "section"
+        if "hero" in name_words and "section" in name_words and depth <= 1:
+            return "header"
+        if "header" in name_words and "section" in name_words and depth <= 1:
+            return "header"
+        if name_words == {"hero"} and depth <= 1:
+            return "header"
         return "div"
 
     def _convert_text(self, node: Dict[str, Any]) -> TailwindNode:
@@ -268,7 +302,7 @@ class FigmaLayoutEngine:
             figma_id=node.get("id"),
             figma_name=_safe_name(node.get("name")),
         )
-        box = node.get("box")
+        box = node.get("box") or node.get("absoluteBoundingBox")
         self._apply_size(tw_node, box)
         style = node.get("style", {})
         self._apply_text_style(tw_node, style)
@@ -277,25 +311,35 @@ class FigmaLayoutEngine:
 
     def _text_tag(self, node: Dict[str, Any]) -> str:
         name = (node.get("name") or "").lower()
-        if "h1" in name or "title" in name or "headline" in name:
+        words = set(re.split(r"[^\w]+", name))
+        if "h1" in words:
             return "h1"
-        if "h2" in name:
+        if "h2" in words:
             return "h2"
-        if "h3" in name:
+        if "h3" in words:
             return "h3"
-        if "button" in name or node.get("type") == "COMPONENT":
+        if "headline" in words:
+            return "h1"
+        if "card" in words and "title" in words:
+            return "h3"
+        if "subtitle" in words or "description" in words or "body" in words:
+            return "p"
+        if "title" in words:
+            return "h2"
+        if "button" in words or node.get("type") == "COMPONENT":
             return "span"
         return "p"
 
     def _convert_asset(self, node: Dict[str, Any]) -> TailwindNode:
         tw_node = TailwindNode(
             tag="img",
-            src=node.get("publicPath"),
+            src=node.get("publicPath") or node.get("imageRef"),
             alt=_safe_name(node.get("name")),
             figma_id=node.get("id"),
             figma_name=_safe_name(node.get("name")),
         )
-        self._apply_size(tw_node, node.get("box"))
+        box = node.get("box") or node.get("absoluteBoundingBox")
+        self._apply_size(tw_node, box)
         self._apply_position(tw_node, node, None)
         return tw_node
 
@@ -305,7 +349,8 @@ class FigmaLayoutEngine:
             figma_id=node.get("id"),
             figma_name=_safe_name(node.get("name")),
         )
-        self._apply_size(tw_node, node.get("box"))
+        box = node.get("box") or node.get("absoluteBoundingBox")
+        self._apply_size(tw_node, box)
         self._apply_position(tw_node, node, None)
         self._apply_fills(tw_node, node)
         self._apply_strokes(tw_node, node)
@@ -354,6 +399,7 @@ class FigmaLayoutEngine:
             "CENTER": "items-center",
             "MAX": "items-end",
             "BASELINE": "items-baseline",
+            "STRETCH": "items-stretch",
         }
 
         if primary in justify_map:
@@ -403,7 +449,7 @@ class FigmaLayoutEngine:
         if node_type == "TEXT":
             return
 
-        box = node.get("box")
+        box = node.get("box") or node.get("absoluteBoundingBox")
         if not box or not parent_box:
             return
 
@@ -415,6 +461,9 @@ class FigmaLayoutEngine:
         rel_x = int(round(x - parent_x))
         rel_y = int(round(y - parent_y))
 
+        if rel_x == 0 and rel_y == 0:
+            return
+
         tw_node.add_class("absolute")
         tw_node.inline_styles["left"] = f"{rel_x}px"
         tw_node.inline_styles["top"] = f"{rel_y}px"
@@ -424,7 +473,7 @@ class FigmaLayoutEngine:
         for fill in fills:
             fill_type = fill.get("type")
             if fill_type == "SOLID":
-                hex_color = fill.get("hex")
+                hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
                 cls = _class_for_color("bg", hex_color)
                 if cls:
                     tw_node.add_class(cls)
@@ -432,7 +481,7 @@ class FigmaLayoutEngine:
                 if opacity is not None and opacity < 1.0:
                     tw_node.inline_styles["opacity"] = str(opacity)
             elif fill_type == "GRADIENT_LINEAR":
-                stops = fill.get("stops", [])
+                stops = fill.get("stops") or fill.get("gradientStops", [])
                 if stops:
                     gradient = self._build_gradient(stops)
                     tw_node.inline_styles["background"] = gradient
@@ -443,7 +492,7 @@ class FigmaLayoutEngine:
     def _build_gradient(self, stops: List[Dict[str, Any]]) -> str:
         parts = []
         for stop in stops:
-            color = stop.get("hex") or stop.get("rgb", "transparent")
+            color = stop.get("hex") or stop.get("rgb") or _color_to_hex(stop.get("color")) or "transparent"
             pos = stop.get("position", 0)
             parts.append(f"{color} {int(round(pos * 100))}%")
         return f"linear-gradient(180deg, {', '.join(parts)})"
@@ -454,7 +503,8 @@ class FigmaLayoutEngine:
             return
         for stroke in strokes:
             if stroke.get("type") == "SOLID":
-                cls = _class_for_color("border", stroke.get("hex"))
+                hex_color = stroke.get("hex") or _color_to_hex(stroke.get("color"))
+                cls = _class_for_color("border", hex_color)
                 if cls:
                     tw_node.add_class(cls)
                 width = _px(node.get("strokeWeight", 1))
@@ -467,7 +517,12 @@ class FigmaLayoutEngine:
         for effect in effects:
             e_type = effect.get("type")
             if e_type in ("DROP_SHADOW", "INNER_SHADOW"):
-                color = effect.get("hex") or effect.get("rgb", "rgba(0,0,0,0.25)")
+                color = (
+                    effect.get("hex")
+                    or effect.get("rgb")
+                    or _color_to_hex(effect.get("color"))
+                    or "rgba(0,0,0,0.25)"
+                )
                 offset = effect.get("offset", {"x": 0, "y": 0})
                 radius = effect.get("radius", 0)
                 x = int(round(offset.get("x", 0)))
@@ -535,7 +590,8 @@ class FigmaLayoutEngine:
         fills = style.get("fills") or []
         for fill in fills:
             if fill.get("type") == "SOLID":
-                cls = _class_for_color("text", fill.get("hex"))
+                hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
+                cls = _class_for_color("text", hex_color)
                 if cls:
                     tw_node.add_class(cls)
                 break

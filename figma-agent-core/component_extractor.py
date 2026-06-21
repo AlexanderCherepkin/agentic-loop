@@ -112,11 +112,19 @@ def _style_to_string(styles: Dict[str, str]) -> str:
     return "; ".join(pairs)
 
 
+def _to_camel_case(kebab: str) -> str:
+    parts = kebab.split("-")
+    return parts[0] + "".join(p.capitalize() for p in parts[1:])
+
+
 def _render_inline_styles(styles: Dict[str, str]) -> str:
     if not styles:
         return ""
-    style_str = _style_to_string(styles)
-    return f' style={{{json.dumps(style_str)}}}'
+    entries = [
+        f"{_to_camel_case(key)}: {json.dumps(value)}"
+        for key, value in sorted(styles.items())
+    ]
+    return f' style={{{", ".join(entries)}}}'
 
 
 def _safe_prop(value: Any) -> str:
