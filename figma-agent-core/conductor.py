@@ -118,6 +118,26 @@ def stage_spec(
     return result.returncode == 0
 
 
+def stage_layout(
+    file: str = "figma_node.json",
+    node_id: Optional[str] = None,
+    output: str = "layout_ast.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3b: детерминированная генерация Tailwind AST из Figma-ноды."""
+    logger.info("=== STAGE: layout ===")
+    command = [sys.executable, "layout_engine.py", "--file", file, "--output", output]
+    if node_id:
+        command.extend(["--node-id", node_id])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def _to_pascal_case(name: str) -> str:
     """Превращает произвольное имя в PascalCase."""
     import re
@@ -271,7 +291,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -300,6 +320,15 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["spec"] = {"success": ok}
+
+        elif stage == "layout":
+            ok = stage_layout(
+                file=file,
+                node_id=node_id,
+                output=config.get("layout_output", "layout_ast.json"),
+                dry_run=dry_run,
+            )
+            report["stages"]["layout"] = {"success": ok}
 
         elif stage == "components":
             if config.get("all_sections", False):
@@ -353,12 +382,12 @@ def main():
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, layout, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -395,6 +424,11 @@ def main():
         "--spec-output",
         default="spec.md",
         help="Путь для сохранения технического задания."
+    )
+    parser.add_argument(
+        "--layout-output",
+        default="layout_ast.json",
+        help="Путь для сохранения Tailwind AST от Layout Engine."
     )
     parser.add_argument(
         "--file",
@@ -435,6 +469,7 @@ def main():
         "api_depth": args.api_depth,
         "skip_assets": args.skip_assets,
         "spec_output": args.spec_output,
+        "layout_output": args.layout_output,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,

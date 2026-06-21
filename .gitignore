@@ -20,3 +20,6 @@ __pycache__/
 .mypy_cache/
 .venv/
 venv/
+conductor_report.json
+spec.md
+layout_ast.json
