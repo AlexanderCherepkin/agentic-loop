@@ -1,9 +1,9 @@
 # CLAUDE.md — Agentic Loop
 
 This is a **multi-agent AI system** with hierarchical safety-first architecture.
-166 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
+171 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
 following the Algorithmic template (Role + Contract + Decision Flow + Failure Modes).
-All 166 agents across all 6 layers are fully implemented with the Algorithmic template.
+All 171 agents across all 6 layers are fully implemented with the Algorithmic template.
 No remaining stubs.
 
 ## First Action (always)
@@ -61,7 +61,7 @@ Never auto-approve (still require confirmation):
 | safety-control | 9 | Input safety (sanitization, permissions, threats) | FILLED |
 | safety-control/mutual_check | 10 | Cross-validation (audit, consistency, compliance) | FILLED |
 | control | 7 | Runtime enforcement (scope, policy, resources) | FILLED |
-| tooll_subagents | 23 | ReAct cycle: user→planning→execution→observability→self_correction→result | FILLED |
+| tooll_subagents | 28 | ReAct cycle: user→planning→execution→observability→self_correction→result | FILLED |
 | tools_read | 10 | Read-file pipeline (path→encoding→read→chunk→parse→extract→integrity→cache→format) | FILLED |
 | tools_replace | 10 | Replace-file pipeline (backup→pattern→edit→diff→rank→validate→write→verify→rollback) | FILLED |
 | tools_search | 10 | Search pipeline (scope→regex+semantic→relevance→dedup→snippet→diff) | FILLED |
@@ -73,7 +73,7 @@ Never auto-approve (still require confirmation):
 | tools_web | 10 | Web request pipeline (auth→request→network→rate→retry→response→content→cache→error→web_optimizer) | FILLED |
 | tools_memory | 10 | Memory store pipeline (read→write→index→embedding→compress→evict→summarize→recall→consistency→optimizer) | FILLED |
 | tools_browser | 10 | Headless browser pipeline (session→navigation→screenshot→dom→selector→interaction→network→cookies→captcha→error→optimizer) | FILLED |
-| **Total** | **166** | | **166 filled, 0 stubs** |
+| **Total** | **171** | | **171 filled, 0 stubs** |
 
 ## Core Architecture
 
@@ -88,6 +88,7 @@ Three-circuit safety: safety-control → mutual_check → control.
 Human-in-the-loop split: human_oversight.md (strategic, in control/) vs human_approval.md (tactical, in execution/).
 Lazy MCP gateway: `mcp_servers/gateway.py` exposes category metadata and materializes servers only on tool invocation (token budget saver).
 Headless browser: `tools_browser/headless_automation` via Playwright MCP server for dynamic pages and screenshots. Optional dependency: `runtime/requirements-browser.txt`.
+Backend Spec Bridge: `figma-agent-core/backend_bridge.py` parses OpenAPI/Prisma/text specs, maps UI forms to backend models, and generates `prisma/schema.prisma`, `app/api/*.ts` routes, and `app/actions/*Action.ts` Server Actions. MCP category `backend` registered in `mcp_servers/backend_server.py`.
 Conditional Edges: `runtime/engine/pipeline_runner.py` uses `PhaseTransitionManager` to route between ReAct phases based on agent outputs.
 `project_rules.md` in repo root is lightweight project context loaded by the runtime; updates require human approval.
 
@@ -114,16 +115,16 @@ Read memory when resuming work. Update memory when architecture changes or key d
 
 ## Current Progress & Next Steps
 
-1. **FILLED (166 agents)** — All layers fully implemented:
+1. **FILLED (171 agents)** — All layers fully implemented:
    - `main_loop.md` (1) — ReAct head agent
    - `orchestrator/` (6) — Router, dispatcher, pipeline coordinator, state manager, API gateway, message bus
    - `safety-control/` (9) — Input sanitization, permissions, threats, leaks, output review, bias, safety assessment, content checking
    - `mutual_check/` (10) — Audit, verification, consistency, validation, performance, quotas, anomalies, quality, feedback, compliance
    - `control/` (7) — File system, network, resources, human oversight, policy, scope, input aggregation
-   - `tooll_subagents/` (23) — Full ReAct cycle: user→planning→execution→observability→self_correction→result
+   - `tooll_subagents/` (28) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `backend_spec_bridge.md` and `responsive_composer.md`
    - `tools_*` (110) — 11 categories × 10 tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
 2. **STUBS (0 agents)** — No remaining placeholders. All agents follow the Algorithmic template.
-3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, and conditional ReAct phase transitions.
+3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Backend Spec Bridge, Responsive Composer, and conditional ReAct phase transitions.
 
 ## Active Skills
 

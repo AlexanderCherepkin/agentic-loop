@@ -29,6 +29,7 @@ from .web_server import WebMCPServer
 from .memory_server import MemoryMCPServer
 from .browser_server import BrowserMCPServer
 from .figma_server import FigmaMCPServer
+from .backend_server import BackendMCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -46,6 +47,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "tools_memory": MemoryMCPServer,
         "tools_browser": BrowserMCPServer,
         "figma": FigmaMCPServer,
+        "backend": BackendMCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -76,7 +78,8 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
         "tools_web": "Web request pipeline — 10 tools",
         "tools_memory": "Memory store pipeline — 11 tools",
         "tools_browser": "Headless browser pipeline — 10 tools",
-        "figma": "Figma-to-code pipeline — 6 tools",
+        "figma": "Figma-to-code pipeline — 9 tools",
+        "backend": "Backend Spec Bridge pipeline — 6 tools",
     }
 
     for category in descriptions:
@@ -188,6 +191,12 @@ async def test_all_servers(registry: MCPRegistry):
     if figma:
         r = await figma.call_tool("figma_run_pipeline", {"dry_run": True})
         results["figma"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test backend server (degraded is acceptable if figma-agent-core missing)
+    backend = registry.get_server("backend")
+    if backend:
+        r = await backend.call_tool("backend_analyze_spec", {})
+        results["backend"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
     return results
 

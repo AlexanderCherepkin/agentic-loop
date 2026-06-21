@@ -15,7 +15,7 @@ Handoff agent that decides what the Figma design analyst's output should become:
 - `handoff_package`: structured object:
   - `handoff_type`: enum (`technical_assignment`, `full_code`, `mixed`)
   - `technical_assignment`: markdown spec (present when type is `technical_assignment` or `mixed`)
-  - `generated_code`: list of `{ file_path, content }` (present when type is `full_code` or `mixed`), including `app/components/*.tsx` from `figma_extract_components`
+  - `generated_code`: list of `{ file_path, content }` (present when type is `full_code` or `mixed`), including `app/components/*.tsx` from `figma_extract_components`, `tailwind.config.ts` and `app/globals.css` from `figma_extract_tokens`, `responsive_ast.json` and `responsive_report.json` from `figma_responsive_compose`, `asset_registry.json` plus files under `public/assets/figma/` from `figma_download_assets`, `interactive_ast.json` and `interactive_registry.json` from `figma_map_interactions`, and backend artifacts (`prisma/schema.prisma`, `app/api/*/route.ts`, `app/actions/*Action.ts`, `backend_mapping.json`) from `backend_run_bridge`
   - `summary`: human-readable summary of what was produced
   - `next_phase_hint`: enum (`planning`, `execution`, `result`)
   - `execution_plan`: optional ordered tool plan when `handoff_type=technical_assignment`
@@ -28,21 +28,23 @@ Handoff agent that decides what the Figma design analyst's output should become:
 ## Decision Flow
 
 1. **Evaluate blueprint status** — if `design_blueprint.status=failed`, set `handoff_type=technical_assignment` with a diagnostic assignment and route to `planning` for replanning.
-2. **Respect explicit output mode** — from `original_request.design_descriptor.output_mode`:
+2. **Runtime fast path already executed** — if the runtime invoked `figma_run_pipeline` directly, use its output as the `design_blueprint` and proceed to packaging. Do not re-run per-stage agents unless the blueprint is incomplete.
+3. **Run Backend Spec Bridge when present** — if `original_request.design_descriptor.backend_spec` exists and the fast path did not already produce backend artifacts, invoke `tooll_subagents/planning/backend_spec_bridge.md` with the spec and `design_blueprint`; merge `backend_blueprint` into the handoff package.
+4. **Respect explicit output mode** — from `original_request.design_descriptor.output_mode`:
    - `technical_assignment` → package spec only, route to `planning`.
-   - `full_code` → package generated code only, route to `result` (with optional post-processing in `execution`).
-   - `both` → package `mixed`; route to `result` with spec included as documentation.
-3. **Infer when mode is missing** —
+   - `full_code` → package generated code only, route to `result` (with optional post-processing in `execution`). Always include `design_tokens` artifacts (`tailwind.config.ts`, `globals.css`) and backend artifacts (`prisma/schema.prisma`, `app/api/*/route.ts`, `app/actions/*Action.ts`, `backend_mapping.json`) when present.
+   - `both` → package `mixed`; route to `result` with spec included as documentation and token artifacts attached.
+5. **Infer when mode is missing** —
    - If `generated_code` is non-empty and confidence high → `full_code`.
    - If only `specification` exists → `technical_assignment`.
    - If neither exists → `technical_assignment` with diagnostic content.
-4. **Apply autonomy level** —
+6. **Apply autonomy level** —
    - `full_auto`: proceed without confirmation.
    - `spec_only`: always produce `technical_assignment` even if code was generated.
    - `confirm_each`: not used in autonomous-bot mode; treated as `full_auto` and logged.
-5. **Build execution plan for spec mode** — produce ordered tool plan: `tools_read`, `tools_replace`, `tools_runtest`, etc., based on target stack inferred from blueprint.
-6. **Summarize** — compose `summary` describing what was generated and what happens next.
-7. **Return** — emit `handoff_package`.
+7. **Build execution plan for spec mode** — produce ordered tool plan: `tools_read`, `tools_replace`, `tools_runtest`, etc., based on target stack inferred from blueprint.
+8. **Summarize** — compose `summary` describing what was generated and what happens next.
+9. **Return** — emit `handoff_package`.
 
 ## Failure Modes
 

@@ -167,6 +167,58 @@ def test_asset_node_becomes_image() -> None:
     assert result.asset_count == 1
 
 
+def test_asset_registry_resolves_image_ref() -> None:
+    node = {
+        "id": "40:2",
+        "name": "Hero image",
+        "type": "IMAGE",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 360, "height": 160},
+    }
+    assets = {
+        "assets": {
+            "40:2": {
+                "publicPath": "/assets/figma/hero_40_2.png",
+                "type": "raster",
+                "width": 360,
+                "height": 160,
+            }
+        }
+    }
+    result = layout_engine.convert_figma_node(node, config={"assets": assets})
+    root = result.root
+    assert root.tag == "img"
+    assert root.src == "/assets/figma/hero_40_2.png"
+    assert root.asset_type == "raster"
+    assert root.asset_width == 360
+    assert root.asset_height == 160
+
+
+def test_image_fill_resolved_from_registry() -> None:
+    node = {
+        "id": "50:1",
+        "name": "Card bg",
+        "type": "RECTANGLE",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 300, "height": 200},
+        "fills": [{"type": "IMAGE", "imageRef": "bg-ref-1"}],
+    }
+    assets = {
+        "assets": {
+            "bg-ref-1": {
+                "publicPath": "/assets/figma/card_bg.png",
+                "type": "raster",
+                "width": 300,
+                "height": 200,
+            }
+        }
+    }
+    result = layout_engine.convert_figma_node(node, config={"assets": assets})
+    root = result.root
+    assert "background-image" in root.inline_styles
+    assert "/assets/figma/card_bg.png" in root.inline_styles["background-image"]
+
+
 def test_shape_with_fill_and_radius() -> None:
     node = {
         "id": "50:1",
@@ -480,3 +532,171 @@ def test_complex_layout_overlay_alpha_renders_rgba_inline() -> None:
     assert "bg-[#1a1a1f99]" not in overlay.classes
     assert overlay.inline_styles.get("backgroundColor") == "rgba(26, 26, 31, 0.60)"
     assert overlay.inline_styles.get("opacity") == "0.6"
+
+
+def _build_token_registry() -> Dict[str, Any]:
+    return {
+        "color_by_hex": {
+            "1a1a1f": "foreground",
+            "ffffff": "background",
+            "3b82f5": "primary",
+            "334c66": "secondary",
+            "66666e": "muted",
+            "f04242": "destructive",
+            "38a687": "accent",
+        },
+        "fonts": {"Inter": "sans"},
+        "font_sizes": {"12": "xs", "14": "sm", "16": "base", "18": "lg", "22": "xl", "24": "2xl", "56": "5xl"},
+        "font_weights": {"400": "normal", "500": "medium", "600": "semibold", "700": "bold"},
+        "line_heights": {"1.5": "normal"},
+    }
+
+
+def test_token_registry_maps_background_and_text_colors() -> None:
+    node = {
+        "id": "200:1",
+        "name": "Card",
+        "type": "FRAME",
+        "visible": True,
+        "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 1}}],
+        "children": [
+            {
+                "id": "200:2",
+                "name": "Title",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Title",
+                "style": {
+                    "fontFamily": "Inter",
+                    "fontSize": 24,
+                    "fontWeight": 700,
+                    "fills": [{"type": "SOLID", "color": {"r": 0.1, "g": 0.1, "b": 0.12, "a": 1}}],
+                },
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node, config={"tokens": _build_token_registry()})
+    assert "bg-background" in result.root.classes
+    title = result.root.children[0]
+    assert "text-foreground" in title.classes
+
+
+def test_token_registry_maps_font_tokens() -> None:
+    node = {
+        "id": "210:1",
+        "name": "Headline",
+        "type": "TEXT",
+        "visible": True,
+        "characters": "Hero",
+        "style": {
+            "fontFamily": "Inter",
+            "fontSize": 56,
+            "fontWeight": 700,
+            "lineHeightPx": 84,
+        },
+    }
+    result = layout_engine.convert_figma_node(node, config={"tokens": _build_token_registry()})
+    text = result.root
+    assert "font-sans" in text.classes
+    assert "text-5xl" in text.classes
+    assert "font-bold" in text.classes
+    assert "leading-normal" in text.classes
+
+
+def test_complex_layout_with_tokens_emits_semantic_classes() -> None:
+    data = _load_fixture("complex_layout.json")
+    result = layout_engine.convert_figma_node(data, config={"tokens": _build_token_registry()})
+    card_stack = result.root.children[0].children[1]
+    card = card_stack.children[0]
+    assert "bg-background" in card.classes
+    badge = card.children[0]
+    assert "bg-destructive" in badge.classes
+
+
+def test_layout_sizing_fill_emits_w_full() -> None:
+    node = {
+        "id": "300:1",
+        "name": "Fill row",
+        "type": "FRAME",
+        "visible": True,
+        "layoutSizingHorizontal": "FILL",
+        "box": {"x": 0, "y": 0, "width": 400, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "w-full" in result.root.classes
+    assert "w-[400px]" not in result.root.classes
+
+
+def test_layout_sizing_hug_emits_w_auto_and_drops_fixed_width() -> None:
+    node = {
+        "id": "301:1",
+        "name": "Hug card",
+        "type": "FRAME",
+        "visible": True,
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "box": {"x": 0, "y": 0, "width": 200, "height": 120},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "w-auto" in result.root.classes
+    assert "h-auto" in result.root.classes
+    assert "w-[200px]" not in result.root.classes
+    assert "h-[120px]" not in result.root.classes
+
+
+def test_layout_grow_maps_to_flex_1() -> None:
+    node = {
+        "id": "302:1",
+        "name": "Grow item",
+        "type": "FRAME",
+        "visible": True,
+        "layoutGrow": 1,
+        "box": {"x": 0, "y": 0, "width": 100, "height": 40},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "flex-1" in result.root.classes
+
+
+def test_layout_align_stretch_maps_to_self_stretch() -> None:
+    node = {
+        "id": "303:1",
+        "name": "Stretch child",
+        "type": "FRAME",
+        "visible": True,
+        "layoutAlign": "STRETCH",
+        "box": {"x": 0, "y": 0, "width": 100, "height": 40},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "self-stretch" in result.root.classes
+
+
+def test_constraint_stretch_horizontal_maps_to_w_full() -> None:
+    node = {
+        "id": "304:1",
+        "name": "Stretch width",
+        "type": "FRAME",
+        "visible": True,
+        "constraints": {"horizontal": "STRETCH", "vertical": "TOP"},
+        "box": {"x": 0, "y": 0, "width": 300, "height": 50},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "w-full" in result.root.classes
+
+
+def test_min_max_width_height_emits_arbitrary_classes() -> None:
+    node = {
+        "id": "305:1",
+        "name": "Bounded box",
+        "type": "FRAME",
+        "visible": True,
+        "minWidth": 120,
+        "maxWidth": 600,
+        "minHeight": 40,
+        "maxHeight": 300,
+        "box": {"x": 0, "y": 0, "width": 300, "height": 100},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "min-w-[120px]" in result.root.classes
+    assert "max-w-[600px]" in result.root.classes
+    assert "min-h-[40px]" in result.root.classes
+    assert "max-h-[300px]" in result.root.classes

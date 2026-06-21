@@ -12,7 +12,6 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 import analyzer
-import asset_downloader
 
 
 load_dotenv()
@@ -34,7 +33,17 @@ def _setup_logging(log_file: str = "conductor.log", verbose: bool = False) -> No
 
 
 def _run_command(command: List[str], timeout: int = 600) -> subprocess.CompletedProcess:
-    """Запускает subprocess и логирует результат."""
+    """Запускает subprocess и логирует результат.
+
+    Если скрипт не найден относительно рабочей директории, но существует
+    рядом с conductor.py (в figma-agent-core), подставляет полный путь.
+    """
+    if len(command) >= 2 and command[1].endswith(".py"):
+        script = Path(command[1])
+        if not script.exists() and not script.is_absolute():
+            candidate = Path(__file__).parent / script.name
+            if candidate.exists():
+                command[1] = str(candidate)
     logger.info(f"Running: {' '.join(command)}")
     try:
         result = subprocess.run(
@@ -118,10 +127,46 @@ def stage_spec(
     return result.returncode == 0
 
 
+def stage_tokens(
+    file: str = "figma_node.json",
+    output_dir: str = ".",
+    registry_file: str = "design_tokens.json",
+    tailwind_config: str = "tailwind.config.ts",
+    globals_css: str = "src/app/globals.css",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3a: извлечение дизайн-токенов и генерация Tailwind-конфига + globals.css."""
+    logger.info("=== STAGE: tokens ===")
+    command = [
+        sys.executable,
+        "design_tokens.py",
+        "--file",
+        file,
+        "--output-dir",
+        output_dir,
+        "--registry",
+        registry_file,
+        "--tailwind-config",
+        tailwind_config,
+        "--globals-css",
+        globals_css,
+    ]
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def stage_layout(
     file: str = "figma_node.json",
     node_id: Optional[str] = None,
     output: str = "layout_ast.json",
+    tokens_file: str = "design_tokens.json",
+    assets_file: str = "asset_registry.json",
+    backend_mapping_file: str = "backend_mapping.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 3b: детерминированная генерация Tailwind AST из Figma-ноды."""
@@ -129,6 +174,94 @@ def stage_layout(
     command = [sys.executable, "layout_engine.py", "--file", file, "--output", output]
     if node_id:
         command.extend(["--node-id", node_id])
+    if Path(tokens_file).exists():
+        command.extend(["--tokens", tokens_file])
+    if Path(assets_file).exists():
+        command.extend(["--assets", assets_file])
+    if Path(backend_mapping_file).exists():
+        command.extend(["--backend-mapping", backend_mapping_file])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_backend_bridge(
+    layout_ast_file: str = "layout_ast.json",
+    openapi_file: Optional[str] = None,
+    prisma_file: Optional[str] = None,
+    text_spec_file: Optional[str] = None,
+    output_dir: str = "backend_bridge_output",
+    mapping_file: str = "backend_mapping.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3b-bridge: сопоставление backend-спецификации с UI и генерация route.ts / action.ts / schema.prisma."""
+    logger.info("=== STAGE: backend_bridge ===")
+    if not openapi_file and not prisma_file and not text_spec_file:
+        logger.info("No backend spec provided. Skipping backend bridge.")
+        return True
+
+    command = [
+        sys.executable,
+        "backend_bridge.py",
+        "--layout-ast",
+        layout_ast_file,
+        "--output-dir",
+        output_dir,
+        "--mapping-file",
+        mapping_file,
+    ]
+    if openapi_file:
+        command.extend(["--openapi", openapi_file])
+    if prisma_file:
+        command.extend(["--prisma", prisma_file])
+    if text_spec_file:
+        command.extend(["--text-spec", text_spec_file])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_responsive(
+    file: str = "figma_node.json",
+    node_id: Optional[str] = None,
+    layout_ast_file: str = "layout_ast.json",
+    output: str = "responsive_ast.json",
+    report: str = "responsive_report.json",
+    tokens_file: str = "design_tokens.json",
+    assets_file: str = "asset_registry.json",
+    backend_mapping_file: str = "backend_mapping.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3b-responsive: генерация breakpoint-вариантов и constraint-классов для Tailwind AST."""
+    logger.info("=== STAGE: responsive ===")
+    command = [
+        sys.executable,
+        "responsive_composer.py",
+        "--layout-ast",
+        layout_ast_file,
+        "--figma-file",
+        file,
+        "--output",
+        output,
+        "--report",
+        report,
+    ]
+    if node_id:
+        command.extend(["--node-id", node_id])
+    if Path(tokens_file).exists():
+        command.extend(["--tokens", tokens_file])
+    if Path(assets_file).exists():
+        command.extend(["--assets", assets_file])
+    if Path(backend_mapping_file).exists():
+        command.extend(["--backend-mapping", backend_mapping_file])
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -174,19 +307,62 @@ def stage_extract_components(
     return result.returncode == 0
 
 
-def stage_compose(
+def stage_interactive(
+    figma_file: str = "figma_node.json",
     ast_file: str = "page_ast.json",
-    fallback_ast_file: str = "layout_ast.json",
+    ast_output: str = "interactive_ast.json",
+    registry_output: str = "interactive_registry.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3c-interactive: маппинг Figma prototype interactions → React state/handlers."""
+    logger.info("=== STAGE: interactive ===")
+    command = [
+        sys.executable,
+        "interactive_layer_mapper.py",
+        "--figma-file",
+        figma_file,
+        "--ast",
+        ast_file,
+        "--ast-output",
+        ast_output,
+        "--registry-output",
+        registry_output,
+    ]
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_compose(
+    ast_file: str = "interactive_ast.json",
+    fallback_ast_file: str = "page_ast.json",
+    responsive_ast_file: str = "responsive_ast.json",
     output: str = "src/app/page.tsx",
+    layout_output: str = "src/app/layout.tsx",
     title: Optional[str] = None,
     dry_run: bool = False,
 ) -> bool:
-    """Этап 3c: сборка Tailwind AST в Next.js page.tsx."""
+    """Этап 3c: сборка Tailwind AST в Next.js page.tsx + layout.tsx."""
     logger.info("=== STAGE: compose ===")
-    target_ast = ast_file
+    target_ast = responsive_ast_file
+    if not Path(target_ast).exists():
+        target_ast = ast_file
     if not Path(target_ast).exists():
         target_ast = fallback_ast_file
-    command = [sys.executable, "page_composer.py", "--ast", target_ast, "--output", output]
+    command = [
+        sys.executable,
+        "page_composer.py",
+        "--ast",
+        target_ast,
+        "--output",
+        output,
+        "--layout-output",
+        layout_output,
+    ]
     if title:
         command.extend(["--title", title])
 
@@ -409,61 +585,40 @@ def stage_components_all(
     return results
 
 
-def stage_assets(file: str = "figma_node.json", dry_run: bool = False) -> bool:
-    """Этап 5: скачивание ассетов."""
+def stage_assets(
+    file: str = "figma_node.json",
+    public_dir: str = "public",
+    assets_dir: str = "assets/figma",
+    registry_file: str = "asset_registry.json",
+    skip_download: bool = False,
+    optimize: bool = True,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 5: скачивание, оптимизация и регистрация ассетов."""
     logger.info("=== STAGE: assets ===")
-    data = analyzer.load_figma_json(file)
-    if not data:
-        logger.warning("No figma_node.json found; skipping asset download.")
-        return False
-
-    assets = asset_downloader.collect_assets_from_tree(data)
-    if not assets:
-        logger.info("No assets found in design tree.")
-        return True
+    command = [
+        sys.executable,
+        "asset_pipeline.py",
+        "--file",
+        file,
+        "--public-dir",
+        public_dir,
+        "--assets-dir",
+        assets_dir,
+        "--registry",
+        registry_file,
+    ]
+    if skip_download:
+        command.append("--skip-download")
+    if not optimize:
+        command.append("--no-optimize")
 
     if dry_run:
-        logger.info(f"[DRY-RUN] Would download {len(assets)} asset(s)")
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
         return True
 
-    token = os.environ.get("FIGMA_TOKEN")
-    url = os.environ.get("FIGMA_URL")
-    if not token or not url:
-        logger.warning("FIGMA_TOKEN/FIGMA_URL not set; skipping asset download.")
-        return False
-
-    file_key_match = re.search(r"/file/([^/]+)", url) or re.search(r"/design/([^/]+)", url)
-    if not file_key_match:
-        logger.warning("Could not parse Figma file key from FIGMA_URL; skipping asset download.")
-        return False
-    file_key = file_key_match.group(1)
-
-    svg_ids = [a["id"] for a in assets if a.get("assetFormat") == "svg"]
-    raster_ids = [a["id"] for a in assets if a.get("assetFormat") != "svg"]
-
-    urls: Dict[str, str] = {}
-    if raster_ids:
-        urls.update(asset_downloader.get_image_urls_from_figma(file_key, raster_ids, token, format="png"))
-    if svg_ids:
-        urls.update(asset_downloader.get_image_urls_from_figma(file_key, svg_ids, token, format="svg"))
-
-    downloaded = 0
-    for asset in assets:
-        node_id = asset["id"]
-        image_url = urls.get(node_id)
-        if not image_url:
-            logger.warning(f"No image URL for asset {node_id} ({asset.get('name')}).")
-            continue
-        fmt = asset.get("assetFormat", "png")
-        public_path = asset_downloader.save_asset(node_id, asset.get("name", "asset"), fmt, image_url)
-        if public_path:
-            logger.info(f"Saved asset {node_id} -> {public_path}")
-            downloaded += 1
-        else:
-            logger.warning(f"Failed to download asset {node_id}.")
-
-    logger.info(f"Downloaded {downloaded}/{len(assets)} assets.")
-    return downloaded > 0 or len(assets) == 0
+    result = _run_command(command, timeout=300)
+    return result.returncode == 0
 
 
 def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
@@ -481,7 +636,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "analyze", "spec", "layout", "extract", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -511,14 +666,70 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             )
             report["stages"]["spec"] = {"success": ok}
 
+        elif stage == "tokens":
+            ok = stage_tokens(
+                file=file,
+                output_dir=config.get("tokens_output_dir", "."),
+                registry_file=config.get("tokens_registry_file", "design_tokens.json"),
+                tailwind_config=config.get("tokens_tailwind_config", "tailwind.config.ts"),
+                globals_css=config.get("tokens_globals_css", "src/app/globals.css"),
+                dry_run=dry_run,
+            )
+            report["stages"]["tokens"] = {"success": ok}
+            if not ok:
+                logger.error("Tokens stage failed. Stopping pipeline.")
+                break
+
         elif stage == "layout":
+            tokens_file = Path(config.get("tokens_output_dir", ".")) / config.get(
+                "tokens_registry_file", "design_tokens.json"
+            )
+            assets_file = Path(config.get("public_dir", "public")) / config.get(
+                "assets_registry_file", "asset_registry.json"
+            )
+            backend_mapping_file = config.get("backend_mapping_file", "backend_mapping.json")
             ok = stage_layout(
                 file=file,
                 node_id=node_id,
                 output=config.get("layout_output", "layout_ast.json"),
+                tokens_file=str(tokens_file),
+                assets_file=str(assets_file),
+                backend_mapping_file=backend_mapping_file,
                 dry_run=dry_run,
             )
             report["stages"]["layout"] = {"success": ok}
+
+        elif stage == "backend_bridge":
+            ok = stage_backend_bridge(
+                layout_ast_file=config.get("layout_output", "layout_ast.json"),
+                openapi_file=config.get("openapi_file"),
+                prisma_file=config.get("prisma_file"),
+                text_spec_file=config.get("backend_spec_text_file"),
+                output_dir=config.get("backend_output_dir", "backend_bridge_output"),
+                mapping_file=config.get("backend_mapping_file", "backend_mapping.json"),
+                dry_run=dry_run,
+            )
+            report["stages"]["backend_bridge"] = {"success": ok}
+
+        elif stage == "responsive":
+            tokens_file = Path(config.get("tokens_output_dir", ".")) / config.get(
+                "tokens_registry_file", "design_tokens.json"
+            )
+            assets_file = Path(config.get("public_dir", "public")) / config.get(
+                "assets_registry_file", "asset_registry.json"
+            )
+            ok = stage_responsive(
+                file=file,
+                node_id=node_id,
+                layout_ast_file=config.get("layout_output", "layout_ast.json"),
+                output=config.get("responsive_output", "responsive_ast.json"),
+                report=config.get("responsive_report", "responsive_report.json"),
+                tokens_file=str(tokens_file),
+                assets_file=str(assets_file),
+                backend_mapping_file=config.get("backend_mapping_file", "backend_mapping.json"),
+                dry_run=dry_run,
+            )
+            report["stages"]["responsive"] = {"success": ok}
 
         elif stage == "extract":
             ok = stage_extract_components(
@@ -532,11 +743,23 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             )
             report["stages"]["extract"] = {"success": ok}
 
+        elif stage == "interactive":
+            ok = stage_interactive(
+                figma_file=config.get("file", "figma_node.json"),
+                ast_file=config.get("page_ast_output", "page_ast.json"),
+                ast_output=config.get("interactive_ast_output", "interactive_ast.json"),
+                registry_output=config.get("interactive_registry_output", "interactive_registry.json"),
+                dry_run=dry_run,
+            )
+            report["stages"]["interactive"] = {"success": ok}
+
         elif stage == "compose":
             ok = stage_compose(
-                ast_file=config.get("page_ast_output", "page_ast.json"),
+                ast_file=config.get("interactive_ast_output", "interactive_ast.json"),
                 fallback_ast_file=config.get("layout_output", "layout_ast.json"),
+                responsive_ast_file=config.get("responsive_output", "responsive_ast.json"),
                 output=config.get("compose_output", "src/app/page.tsx"),
+                layout_output=config.get("compose_layout_output", "src/app/layout.tsx"),
                 title=config.get("compose_title"),
                 dry_run=dry_run,
             )
@@ -624,7 +847,15 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 report["stages"]["components"] = {"success": ok}
 
         elif stage == "assets":
-            ok = stage_assets(file=file, dry_run=dry_run)
+            ok = stage_assets(
+                file=file,
+                public_dir=config.get("public_dir", "public"),
+                assets_dir=config.get("assets_dir", "assets/figma"),
+                registry_file=config.get("assets_registry_file", "asset_registry.json"),
+                skip_download=config.get("skip_assets_download", False),
+                optimize=config.get("optimize_assets", True),
+                dry_run=dry_run,
+            )
             report["stages"]["assets"] = {"success": ok}
 
         else:
@@ -643,18 +874,18 @@ def save_report(report: Dict[str, Any], path: str = "conductor_report.json") -> 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, layout, extract, compose, components, assets.",
+        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, tokens, layout, extract, compose, components, assets.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, analyze, spec, layout, extract, compose, compliance, visual_qa, refinement, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, analyze, spec, tokens, layout, extract, compose, compliance, visual_qa, refinement, components, assets.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, analyze, spec, layout, extract, compose, compliance, visual_qa, refinement, components, assets."
+        help="Запустить только один этап: bootstrap, analyze, spec, tokens, layout, backend_bridge, responsive, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
     )
     parser.add_argument(
         "--node-id",
@@ -688,9 +919,55 @@ def main():
         help="Не скачивать ассеты."
     )
     parser.add_argument(
+        "--skip-assets-download",
+        action="store_true",
+        help="Asset Pipeline: построить реестр без реального скачивания (synthetic publicPath)."
+    )
+    parser.add_argument(
+        "--optimize-assets",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Asset Pipeline: включить/отключить svgo/sharp оптимизацию (по умолчанию включено)."
+    )
+    parser.add_argument(
+        "--public-dir",
+        default="public",
+        help="Корневая public-директория для ассетов (по умолчанию public)."
+    )
+    parser.add_argument(
+        "--assets-dir",
+        default="assets/figma",
+        help="Поддиректория в public-dir для Figma-ассетов (по умолчанию assets/figma)."
+    )
+    parser.add_argument(
+        "--assets-registry-file",
+        default="asset_registry.json",
+        help="Имя JSON-реестра ассетов (по умолчанию asset_registry.json)."
+    )
+    parser.add_argument(
         "--spec-output",
         default="spec.md",
         help="Путь для сохранения технического задания."
+    )
+    parser.add_argument(
+        "--tokens-output-dir",
+        default=".",
+        help="Директория для записи design_tokens.json, tailwind.config.ts и globals.css."
+    )
+    parser.add_argument(
+        "--tokens-registry-file",
+        default="design_tokens.json",
+        help="Имя JSON-реестра дизайн-токенов."
+    )
+    parser.add_argument(
+        "--tokens-tailwind-config",
+        default="tailwind.config.ts",
+        help="Имя Tailwind-конфига."
+    )
+    parser.add_argument(
+        "--tokens-globals-css",
+        default="src/app/globals.css",
+        help="Относительный путь к globals.css внутри --tokens-output-dir."
     )
     parser.add_argument(
         "--layout-output",
@@ -698,9 +975,24 @@ def main():
         help="Путь для сохранения Tailwind AST от Layout Engine."
     )
     parser.add_argument(
+        "--responsive-output",
+        default="responsive_ast.json",
+        help="Путь для сохранения enriched responsive AST от Responsive Composer."
+    )
+    parser.add_argument(
+        "--responsive-report",
+        default="responsive_report.json",
+        help="Путь для сохранения отчёта Responsive Composer."
+    )
+    parser.add_argument(
         "--compose-output",
         default="src/app/page.tsx",
         help="Путь для сохранения Next.js-страницы от Section Composer."
+    )
+    parser.add_argument(
+        "--compose-layout-output",
+        default="src/app/layout.tsx",
+        help="Путь для сохранения Next.js layout.tsx от Section Composer."
     )
     parser.add_argument(
         "--compose-title",
@@ -716,6 +1008,16 @@ def main():
         "--page-ast-output",
         default="page_ast.json",
         help="Путь для урезанного AST страницы после извлечения компонентов."
+    )
+    parser.add_argument(
+        "--interactive-ast-output",
+        default="interactive_ast.json",
+        help="Путь для AST с маппингом интерактивных слоёв."
+    )
+    parser.add_argument(
+        "--interactive-registry-output",
+        default="interactive_registry.json",
+        help="Путь для реестра интерактивных слоёв."
     )
     parser.add_argument(
         "--component-map-output",
@@ -803,6 +1105,31 @@ def main():
         help="Путь для сохранения отчёта refinement loop."
     )
     parser.add_argument(
+        "--openapi",
+        default=None,
+        help="Путь к OpenAPI JSON/YAML спецификации backend."
+    )
+    parser.add_argument(
+        "--prisma",
+        default=None,
+        help="Путь к Prisma schema файлу."
+    )
+    parser.add_argument(
+        "--backend-spec-text",
+        default=None,
+        help="Путь к структурированному JSON-брифу backend."
+    )
+    parser.add_argument(
+        "--backend-output-dir",
+        default="backend_bridge_output",
+        help="Директория для сгенерированных backend артефактов."
+    )
+    parser.add_argument(
+        "--backend-mapping-file",
+        default="backend_mapping.json",
+        help="Путь для backend_mapping.json."
+    )
+    parser.add_argument(
         "--file",
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры."
@@ -837,12 +1164,26 @@ def main():
         "node_id": args.node_id,
         "output_name": args.output_name,
         "all_sections": args.all_sections,
+        "interactive_ast_output": args.interactive_ast_output,
+        "interactive_registry_output": args.interactive_registry_output,
         "force_refresh": args.force,
         "api_depth": args.api_depth,
         "skip_assets": args.skip_assets,
+        "skip_assets_download": args.skip_assets_download,
+        "optimize_assets": args.optimize_assets,
+        "public_dir": args.public_dir,
+        "assets_dir": args.assets_dir,
+        "assets_registry_file": args.assets_registry_file,
         "spec_output": args.spec_output,
+        "tokens_output_dir": args.tokens_output_dir,
+        "tokens_registry_file": args.tokens_registry_file,
+        "tokens_tailwind_config": args.tokens_tailwind_config,
+        "tokens_globals_css": args.tokens_globals_css,
         "layout_output": args.layout_output,
+        "responsive_output": args.responsive_output,
+        "responsive_report": args.responsive_report,
         "compose_output": args.compose_output,
+        "compose_layout_output": args.compose_layout_output,
         "compose_title": args.compose_title,
         "components_output_dir": args.components_output_dir,
         "page_ast_output": args.page_ast_output,
@@ -862,6 +1203,11 @@ def main():
         "refinement_max_iterations": args.refinement_max_iterations,
         "refinement_diff_threshold": args.refinement_diff_threshold,
         "refinement_report_output": args.refinement_report_output,
+        "openapi_file": args.openapi,
+        "prisma_file": args.prisma,
+        "backend_spec_text_file": args.backend_spec_text,
+        "backend_output_dir": args.backend_output_dir,
+        "backend_mapping_file": args.backend_mapping_file,
         "file": args.file,
         "dry_run": args.dry_run,
         "verbose": args.verbose,

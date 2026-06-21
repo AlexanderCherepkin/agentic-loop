@@ -47,6 +47,10 @@ class FigmaMCPServer(MCPServer):
         self.register("figma_generate_spec", "Generate a technical assignment (spec.md) from the cached Figma structure",
                       s({"file?": "string", "node_id?": "string", "output?": "string"}),
                       self.figma_generate_spec)
+        self.register("figma_extract_tokens", "Extract design tokens from a Figma file and generate tailwind.config.ts + globals.css + design_tokens.json",
+                      s({"file?": "string", "output_dir?": "string", "registry_file?": "string",
+                         "tailwind_config?": "string", "globals_css?": "string"}),
+                      self.figma_extract_tokens)
         self.register("figma_generate_component", "Generate a React/TSX component for a Figma node",
                       s({"file?": "string", "node_id?": "string", "output_name?": "string",
                          "skip_assets?": "bool"}),
@@ -55,13 +59,25 @@ class FigmaMCPServer(MCPServer):
                       s({"ast_file?": "string", "output_dir?": "string", "page_ast_output?": "string",
                          "component_map_output?": "string", "patterns?": "string", "min_duplicates?": "int"}),
                       self.figma_extract_components)
-        self.register("figma_download_assets", "Download image/SVG assets referenced by the cached Figma structure",
-                      s({"file?": "string"}),
+        self.register("figma_map_interactions", "Map Figma prototype interactions (clicks, hovers, overlays, navigation) to React state/handlers",
+                      s({"figma_file?": "string", "ast_file?": "string", "ast_output?": "string",
+                         "registry_output?": "string"}),
+                      self.figma_map_interactions)
+        self.register("figma_responsive_compose", "Generate responsive breakpoint variants from layout_ast and raw Figma constraints",
+                      s({"layout_ast_file?": "string", "figma_file?": "string", "output?": "string",
+                         "report?": "string", "node_id?": "string"}),
+                      self.figma_responsive_compose)
+        self.register("figma_download_assets", "Download, optimize and register image/SVG assets referenced by the cached Figma structure",
+                      s({"file?": "string", "public_dir?": "string", "assets_dir?": "string",
+                         "registry_file?": "string", "skip_download?": "bool", "optimize?": "bool"}),
                       self.figma_download_assets)
-        self.register("figma_run_pipeline", "Run the full Figma-to-code pipeline (bootstrap, analyze, spec, layout, extract, compose, components, assets)",
+        self.register("figma_run_pipeline", "Run the full Figma-to-code/fullstack pipeline (bootstrap, analyze, spec, tokens, layout, backend_bridge, responsive, extract, compose, components, assets). Optional backend spec + Figma URL/file_key supported.",
                       s({"force_refresh?": "bool", "node_id?": "string", "all_sections?": "bool",
                          "skip_assets?": "bool", "api_depth?": "int", "spec_output?": "string",
-                         "output_name?": "string", "dry_run?": "bool"}),
+                         "output_name?": "string", "dry_run?": "bool",
+                         "figma_url?": "string", "file_key?": "string",
+                         "openapi?": "string", "prisma?": "string", "backend_spec_text?": "string",
+                         "backend_output_dir?": "string", "backend_mapping_file?": "string"}),
                       self.figma_run_pipeline)
 
     @staticmethod
@@ -93,6 +109,7 @@ class FigmaMCPServer(MCPServer):
         merged_env = os.environ.copy()
         if env:
             merged_env.update(env)
+        # Do not persist temporary per-call env in the parent process.
         try:
             result = subprocess.run(
                 cmd,
@@ -140,6 +157,22 @@ class FigmaMCPServer(MCPServer):
             args.extend(["--node-id", node_id])
         return self._run_core_script("spec_writer.py", args)
 
+    def figma_extract_tokens(self, file: str = "figma_node.json", output_dir: str = ".",
+                             registry_file: str = "design_tokens.json",
+                             tailwind_config: str = "tailwind.config.ts",
+                             globals_css: str = "src/app/globals.css") -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = [
+            "--file", file,
+            "--output-dir", output_dir,
+            "--registry", registry_file,
+            "--tailwind-config", tailwind_config,
+            "--globals-css", globals_css,
+        ]
+        return self._run_core_script("design_tokens.py", args)
+
     def figma_generate_component(self, file: str = "figma_node.json", node_id: str = "",
                                   output_name: str = "", skip_assets: bool = False) -> dict[str, Any]:
         degraded = self._check_degraded()
@@ -172,17 +205,76 @@ class FigmaMCPServer(MCPServer):
             args.extend(["--patterns", patterns])
         return self._run_core_script("component_extractor.py", args)
 
-    def figma_download_assets(self, file: str = "figma_node.json") -> dict[str, Any]:
+    def figma_map_interactions(
+        self,
+        figma_file: str = "figma_node.json",
+        ast_file: str = "page_ast.json",
+        ast_output: str = "interactive_ast.json",
+        registry_output: str = "interactive_registry.json",
+    ) -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        # conductor.stage_assets reads figma_node.json directly; use --only assets via the conductor.
-        args = ["--only", "assets", "--file", file]
-        return self._run_core_script("conductor.py", args)
+        args = [
+            "--figma-file", figma_file,
+            "--ast", ast_file,
+            "--ast-output", ast_output,
+            "--registry-output", registry_output,
+        ]
+        return self._run_core_script("interactive_layer_mapper.py", args)
+
+    def figma_responsive_compose(
+        self,
+        layout_ast_file: str = "layout_ast.json",
+        figma_file: str = "figma_node.json",
+        output: str = "responsive_ast.json",
+        report: str = "responsive_report.json",
+        node_id: str = "",
+    ) -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = [
+            "--layout-ast", layout_ast_file,
+            "--figma-file", figma_file,
+            "--output", output,
+            "--report", report,
+        ]
+        if node_id:
+            args.extend(["--node-id", node_id])
+        return self._run_core_script("responsive_composer.py", args)
+
+    def figma_download_assets(
+        self,
+        file: str = "figma_node.json",
+        public_dir: str = "public",
+        assets_dir: str = "assets/figma",
+        registry_file: str = "asset_registry.json",
+        skip_download: bool = False,
+        optimize: bool = True,
+    ) -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = [
+            "--file", file,
+            "--public-dir", public_dir,
+            "--assets-dir", assets_dir,
+            "--registry", registry_file,
+        ]
+        if skip_download:
+            args.append("--skip-download")
+        if not optimize:
+            args.append("--no-optimize")
+        return self._run_core_script("asset_pipeline.py", args)
 
     def figma_run_pipeline(self, force_refresh: bool = False, node_id: str = "", all_sections: bool = True,
                            skip_assets: bool = False, api_depth: int = 2, spec_output: str = "spec.md",
-                           output_name: str = "", dry_run: bool = False) -> dict[str, Any]:
+                           output_name: str = "", dry_run: bool = False,
+                           figma_url: str = "", file_key: str = "",
+                           openapi: str = "", prisma: str = "", backend_spec_text: str = "",
+                           backend_output_dir: str = "backend_bridge_output",
+                           backend_mapping_file: str = "backend_mapping.json") -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
             return degraded
@@ -197,9 +289,25 @@ class FigmaMCPServer(MCPServer):
             args.extend(["--output-name", output_name])
         if skip_assets:
             args.append("--skip-assets")
+        if openapi:
+            args.extend(["--openapi", openapi])
+        if prisma:
+            args.extend(["--prisma", prisma])
+        if backend_spec_text:
+            args.extend(["--backend-spec-text", backend_spec_text])
+        if backend_output_dir:
+            args.extend(["--backend-output-dir", backend_output_dir])
+        if backend_mapping_file:
+            args.extend(["--backend-mapping-file", backend_mapping_file])
         if dry_run:
             args.append("--dry-run")
-        return self._run_core_script("conductor.py", args)
+
+        env: dict[str, str] = {}
+        if figma_url:
+            env["FIGMA_URL"] = figma_url
+        if file_key:
+            env["FIGMA_FILE_KEY"] = file_key
+        return self._run_core_script("conductor.py", args, env=env if env else None)
 
 
 

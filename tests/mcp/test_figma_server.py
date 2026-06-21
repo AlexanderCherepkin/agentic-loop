@@ -44,13 +44,17 @@ def test_figma_server_initializes(figma_server: FigmaMCPServer) -> None:
     assert figma_server.name == "figma"
     assert figma_server._initialized is True
     tools = figma_server.get_tools_list()
-    assert len(tools) == 6
+    assert len(tools) == 10
     names = {t["name"] for t in tools}
     expected = {
         "figma_bootstrap",
         "figma_analyze",
         "figma_generate_spec",
+        "figma_extract_tokens",
+        "figma_responsive_compose",
         "figma_generate_component",
+        "figma_extract_components",
+        "figma_map_interactions",
         "figma_download_assets",
         "figma_run_pipeline",
     }
@@ -102,6 +106,34 @@ def test_figma_bootstrap_invokes_script(figma_server: FigmaMCPServer) -> None:
     assert "3" in cmd
 
 
+def test_figma_extract_tokens_invokes_design_tokens(figma_server: FigmaMCPServer) -> None:
+    completed = MagicMock(spec=subprocess.CompletedProcess)
+    completed.returncode = 0
+    completed.stdout = "tokens ok"
+    completed.stderr = ""
+
+    with patch("subprocess.run", return_value=completed) as mock_run:
+        result = figma_server.figma_extract_tokens(
+            file="figma_node.json",
+            output_dir=".",
+            registry_file="design_tokens.json",
+            tailwind_config="tailwind.config.ts",
+            globals_css="src/app/globals.css",
+        )
+
+    assert result["status"] == "success"
+    mock_run.assert_called_once()
+    args, _ = mock_run.call_args
+    cmd = args[0]
+    assert cmd[1] == "design_tokens.py"
+    assert "--file" in cmd
+    assert "figma_node.json" in cmd
+    assert "--output-dir" in cmd
+    assert "--registry" in cmd
+    assert "--tailwind-config" in cmd
+    assert "--globals-css" in cmd
+
+
 def test_figma_generate_component_invokes_agent(figma_server: FigmaMCPServer) -> None:
     completed = MagicMock(spec=subprocess.CompletedProcess)
     completed.returncode = 0
@@ -130,6 +162,65 @@ def test_figma_generate_component_invokes_agent(figma_server: FigmaMCPServer) ->
     assert "--skip-assets" in cmd
 
 
+def test_figma_map_interactions_invokes_interactive_layer_mapper(figma_server: FigmaMCPServer) -> None:
+    completed = MagicMock(spec=subprocess.CompletedProcess)
+    completed.returncode = 0
+    completed.stdout = "interactive ok"
+    completed.stderr = ""
+
+    with patch("subprocess.run", return_value=completed) as mock_run:
+        result = figma_server.figma_map_interactions(
+            figma_file="figma_node.json",
+            ast_file="page_ast.json",
+            ast_output="interactive_ast.json",
+            registry_output="interactive_registry.json",
+        )
+
+    assert result["status"] == "success"
+    mock_run.assert_called_once()
+    args, _ = mock_run.call_args
+    cmd = args[0]
+    assert cmd[1] == "interactive_layer_mapper.py"
+    assert "--figma-file" in cmd
+    assert "figma_node.json" in cmd
+    assert "--ast" in cmd
+    assert "page_ast.json" in cmd
+    assert "--ast-output" in cmd
+    assert "interactive_ast.json" in cmd
+    assert "--registry-output" in cmd
+    assert "interactive_registry.json" in cmd
+
+
+def test_figma_download_assets_invokes_asset_pipeline(figma_server: FigmaMCPServer) -> None:
+    completed = MagicMock(spec=subprocess.CompletedProcess)
+    completed.returncode = 0
+    completed.stdout = "assets ok"
+    completed.stderr = ""
+
+    with patch("subprocess.run", return_value=completed) as mock_run:
+        result = figma_server.figma_download_assets(
+            file="figma_node.json",
+            public_dir="public",
+            assets_dir="assets/figma",
+            registry_file="asset_registry.json",
+            skip_download=True,
+            optimize=False,
+        )
+
+    assert result["status"] == "success"
+    mock_run.assert_called_once()
+    args, _ = mock_run.call_args
+    cmd = args[0]
+    assert cmd[1] == "asset_pipeline.py"
+    assert "--file" in cmd
+    assert "figma_node.json" in cmd
+    assert "--public-dir" in cmd
+    assert "--assets-dir" in cmd
+    assert "--registry" in cmd
+    assert "--skip-download" in cmd
+    assert "--no-optimize" in cmd
+
+
 def test_figma_run_pipeline_dry_run(figma_server: FigmaMCPServer) -> None:
     completed = MagicMock(spec=subprocess.CompletedProcess)
     completed.returncode = 0
@@ -156,6 +247,39 @@ def test_figma_run_pipeline_dry_run(figma_server: FigmaMCPServer) -> None:
     assert "2" in cmd
     assert "--spec-output" in cmd
     assert "spec.md" in cmd
+
+
+def test_figma_run_pipeline_forwards_backend_and_url_params(figma_server: FigmaMCPServer) -> None:
+    completed = MagicMock(spec=subprocess.CompletedProcess)
+    completed.returncode = 0
+    completed.stdout = "pipeline ok"
+    completed.stderr = ""
+
+    with patch("subprocess.run", return_value=completed) as mock_run:
+        result = figma_server.figma_run_pipeline(
+            figma_url="https://www.figma.com/design/abc123/Sample?node-id=1-2",
+            file_key="abc123",
+            openapi="openapi.yaml",
+            prisma="",
+            backend_spec_text="",
+            backend_output_dir="backend_out",
+            backend_mapping_file="mapping.json",
+        )
+
+    assert result["status"] == "success"
+    mock_run.assert_called_once()
+    args, kwargs = mock_run.call_args
+    cmd = args[0]
+    env = kwargs.get("env", {})
+    assert cmd[1] == "conductor.py"
+    assert "--openapi" in cmd
+    assert "openapi.yaml" in cmd
+    assert "--backend-output-dir" in cmd
+    assert "backend_out" in cmd
+    assert "--backend-mapping-file" in cmd
+    assert "mapping.json" in cmd
+    assert env.get("FIGMA_URL") == "https://www.figma.com/design/abc123/Sample?node-id=1-2"
+    assert env.get("FIGMA_FILE_KEY") == "abc123"
 
 
 def test_figma_run_pipeline_handles_subprocess_error(figma_server: FigmaMCPServer) -> None:

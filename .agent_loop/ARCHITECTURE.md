@@ -54,13 +54,15 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
 │   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
-│   ├── planning/                         #   Planning layer (6 agents)
+│   ├── planning/                         #   Planning layer (8 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
 │   │   ├── internal_monologue.md         #     Internal reasoning
 │   │   ├── figma_design_analyst.md       #     Run Figma pipeline and produce a design_blueprint
-│   │   └── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
+│   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
+│   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
+│   │   └── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
 │   ├── execution/                        #   Execution layer (4 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
@@ -140,9 +142,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 26 |
+| tooll_subagents | 28 |
 | tools_* | 110 |
-| **Total** | **169** |
+| **Total** | **171** |
 
 ## Naming Convention
 - snake_case filenames
@@ -163,15 +165,16 @@ User Request
 
 ## Implementation Status
 
-All 166 agents are fully implemented following the Algorithmic template:
+All 171 agents are fully implemented following the Algorithmic template:
 - `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (26) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (6 with `figma_design_analyst.md` and `design_to_code_planner.md`), execution (4), observability (4), self_correction (4), result (4)
+- `tooll_subagents/` (28) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (8 with `figma_design_analyst.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, and `responsive_composer.md`), execution (4), observability (4), self_correction (4), result (4)
 - `tools_*` (110) — 11 categories × 10 agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
-- `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline
+- `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), reusable component extraction (`figma_extract_components`), and responsive breakpoint composition (`figma_responsive_compose`)
+- `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 
 Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Failure Modes.
 
@@ -184,6 +187,7 @@ Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Fail
 - `mcp_servers/gateway.py` — exposes `categories()`, `category_metadata()`, `tools_for_category()`, and `execute()` without loading unused servers.
 - `mcp_servers/browser_server.py` — optional Playwright-based browser automation server; lazy-loaded and falls back gracefully if Playwright is unavailable.
 - `mcp_servers/figma_server.py` — optional Figma-to-code pipeline server wrapping `figma-agent-core/`; lazy-loaded and reports degraded if `figma-agent-core/` is missing or `FIGMA_TOKEN`/`FIGMA_URL` are unset.
+- `mcp_servers/backend_server.py` — optional Backend Spec Bridge server wrapping `figma-agent-core/backend_bridge.py`; lazy-loaded and reports degraded if `figma-agent-core/` is missing or no backend spec is provided.
 - `runtime/requirements-browser.txt` — optional Playwright dependency file; core `runtime/requirements.txt` stays lightweight.
 - `runtime/engine/pipeline_runner.py` — also hosts `PhaseTransitionManager` for conditional ReAct phase routing.
 - `project_rules.md` — lightweight project-level context file in repo root (Scope, Conventions, Tooling Preferences, Safety Defaults, Human-in-the-Loop Triggers).
@@ -192,7 +196,7 @@ Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Fail
 
 ### Cross-Reference Integrity
 
-All 166 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
+All 171 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
 
 **Test results (2026-06-10):**
 - Broken links: 0 (6 known false positives filtered — `README.md`, `API.md`, `CHANGELOG.md`, `MEMORY.md`, `project_rules.md` are documentation targets, not agents)

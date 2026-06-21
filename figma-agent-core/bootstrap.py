@@ -174,6 +174,17 @@ class FigmaExtractor:
             cleaned["counterAxisAlignItems"] = node.get("counterAxisAlignItems")
             cleaned["primaryAxisSizingMode"] = node.get("primaryAxisSizingMode")
             cleaned["counterAxisSizingMode"] = node.get("counterAxisSizingMode")
+            cleaned["layoutSizingHorizontal"] = node.get("layoutSizingHorizontal")
+            cleaned["layoutSizingVertical"] = node.get("layoutSizingVertical")
+            cleaned["layoutGrow"] = node.get("layoutGrow")
+            cleaned["layoutAlign"] = node.get("layoutAlign")
+
+        if "constraints" in node:
+            cleaned["constraints"] = node.get("constraints")
+
+        for sizing_key in ("minWidth", "maxWidth", "minHeight", "maxHeight"):
+            if sizing_key in node:
+                cleaned[sizing_key] = node.get(sizing_key)
 
         if "absoluteBoundingBox" in node:
             box = node["absoluteBoundingBox"]
@@ -200,6 +211,12 @@ class FigmaExtractor:
             cleaned["characters"] = node.get("characters", "")
             if "style" in node:
                 cleaned["style"] = extract_text_style(node["style"])
+
+        # Preserve interaction data from Figma prototype
+        if node.get("reactions"):
+            cleaned["reactions"] = node["reactions"]
+        if node.get("variantProperties"):
+            cleaned["variantProperties"] = node["variantProperties"]
 
         if node_type in ("RECTANGLE", "ELLIPSE", "VECTOR", "IMAGE"):
             has_image_fill = any(f.get("type") == "IMAGE" for f in (node.get("fills") or []))

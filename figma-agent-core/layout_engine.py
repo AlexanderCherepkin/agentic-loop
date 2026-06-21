@@ -102,6 +102,13 @@ def _class_for_color(prefix: str, hex_color: Optional[str]) -> Optional[str]:
     return f"{prefix}-{mapped}"
 
 
+def _token_for_hex(hex_color: Optional[str], token_map: Optional[Dict[str, str]]) -> Optional[str]:
+    if not hex_color or not token_map:
+        return None
+    key = hex_color.lower().strip().lstrip("#")
+    return token_map.get(key)
+
+
 def _color_to_hex(color: Optional[Dict[str, float]]) -> Optional[str]:
     """Конвертирует raw Figma RGBA в HEX, если в ноде нет precomputed hex."""
     if not color:
@@ -179,6 +186,16 @@ class TailwindNode:
     text: Optional[str] = None
     src: Optional[str] = None
     alt: Optional[str] = None
+    asset_type: Optional[str] = None
+    asset_width: Optional[int] = None
+    asset_height: Optional[int] = None
+    inline_svg: Optional[str] = None
+    backend_action: Optional[str] = None
+    backend_endpoint: Optional[str] = None
+    backend_model: Optional[str] = None
+    backend_field: Optional[str] = None
+    input_type: Optional[str] = None
+    required: Optional[bool] = None
     children: List["TailwindNode"] = field(default_factory=list)
     figma_id: Optional[str] = None
     figma_name: Optional[str] = None
@@ -210,6 +227,26 @@ class TailwindNode:
             result["figma_name"] = self.figma_name
         if self.figma_type is not None:
             result["figma_type"] = self.figma_type
+        if self.asset_type is not None:
+            result["asset_type"] = self.asset_type
+        if self.asset_width is not None:
+            result["asset_width"] = self.asset_width
+        if self.asset_height is not None:
+            result["asset_height"] = self.asset_height
+        if self.inline_svg is not None:
+            result["inline_svg"] = self.inline_svg
+        if self.backend_action is not None:
+            result["backend_action"] = self.backend_action
+        if self.backend_endpoint is not None:
+            result["backend_endpoint"] = self.backend_endpoint
+        if self.backend_model is not None:
+            result["backend_model"] = self.backend_model
+        if self.backend_field is not None:
+            result["backend_field"] = self.backend_field
+        if self.input_type is not None:
+            result["input_type"] = self.input_type
+        if self.required is not None:
+            result["required"] = self.required
         return result
 
 
@@ -233,6 +270,51 @@ class FigmaLayoutEngine:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or {}
         self._use_arbitrary_sizes = self.config.get("use_arbitrary_sizes", True)
+        self.tokens = self.config.get("tokens")
+        self.assets = self.config.get("assets")
+        self.backend_mapping = self.config.get("backend_mapping")
+        self._form_by_node_id: Dict[str, Dict[str, Any]] = {}
+        self._field_by_node_id: Dict[str, Dict[str, Any]] = {}
+        if self.backend_mapping:
+            for m in self.backend_mapping.get("mappings", []):
+                self._form_by_node_id[m.get("node_id", "")] = m
+                for fm in m.get("field_mappings", []):
+                    self._field_by_node_id[fm.get("node_id", "")] = fm
+
+    def _class_for_color(self, prefix: str, hex_color: Optional[str]) -> Optional[str]:
+        token_name = _token_for_hex(hex_color, self.tokens.get("color_by_hex") if self.tokens else None)
+        if token_name:
+            return f"{prefix}-{token_name}"
+        return _class_for_color(prefix, hex_color)
+
+    def _font_class(self, family: str) -> str:
+        if self.tokens:
+            token = self.tokens.get("fonts", {}).get(family)
+            if token:
+                return f"font-{token}"
+        return _arbitrary("font", family.replace(" ", "_"), unit="")
+
+    def _font_size_class(self, size_px: float) -> str:
+        px = int(round(size_px))
+        if self.tokens:
+            token = self.tokens.get("font_sizes", {}).get(str(px))
+            if token:
+                return f"text-{token}"
+        return _arbitrary("text", px)
+
+    def _font_weight_class(self, weight: int) -> str:
+        if self.tokens:
+            token = self.tokens.get("font_weights", {}).get(str(weight))
+            if token:
+                return f"font-{token}"
+        return _arbitrary("font", weight, unit="")
+
+    def _line_height_class(self, ratio: float) -> str:
+        if self.tokens:
+            token = self.tokens.get("line_heights", {}).get(str(ratio))
+            if token:
+                return f"leading-{token}"
+        return _arbitrary("leading", ratio, unit="")
 
     def convert(self, node: Dict[str, Any]) -> LayoutResult:
         root = self._convert_node(node, parent_box=node.get("box"))
@@ -310,6 +392,7 @@ class FigmaLayoutEngine:
         self._apply_strokes(tw_node, node)
         self._apply_effects(tw_node, node)
         self._apply_radius(tw_node, node)
+        self._apply_backend_hints(tw_node, node)
         if node.get("clipContent"):
             tw_node.add_class("overflow-hidden")
 
@@ -360,6 +443,7 @@ class FigmaLayoutEngine:
         style = node.get("style", {})
         self._apply_text_style(tw_node, style)
         self._apply_position(tw_node, node, None)
+        self._apply_backend_hints(tw_node, node)
         return tw_node
 
     def _text_tag(self, node: Dict[str, Any]) -> str:
@@ -383,17 +467,34 @@ class FigmaLayoutEngine:
             return "span"
         return "p"
 
+    def _resolve_asset(self, ref: str) -> Optional[Dict[str, Any]]:
+        if not self.assets:
+            return None
+        return self.assets.get("assets", {}).get(ref)
+
     def _convert_asset(self, node: Dict[str, Any]) -> TailwindNode:
+        node_id = node.get("id", "")
+        ref = node.get("imageRef") or node_id
+        resolved = self._resolve_asset(ref)
+
         tw_node = TailwindNode(
             tag="img",
-            src=node.get("publicPath") or node.get("imageRef"),
+            src=resolved.get("publicPath") if resolved else node.get("publicPath") or ref,
             alt=_safe_name(node.get("name")),
-            figma_id=node.get("id"),
+            figma_id=node_id,
             figma_name=_safe_name(node.get("name")),
         )
+        if resolved:
+            tw_node.asset_type = resolved.get("type", "raster")
+            tw_node.asset_width = resolved.get("width")
+            tw_node.asset_height = resolved.get("height")
+            if resolved.get("type") == "svg" and resolved.get("inlineSvg"):
+                tw_node.inline_svg = resolved.get("inlineSvg")
+
         box = node.get("box") or node.get("absoluteBoundingBox")
         self._apply_size(tw_node, box, node)
         self._apply_position(tw_node, node, None)
+        self._apply_backend_hints(tw_node, node)
         return tw_node
 
     def _convert_shape(self, node: Dict[str, Any]) -> TailwindNode:
@@ -409,6 +510,7 @@ class FigmaLayoutEngine:
         self._apply_strokes(tw_node, node)
         self._apply_effects(tw_node, node)
         self._apply_radius(tw_node, node)
+        self._apply_backend_hints(tw_node, node)
         return tw_node
 
     def _apply_size(
@@ -420,18 +522,73 @@ class FigmaLayoutEngine:
         if not box:
             return
 
-        if node and self.config.get("skip_fixed_size_when_auto", True):
-            primary_axis = node.get("primaryAxisSizingMode")
-            counter_axis = node.get("counterAxisSizingMode")
-            if primary_axis == "AUTO" and counter_axis == "AUTO":
-                return
+        constraints = (node.get("constraints") or {}) if node else {}
+        lsh = node.get("layoutSizingHorizontal") if node else None
+        lsv = node.get("layoutSizingVertical") if node else None
+
+        # Width behavior
+        width_behavior = "fixed"
+        if lsh == "FILL" or constraints.get("horizontal") in ("STRETCH", "LEFT_RIGHT"):
+            width_behavior = "full"
+        elif lsh == "HUG":
+            width_behavior = "auto"
+        elif node and node.get("layoutGrow") == 1:
+            width_behavior = "grow"
+
+        # Height behavior
+        height_behavior = "fixed"
+        if lsv == "FILL" or constraints.get("vertical") in ("STRETCH", "TOP_BOTTOM"):
+            height_behavior = "full"
+        elif lsv == "HUG":
+            height_behavior = "auto"
+
+        if width_behavior == "full":
+            tw_node.add_class("w-full")
+        elif width_behavior == "auto":
+            tw_node.add_class("w-auto")
+        elif width_behavior == "grow":
+            tw_node.add_class("flex-1")
+
+        if height_behavior == "full":
+            tw_node.add_class("h-full")
+        elif height_behavior == "auto":
+            tw_node.add_class("h-auto")
+
+        if node and node.get("layoutAlign") == "STRETCH":
+            tw_node.add_class("self-stretch")
 
         width = _px(box.get("width"))
         height = _px(box.get("height"))
-        if width is not None and width > 0:
+
+        skip_fixed_width = width_behavior in ("full", "auto", "grow")
+        skip_fixed_height = height_behavior in ("full", "auto")
+
+        if node and self.config.get("skip_fixed_size_when_auto", True):
+            primary_axis = node.get("primaryAxisSizingMode")
+            counter_axis = node.get("counterAxisSizingMode")
+            if primary_axis == "AUTO":
+                skip_fixed_width = True
+            if counter_axis == "AUTO":
+                skip_fixed_height = True
+
+        if width is not None and width > 0 and not skip_fixed_width:
             tw_node.add_class(_arbitrary("w", int(round(width))))
-        if height is not None and height > 0:
+        if height is not None and height > 0 and not skip_fixed_height:
             tw_node.add_class(_arbitrary("h", int(round(height))))
+
+        if node:
+            min_w = _px(node.get("minWidth"))
+            max_w = _px(node.get("maxWidth"))
+            min_h = _px(node.get("minHeight"))
+            max_h = _px(node.get("maxHeight"))
+            if min_w is not None and min_w > 0:
+                tw_node.add_class(_arbitrary("min-w", int(round(min_w))))
+            if max_w is not None and max_w > 0:
+                tw_node.add_class(_arbitrary("max-w", int(round(max_w))))
+            if min_h is not None and min_h > 0:
+                tw_node.add_class(_arbitrary("min-h", int(round(min_h))))
+            if max_h is not None and max_h > 0:
+                tw_node.add_class(_arbitrary("max-h", int(round(max_h))))
 
     def _apply_layout(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         layout_mode = node.get("layoutMode")
@@ -548,7 +705,7 @@ class FigmaLayoutEngine:
                     if rgba:
                         tw_node.inline_styles["backgroundColor"] = rgba
                 else:
-                    cls = _class_for_color("bg", hex_color)
+                    cls = self._class_for_color("bg", hex_color)
                     if cls:
                         tw_node.add_class(cls)
                 opacity = fill.get("opacity")
@@ -560,7 +717,10 @@ class FigmaLayoutEngine:
                     gradient = self._build_gradient(stops)
                     tw_node.inline_styles["background"] = gradient
             elif fill_type == "IMAGE":
-                tw_node.inline_styles["background-image"] = f"url('{fill.get('imageRef')}')"
+                ref = fill.get("imageRef", "")
+                resolved = self._resolve_asset(ref) if ref else None
+                public_path = resolved.get("publicPath") if resolved else ref
+                tw_node.inline_styles["background-image"] = f"url('{public_path}')"
                 tw_node.inline_styles["background-size"] = "cover"
 
     def _build_gradient(self, stops: List[Dict[str, Any]]) -> str:
@@ -578,7 +738,7 @@ class FigmaLayoutEngine:
         for stroke in strokes:
             if stroke.get("type") == "SOLID":
                 hex_color = stroke.get("hex") or _color_to_hex(stroke.get("color"))
-                cls = _class_for_color("border", hex_color)
+                cls = self._class_for_color("border", hex_color)
                 if cls:
                     tw_node.add_class(cls)
                 width = _px(node.get("strokeWeight", 1))
@@ -629,18 +789,33 @@ class FigmaLayoutEngine:
         else:
             tw_node.add_class(_arbitrary("rounded", rounded))
 
+    def _apply_backend_hints(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
+        node_id = node.get("id")
+        if not node_id:
+            return
+        if node_id in self._form_by_node_id:
+            m = self._form_by_node_id[node_id]
+            tw_node.backend_action = m.get("action")
+            tw_node.backend_endpoint = m.get("endpoint")
+            tw_node.backend_model = m.get("model")
+        if node_id in self._field_by_node_id:
+            fm = self._field_by_node_id[node_id]
+            tw_node.backend_field = fm.get("field")
+            tw_node.input_type = fm.get("type", "text")
+            tw_node.required = fm.get("required", True)
+
     def _apply_text_style(self, tw_node: TailwindNode, style: Dict[str, Any]) -> None:
         font_size = _px(style.get("fontSize"))
         if font_size is not None and font_size > 0:
-            tw_node.add_class(_arbitrary("text", int(round(font_size))))
+            tw_node.add_class(self._font_size_class(font_size))
 
         weight = style.get("fontWeight")
         if weight is not None:
-            tw_node.add_class(_arbitrary("font", weight, unit=""))
+            tw_node.add_class(self._font_weight_class(int(weight)))
 
         family = style.get("fontFamily")
         if family:
-            tw_node.add_class(_arbitrary("font", family.replace(" ", "_"), unit=""))
+            tw_node.add_class(self._font_class(family))
 
         align = style.get("textAlignHorizontal")
         align_map = {
@@ -655,7 +830,7 @@ class FigmaLayoutEngine:
         line_height_px = _px(style.get("lineHeightPx"))
         if line_height_px is not None and font_size:
             ratio = round(line_height_px / font_size, 3)
-            tw_node.add_class(_arbitrary("leading", ratio, unit=""))
+            tw_node.add_class(self._line_height_class(ratio))
 
         letter_spacing = _px(style.get("letterSpacing"))
         if letter_spacing is not None:
@@ -665,7 +840,7 @@ class FigmaLayoutEngine:
         for fill in fills:
             if fill.get("type") == "SOLID":
                 hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
-                cls = _class_for_color("text", hex_color)
+                cls = self._class_for_color("text", hex_color)
                 if cls:
                     tw_node.add_class(cls)
                 break
@@ -674,6 +849,14 @@ class FigmaLayoutEngine:
 def convert_figma_node(node: Dict[str, Any], config: Optional[Dict[str, Any]] = None) -> LayoutResult:
     engine = FigmaLayoutEngine(config)
     return engine.convert(node)
+
+
+def _load_tokens(path: str) -> Optional[Dict[str, Any]]:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
 
 
 def main():
@@ -693,6 +876,21 @@ def main():
         default="layout_ast.json",
         help="Путь для сохранения AST.",
     )
+    parser.add_argument(
+        "--tokens",
+        default="design_tokens.json",
+        help="Путь к JSON-реестру дизайн-токенов (опционально).",
+    )
+    parser.add_argument(
+        "--assets",
+        default="asset_registry.json",
+        help="Путь к JSON-реестру ассетов (опционально).",
+    )
+    parser.add_argument(
+        "--backend-mapping",
+        default="backend_mapping.json",
+        help="Путь к backend_mapping.json (опционально).",
+    )
     args = parser.parse_args()
 
     import analyzer
@@ -710,7 +908,17 @@ def main():
             return
         node = target
 
-    result = convert_figma_node(node)
+    tokens = _load_tokens(args.tokens)
+    assets = _load_tokens(args.assets)
+    backend_mapping = _load_tokens(args.backend_mapping)
+    config: Dict[str, Any] = {}
+    if tokens:
+        config["tokens"] = tokens
+    if assets:
+        config["assets"] = assets
+    if backend_mapping:
+        config["backend_mapping"] = backend_mapping
+    result = convert_figma_node(node, config=config)
     output_path = Path(args.output)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result.to_dict(), f, ensure_ascii=False, indent=2)
