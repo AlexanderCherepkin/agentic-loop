@@ -18,6 +18,8 @@ components/
 public/images/
 analysis_report.txt
 figma_node.json
+conductor_report.json
+spec.md
 
 # IDE / OS
 .vscode/

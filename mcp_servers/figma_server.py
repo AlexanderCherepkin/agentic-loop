@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import traceback
 import warnings
@@ -83,8 +84,6 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-
-        import subprocess
 
         cmd = [sys.executable, script_name, *args]
         merged_env = os.environ.copy()

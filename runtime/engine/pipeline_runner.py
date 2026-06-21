@@ -462,7 +462,7 @@ class PipelineRunner:
         Filters out the Figma category if Figma is not configured so the planner
         does not waste tokens on tools that cannot execute.
         """
-        if not self._mcp_gateway:
+        if not self.mcp_enabled:
             return []
         categories = self._mcp_gateway.categories()
         if "figma" in categories and not self.figma_available:
