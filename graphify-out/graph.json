@@ -660,11 +660,19 @@
       "_origin": "ast"
     },
     {
+      "id": "figma_agent_core_asset_pipeline_to_pascal_case_icon_name",
+      "label": "_to_pascal_case_icon_name()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L61",
+      "_origin": "ast"
+    },
+    {
       "id": "figma_agent_core_asset_pipeline_asset_dest_path",
       "label": "_asset_dest_path()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L61",
+      "source_location": "L73",
       "_origin": "ast"
     },
     {
@@ -672,7 +680,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L61",
+      "source_location": "L73",
       "_origin": "ast"
     },
     {
@@ -680,7 +688,7 @@
       "label": "_public_path()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L67",
+      "source_location": "L79",
       "_origin": "ast"
     },
     {
@@ -688,7 +696,7 @@
       "label": "_extract_box_size()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L77",
+      "source_location": "L89",
       "_origin": "ast"
     },
     {
@@ -696,7 +704,7 @@
       "label": "Any",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L77",
+      "source_location": "L89",
       "_origin": "ast"
     },
     {
@@ -704,7 +712,7 @@
       "label": "AssetExtractor",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L86",
+      "source_location": "L98",
       "_origin": "ast"
     },
     {
@@ -712,7 +720,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L89",
+      "source_location": "L101",
       "_origin": "ast"
     },
     {
@@ -720,7 +728,7 @@
       "label": ".extract()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L93",
+      "source_location": "L105",
       "_origin": "ast"
     },
     {
@@ -728,7 +736,7 @@
       "label": "._add_asset()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L99",
+      "source_location": "L111",
       "_origin": "ast"
     },
     {
@@ -736,7 +744,7 @@
       "label": "._walk()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L120",
+      "source_location": "L132",
       "_origin": "ast"
     },
     {
@@ -744,7 +752,7 @@
       "label": "FontCollector",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L148",
+      "source_location": "L160",
       "_origin": "ast"
     },
     {
@@ -752,7 +760,7 @@
       "label": ".collect()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L151",
+      "source_location": "L163",
       "_origin": "ast"
     },
     {
@@ -760,7 +768,7 @@
       "label": "._collect_families()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L156",
+      "source_location": "L168",
       "_origin": "ast"
     },
     {
@@ -768,7 +776,7 @@
       "label": "._build_fonts()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L167",
+      "source_location": "L179",
       "_origin": "ast"
     },
     {
@@ -776,7 +784,7 @@
       "label": "AssetDownloader",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L184",
+      "source_location": "L196",
       "_origin": "ast"
     },
     {
@@ -784,7 +792,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L187",
+      "source_location": "L199",
       "_origin": "ast"
     },
     {
@@ -792,7 +800,7 @@
       "label": "._parse_file_key()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L193",
+      "source_location": "L205",
       "_origin": "ast"
     },
     {
@@ -800,7 +808,7 @@
       "label": ".get_image_urls()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L197",
+      "source_location": "L209",
       "_origin": "ast"
     },
     {
@@ -808,31 +816,7 @@
       "label": ".download()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L212",
-      "_origin": "ast"
-    },
-    {
-      "id": "figma_agent_core_asset_pipeline_assetoptimizer",
-      "label": "AssetOptimizer",
-      "file_type": "code",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L225",
-      "_origin": "ast"
-    },
-    {
-      "id": "figma_agent_core_asset_pipeline_assetoptimizer_init",
-      "label": ".__init__()",
-      "file_type": "code",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L228",
-      "_origin": "ast"
-    },
-    {
-      "id": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
-      "label": ".optimize()",
-      "file_type": "code",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L231",
+      "source_location": "L224",
       "_origin": "ast"
     },
     {
@@ -840,7 +824,15 @@
       "label": "InlineSvgExtractor",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L241",
+      "source_location": "L237",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_inlinesvgextractor_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L244",
       "_origin": "ast"
     },
     {
@@ -852,11 +844,67 @@
       "_origin": "ast"
     },
     {
+      "id": "figma_agent_core_asset_pipeline_svgclassifier",
+      "label": "SvgClassifier",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L265",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "label": ".classify()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L272",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_svgclassifier_looks_like_icon",
+      "label": "._looks_like_icon()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L281",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_svgclassifier_is_simple",
+      "label": "._is_simple()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L300",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_assetoptimizer",
+      "label": "AssetOptimizer",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L309",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_assetoptimizer_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L312",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
+      "label": ".optimize()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L315",
+      "_origin": "ast"
+    },
+    {
       "id": "figma_agent_core_asset_pipeline_assetoptimizer_run_svgo",
       "label": "._run_svgo()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L278",
+      "source_location": "L324",
       "_origin": "ast"
     },
     {
@@ -864,7 +912,7 @@
       "label": "._run_sharp()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L294",
+      "source_location": "L340",
       "_origin": "ast"
     },
     {
@@ -872,7 +920,7 @@
       "label": "AssetPipeline",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L311",
+      "source_location": "L357",
       "_origin": "ast"
     },
     {
@@ -880,7 +928,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L314",
+      "source_location": "L360",
       "_origin": "ast"
     },
     {
@@ -888,7 +936,15 @@
       "label": ".run()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L329",
+      "source_location": "L378",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_assetpipeline_write_icon_component",
+      "label": "._write_icon_component()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L494",
       "_origin": "ast"
     },
     {
@@ -896,7 +952,7 @@
       "label": "write_registry()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L418",
+      "source_location": "L513",
       "_origin": "ast"
     },
     {
@@ -904,63 +960,63 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L424",
+      "source_location": "L519",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_87",
+      "id": "figma_agent_core_asset_pipeline_rationale_99",
       "label": "Рекурсивно находит ассеты в сжатом дереве Figma.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L87",
+      "source_location": "L99",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_149",
+      "id": "figma_agent_core_asset_pipeline_rationale_161",
       "label": "Собирает шрифты из текстовых нод и мапит их на next/font/google.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L149",
+      "source_location": "L161",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_185",
+      "id": "figma_agent_core_asset_pipeline_rationale_197",
       "label": "Скачивание ассетов через Figma Images API.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L185",
+      "source_location": "L197",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_226",
-      "label": "Оптимизация SVG (svgo) и PNG (sharp) с graceful fallback.",
-      "file_type": "rationale",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L226",
-      "_origin": "ast"
-    },
-    {
-      "id": "figma_agent_core_asset_pipeline_rationale_242",
+      "id": "figma_agent_core_asset_pipeline_rationale_238",
       "label": "Пытается безопасно инлайнить простой SVG для page_composer.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L242",
+      "source_location": "L238",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_264",
+      "id": "figma_agent_core_asset_pipeline_rationale_266",
+      "label": "Определяет стратегию SVG: inline, next/image, img, icon component.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L266",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_agent_core_asset_pipeline_rationale_310",
       "label": "Оптимизация SVG (svgo) и PNG (sharp) с graceful fallback.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L264",
+      "source_location": "L310",
       "_origin": "ast"
     },
     {
-      "id": "figma_agent_core_asset_pipeline_rationale_312",
+      "id": "figma_agent_core_asset_pipeline_rationale_358",
       "label": "Полный пайплайн: discovery → download → optimize → registry.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L312",
+      "source_location": "L358",
       "_origin": "ast"
     },
     {
@@ -16712,7 +16768,7 @@
       "label": "test_optimizer_graceful_fallback_when_tools_missing()",
       "file_type": "code",
       "source_file": "tests/figma/test_asset_pipeline.py",
-      "source_location": "L75",
+      "source_location": "L76",
       "_origin": "ast"
     },
     {
@@ -16720,7 +16776,47 @@
       "label": "test_inline_svg_extractor_rejects_large_or_script()",
       "file_type": "code",
       "source_file": "tests/figma/test_asset_pipeline.py",
-      "source_location": "L84",
+      "source_location": "L85",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_asset_pipeline_test_svg_classifier_icon_by_name",
+      "label": "test_svg_classifier_icon_by_name()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L109",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_asset_pipeline_test_svg_classifier_simple_svg_inline",
+      "label": "test_svg_classifier_simple_svg_inline()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L116",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_asset_pipeline_test_svg_classifier_complex_svg_to_image",
+      "label": "test_svg_classifier_complex_svg_to_image()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L123",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_asset_pipeline_test_svg_classifier_none_to_img",
+      "label": "test_svg_classifier_none_to_img()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L130",
+      "_origin": "ast"
+    },
+    {
+      "id": "figma_test_asset_pipeline_test_icon_component_written",
+      "label": "test_icon_component_written()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L135",
       "_origin": "ast"
     },
     {
@@ -33204,11 +33300,20 @@
     },
     {
       "source": "figma_agent_core_asset_pipeline",
-      "target": "figma_agent_core_asset_pipeline_asset_dest_path",
+      "target": "figma_agent_core_asset_pipeline_to_pascal_case_icon_name",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
       "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline",
+      "target": "figma_agent_core_asset_pipeline_asset_dest_path",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -33218,7 +33323,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L61",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -33227,7 +33332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L67",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -33237,7 +33342,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L67",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -33246,7 +33351,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L77",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -33256,7 +33361,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L77",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -33265,7 +33370,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L86",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -33274,7 +33379,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L89",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -33283,7 +33388,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L93",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -33293,7 +33398,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L93",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -33302,7 +33407,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L99",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -33312,7 +33417,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L99",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -33321,7 +33426,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L120",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -33331,7 +33436,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L120",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -33340,7 +33445,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L148",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -33349,7 +33454,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L151",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -33359,7 +33464,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L151",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -33368,7 +33473,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L156",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -33378,7 +33483,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L156",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -33387,7 +33492,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L167",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -33396,7 +33501,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L184",
+      "source_location": "L196",
       "weight": 1.0
     },
     {
@@ -33405,7 +33510,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L187",
+      "source_location": "L199",
       "weight": 1.0
     },
     {
@@ -33414,7 +33519,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L193",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -33423,7 +33528,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L197",
+      "source_location": "L209",
       "weight": 1.0
     },
     {
@@ -33432,7 +33537,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L212",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -33442,44 +33547,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L212",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline",
-      "target": "figma_agent_core_asset_pipeline_assetoptimizer",
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L225",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetoptimizer",
-      "target": "figma_agent_core_asset_pipeline_assetoptimizer_init",
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L228",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetoptimizer",
-      "target": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L231",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
-      "target": "figma_agent_core_asset_pipeline_py_path",
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L231",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -33488,7 +33556,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L241",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_inlinesvgextractor",
+      "target": "figma_agent_core_asset_pipeline_inlinesvgextractor_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -33511,12 +33588,105 @@
       "weight": 1.0
     },
     {
+      "source": "figma_agent_core_asset_pipeline",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L265",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L272",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "target": "figma_agent_core_asset_pipeline_py_any",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L272",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_looks_like_icon",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L281",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier_looks_like_icon",
+      "target": "figma_agent_core_asset_pipeline_py_any",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L281",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_is_simple",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L300",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline",
+      "target": "figma_agent_core_asset_pipeline_assetoptimizer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetoptimizer",
+      "target": "figma_agent_core_asset_pipeline_assetoptimizer_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L312",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetoptimizer",
+      "target": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetoptimizer_optimize",
+      "target": "figma_agent_core_asset_pipeline_py_path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
       "source": "figma_agent_core_asset_pipeline_assetoptimizer",
       "target": "figma_agent_core_asset_pipeline_assetoptimizer_run_svgo",
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L278",
+      "source_location": "L324",
       "weight": 1.0
     },
     {
@@ -33526,7 +33696,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L278",
+      "source_location": "L324",
       "weight": 1.0
     },
     {
@@ -33535,7 +33705,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L294",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -33545,7 +33715,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L294",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -33554,7 +33724,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L311",
+      "source_location": "L357",
       "weight": 1.0
     },
     {
@@ -33563,7 +33733,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L314",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -33573,7 +33743,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L314",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -33583,7 +33753,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L314",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -33592,7 +33762,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L329",
+      "source_location": "L378",
       "weight": 1.0
     },
     {
@@ -33602,7 +33772,26 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L329",
+      "source_location": "L378",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline",
+      "target": "figma_agent_core_asset_pipeline_assetpipeline_write_icon_component",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L494",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_write_icon_component",
+      "target": "figma_agent_core_asset_pipeline_py_path",
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L494",
       "weight": 1.0
     },
     {
@@ -33611,7 +33800,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L418",
+      "source_location": "L513",
       "weight": 1.0
     },
     {
@@ -33621,7 +33810,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L418",
+      "source_location": "L513",
       "weight": 1.0
     },
     {
@@ -33631,7 +33820,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L418",
+      "source_location": "L513",
       "weight": 1.0
     },
     {
@@ -33640,7 +33829,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L424",
+      "source_location": "L519",
       "weight": 1.0
     },
     {
@@ -33650,7 +33839,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L62",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -33660,7 +33849,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L96",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -33670,7 +33859,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L109",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -33680,7 +33869,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L128",
+      "source_location": "L140",
       "weight": 1.0
     },
     {
@@ -33690,7 +33879,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L153",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -33700,7 +33889,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L154",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -33710,7 +33899,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L173",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -33720,7 +33909,27 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L190",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_looks_like_icon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L275",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_is_simple",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -33730,7 +33939,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L235",
+      "source_location": "L319",
       "weight": 1.0
     },
     {
@@ -33740,7 +33949,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L237",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -33750,7 +33959,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L283",
+      "source_location": "L329",
       "weight": 1.0
     },
     {
@@ -33760,7 +33969,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L304",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -33770,7 +33979,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L322",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -33780,7 +33989,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L324",
+      "source_location": "L372",
       "weight": 1.0
     },
     {
@@ -33790,7 +33999,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L325",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -33800,72 +34009,12 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L327",
+      "source_location": "L375",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_assetextractor",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L333",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_inlinesvgextractor_extract",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L334",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_fontcollector",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L336",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_fontcollector_collect",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L337",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_asset_dest_path",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L355",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_public_path",
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L356",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
-      "target": "figma_agent_core_asset_pipeline_assetdownloader_get_image_urls",
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_init",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier",
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -33875,12 +34024,82 @@
     },
     {
       "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_assetextractor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L382",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_inlinesvgextractor_extract",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L383",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_fontcollector",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L385",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_fontcollector_collect",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L386",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_asset_dest_path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L406",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_public_path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L407",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_assetdownloader_get_image_urls",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L428",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
       "target": "figma_agent_core_asset_pipeline_assetdownloader_download",
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L390",
+      "source_location": "L442",
       "weight": 1.0
     },
     {
@@ -33890,7 +34109,47 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L391",
+      "source_location": "L443",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier_classify",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L458",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_assetpipeline_write_icon_component",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L473",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_run",
+      "target": "figma_agent_core_asset_pipeline_to_pascal_case_icon_name",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L475",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_assetpipeline_write_icon_component",
+      "target": "figma_agent_core_asset_pipeline_to_pascal_case_icon_name",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L496",
       "weight": 1.0
     },
     {
@@ -33900,7 +34159,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L437",
+      "source_location": "L533",
       "weight": 1.0
     },
     {
@@ -33910,7 +34169,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L445",
+      "source_location": "L541",
       "weight": 1.0
     },
     {
@@ -33920,7 +34179,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L446",
+      "source_location": "L542",
       "weight": 1.0
     },
     {
@@ -33930,7 +34189,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L447",
+      "source_location": "L543",
       "weight": 1.0
     },
     {
@@ -33940,7 +34199,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L455",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -33950,70 +34209,70 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L458",
+      "source_location": "L555",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_87",
+      "source": "figma_agent_core_asset_pipeline_rationale_99",
       "target": "figma_agent_core_asset_pipeline_assetextractor",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L87",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_149",
+      "source": "figma_agent_core_asset_pipeline_rationale_161",
       "target": "figma_agent_core_asset_pipeline_fontcollector",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L149",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_185",
+      "source": "figma_agent_core_asset_pipeline_rationale_197",
       "target": "figma_agent_core_asset_pipeline_assetdownloader",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L185",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_226",
-      "target": "figma_agent_core_asset_pipeline_assetoptimizer",
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L226",
-      "weight": 1.0
-    },
-    {
-      "source": "figma_agent_core_asset_pipeline_rationale_242",
+      "source": "figma_agent_core_asset_pipeline_rationale_238",
       "target": "figma_agent_core_asset_pipeline_inlinesvgextractor",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L242",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_264",
+      "source": "figma_agent_core_asset_pipeline_rationale_266",
+      "target": "figma_agent_core_asset_pipeline_svgclassifier",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/asset_pipeline.py",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_agent_core_asset_pipeline_rationale_310",
       "target": "figma_agent_core_asset_pipeline_assetoptimizer",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L264",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
-      "source": "figma_agent_core_asset_pipeline_rationale_312",
+      "source": "figma_agent_core_asset_pipeline_rationale_358",
       "target": "figma_agent_core_asset_pipeline_assetpipeline",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/asset_pipeline.py",
-      "source_location": "L312",
+      "source_location": "L358",
       "weight": 1.0
     },
     {
@@ -73426,7 +73685,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/figma/test_asset_pipeline.py",
-      "source_location": "L75",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -73435,7 +73694,52 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/figma/test_asset_pipeline.py",
-      "source_location": "L84",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_asset_pipeline",
+      "target": "figma_test_asset_pipeline_test_svg_classifier_icon_by_name",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_asset_pipeline",
+      "target": "figma_test_asset_pipeline_test_svg_classifier_simple_svg_inline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_asset_pipeline",
+      "target": "figma_test_asset_pipeline_test_svg_classifier_complex_svg_to_image",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_asset_pipeline",
+      "target": "figma_test_asset_pipeline_test_svg_classifier_none_to_img",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "figma_test_asset_pipeline",
+      "target": "figma_test_asset_pipeline_test_icon_component_written",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_asset_pipeline.py",
+      "source_location": "L135",
       "weight": 1.0
     },
     {

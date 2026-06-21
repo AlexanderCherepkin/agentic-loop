@@ -58,6 +58,18 @@ def _to_camel_case(snake: str) -> str:
     return parts[0].lower() + "".join(p.capitalize() for p in parts[1:] if p)
 
 
+def _to_pascal_case_icon_name(name: str) -> str:
+    base = name.replace(".", "_").replace(" ", "_").replace("-", "_")
+    base = re.sub(r"[^A-Za-z0-9_]", "", base)
+    words = [w for w in base.split("_") if w]
+    result = "".join(w[:1].upper() + w[1:] for w in words) or "Icon"
+    if not result[0].isalpha():
+        result = "Icon" + result
+    if not result.endswith("Icon"):
+        result = result + "Icon"
+    return result
+
+
 def _asset_dest_path(node_id: str, name: str, extension: str, assets_dir: Path) -> Path:
     stem = _safe_filename(name)
     unique = f"{stem}_{node_id.replace(':', '_').replace('-', '_')}"
@@ -222,42 +234,76 @@ class AssetDownloader:
             return False
 
 
-class AssetOptimizer:
-    """Оптимизация SVG (svgo) и PNG (sharp) с graceful fallback."""
-
-    def __init__(self, enabled: bool = True) -> None:
-        self.enabled = enabled
-
-    def optimize(self, path: Path, fmt: str) -> bool:
-        if not self.enabled:
-            return False
-        if fmt == "svg":
-            return self._run_svgo(path)
-        if fmt in ("png", "jpg", "jpeg"):
-            return self._run_sharp(path)
-        return False
-
-
 class InlineSvgExtractor:
     """Пытается безопасно инлайнить простой SVG для page_composer."""
 
-    MAX_SIZE_BYTES = 2048
-    FORBIDDEN_TAGS = {"script", "foreignObject", "iframe", "object", "embed"}
+    MAX_SIZE_BYTES = 1024
+    FORBIDDEN_TAGS = {"script", "foreignObject", "iframe", "object", "embed", "use"}
+    COMPLEX_ATTRS = ("filter", "mask", "clip-path", "linearGradient", "radialGradient")
+
+    def __init__(self, max_size_bytes: int = 1024) -> None:
+        self.max_size_bytes = max_size_bytes
 
     def extract(self, path: Path) -> Optional[str]:
         try:
             content = path.read_text(encoding="utf-8")
         except Exception:
             return None
-        if len(content.encode("utf-8")) > self.MAX_SIZE_BYTES:
+        if len(content.encode("utf-8")) > self.max_size_bytes:
             return None
         lowered = content.lower()
         if any(f"<{tag}" in lowered for tag in self.FORBIDDEN_TAGS):
+            return None
+        if any(f" {attr}" in lowered or f"='{attr}" in lowered for attr in self.COMPLEX_ATTRS):
             return None
         # Убираем XML declaration и DOCTYPE.
         content = re.sub(r"<\?xml[^?]*\?>\s*", "", content)
         content = re.sub(r"<!DOCTYPE[^>]*>\s*", "", content, flags=re.IGNORECASE)
         return content.strip()
+
+
+class SvgClassifier:
+    """Определяет стратегию SVG: inline, next/image, img, icon component."""
+
+    ICON_MAX_SIZE = 64
+    SIMPLE_MAX_BYTES = 1024
+    FORBIDDEN_INLINE_TAGS = {"script", "foreignObject", "iframe", "object", "embed", "use"}
+
+    def classify(self, node: Dict[str, Any], content: Optional[str], byte_size: int = 0) -> str:
+        if content is None:
+            return "img"
+        if self._looks_like_icon(node, content, byte_size):
+            return "icon"
+        if self._is_simple(content, byte_size):
+            return "inline"
+        return "image"
+
+    def _looks_like_icon(self, node: Dict[str, Any], content: str, byte_size: int) -> bool:
+        name = (node.get("name") or "").lower()
+        if any(word in name for word in ("icon", "ico", "glyph", "symbol")):
+            return True
+        width = node.get("width") or 0
+        height = node.get("height") or 0
+        if isinstance(width, (int, float)) and isinstance(height, (int, float)):
+            if max(width, height) <= self.ICON_MAX_SIZE:
+                return True
+        lowered = content.lower()
+        if "viewbox=" in lowered and byte_size <= self.SIMPLE_MAX_BYTES:
+            match = re.search(r"viewbox=\"\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*\"", lowered)
+            if match:
+                vb_w = int(match.group(3))
+                vb_h = int(match.group(4))
+                if max(vb_w, vb_h) <= self.ICON_MAX_SIZE:
+                    return True
+        return False
+
+    def _is_simple(self, content: str, byte_size: int) -> bool:
+        if byte_size > self.SIMPLE_MAX_BYTES:
+            return False
+        lowered = content.lower()
+        if any(f"<{tag}" in lowered for tag in self.FORBIDDEN_INLINE_TAGS):
+            return False
+        return True
 
 
 class AssetOptimizer:
@@ -315,16 +361,19 @@ class AssetPipeline:
         self,
         public_dir: str = DEFAULT_PUBLIC_DIR,
         assets_dir: str = DEFAULT_ASSETS_DIR,
+        components_dir: str = "src/components/icons",
         downloader: Optional[AssetDownloader] = None,
         optimizer: Optional[AssetOptimizer] = None,
         skip_download: bool = False,
     ) -> None:
         self.public_dir = Path(public_dir)
         self.assets_dir = self.public_dir / assets_dir
+        self.components_dir = Path(components_dir)
         self.downloader = downloader or AssetDownloader()
         self.optimizer = optimizer or AssetOptimizer(enabled=True)
         self.skip_download = skip_download
         self._inline_extractor = InlineSvgExtractor()
+        self._svg_classifier = SvgClassifier()
 
     def run(
         self,
@@ -339,11 +388,13 @@ class AssetPipeline:
         registry: Dict[str, Any] = {
             "assets": {},
             "fonts": fonts,
+            "icons": [],
             "stats": {
                 "discovered": len(assets),
                 "downloaded": 0,
                 "optimized": 0,
                 "skipped": 0,
+                "icons": 0,
             },
         }
 
@@ -363,6 +414,7 @@ class AssetPipeline:
                     "originalName": asset["name"],
                     "optimized": False,
                     "skipped": True,
+                    "strategy": "unknown",
                 }
                 registry["stats"]["skipped"] += 1
             return registry
@@ -399,11 +451,36 @@ class AssetPipeline:
                     "originalName": asset["name"],
                     "optimized": optimized,
                     "skipped": False,
+                    "strategy": "img",
                 }
                 if asset["format"] == "svg":
-                    inline = self._inline_extractor.extract(dest)
-                    if inline:
-                        entry["inlineSvg"] = inline
+                    content = self._inline_extractor.extract(dest)
+                    strategy = self._svg_classifier.classify(
+                        {
+                            "name": asset["name"],
+                            "width": asset["width"],
+                            "height": asset["height"],
+                        },
+                        content,
+                        byte_size=dest.stat().st_size if dest.exists() else 0,
+                    )
+                    entry["strategy"] = strategy
+                    if strategy == "inline" and content:
+                        entry["inlineSvg"] = content
+                    elif strategy == "icon":
+                        if content:
+                            entry["inlineSvg"] = content
+                        icon_file = self._write_icon_component(asset["name"], content or dest.read_text(encoding="utf-8"))
+                        entry["componentPath"] = icon_file
+                        entry["componentName"] = _to_pascal_case_icon_name(asset["name"])
+                        registry["icons"].append({
+                            "name": entry["componentName"],
+                            "path": str(icon_file),
+                            "ref": ref,
+                        })
+                        registry["stats"]["icons"] += 1
+                    elif strategy == "image":
+                        entry["inlineSvg"] = None
                 registry["assets"][ref] = entry
                 registry["stats"]["downloaded"] += 1
                 if optimized:
@@ -413,6 +490,24 @@ class AssetPipeline:
                 registry["stats"]["skipped"] += 1
 
         return registry
+
+    def _write_icon_component(self, name: str, svg_content: str) -> Path:
+        self.components_dir.mkdir(parents=True, exist_ok=True)
+        component_name = _to_pascal_case_icon_name(name)
+        # Убираем XML декларацию и DOCTYPE если остались.
+        svg_content = re.sub(r"<\?xml[^?]*\?>\s*", "", svg_content)
+        svg_content = re.sub(r"<!DOCTYPE[^>]*>\s*", "", svg_content, flags=re.IGNORECASE)
+        code = f'''import React from "react";
+
+export default function {component_name}(props: React.SVGProps<SVGSVGElement>) {{
+  return (
+    {svg_content.strip()}
+  );
+}}
+'''
+        file_path = self.components_dir / f"{component_name}.tsx"
+        file_path.write_text(code, encoding="utf-8")
+        return file_path
 
 
 def write_registry(registry: Dict[str, Any], path: Path) -> None:
@@ -426,6 +521,7 @@ def main() -> None:
     parser.add_argument("--file", default="figma_node.json", help="Path to Figma JSON structure.")
     parser.add_argument("--public-dir", default=DEFAULT_PUBLIC_DIR, help="Public directory root.")
     parser.add_argument("--assets-dir", default=DEFAULT_ASSETS_DIR, help="Subdirectory under public-dir for assets.")
+    parser.add_argument("--components-dir", default="src/components/icons", help="Directory for generated icon components.")
     parser.add_argument("--registry", default=DEFAULT_REGISTRY_FILE, help="Output asset registry JSON path.")
     parser.add_argument("--figma-token", default=os.environ.get("FIGMA_TOKEN", ""), help="Figma API token.")
     parser.add_argument("--figma-url", default=os.environ.get("FIGMA_URL", ""), help="Figma file URL.")
@@ -447,6 +543,7 @@ def main() -> None:
     pipeline = AssetPipeline(
         public_dir=args.public_dir,
         assets_dir=args.assets_dir,
+        components_dir=args.components_dir,
         downloader=downloader,
         optimizer=optimizer,
         skip_download=args.skip_download,
@@ -457,7 +554,7 @@ def main() -> None:
     registry_path = Path(args.registry)
     write_registry(registry, registry_path)
     print(f"[ASSETS] registry: {registry_path}")
-    print(f"[ASSETS] discovered={registry['stats']['discovered']} downloaded={registry['stats']['downloaded']} optimized={registry['stats']['optimized']} skipped={registry['stats']['skipped']}")
+    print(f"[ASSETS] discovered={registry['stats']['discovered']} downloaded={registry['stats']['downloaded']} optimized={registry['stats']['optimized']} skipped={registry['stats']['skipped']} icons={registry['stats'].get('icons', 0)}")
 
 
 if __name__ == "__main__":

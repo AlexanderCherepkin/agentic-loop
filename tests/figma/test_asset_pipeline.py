@@ -70,6 +70,7 @@ def test_pipeline_skip_download_builds_registry(tmp_path):
     for ref in refs:
         assert ref in registry["assets"]
         assert registry["assets"][ref]["publicPath"].startswith("/assets/figma/")
+        assert "strategy" in registry["assets"][ref]
 
 
 def test_optimizer_graceful_fallback_when_tools_missing(tmp_path):
@@ -84,12 +85,16 @@ def test_optimizer_graceful_fallback_when_tools_missing(tmp_path):
 def test_inline_svg_extractor_rejects_large_or_script():
     extractor = asset_pipeline.InlineSvgExtractor()
     small = Path(__file__).parent / "small.svg"
-    small.write_text('<svg><circle r="5"/></svg>')
-    assert extractor.extract(small) == '<svg><circle r="5"/></svg>'
+    small.write_text('<svg viewBox="0 0 24 24"><circle r="5"/></svg>')
+    assert extractor.extract(small) == '<svg viewBox="0 0 24 24"><circle r="5"/></svg>'
 
     bad = Path(__file__).parent / "bad.svg"
     bad.write_text('<svg><script>alert(1)</script></svg>')
     assert extractor.extract(bad) is None
+
+    use = Path(__file__).parent / "use.svg"
+    use.write_text('<svg><use href="#x"/></svg>')
+    assert extractor.extract(use) is None
 
     big = Path(__file__).parent / "big.svg"
     big.write_text('<svg>' + 'x' * 5000 + '</svg>')
@@ -97,4 +102,48 @@ def test_inline_svg_extractor_rejects_large_or_script():
 
     small.unlink()
     bad.unlink()
+    use.unlink()
     big.unlink()
+
+
+def test_svg_classifier_icon_by_name():
+    classifier = asset_pipeline.SvgClassifier()
+    node = {"name": "Close Icon", "width": 24, "height": 24}
+    svg = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12"/></svg>'
+    assert classifier.classify(node, svg, byte_size=len(svg)) == "icon"
+
+
+def test_svg_classifier_simple_svg_inline():
+    classifier = asset_pipeline.SvgClassifier()
+    node = {"name": "Logo mark", "width": 120, "height": 40}
+    svg = '<svg viewBox="0 0 120 40"><rect width="120" height="40"/></svg>'
+    assert classifier.classify(node, svg, byte_size=len(svg)) == "inline"
+
+
+def test_svg_classifier_complex_svg_to_image():
+    classifier = asset_pipeline.SvgClassifier()
+    node = {"name": "Big illustration", "width": 800, "height": 600}
+    big_svg = '<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">' + "x" * 2000 + '</svg>'
+    assert classifier.classify(node, big_svg, byte_size=len(big_svg.encode("utf-8"))) == "image"
+
+
+def test_svg_classifier_none_to_img():
+    classifier = asset_pipeline.SvgClassifier()
+    assert classifier.classify({"name": "Missing"}, None, byte_size=0) == "img"
+
+
+def test_icon_component_written(tmp_path):
+    svg_content = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle r="10"/></svg>'
+    pipeline = asset_pipeline.AssetPipeline(
+        public_dir=str(tmp_path / "public"),
+        components_dir=str(tmp_path / "src" / "components" / "icons"),
+        skip_download=True,
+    )
+    dest = tmp_path / "public" / "assets" / "figma" / "close_icon_2_2.svg"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(svg_content, encoding="utf-8")
+
+    icon_file = pipeline._write_icon_component("Close Icon", svg_content)
+    assert icon_file.exists()
+    assert "CloseIcon" in icon_file.read_text(encoding="utf-8")
+    assert icon_file.name == "CloseIcon.tsx"

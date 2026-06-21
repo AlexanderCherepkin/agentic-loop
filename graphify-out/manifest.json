@@ -1715,8 +1715,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/asset_pipeline.py": {
-    "mtime": 1782035633.1346886,
-    "ast_hash": "b859dabbe8dde9c4cdda5f36d05959e0",
+    "mtime": 1782059654.122795,
+    "ast_hash": "754b89fcd39b4a0818dc5277dab36b4e",
     "semantic_hash": ""
   },
   "tests/figma/fixtures/assets_simple.json": {
@@ -1725,8 +1725,8 @@
     "semantic_hash": ""
   },
   "tests/figma/test_asset_pipeline.py": {
-    "mtime": 1782035576.9872105,
-    "ast_hash": "cbe639c6224c210881688134855122b0",
+    "mtime": 1782059824.0337443,
+    "ast_hash": "9cca7b780e8531d66047ef9738b2b70c",
     "semantic_hash": ""
   },
   ".claude/plan.md": {
