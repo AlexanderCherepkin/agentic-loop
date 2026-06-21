@@ -56,6 +56,20 @@ class MockLLMEngine:
         "scope_manager.md": {"scope_approved": True, "scope": "mock_scope"},
         "policy_enforcer.md": {"policy_violation": False, "policy": "mock_policy"},
         "user/request.md": {"parsed_intent": "analysis", "entities": []},
+        "user/design_intake.md": {
+            "request_type": "design_project",
+            "design_descriptor": {
+                "design_source": "figma_url",
+                "source_value": "https://www.figma.com/design/abc123/Sample",
+                "output_mode": "full_code",
+                "target_stack": "react_next_tailwind",
+                "target_scope": "whole_page",
+                "backend_spec": None,
+                "metadata": {"title": "Mock Design", "detected_language": "en", "has_assets": True, "has_components": True, "has_backend_spec": False},
+            },
+            "parsed_request": None,
+            "confidence": 0.95,
+        },
         "user/context.md": {"context_summary": "mock context", "relevant": True},
         "planning/task_decomposition.md": {"tasks": [{"id": 1, "agent": "tools_read/read_file.md", "description": "Read file"}]},
         "planning/tool_plan_selection.md": {"plan": [{"step": 1, "agent": "tools_read/read_file.md", "inputs": {"path": "."}}]},
@@ -83,9 +97,9 @@ class MockLLMEngine:
         agent_path = getattr(spec, "source_path", "") or ""
         base_latency = 15.0
 
-        # Determine mock response
+        # Determine mock response (normalize Windows paths to forward slashes)
         response_data: dict[str, Any] = {}
-        agent_str = str(agent_path)
+        agent_str = str(agent_path).replace("\\", "/")
         for suffix, payload in self._RESPONSES.items():
             if agent_str.endswith(suffix):
                 response_data = dict(payload)
@@ -98,6 +112,18 @@ class MockLLMEngine:
             iteration = inputs.get("iteration", 1)
             if iteration >= 2:
                 response_data = {"decision": "terminate_success", "reason": "mock completion"}
+
+        # Special handling for design intake: only classify as design project when signals present
+        if agent_str.endswith("user/design_intake.md"):
+            raw_request = str(inputs.get("raw_request", "")).lower()
+            design_signals = ["figma", "макет", "дизайн", "design", "верстай", "сверстай", "react по макету"]
+            if not any(signal in raw_request for signal in design_signals):
+                response_data = {
+                    "request_type": "general",
+                    "design_descriptor": None,
+                    "parsed_request": {"intent": "general"},
+                    "confidence": 0.8,
+                }
 
         content = json.dumps(response_data, ensure_ascii=False)
         return LLMResponse(

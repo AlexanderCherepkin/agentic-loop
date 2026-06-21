@@ -33,10 +33,12 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 4. **Design-intake branch (conditional)** — pass parsed request to `tooll_subagents/user/design_intake.md`:
    - If `request_type != design_project`, continue to Plan phase unchanged.
    - If `request_type == design_project`:
-     a. Invoke `tooll_subagents/planning/figma_design_analyst.md` with the `design_descriptor` to produce a `design_blueprint` (Figma structure, spec, components, assets).
-     b. Invoke `tooll_subagents/planning/design_to_code_planner.md` with the `design_blueprint` to produce a `handoff_package`.
-     c. If `handoff_type == technical_assignment`, treat the package as the task definition and continue to the Plan phase with `design_blueprint` attached.
-     d. If `handoff_type == full_code` or `mixed`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`.
+     - **Runtime fast path (default)** — when the runtime has MCP enabled and `figma_run_pipeline` is available, invoke the full pipeline directly via MCP with the `design_descriptor` (Figma source, backend spec, target scope). For `output_mode == full_code` or `both`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`. For `output_mode == technical_assignment`, attach the returned `design_blueprint` to the Plan phase.
+     - **Blueprint path** — if the runtime fast path is unavailable or explicitly disabled:
+       a. Invoke `tooll_subagents/planning/figma_design_analyst.md` with the `design_descriptor` to produce a `design_blueprint` (Figma structure, spec, design tokens, components, assets).
+       b. Invoke `tooll_subagents/planning/design_to_code_planner.md` with the `design_blueprint` to produce a `handoff_package`.
+       c. If `handoff_type == technical_assignment`, treat the package as the task definition and continue to the Plan phase with `design_blueprint` attached.
+       d. If `handoff_type == full_code` or `mixed`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`.
 5. **Plan phase** — invoke `tooll_subagents/planning/` (task_decomposition, cost_risk_assessment, tool_plan_selection, internal_monologue) to produce initial task graph and tool plan. If a design blueprint is present, `tool_plan_selection` must include Figma MCP tools.
 6. **Enter ReAct loop** — for each iteration up to `max_iterations`:
    a. **Check budget** — if `token_budget` exhausted, break and set `termination_status=partial`.

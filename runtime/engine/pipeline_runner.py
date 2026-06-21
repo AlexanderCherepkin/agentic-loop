@@ -600,9 +600,33 @@ class PipelineRunner:
 
             await self._publish_progress("phase.end", {"phase": "safety_pre_check", "session_id": session_id})
 
-            # Phase 2: Plan
+            # Phase 2: Design intake & optional full-pipeline short-circuit
+            await self._publish_progress("phase.start", {"phase": "design_intake", "session_id": session_id})
+            design_descriptor = await self._run_design_intake(augmented_input, session_id, trace, metrics)
+            await self._publish_progress("phase.end", {"phase": "design_intake", "session_id": session_id})
+
+            if design_descriptor:
+                output_mode = design_descriptor.get("output_mode", "both")
+                if output_mode in ("full_code", "both"):
+                    pipeline_result = await self._run_design_pipeline(design_descriptor, session_id)
+                    if pipeline_result and not pipeline_result.get("is_error"):
+                        final_response = self._format_design_pipeline_result(design_descriptor, pipeline_result)
+                        await self._run_safety_post_check(final_response, session_id, trace, metrics)
+                        await self._run_mutual_check(final_response, session_id, trace, metrics)
+                        metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+                        self.state.update(f"session:{session_id}", {
+                            "status": PipelineStatus.COMPLETED.value,
+                            "completed_at": time.time(),
+                        }, scope="session")
+                        return await self._finalize_and_return(
+                            user_input, final_response, TerminationStatus.SUCCESS,
+                            metrics, audit_anchor, trace, session_id,
+                        )
+
+            # Phase 3: Plan
             await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
-            plan = await self._run_planning(augmented_input, session_id, trace, metrics)
+            plan = await self._run_planning(augmented_input, session_id, trace, metrics,
+                                            design_descriptor=design_descriptor)
             await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
 
             # Phase 3: ReAct loop with conditional edges
@@ -783,13 +807,90 @@ class PipelineRunner:
                 context.update(result.parsed)
         return True
 
+    async def _run_design_intake(self, user_input: str, session_id: str,
+                                 trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any] | None:
+        """Classify request via design_intake.md and return design_descriptor if design project."""
+        if not self.mcp_enabled or not self.figma_available:
+            return None
+        result = await self._invoke_agent(
+            "tooll_subagents/user/design_intake.md",
+            {
+                "raw_request": user_input,
+                "source_channel": "cli",
+                "session_id": session_id,
+                "priority_hint": "normal",
+                "project_rules": self._project_rules,
+            },
+            trace, "design_intake", metrics,
+        )
+        if not result or not result.parsed:
+            return None
+        if result.parsed.get("request_type") != "design_project":
+            return None
+        return result.parsed.get("design_descriptor")
+
+    async def _run_design_pipeline(self, design_descriptor: dict[str, Any],
+                                   session_id: str) -> dict[str, Any]:
+        """Trigger the full Figma-to-code pipeline via MCP figma_run_pipeline."""
+        source_value = design_descriptor.get("source_value", "")
+        backend_spec = design_descriptor.get("backend_spec") or {}
+        args: dict[str, Any] = {
+            "output_name": session_id[:8],
+            "dry_run": False,
+            "figma_url": source_value if design_descriptor.get("design_source") == "figma_url" else "",
+        }
+        file_key = self._extract_figma_file_key(source_value)
+        if file_key:
+            args["file_key"] = file_key
+        if design_descriptor.get("target_scope") == "single_section":
+            node_id = self._extract_figma_node_id(source_value)
+            if node_id:
+                args["node_id"] = node_id
+        if backend_spec:
+            spec_type = backend_spec.get("spec_type")
+            spec_path = backend_spec.get("spec_path", "")
+            if spec_type == "openapi":
+                args["openapi"] = spec_path
+            elif spec_type == "prisma":
+                args["prisma"] = spec_path
+            else:
+                args["backend_spec_text"] = spec_path
+        return await self.execute_mcp_tool("figma_run_pipeline", args)
+
+    def _extract_figma_file_key(self, source_value: str) -> str:
+        import re
+        match = re.search(r"figma\.com/(?:file|design)/([a-zA-Z0-9_-]+)", source_value)
+        return match.group(1) if match else ""
+
+    def _extract_figma_node_id(self, source_value: str) -> str:
+        import re
+        match = re.search(r"node-id=([0-9-:]+)", source_value)
+        return match.group(1).replace("-", ":") if match else ""
+
+    def _format_design_pipeline_result(self, design_descriptor: dict[str, Any],
+                                       pipeline_result: dict[str, Any]) -> str:
+        source = design_descriptor.get("source_value", "")
+        mode = design_descriptor.get("output_mode", "full_code")
+        result = pipeline_result.get("result", pipeline_result)
+        status = result.get("status", "unknown")
+        summary = f"Design pipeline triggered for {source} (mode={mode}).\nStatus: {status}.\n"
+        if result.get("returncode") is not None:
+            summary += f"Return code: {result['returncode']}.\n"
+        if result.get("stdout"):
+            summary += f"\nOutput:\n{result['stdout'][:2000]}"
+        if result.get("stderr"):
+            summary += f"\nErrors:\n{result['stderr'][:1000]}"
+        return summary
+
     async def _run_planning(self, user_input: str, session_id: str,
-                            trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any]:
+                            trace: list[IterationTrace], metrics: SessionMetrics,
+                            design_descriptor: dict[str, Any] | None = None) -> dict[str, Any]:
         plan = {
             "user_input": user_input,
             "session_id": session_id,
             "project_rules": self._project_rules,
             "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
+            "design_descriptor": design_descriptor,
         }
         for agent_path in self.FLOW_SEQUENCE:
             result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)

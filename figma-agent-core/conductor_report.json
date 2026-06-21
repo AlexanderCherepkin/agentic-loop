@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-06-21T08:41:07.492626+00:00",
+  "started_at": "2026-06-21T14:42:03.376095+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -10,10 +10,22 @@
     "spec": {
       "success": true
     },
+    "tokens": {
+      "success": true
+    },
     "layout": {
       "success": true
     },
+    "backend_bridge": {
+      "success": true
+    },
+    "responsive": {
+      "success": true
+    },
     "extract": {
+      "success": true
+    },
+    "interactive": {
       "success": true
     },
     "compose": {
@@ -57,12 +69,26 @@
     "node_id": "662:808",
     "output_name": null,
     "all_sections": true,
+    "interactive_ast_output": "interactive_ast.json",
+    "interactive_registry_output": "interactive_registry.json",
     "force_refresh": false,
     "api_depth": 2,
     "skip_assets": false,
+    "skip_assets_download": false,
+    "optimize_assets": true,
+    "public_dir": "public",
+    "assets_dir": "assets/figma",
+    "assets_registry_file": "asset_registry.json",
     "spec_output": "spec.md",
+    "tokens_output_dir": ".",
+    "tokens_registry_file": "design_tokens.json",
+    "tokens_tailwind_config": "tailwind.config.ts",
+    "tokens_globals_css": "src/app/globals.css",
     "layout_output": "layout_ast.json",
+    "responsive_output": "responsive_ast.json",
+    "responsive_report": "responsive_report.json",
     "compose_output": "src/app/page.tsx",
+    "compose_layout_output": "src/app/layout.tsx",
     "compose_title": null,
     "components_output_dir": "src/app/components",
     "page_ast_output": "page_ast.json",
@@ -82,10 +108,15 @@
     "refinement_max_iterations": 3,
     "refinement_diff_threshold": 0.05,
     "refinement_report_output": "refinement_report.json",
+    "openapi_file": null,
+    "prisma_file": null,
+    "backend_spec_text_file": null,
+    "backend_output_dir": "backend_bridge_output",
+    "backend_mapping_file": "backend_mapping.json",
     "file": "figma_node.json",
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-21T08:41:07.494599+00:00",
+  "finished_at": "2026-06-21T14:42:03.378068+00:00",
   "duration_seconds": 0.0
 }

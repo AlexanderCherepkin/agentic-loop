@@ -44,6 +44,7 @@ class MCPRegistry:
         "tools_memory": "Memory store pipeline",
         "tools_browser": "Headless browser pipeline",
         "figma": "Figma-to-code pipeline",
+        "backend": "Backend Spec Bridge pipeline",
     }
 
     def __init__(self):

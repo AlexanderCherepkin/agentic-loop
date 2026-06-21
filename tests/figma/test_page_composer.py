@@ -70,6 +70,51 @@ def test_compose_image_asset() -> None:
     assert "<img className=\"w-[600px] h-[400px]\" src=\"/images/hero.png\" alt=\"Hero\" />" in code
 
 
+def test_compose_raster_asset_uses_next_image() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "img",
+            "classes": ["w-[360px]", "h-[160px]"],
+            "src": "/assets/figma/hero.png",
+            "alt": "Hero",
+            "asset_type": "raster",
+            "asset_width": 360,
+            "asset_height": 160,
+        },
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'import Image from "next/image"' in code
+    assert "<Image" in code
+    assert 'src="/assets/figma/hero.png"' in code
+    assert "width={360}" in code
+    assert "height={160}" in code
+
+
+def test_compose_inline_svg() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "img",
+            "classes": ["w-[48px]", "h-[48px]"],
+            "src": "/assets/figma/logo.svg",
+            "alt": "Logo",
+            "asset_type": "svg",
+            "inline_svg": '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><circle r="20"/></svg>',
+        },
+    ])
+    code = page_composer.compose_page(ast)
+    assert "<svg xmlns=\"http://www.w3.org/2000/svg\"" in code
+
+
+def test_compose_layout_with_google_font() -> None:
+    ast = _minimal_ast([
+        {"tag": "h1", "text": "Title", "classes": ["font-sans"], "inline_styles": {"fontFamily": "'Inter'"}},
+    ])
+    layout = page_composer.compose_layout("Test", fonts=page_composer._collect_fonts(ast))
+    assert 'import { Inter } from "next/font/google"' in layout
+    assert "const inter = Inter({ subsets: [\"latin\"], variable: \"--font-inter\" })" in layout
+    assert "className={`${inter.variable} antialiased`}" in layout
+
+
 def test_compose_inline_styles() -> None:
     ast = _minimal_ast([
         {
@@ -80,8 +125,8 @@ def test_compose_inline_styles() -> None:
         }
     ])
     code = page_composer.compose_page(ast)
-    assert 'style={left: "120px", top: "40px"}' in code
-    assert '<div className="absolute" style={left: "120px", top: "40px"} />' in code
+    assert 'style={{left: "120px", top: "40px"}}' in code
+    assert '<div className="absolute" style={{left: "120px", top: "40px"}} />' in code
 
 
 def test_compose_nested_children() -> None:
@@ -212,3 +257,102 @@ def test_compose_mixed_nodes_and_components() -> None:
     assert 'import FeatureCard from "@/app/components/FeatureCard"' in code
     assert "<h1 className=\"text-[40px]\">\n      Title\n    </h1>" in code
     assert "<FeatureCard />" in code
+
+
+def test_compose_navigation_adds_client_directive_and_router() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "button",
+            "text": "Go to pricing",
+            "classes": ["bg-blue-500"],
+            "figma_id": "1:2",
+            "interactive": {
+                "state_key": "pricingButtonState",
+                "component_name": "PricingButton",
+                "needs_client": True,
+                "triggers": [
+                    {"event": "on_click", "type": "navigate", "route": "/pricing"}
+                ],
+            },
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert '"use client"' in code
+    assert 'import { useRouter } from "next/navigation"' in code
+    assert 'import { useState } from "react"' in code
+    assert "const router = useRouter();" in code
+    assert "const [pricingButtonState, setPricingButtonState] = useState(false);" in code
+    assert "onClick={() => router.push(\"/pricing\")}" in code
+    assert "export const metadata" not in code
+
+
+def test_compose_overlay_conditional_rendering() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "button",
+            "text": "Open modal",
+            "classes": ["bg-black", "text-white"],
+            "figma_id": "1:2",
+            "interactive": {
+                "state_key": "modalButtonState",
+                "component_name": "ModalButton",
+                "needs_client": True,
+                "triggers": [
+                    {"event": "on_click", "type": "overlay", "destination_id": "5:6"}
+                ],
+            },
+        },
+        {
+            "tag": "div",
+            "classes": ["fixed", "inset-0"],
+            "figma_id": "5:6",
+            "children": [{"tag": "p", "text": "Modal content"}],
+        },
+    ])
+    code = page_composer.compose_page(ast)
+    assert "const [modalButtonState, setModalButtonState] = useState(false);" in code
+    assert "onClick={() => setModalButtonState(true)}" in code
+    assert "{modalButtonState} && (" in code
+    assert "<div className=\"fixed inset-0\"" in code
+
+
+def test_compose_external_url_opens_window() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "a",
+            "text": "External",
+            "classes": ["text-blue-500"],
+            "figma_id": "1:2",
+            "interactive": {
+                "state_key": "externalLinkState",
+                "component_name": "ExternalLink",
+                "needs_client": True,
+                "triggers": [
+                    {"event": "on_click", "type": "url", "url": "https://example.com", "external": True}
+                ],
+            },
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "onClick={() => window.open(\"https://example.com\", '_blank')}" in code
+
+
+def test_compose_hover_event() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "text": "Hover me",
+            "classes": ["p-4"],
+            "figma_id": "1:2",
+            "interactive": {
+                "state_key": "hoverState",
+                "component_name": "HoverBox",
+                "needs_client": True,
+                "triggers": [
+                    {"event": "on_hover", "type": "url", "url": "/hover-target"}
+                ],
+            },
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "onMouseEnter={() => router.push(\"/hover-target\")}" in code

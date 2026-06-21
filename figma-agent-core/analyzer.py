@@ -105,7 +105,7 @@ def list_top_level_nodes(node: Dict[str, Any]) -> List[Dict[str, str]]:
 
 def summarize_tree(node: dict) -> dict:
     """Собирает краткую статистику по дереву."""
-    stats = {"nodes": 0, "frames": 0, "texts": 0, "images": 0, "vectors": 0, "auto_layouts": 0}
+    stats = {"nodes": 0, "frames": 0, "texts": 0, "images": 0, "vectors": 0, "auto_layouts": 0, "interactions": 0, "variants": 0}
 
     def walk(n):
         stats["nodes"] += 1
@@ -120,6 +120,10 @@ def summarize_tree(node: dict) -> dict:
             stats["vectors"] += 1
         if n.get("layoutMode"):
             stats["auto_layouts"] += 1
+        if n.get("reactions"):
+            stats["interactions"] += 1
+        if n.get("variantProperties"):
+            stats["variants"] += 1
         for child in n.get("children", []):
             walk(child)
 

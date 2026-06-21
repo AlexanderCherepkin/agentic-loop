@@ -16,7 +16,7 @@
   "14": "Agent Loop Tools Runcom",
   "15": "Agent Loop Tools Runtest",
   "16": "Agent Loop Tools Database",
-  "17": "Agent Loop Tools Memory",
+  "17": "Community 17",
   "18": "Agent Loop Tools Terminal",
   "19": "Agent Spec Contracts",
   "20": "Agent Loop Tools Manangr",
@@ -90,7 +90,7 @@
   "88": "MCP Commander Package Duplicate",
   "89": "MCP Database Sqlite Types",
   "90": "MCP Filesystem Package Duplicate",
-  "91": "MCP Github Package Duplicate",
+  "91": "Community 91",
   "92": "MCP Replace Package Duplicate",
   "93": "Agent Loop Result Action Report Duplicate",
   "94": "Install Git Hooks Script",
@@ -323,11 +323,5 @@
   "321": "Community 321",
   "322": "Community 322",
   "323": "Community 323",
-  "324": "Community 324",
-  "325": "Community 325",
-  "326": "Community 326",
-  "327": "Community 327",
-  "328": "Community 328",
-  "329": "Community 329",
-  "330": "Community 330"
+  "324": "Community 324"
 }
