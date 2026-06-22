@@ -427,6 +427,31 @@ class FigmaLayoutEngine:
             except Exception as e:
                 print(f"[LAYOUT] could not load component mapper: {e}")
 
+        # Manual override file takes precedence and is merged into the loaded mapper.
+        self.override_path: Optional[Path] = None
+        override_path = self.config.get("component_mapper_override")
+        if override_path and Path(override_path).exists():
+            try:
+                from mapper_override import load_override_set, merge_overrides_into_mapper
+            except ImportError:
+                import importlib.util
+                override_module_path = Path(__file__).with_name("mapper_override.py")
+                spec = importlib.util.spec_from_file_location("mapper_override", str(override_module_path))
+                override_module = importlib.util.module_from_spec(spec)
+                sys.modules["mapper_override"] = override_module
+                spec.loader.exec_module(override_module)
+                load_override_set = override_module.load_override_set
+                merge_overrides_into_mapper = override_module.merge_overrides_into_mapper
+            try:
+                override_set = load_override_set(override_path)
+                self.component_mapper = merge_overrides_into_mapper(
+                    self.component_mapper or {"version": "1.0", "mappings": {}},
+                    override_set,
+                    self.component_registry.data if self.component_registry else None,
+                )
+            except Exception as e:
+                print(f"[LAYOUT] could not load component mapper override: {e}")
+
         self.data_models = _load_data_models(self.config.get("data_models"))
 
     def _token_for_style_or_variable(self, node: Optional[Dict[str, Any]], kind: str) -> Optional[str]:
@@ -1394,6 +1419,11 @@ def main():
         default=None,
         help="Путь к data_model.json для привязки повторяющихся структур к данным (опционально).",
     )
+    parser.add_argument(
+        "--components-mapper-override",
+        default=".agent_loop/figma_overrides.json",
+        help="Path to manual component mapping override file.",
+    )
     args = parser.parse_args()
 
     import analyzer
@@ -1430,6 +1460,9 @@ def main():
             mapper_path = fallback
     if mapper_path and mapper_path.exists():
         config["component_mapper"] = str(mapper_path)
+    override_path = Path(args.components_mapper_override)
+    if override_path.exists():
+        config["component_mapper_override"] = str(override_path)
     if args.data_models and Path(args.data_models).exists():
         config["data_models"] = str(Path(args.data_models).resolve())
     result = convert_figma_node(node, config=config)

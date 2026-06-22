@@ -135,11 +135,12 @@ def stage_component_registry(
     node_id: Optional[str] = None,
     scan_dirs: Optional[List[str]] = None,
     semantic_threshold: float = 0.5,
+    override_path: str = ".agent_loop/figma_overrides.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instances, DAG)."""
     logger.info("=== STAGE: component_registry ===")
-    command = [sys.executable, "component_registry.py", "--file", file, "--output", output, "--mapper-output", mapper_output, "--semantic-threshold", str(semantic_threshold)]
+    command = [sys.executable, "component_registry.py", "--file", file, "--output", output, "--mapper-output", mapper_output, "--semantic-threshold", str(semantic_threshold), "--override-path", override_path]
     if node_id:
         command.extend(["--node-id", node_id])
     for d in scan_dirs or []:
@@ -311,6 +312,7 @@ def stage_layout(
     backend_mapping_file: str = "backend_mapping.json",
     components_registry_file: str = "component_registry.json",
     components_mapper_file: str = "figma_component_map.json",
+    components_mapper_override_file: str = ".agent_loop/figma_overrides.json",
     data_models_file: str = "data_model.json",
     dry_run: bool = False,
 ) -> bool:
@@ -329,6 +331,8 @@ def stage_layout(
         command.extend(["--components", components_registry_file])
     if Path(components_mapper_file).exists():
         command.extend(["--components-mapper", components_mapper_file])
+    if Path(components_mapper_override_file).exists():
+        command.extend(["--components-mapper-override", components_mapper_override_file])
     if Path(data_models_file).exists():
         command.extend(["--data-models", data_models_file])
 
@@ -901,6 +905,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     config.get("components_output_dir", "src/app/components"),
                 ],
                 semantic_threshold=config.get("component_semantic_threshold", 0.5),
+                override_path=config.get("component_mapper_override_path", ".agent_loop/figma_overrides.json"),
                 dry_run=dry_run,
             )
             report["stages"]["component_registry"] = {"success": ok}
@@ -960,6 +965,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 backend_mapping_file=backend_mapping_file,
                 components_registry_file=config.get("component_registry_output", "component_registry.json"),
                 components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
+                components_mapper_override_file=config.get("component_mapper_override_path", ".agent_loop/figma_overrides.json"),
                 data_models_file=config.get("data_model_output", "data_model.json"),
                 dry_run=dry_run,
             )
@@ -1283,6 +1289,11 @@ def main():
         help="Minimum semantic similarity score (0-1) for matching Figma components to local components."
     )
     parser.add_argument(
+        "--component-mapper-override-path",
+        default=".agent_loop/figma_overrides.json",
+        help="Path to manual component mapping override file."
+    )
+    parser.add_argument(
         "--components-ui-output-dir",
         default="src/components/ui",
         help="Директория для компонентов, сгенерированных из Figma Component Sets."
@@ -1516,6 +1527,7 @@ def main():
         "layout_output": args.layout_output,
         "component_registry_output": args.component_registry_output,
         "component_semantic_threshold": args.component_semantic_threshold,
+        "component_mapper_override_path": args.component_mapper_override_path,
         "components_ui_output_dir": args.components_ui_output_dir,
         "responsive_output": args.responsive_output,
         "responsive_report": args.responsive_report,

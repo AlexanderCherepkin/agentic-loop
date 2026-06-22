@@ -1410,8 +1410,8 @@
     "semantic_hash": "752aa83aa64361ac32860f882dcff932"
   },
   "CLAUDE.md": {
-    "mtime": 1782117779.0099325,
-    "ast_hash": "a9dcd91f3058c45394344adf0d8d679f",
+    "mtime": 1782131917.4676428,
+    "ast_hash": "e2dcda992f82a4d1ff28940db48cc9a1",
     "semantic_hash": ""
   },
   "pnpm-workspace.yaml": {
@@ -1525,8 +1525,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/conductor.py": {
-    "mtime": 1782127611.7735832,
-    "ast_hash": "cdc2b6baf5d1272f575c5f1fccd06006",
+    "mtime": 1782132184.737349,
+    "ast_hash": "524e0282d4c13d9a5c6a3b9737793f0f",
     "semantic_hash": ""
   },
   "figma-agent-core/conductor_report.json": {
@@ -1630,8 +1630,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/layout_engine.py": {
-    "mtime": 1782128617.9191415,
-    "ast_hash": "79191c1ef95a450c2a0ddb51bcef50f9",
+    "mtime": 1782132113.1761773,
+    "ast_hash": "db36a1ffe19cc501888e4518521391fb",
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
@@ -1810,8 +1810,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/component_registry.py": {
-    "mtime": 1782130304.7755604,
-    "ast_hash": "43f7115c3311437292efcfe6373a92cc",
+    "mtime": 1782132239.0524395,
+    "ast_hash": "d6d6d09a35de16dec6e3c0956593cd54",
     "semantic_hash": ""
   },
   "tests/figma/fixtures/component_set.json": {
@@ -1870,7 +1870,7 @@
     "semantic_hash": ""
   },
   "figma_component_mappings.json": {
-    "mtime": 1782131267.343778,
+    "mtime": 1782132265.0321064,
     "ast_hash": "b0a44c8ae4a36a4f3323711528c0bfb1",
     "semantic_hash": ""
   },
@@ -1910,7 +1910,7 @@
     "semantic_hash": ""
   },
   "content_model.json": {
-    "mtime": 1782131267.3983397,
+    "mtime": 1782132265.072301,
     "ast_hash": "5c69349dbe325daf3dd1c40ceb5aeedd",
     "semantic_hash": ""
   },
@@ -1952,6 +1952,16 @@
   "tests/figma/test_precise_mode_auditor.py": {
     "mtime": 1782130705.9831505,
     "ast_hash": "9b09d73ab2b653aef055ac1edd5287c7",
+    "semantic_hash": ""
+  },
+  "figma-agent-core/mapper_override.py": {
+    "mtime": 1782132226.8239248,
+    "ast_hash": "3eabb3d2daf836f814474ea33124335f",
+    "semantic_hash": ""
+  },
+  "tests/figma/test_mapper_override.py": {
+    "mtime": 1782132249.5388172,
+    "ast_hash": "c7a48b9b4849e34b88a7c182a40c805e",
     "semantic_hash": ""
   }
 }

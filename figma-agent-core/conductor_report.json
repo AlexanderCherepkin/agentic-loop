@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-06-22T12:27:50.968058+00:00",
+  "started_at": "2026-06-22T12:44:28.230298+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -105,6 +105,7 @@
     "layout_output": "layout_ast.json",
     "component_registry_output": "component_registry.json",
     "component_semantic_threshold": 0.5,
+    "component_mapper_override_path": ".agent_loop/figma_overrides.json",
     "components_ui_output_dir": "src/components/ui",
     "responsive_output": "responsive_ast.json",
     "responsive_report": "responsive_report.json",
@@ -143,6 +144,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-22T12:27:50.972575+00:00",
+  "finished_at": "2026-06-22T12:44:28.234287+00:00",
   "duration_seconds": 0.0
 }

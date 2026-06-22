@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -121,11 +123,13 @@ class ComponentMapper:
         output_path: Optional[Path | str] = None,
         per_component_mapper_dir: Optional[Path | str] = None,
         aggregate_path: Optional[Path | str] = None,
+        override_path: Optional[Path | str] = None,
     ):
         self.registry = registry
         self.output_path = output_path or Path("figma_component_map.json")
         self.per_component_mapper_dir = per_component_mapper_dir
         self.aggregate_path = aggregate_path or Path("figma_component_mappings.json")
+        self.override_path = override_path
 
     def build(self) -> Dict[str, Any]:
         components = self.registry.get("components", {})
@@ -187,6 +191,23 @@ class ComponentMapper:
 
     def build_and_write(self) -> Path:
         mapper = self.build()
+
+        # Apply manual overrides to aggregate mapper output.
+        if self.override_path and Path(self.override_path).exists():
+            try:
+                from mapper_override import load_override_set, merge_overrides_into_mapper
+            except ImportError:
+                import importlib.util
+                override_module_path = Path(__file__).with_name("mapper_override.py")
+                spec = importlib.util.spec_from_file_location("mapper_override", str(override_module_path))
+                override_module = importlib.util.module_from_spec(spec)
+                sys.modules["mapper_override"] = override_module
+                spec.loader.exec_module(override_module)
+                load_override_set = override_module.load_override_set
+                merge_overrides_into_mapper = override_module.merge_overrides_into_mapper
+            override_set = load_override_set(self.override_path)
+            mapper = merge_overrides_into_mapper(mapper, override_set, self.registry)
+
         path = Path(self.output_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(mapper, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -204,6 +225,8 @@ class ComponentMapper:
                 file_path = mapper_dir / f"{pascal}.mapper.json"
                 per_component = dict(mapping)
                 per_component["$schema"] = "https://agentic-loop.dev/schemas/component-mapper.json"
+                # Do not emit manual_override metadata into per-component files; overrides live centrally.
+                per_component.pop("manual_override", None)
                 file_path.write_text(json.dumps(per_component, indent=2, ensure_ascii=False), encoding="utf-8")
 
         return path
@@ -356,12 +379,14 @@ class RegistryBuilder:
         mapper_output_path: Optional[Path | str] = None,
         per_component_mapper_dir: Optional[Path | str] = None,
         aggregate_mapper_path: Optional[Path | str] = None,
+        override_path: Optional[Path | str] = None,
     ):
         self.document = document
         self.output_path = output_path or Path("component_registry.json")
         self.mapper_output_path = mapper_output_path or Path("figma_component_map.json")
         self.per_component_mapper_dir = per_component_mapper_dir
         self.aggregate_mapper_path = aggregate_mapper_path or Path("figma_component_mappings.json")
+        self.override_path = override_path
         self.scan_dirs: List[Path] = [Path(d) for d in (scan_dirs or [])]
         self._sets: Dict[str, Dict[str, Any]] = {}
         self._components: Dict[str, Dict[str, Any]] = {}
@@ -393,12 +418,28 @@ class RegistryBuilder:
         return registry
 
     def build_mapper(self, semantic_matcher: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        return ComponentMapper(
+        mapper = ComponentMapper(
             self.build(semantic_matcher=semantic_matcher),
             self.mapper_output_path,
             self.per_component_mapper_dir,
             self.aggregate_mapper_path,
+            self.override_path,
         ).build()
+        if self.override_path and Path(self.override_path).exists():
+            try:
+                from mapper_override import load_override_set, merge_overrides_into_mapper
+            except ImportError:
+                import importlib.util
+                override_module_path = Path(__file__).with_name("mapper_override.py")
+                spec = importlib.util.spec_from_file_location("mapper_override", str(override_module_path))
+                override_module = importlib.util.module_from_spec(spec)
+                sys.modules["mapper_override"] = override_module
+                spec.loader.exec_module(override_module)
+                load_override_set = override_module.load_override_set
+                merge_overrides_into_mapper = override_module.merge_overrides_into_mapper
+            override_set = load_override_set(self.override_path)
+            mapper = merge_overrides_into_mapper(mapper, override_set, self.build(semantic_matcher=semantic_matcher))
+        return mapper
 
     def build_and_write(self, semantic_matcher: Optional[Dict[str, Any]] = None) -> Path:
         registry = self.build(semantic_matcher=semantic_matcher)
@@ -410,6 +451,7 @@ class RegistryBuilder:
             self.mapper_output_path,
             self.per_component_mapper_dir,
             self.aggregate_mapper_path,
+            self.override_path,
         ).build_and_write()
         return path
 
@@ -695,8 +737,9 @@ class ComponentRegistry:
         registry_path: Path | str,
         aggregate_mapper_path: Optional[Path | str] = None,
         per_component_mapper_dir: Optional[Path | str] = None,
+        override_path: Optional[Path | str] = None,
     ) -> ComponentRegistry:
-        """Load registry and overlay per-component `*.mapper.json` files on the aggregate mapper."""
+        """Load registry and overlay per-component `*.mapper.json` and manual overrides on the aggregate mapper."""
         registry = cls.load(registry_path)
         aggregate: Optional[Dict[str, Any]] = None
         if aggregate_mapper_path and Path(aggregate_mapper_path).exists():
@@ -705,6 +748,21 @@ class ComponentRegistry:
         if aggregate is not None or per_component:
             aggregate = aggregate or {"version": "1.0", "mappings": {}}
             registry.mapper = ComponentMapper.merge_per_component_mappers(aggregate, per_component)
+        if override_path and Path(override_path).exists():
+            try:
+                from mapper_override import load_override_set, merge_overrides_into_mapper
+            except ImportError:
+                # Allow running when mapper_override is imported via the same directory.
+                import importlib.util
+                override_module_path = Path(__file__).with_name("mapper_override.py")
+                spec = importlib.util.spec_from_file_location("mapper_override", str(override_module_path))
+                override_module = importlib.util.module_from_spec(spec)
+                sys.modules["mapper_override"] = override_module
+                spec.loader.exec_module(override_module)
+                load_override_set = override_module.load_override_set
+                merge_overrides_into_mapper = override_module.merge_overrides_into_mapper
+            override_set = load_override_set(override_path)
+            registry.mapper = merge_overrides_into_mapper(registry.mapper or {"version": "1.0", "mappings": {}}, override_set, registry.data)
         return registry
 
     @property
@@ -776,6 +834,11 @@ if __name__ == "__main__":
         default=0.5,
         help="Minimum semantic similarity score (0-1) for matching Figma components to local components.",
     )
+    parser.add_argument(
+        "--override-path",
+        default=".agent_loop/figma_overrides.json",
+        help="Path to manual component mapping override file.",
+    )
     args = parser.parse_args()
 
 
@@ -807,6 +870,7 @@ if __name__ == "__main__":
         mapper_output_path=args.mapper_output,
         per_component_mapper_dir=args.per_component_mapper_dir,
         aggregate_mapper_path=args.aggregate_mapper_path,
+        override_path=args.override_path,
     )
     semantic_matcher = {"threshold": args.semantic_threshold}
     builder.build_and_write(semantic_matcher=semantic_matcher)
