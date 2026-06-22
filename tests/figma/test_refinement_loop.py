@@ -312,6 +312,96 @@ def test_bbox_mismatch_applies_exact_size(tmp_path: Path) -> None:
     assert "w-full" not in classes
 
 
+def test_snug_text_fix_adjusts_width_when_fixed_width_present(tmp_path: Path) -> None:
+    ast_file = tmp_path / "layout_ast.json"
+    ast_file.write_text(
+        '{"root": {"tag": "section", "children": [{"tag": "p", "figma_id": "2:1", "classes": ["w-[120px]"]}]}}',
+        encoding="utf-8",
+    )
+
+    def fake_compose(mod: Any, ast: Path, out: Path, title: Any) -> bool:
+        return True
+
+    def fake_qa(i: int, url: str, ast: Path, out: Path, ref: Any, qa_dir: Path) -> dict:
+        return {
+            "status": "failed",
+            "diff_score": 0.05,
+            "dom_assertions": [],
+            "layout_checks": [
+                {
+                    "type": "snug_text",
+                    "passed": False,
+                    "figma_id": "2:1",
+                    "figma_width": 100,
+                    "page_width": 140,
+                    "delta_width": 40,
+                    "discrepancy": "Rendered text width exceeds Figma text bbox",
+                }
+            ],
+            "discrepancies": [],
+        }
+
+    result = refinement.run_refinement_loop(
+        page_url="http://localhost:3000",
+        ast_path=str(ast_file),
+        compose_output=str(tmp_path / "page.tsx"),
+        max_iterations=1,
+        report_output=str(tmp_path / "refinement_report.json"),
+        on_compose=fake_compose,
+        on_visual_qa=fake_qa,
+    )
+    assert result["status"] == "needs_human"
+    saved = json.loads(ast_file.read_text(encoding="utf-8"))
+    classes = saved["root"]["children"][0]["classes"]
+    assert "w-[100px]" in classes
+    assert "min-w-0" not in classes
+
+
+def test_snug_text_fix_adds_min_w_0_for_single_line_flex_label(tmp_path: Path) -> None:
+    ast_file = tmp_path / "layout_ast.json"
+    ast_file.write_text(
+        '{"root": {"tag": "section", "classes": ["flex", "flex-row"], "children": [{"tag": "p", "figma_id": "2:1", "classes": ["flex", "flex-1"]}]}}',
+        encoding="utf-8",
+    )
+
+    def fake_compose(mod: Any, ast: Path, out: Path, title: Any) -> bool:
+        return True
+
+    def fake_qa(i: int, url: str, ast: Path, out: Path, ref: Any, qa_dir: Path) -> dict:
+        return {
+            "status": "failed",
+            "diff_score": 0.05,
+            "dom_assertions": [],
+            "layout_checks": [
+                {
+                    "type": "snug_text",
+                    "passed": False,
+                    "figma_id": "2:1",
+                    "figma_width": 100,
+                    "page_width": 140,
+                    "delta_width": 40,
+                    "discrepancy": "Rendered text width exceeds Figma text bbox",
+                }
+            ],
+            "discrepancies": [],
+        }
+
+    result = refinement.run_refinement_loop(
+        page_url="http://localhost:3000",
+        ast_path=str(ast_file),
+        compose_output=str(tmp_path / "page.tsx"),
+        max_iterations=1,
+        report_output=str(tmp_path / "refinement_report.json"),
+        on_compose=fake_compose,
+        on_visual_qa=fake_qa,
+    )
+    assert result["status"] == "needs_human"
+    saved = json.loads(ast_file.read_text(encoding="utf-8"))
+    classes = saved["root"]["children"][0]["classes"]
+    assert "whitespace-nowrap" in classes
+    assert "min-w-0" in classes
+
+
 def test_convergence_guard_escalates_when_score_stagnates(tmp_path: Path) -> None:
     ast_file = tmp_path / "layout_ast.json"
     ast_file.write_text('{"root": {"tag": "div", "figma_id": "1:1", "classes": [], "children": []}}', encoding="utf-8")

@@ -298,3 +298,92 @@ def test_generate_artifacts_writes_files() -> None:
         saved = json.loads(Path(artifacts["registry"]).read_text(encoding="utf-8"))
         assert "colors" in saved
         assert "fonts" in saved
+        # Strict token matching: no semantic fallback maps are persisted.
+        assert "semantic_token_map" not in saved
+        assert "semantic_match_scores" not in saved
+
+
+def test_style_name_does_not_alias_to_heuristic_semantic_token() -> None:
+    """A style name containing a semantic keyword must map to its exact path, not alias to a heuristic token."""
+    fixture = {
+        "id": "0:1",
+        "name": "No Semantic Alias",
+        "type": "FRAME",
+        "styles": {"s-primary-blue": {"name": "colors/primary/blue"}},
+        "children": [
+            {
+                "id": "1:1",
+                "name": "Primary Button",
+                "type": "FRAME",
+                "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+                "styles": {"fill": "s-primary-blue"},
+            },
+            {
+                "id": "1:2",
+                "name": "Surface",
+                "type": "FRAME",
+                "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 1}}],
+            },
+        ],
+    }
+    registry = design_tokens.FigmaTokenExtractor(fixture).extract()
+    # Heuristic extraction still creates a "primary" token from the saturated blue.
+    assert "primary" in registry.colors
+    # But the style ID must map to its exact path, not silently alias to "primary".
+    assert registry.style_token_map["s-primary-blue"] == "colors.primary.blue"
+    assert not hasattr(registry, "semantic_token_map")
+
+
+def test_variable_name_does_not_alias_to_heuristic_semantic_token() -> None:
+    """A variable name containing a semantic keyword must map to its exact path, not alias to a heuristic token."""
+    fixture = {
+        "id": "0:1",
+        "name": "No Semantic Alias",
+        "type": "FRAME",
+        "variables": {"v-primary": {"name": "colors/primary/500", "collection": "theme"}},
+        "children": [
+            {
+                "id": "1:1",
+                "name": "Primary Button",
+                "type": "FRAME",
+                "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+                "boundVariables": {"fill": "v-primary"},
+            },
+            {
+                "id": "1:2",
+                "name": "Surface",
+                "type": "FRAME",
+                "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 1}}],
+            },
+        ],
+    }
+    registry = design_tokens.FigmaTokenExtractor(fixture).extract()
+    assert "primary" in registry.colors
+    assert registry.variable_token_map["v-primary"] == "theme.colors.primary.500"
+    assert not hasattr(registry, "semantic_token_map")
+
+
+def test_exact_style_and_variable_names_take_precedence_over_heuristics() -> None:
+    """If a style or variable name resolves to an exact path, it must not be overridden by a semantic guess."""
+    fixture = {
+        "id": "0:1",
+        "name": "Exact Precedence",
+        "type": "FRAME",
+        "styles": {"s-primary": {"name": "colors/semantic/brand"}},
+        "variables": {"v-primary": {"name": "colors/primary/500", "collection": "theme"}},
+        "children": [
+            {
+                "id": "1:1",
+                "name": "Brand Box",
+                "type": "FRAME",
+                "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+                "styles": {"fill": "s-primary"},
+                "boundVariables": {"fill": "v-primary"},
+            }
+        ],
+    }
+    registry = design_tokens.FigmaTokenExtractor(fixture).extract()
+    assert registry.style_token_map["s-primary"] == "colors.semantic.brand"
+    assert registry.variable_token_map["v-primary"] == "theme.colors.primary.500"
+    assert "colors.semantic.brand" in registry.colors
+    assert "theme.colors.primary.500" in registry.colors

@@ -343,3 +343,124 @@ def test_main_cli_writes_outputs(tmp_path: Path) -> None:
     data = json.loads(output_path.read_text(encoding="utf-8"))
     title = data["root"]["children"][0]
     assert "md:" in " ".join(title.get("responsive_variants", {}).get("md", []))
+
+
+def test_compose_responsive_ast_matches_by_stable_figma_id() -> None:
+    """Stable figma_id is preferred when matching nodes across breakpoint frames."""
+    base = {
+        "id": "1:1",
+        "name": "Frame",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 375, "height": 600},
+        "children": [
+            {
+                "id": "same-id-across-breakpoints",
+                "name": "Title",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Hello",
+                "box": {"x": 20, "y": 100, "width": 335, "height": 40},
+                "style": {"fontSize": 32, "fontWeight": 700},
+            }
+        ],
+    }
+    tablet = {
+        "id": "2:1",
+        "name": "Tablet Frame",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 768, "height": 600},
+        "children": [
+            {
+                # Same id proves stable-id matching even when sibling index differs.
+                "id": "same-id-across-breakpoints",
+                "name": "Different Name",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Hello",
+                "box": {"x": 40, "y": 100, "width": 688, "height": 48},
+                "style": {"fontSize": 40, "fontWeight": 700},
+            }
+        ],
+    }
+    figma_root = {"id": "0:1", "name": "Page", "type": "PAGE", "children": [base, tablet]}
+    layout_ast = layout_engine.convert_figma_node(base).to_dict()
+    responsive_ast, report = responsive_composer.compose_responsive_ast(layout_ast, figma_root)
+
+    title = responsive_ast["root"]["children"][0]
+    assert "responsive_variants" in title
+    md_variants = title["responsive_variants"].get("md", [])
+    assert any("md:w-[688px]" == c for c in md_variants)
+    # The matching succeeded because the shared figma_id won over the different names.
+    assert report["matched_nodes"] >= 1
+
+
+def _wrap_frame(children: list, extra: dict | None = None) -> dict:
+    frame = {
+        "id": "1:1",
+        "name": "Tag List",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "layoutWrap": "WRAP",
+        "itemSpacing": 8,
+        "box": {"x": 0, "y": 0, "width": 375, "height": 200},
+        "children": children,
+    }
+    if extra:
+        frame.update(extra)
+    return frame
+
+
+def test_compose_responsive_ast_grid_for_wrap() -> None:
+    """When grid_for_wrap is enabled, wrapped frames are rendered as CSS Grid."""
+    base = {
+        "id": "1:0",
+        "name": "Mobile Tags",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 375, "height": 400},
+        "children": [_wrap_frame([
+            {"id": "1:2", "name": "Tag 1", "type": "FRAME", "visible": True, "box": {"x": 0, "y": 0, "width": 80, "height": 32}},
+            {"id": "1:3", "name": "Tag 2", "type": "FRAME", "visible": True, "box": {"x": 88, "y": 0, "width": 80, "height": 32}},
+        ])],
+    }
+    tablet = {
+        "id": "2:0",
+        "name": "Tablet Tags",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 0, "y": 0, "width": 768, "height": 400},
+        "children": [_wrap_frame([
+            {"id": "2:2", "name": "Tag 1", "type": "FRAME", "visible": True, "box": {"x": 0, "y": 0, "width": 80, "height": 32}},
+            {"id": "2:3", "name": "Tag 2", "type": "FRAME", "visible": True, "box": {"x": 92, "y": 0, "width": 80, "height": 32}},
+            {"id": "2:4", "name": "Tag 3", "type": "FRAME", "visible": True, "box": {"x": 184, "y": 0, "width": 80, "height": 32}},
+        ], {"id": "2:1", "itemSpacing": 12, "counterAxisCount": 3, "box": {"x": 0, "y": 0, "width": 768, "height": 200}})],
+    }
+    page = {"id": "0:1", "name": "Page", "type": "PAGE", "children": [base, tablet]}
+    layout_ast = layout_engine.convert_figma_node(base, config={"grid_for_wrap": True}).to_dict()
+    responsive_ast, report = responsive_composer.compose_responsive_ast(
+        layout_ast,
+        page,
+        config={"grid_for_wrap": True},
+    )
+
+    tags = responsive_ast["root"]["children"][0]
+    base_classes = tags["classes"]
+    assert "grid" in base_classes
+    assert "grid-cols-2" in base_classes
+    assert "flex-wrap" not in base_classes
+    md_variants = tags.get("responsive_variants", {}).get("md", [])
+    assert "md:grid-cols-3" in md_variants
+    assert "md:gap-[12px]" in md_variants
+
+
+def test_grid_for_wrap_disabled_keeps_flex_wrap() -> None:
+    """Without the grid_for_wrap flag, wrap frames keep the legacy flex-wrap layout."""
+    node = _wrap_frame([])
+    result = layout_engine.convert_figma_node(node).to_dict()
+    classes = result["root"]["classes"]
+    assert "flex" in classes
+    assert "flex-wrap" in classes
+    assert "grid" not in classes

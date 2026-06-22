@@ -214,3 +214,53 @@ def test_props_for_instance_uses_per_component_value_mapping() -> None:
     }
     props = registry_module.ComponentMapper.props_for_instance(mapping, {"Variant": "Secondary", "Size": "Large"})
     assert props == {"variant": "secondary", "size": "lg"}
+
+
+def test_extract_exports_and_props_reads_jsdoc_description(tmp_path: Path) -> None:
+    src = tmp_path / "ActionButton.tsx"
+    src.write_text(
+        '''/**
+ * Primary call-to-action button used for forms and dialogs.
+ * @tag action cta primary
+ */
+export function ActionButton(props: ActionButtonProps) {
+  return <button {...props} />;
+}
+
+interface ActionButtonProps {
+  variant: string;
+  size: string;
+}
+''',
+        encoding="utf-8",
+    )
+    info = registry_module._extract_exports_and_props(src)
+    assert info["exports"] == ["ActionButton"]
+    details = info["export_details"]
+    assert len(details) == 1
+    assert details[0][0] == "ActionButton"
+    assert "call-to-action" in details[0][2]
+    assert any("@tag action cta primary" in tag for tag in details[0][3])
+
+
+def test_scan_local_components_preserves_jsdoc_description(tmp_path: Path) -> None:
+    src = tmp_path / "ActionButton.tsx"
+    src.write_text(
+        '''/**
+ * Primary call-to-action button used for forms and dialogs.
+ */
+export function ActionButton(props: ActionButtonProps) {
+  return <button {...props} />;
+}
+
+interface ActionButtonProps {
+  variant: string;
+  size: string;
+}
+''',
+        encoding="utf-8",
+    )
+    local = registry_module._scan_local_components([tmp_path])
+    assert "actionbutton" in local
+    assert "call-to-action" in local["actionbutton"]["description"]
+    assert local["actionbutton"]["doc"] == local["actionbutton"]["description"]

@@ -250,9 +250,18 @@ def _apply_layout_adjustments(
         elif check_type == "snug_text":
             figma_width = check.get("figma_width")
             if figma_width:
-                # Prefer whitespace-nowrap if node looks like a single-line label.
-                if "whitespace-nowrap" not in classes and ("flex" in classes or "flex-row" in " ".join(classes)):
-                    classes.append("whitespace-nowrap")
+                has_fixed_width = any(c.startswith("w-") for c in classes)
+                has_whitespace_nowrap = "whitespace-nowrap" in classes
+                single_line_label = has_whitespace_nowrap or (
+                    "\n" not in (check.get("text") or "") and ("flex" in classes or "flex-row" in " ".join(classes))
+                )
+                if single_line_label:
+                    if "whitespace-nowrap" not in classes:
+                        classes.append("whitespace-nowrap")
+                    if "min-w-0" not in classes:
+                        classes.append("min-w-0")
+                elif has_fixed_width:
+                    _replace_size_class(classes, "w", int(round(figma_width)))
                 else:
                     _replace_size_class(classes, "max-w", int(round(figma_width)))
             adjustments.append({

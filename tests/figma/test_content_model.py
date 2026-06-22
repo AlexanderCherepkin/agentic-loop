@@ -89,6 +89,15 @@ def test_splits_ast_into_page_sections_and_data(tmp_path: Path) -> None:
     hero_section = next(s for s in cm["sections"] if s["name"] == "Hero")
     assert any(f["name"] == "heading" for f in hero_section["fields"])
     assert any(f["name"] == "image" for f in hero_section["fields"])
+    heading_field = next(f for f in hero_section["fields"] if f["name"] == "heading")
+    assert heading_field["type"] == "text"
+    assert heading_field["label"] == "Title"
+    assert heading_field["required"] is True
+    assert heading_field["role"] == "heading"
+    image_field = next(f for f in hero_section["fields"] if f["name"] == "image")
+    assert image_field["type"] == "image"
+    assert image_field["label"] == "Image"
+    assert image_field["required"] is False
 
     hero_file = tmp_path / "sections" / "Hero.tsx"
     features_file = tmp_path / "sections" / "Features.tsx"
@@ -240,3 +249,11 @@ def test_data_model_binding_in_section(tmp_path: Path) -> None:
     data_code = data_file.read_text(encoding="utf-8")
     assert "cardData" in data_code
     assert result.data["Features"]["cardData"] == [{"title": "Card A"}]
+
+    cm_file = tmp_path / "content_model.json"
+    cm = json.loads(cm_file.read_text(encoding="utf-8"))
+    features_section = next(s for s in cm["sections"] if s["name"] == "Features")
+    card_field = next(f for f in features_section["fields"] if f["name"] == "cardData")
+    assert card_field["type"] == "list"
+    assert card_field["label"] == "Card items"
+    assert card_field["role"].endswith("Data")

@@ -217,6 +217,43 @@ def _field_type_for_role(role: str) -> str:
     return "string"
 
 
+def _content_field_type(role: str) -> str:
+    if role == "ctaHref":
+        return "url"
+    if role == "image":
+        return "image"
+    if role.endswith("Data"):
+        return "list"
+    return "text"
+
+
+def _split_camel(name: str) -> str:
+    spaced = re.sub(r"([a-z])([A-Z])", r"\1 \2", name)
+    return re.sub(r"\s+", " ", spaced).strip().lower()
+
+
+def _content_field_label(role: str, prop: str) -> str:
+    labels = {
+        "heading": "Title",
+        "subtitle": "Subtitle",
+        "ctaText": "Call to action",
+        "ctaHref": "Link URL",
+        "image": "Image",
+        "text": "Text",
+    }
+    if role in labels:
+        return labels[role]
+    if role.endswith("Data"):
+        base = prop[:-4] if prop.endswith("Data") else role[:-4]
+        human = _split_camel(base)
+        return (human[0].upper() + human[1:] + " items") if human else "Items"
+    return prop
+
+
+def _content_field_required(role: str) -> bool:
+    return role in ("heading", "ctaText", "ctaHref")
+
+
 def _section_component_code(name: str, node: Dict[str, Any], imports: List[str], fields: List[Tuple[str, str]]) -> str:
     import_block = "\n".join(imports)
     if import_block:
@@ -383,17 +420,12 @@ def _build_content_model_json(sections: List[SectionModel]) -> Dict[str, Any]:
     for s in sections:
         fields: List[Dict[str, Any]] = []
         for prop, role in s.fields:
-            if role == "ctaHref":
-                ftype = "url"
-            elif role == "image":
-                ftype = "image"
-            else:
-                ftype = "text"
             fields.append({
                 "name": prop,
-                "type": ftype,
-                "label": prop,
-                "required": role == "heading",
+                "type": _content_field_type(role),
+                "label": _content_field_label(role, prop),
+                "required": _content_field_required(role),
+                "role": role,
             })
         section_entries.append({
             "name": s.name,

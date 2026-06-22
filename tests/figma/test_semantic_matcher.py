@@ -139,3 +139,31 @@ def test_save_and_load_index(tmp_path: Path) -> None:
     loaded = matcher_module.SemanticIndex.load(path)
     assert len(loaded.components) == 1
     assert loaded.components[0]["key"] == "Button"
+
+
+def test_semantic_index_matches_component_by_jsdoc_description() -> None:
+    registry = {
+        "local_components": {
+            "ActionButton": {
+                "export_name": "ActionButton",
+                "file_path": "src/components/ui/ActionButton.tsx",
+                "description": "Primary call-to-action button for forms and dialogs",
+                "doc": "Primary call-to-action button for forms and dialogs",
+                "tags": ["@tag action cta primary"],
+                "props": {"variant": "string", "size": "string"},
+            }
+        }
+    }
+    index = matcher_module.SemanticIndex.from_component_registry(registry)
+    figma_entry = {
+        "name": "Action Button",
+        "pascal_name": "ActionButton",
+        "description": "Main call-to-action button for forms",
+        "variant_properties": {},
+    }
+    match, score, reason = index.match_component(figma_entry, threshold=0.4)
+    assert match is not None
+    assert match["entry"]["export_name"] == "ActionButton"
+    assert score >= 0.4
+    # Description/doc field must contribute to the reason or the overall match.
+    assert "description" in reason or "doc" in reason or "name" in reason

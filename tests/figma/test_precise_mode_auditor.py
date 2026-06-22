@@ -64,7 +64,9 @@ def test_ready_design_returns_ready() -> None:
     result = auditor.audit()
     assert result["status"] == "ready"
     assert result["next_phase_hint"] == "continue"
-    assert result["score"] >= 0.85
+    assert result["score"] >= 0.90
+    assert result["metrics"]["threshold_ready"] == 0.90
+    assert result["metrics"]["threshold_cleanup"] == 0.80
     failed_checks = [c["check_id"] for c in result["checks"] if not c["passed"]]
     assert failed_checks == []
 
@@ -164,6 +166,88 @@ def test_audit_returns_expected_report_keys() -> None:
         "auto_fixable",
         "requires_designer",
         "next_phase_hint",
+        "metrics",
     }
+    assert "threshold_ready" in result["metrics"]
+    assert "threshold_cleanup" in result["metrics"]
+    assert result["metrics"]["total_checks"] == 8
     assert isinstance(result["checks"], list)
     assert len(result["checks"]) == 8
+
+
+def test_auto_width_text_is_considered_snug() -> None:
+    root = _make_node(
+        "1:1",
+        "Desktop",
+        "FRAME",
+        box={"x": 0, "y": 0, "width": 1440, "height": 900},
+        layoutMode="VERTICAL",
+        children=[
+            _make_node(
+                "2:1",
+                "Loose",
+                "TEXT",
+                characters="Hi",
+                fontSize=16,
+                textAutoResize="WIDTH_AND_HEIGHT",
+                box={"x": 0, "y": 0, "width": 400, "height": 80},
+            ),
+        ],
+    )
+    auditor = auditor_module.PreciseModeAuditor(root)
+    result = auditor.audit()
+    snug = next(c for c in result["checks"] if c["check_id"] == "snug_text")
+    assert snug["passed"]
+
+
+def test_content_box_within_tolerance_is_snug() -> None:
+    root = _make_node(
+        "1:1",
+        "Desktop",
+        "FRAME",
+        box={"x": 0, "y": 0, "width": 1440, "height": 900},
+        layoutMode="VERTICAL",
+        children=[
+            _make_node(
+                "2:1",
+                "Tight",
+                "TEXT",
+                characters="Hi",
+                fontSize=16,
+                textAutoResize="NONE",
+                box={"x": 0, "y": 0, "width": 34, "height": 22},
+                boundingBox={"x": 0, "y": 0, "width": 30, "height": 18},
+            ),
+        ],
+    )
+    auditor = auditor_module.PreciseModeAuditor(root)
+    result = auditor.audit()
+    snug = next(c for c in result["checks"] if c["check_id"] == "snug_text")
+    assert snug["passed"]
+
+
+def test_fixed_width_text_with_loose_content_box_is_flagged() -> None:
+    root = _make_node(
+        "1:1",
+        "Desktop",
+        "FRAME",
+        box={"x": 0, "y": 0, "width": 1440, "height": 900},
+        layoutMode="VERTICAL",
+        children=[
+            _make_node(
+                "2:1",
+                "Loose",
+                "TEXT",
+                characters="Hi",
+                fontSize=16,
+                textAutoResize="NONE",
+                box={"x": 0, "y": 0, "width": 400, "height": 80},
+                boundingBox={"x": 0, "y": 0, "width": 40, "height": 18},
+            ),
+        ],
+    )
+    auditor = auditor_module.PreciseModeAuditor(root)
+    result = auditor.audit()
+    snug = next(c for c in result["checks"] if c["check_id"] == "snug_text")
+    assert not snug["passed"]
+    assert snug["details"][0]["reason"] == "bounding-box-exceeds-content-box"

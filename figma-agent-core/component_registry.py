@@ -56,6 +56,36 @@ def _normalize_prop_value(value: Any) -> str:
     return s.lower().replace(" ", "-")
 
 
+def _extract_jsdoc_blocks(text: str) -> List[Tuple[int, int, str]]:
+    """Return (start, end, content) for each /** ... */ block in source order."""
+    return [(m.start(), m.end(), m.group(1)) for m in re.finditer(r"/\*\*(.*?)\*/", text, re.DOTALL)]
+
+
+def _parse_jsdoc(content: str) -> Tuple[str, List[str]]:
+    """Extract plain description and @tags from a JSDoc/TSDoc block."""
+    lines = []
+    for raw in content.split("\n"):
+        line = re.sub(r"^\s*\*\s?", "", raw)
+        lines.append(line)
+    desc_lines = [line.strip() for line in lines if line.strip() and not line.strip().startswith("@")]
+    tags = [line.strip() for line in lines if line.strip().startswith("@")]
+    description = " ".join(desc_lines)
+    return description, tags
+
+
+def _find_jsdoc_before(text: str, position: int, jsdocs: List[Tuple[int, int, str]]) -> Tuple[str, List[str]]:
+    """Return the JSDoc immediately preceding the given position, if any."""
+    best: Optional[Tuple[int, int, str]] = None
+    for start, end, content in jsdocs:
+        if end < position:
+            best = (start, end, content)
+        else:
+            break
+    if not best:
+        return "", []
+    return _parse_jsdoc(best[2])
+
+
 def _extract_exports_and_props(file_path: Path) -> Dict[str, Any]:
     """Lightweight scan of a React/TypeScript component file."""
     try:
@@ -63,12 +93,16 @@ def _extract_exports_and_props(file_path: Path) -> Dict[str, Any]:
     except Exception:
         return {}
 
-    exports: List[str] = []
+    jsdocs = _extract_jsdoc_blocks(text)
+
+    exports: List[Tuple[str, int]] = []
     for m in re.finditer(
         r"export\s+(?:default\s+)?(?:function|const|class)\s+(\w+)" r"|export\s+default\s+(\w+)\s*;?",
         text,
     ):
-        exports.append(m.group(1) or m.group(2))
+        name = m.group(1) or m.group(2)
+        description, tags = _find_jsdoc_before(text, m.start(), jsdocs)
+        exports.append((name, m.start(), description, tags))
 
     props: Dict[str, str] = {}
     for m in re.finditer(r"interface\s+(\w+)Props\s*\{([^}]*)\}", text, re.DOTALL):
@@ -78,7 +112,11 @@ def _extract_exports_and_props(file_path: Path) -> Dict[str, Any]:
             if prop_match:
                 props[prop_match.group(1)] = prop_match.group(2).strip()
 
-    return {"exports": list(set(exports)), "props": props}
+    return {
+        "exports": list({e[0] for e in exports}),
+        "export_details": exports,
+        "props": props,
+    }
 
 
 def _scan_local_components(scan_dirs: List[Path]) -> Dict[str, Any]:
@@ -96,15 +134,18 @@ def _scan_local_components(scan_dirs: List[Path]) -> Dict[str, Any]:
                 info = _extract_exports_and_props(file_path)
                 if not info["exports"]:
                     continue
-                for export in info["exports"]:
-                    key = _normalize_component_name(export)
+                for name, _pos, description, tags in info.get("export_details", []):
+                    key = _normalize_component_name(name)
                     if not key:
                         continue
                     if key not in local:
                         local[key] = {
                             "file_path": str(file_path),
-                            "export_name": export,
+                            "export_name": name,
                             "props": info["props"],
+                            "description": description,
+                            "doc": description,
+                            "tags": tags,
                             "matches": [],
                         }
     return local

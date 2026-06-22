@@ -459,17 +459,12 @@ class FigmaLayoutEngine:
             return None
         style_id = (node.get("styles") or {}).get(kind)
         if style_id:
-            # Exact style binding first, then semantic matcher fallback.
-            for token_map in ("style_token_map", "semantic_token_map"):
-                name = self.tokens.get(token_map, {}).get(style_id)
-                if name:
-                    return name
+            # Exact style binding only; no silent semantic renaming.
+            return self.tokens.get("style_token_map", {}).get(style_id)
         var_id = (node.get("boundVariables") or {}).get(kind)
         if var_id:
-            for token_map in ("variable_token_map", "semantic_token_map"):
-                name = self.tokens.get(token_map, {}).get(var_id)
-                if name:
-                    return name
+            # Exact variable binding only; no silent semantic renaming.
+            return self.tokens.get("variable_token_map", {}).get(var_id)
         return None
 
     def _class_for_color(self, prefix: str, hex_color: Optional[str], node: Optional[Dict[str, Any]] = None, kind: str = "fill") -> Optional[str]:
@@ -713,6 +708,10 @@ class FigmaLayoutEngine:
         """Heuristic: if Figma text box is wider than its content, constrain width."""
         if not box:
             return
+        auto_resize = node.get("textAutoResize") or "NONE"
+        if auto_resize in ("WIDTH_AND_HEIGHT", "HEIGHT_AND_WIDTH", "WIDTH", "HEIGHT"):
+            # Figma controls at least one dimension; don't clamp the width with max-w.
+            return
         width = _px(box.get("width"))
         if not width or width <= 0:
             return
@@ -724,6 +723,8 @@ class FigmaLayoutEngine:
         has_newline = "\n" in text
         if is_horizontal and not has_newline:
             tw_node.add_class("whitespace-nowrap")
+            # Ensure the text can shrink inside a flex container instead of overflowing.
+            tw_node.add_class("min-w-0")
             return
         # otherwise cap max width to Figma bbox
         tw_node.add_class(f"max-w-[{int(round(width))}px]")
@@ -880,6 +881,17 @@ class FigmaLayoutEngine:
         elif lsv == "HUG":
             height_behavior = "auto"
 
+        # Text auto-resize overrides fixed sizing so the DOM owns text dimensions.
+        if node and node.get("type") == "TEXT":
+            auto_resize = node.get("textAutoResize") or "NONE"
+            if auto_resize in ("WIDTH_AND_HEIGHT", "HEIGHT_AND_WIDTH"):
+                width_behavior = "auto"
+                height_behavior = "auto"
+            elif auto_resize == "HEIGHT":
+                height_behavior = "auto"
+            elif auto_resize == "WIDTH":
+                width_behavior = "auto"
+
         if width_behavior == "full":
             tw_node.add_class("w-full")
         elif width_behavior == "auto":
@@ -933,17 +945,22 @@ class FigmaLayoutEngine:
         if not layout_mode:
             return
 
-        tw_node.add_class("flex")
-        if layout_mode == "VERTICAL":
-            tw_node.add_class("flex-col")
-        else:
-            tw_node.add_class("flex-row")
-
         is_wrap = node.get("layoutWrap") == "WRAP"
-        spacing_mode = node.get("spacingMode")
-        if is_wrap:
-            tw_node.add_class("flex-wrap")
+        use_grid = self.config.get("grid_for_wrap") and is_wrap
+        if use_grid:
+            tw_node.add_class("grid")
+            cols = node.get("counterAxisCount") or self.config.get("grid_wrap_columns", 2)
+            tw_node.add_class(f"grid-cols-{cols}")
+        else:
+            tw_node.add_class("flex")
+            if layout_mode == "VERTICAL":
+                tw_node.add_class("flex-col")
+            else:
+                tw_node.add_class("flex-row")
+            if is_wrap:
+                tw_node.add_class("flex-wrap")
 
+        spacing_mode = node.get("spacingMode")
         spacing = _px(node.get("itemSpacing"))
         if spacing_mode == "SPACE_BETWEEN":
             tw_node.add_class("justify-between")

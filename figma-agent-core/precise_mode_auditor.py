@@ -99,10 +99,10 @@ class PreciseModeAuditor:
         critical_count = sum(1 for c in self.checks if not c.passed and c.severity == "critical")
         status = "ready"
         hint = "continue"
-        if score < 0.70 or critical_count > 0:
+        if score < 0.80 or critical_count > 0:
             status = "not_ready"
             hint = "halt_for_cleanup"
-        elif score < 0.85:
+        elif score < 0.90:
             status = "needs_cleanup"
             hint = "warn_and_continue"
 
@@ -119,6 +119,8 @@ class PreciseModeAuditor:
                     "suggestion": c.suggestion,
                 })
 
+        warning_count = sum(1 for c in self.checks if not c.passed and c.severity == "warning")
+
         return {
             "score": round(score, 3),
             "status": status,
@@ -127,6 +129,15 @@ class PreciseModeAuditor:
             "auto_fixable": auto_fixable,
             "requires_designer": requires_designer,
             "next_phase_hint": hint,
+            "metrics": {
+                "raw_score": score,
+                "threshold_ready": 0.90,
+                "threshold_cleanup": 0.80,
+                "critical_count": critical_count,
+                "warning_count": warning_count,
+                "passed_checks": sum(1 for c in self.checks if c.passed),
+                "total_checks": len(self.checks),
+            },
         }
 
     def _check_to_dict(self, c: CheckResult) -> Dict[str, Any]:
@@ -237,17 +248,46 @@ class PreciseModeAuditor:
             chars = n.get("characters", "")
             if not chars:
                 continue
+            auto_resize = n.get("textAutoResize")
+            if auto_resize in ("WIDTH_AND_HEIGHT", "HEIGHT_AND_WIDTH"):
+                # Figma is auto-sizing this text; treat as snug.
+                continue
             box = n.get("box") or n.get("absoluteBoundingBox")
             if not box:
                 continue
             bw = _px(box.get("width")) or 0
             bh = _px(box.get("height")) or 0
-            # Approximate text size using characters and font size as a heuristic
-            font_size = _px(n.get("fontSize")) or _px((n.get("style") or {}).get("fontSize")) or 16
-            # Estimate width with a conservative multiplier; this is intentionally approximate
-            est_width = len(chars) * font_size * 0.55
-            est_height = font_size * (1 + chars.count("\n"))
-            if bw > est_width + 12 or bh > est_height + 4:
+            # Figma sometimes exposes a tighter text content box; use it when available.
+            content_box = n.get("boundingBox")
+            if content_box:
+                cw = _px(content_box.get("width"))
+                ch = _px(content_box.get("height"))
+                if cw and ch and (bw > cw + 4 or bh > ch + 4):
+                    loose.append({
+                        "id": n.get("id"),
+                        "name": n.get("name"),
+                        "box_width": bw,
+                        "box_height": bh,
+                        "content_width": round(cw, 1),
+                        "content_height": round(ch, 1),
+                        "reason": "bounding-box-exceeds-content-box",
+                    })
+                    continue
+                if cw and ch:
+                    # Content box is available and fits; no need for heuristic.
+                    continue
+            style = n.get("style") or {}
+            font_size = _px(n.get("fontSize")) or _px(style.get("fontSize")) or 16
+            weight = _px(style.get("fontWeight")) or 400
+            lines = chars.split("\n") or [chars]
+            max_line_len = max(len(line) for line in lines)
+            # Per-character width adjusted by weight; 0.6 is a conservative average for UI fonts.
+            char_width = 0.65 if weight >= 700 else 0.6
+            est_width = max_line_len * font_size * char_width
+            est_height = font_size * len(lines) * 1.2
+            tolerance_w = max(16, font_size * 1.5)
+            tolerance_h = max(8, font_size * 0.75)
+            if bw > est_width + tolerance_w or bh > est_height + tolerance_h:
                 loose.append({
                     "id": n.get("id"),
                     "name": n.get("name"),
@@ -255,17 +295,18 @@ class PreciseModeAuditor:
                     "box_height": bh,
                     "estimated_text_width": round(est_width, 1),
                     "estimated_text_height": round(est_height, 1),
+                    "reason": "heuristic-bounding-box",
                 })
         ratio = (len(texts) - len(loose)) / len(texts)
-        passed = ratio >= 0.85
-        severity = "critical" if ratio < 0.70 else ("warning" if ratio < 0.85 else "info")
+        passed = ratio >= 0.90
+        severity = "critical" if ratio < 0.75 else ("warning" if ratio < 0.90 else "info")
         return CheckResult(
             check_id="snug_text",
             passed=passed,
             severity=severity,
             summary=f"Snug text boxes: {len(texts) - len(loose)}/{len(texts)} ({round(ratio * 100)}%)",
             details=loose[:20],
-            suggestion="Resize text bounding boxes to tightly fit their content. Avoid wide boxes that cause unintended line breaks.",
+            suggestion="Resize text bounding boxes to tightly fit their content. Use Figma's 'Auto Width/Height' text resizing or match the bounding box to the text content box.",
         )
 
     def _check_overlaps(self) -> CheckResult:

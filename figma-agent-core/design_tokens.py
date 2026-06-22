@@ -189,8 +189,6 @@ class TokenRegistry:
     text_color_by_hex: Dict[str, str] = field(default_factory=dict)
     style_token_map: Dict[str, str] = field(default_factory=dict)
     variable_token_map: Dict[str, str] = field(default_factory=dict)
-    semantic_token_map: Dict[str, str] = field(default_factory=dict)
-    semantic_match_scores: Dict[str, float] = field(default_factory=dict)
     exact_token_paths: List[str] = field(default_factory=list)
 
     def to_config_map(self) -> Dict[str, Any]:
@@ -794,73 +792,7 @@ class FigmaTokenExtractor:
         registry.font_weights = font_weights
         registry.line_heights = line_height_tokens
 
-        # 3. Semantic matcher fallback (only for IDs not already matched exactly).
-        registry.semantic_token_map, registry.semantic_match_scores = self._build_semantic_token_map(registry.colors)
-        for sid, name in self._build_style_token_map(registry.colors).items():
-            if sid not in registry.style_token_map:
-                registry.style_token_map[sid] = name
-        for vid, name in self._build_variable_token_map(registry.colors).items():
-            if vid not in registry.variable_token_map:
-                registry.variable_token_map[vid] = name
-
         return registry
-
-    def _build_semantic_token_map(
-        self,
-        colors: Dict[str, ColorToken],
-    ) -> Tuple[Dict[str, str], Dict[str, float]]:
-        """Map Figma variable/style IDs to existing semantic tokens using names + descriptions."""
-        mapping: Dict[str, str] = {}
-        scores: Dict[str, float] = {}
-        if not colors:
-            return mapping, scores
-        try:
-            from semantic_matcher import SemanticIndex, SemanticMatcher
-
-            index = SemanticIndex.from_token_registry({"colors": colors})
-            matcher = SemanticMatcher(index, threshold=0.5)
-        except Exception:
-            return mapping, scores
-
-        for vid, meta in {**self.variables_map, **self.styles_map}.items():
-            name = meta.get("name")
-            if not name:
-                continue
-            description = meta.get("description", "")
-            contexts = " ".join(meta.get("contexts", []))
-            existing, score, _ = matcher.find_token(name, description, contexts)
-            if existing and existing in colors:
-                mapping[vid] = existing
-                scores[vid] = score
-        return mapping, scores
-
-    def _build_style_token_map(self, colors: Dict[str, ColorToken]) -> Dict[str, str]:
-        mapping: Dict[str, str] = {}
-        for sid, meta in self.styles_map.items():
-            name = meta.get("name")
-            if not name:
-                continue
-            sem = _semantic_name_from_style(name)
-            if sem and sem in colors:
-                mapping[sid] = sem
-            kebab = _safe_kebab(name)
-            if kebab in colors and sid not in mapping:
-                mapping[sid] = kebab
-        return mapping
-
-    def _build_variable_token_map(self, colors: Dict[str, ColorToken]) -> Dict[str, str]:
-        mapping: Dict[str, str] = {}
-        for vid, meta in self.variables_map.items():
-            name = meta.get("name")
-            if not name:
-                continue
-            sem = _semantic_name_from_style(name)
-            if sem and sem in colors:
-                mapping[vid] = sem
-            kebab = _safe_kebab(name)
-            if kebab in colors and vid not in mapping:
-                mapping[vid] = kebab
-        return mapping
 
 
 def _set_nested(obj: Dict[str, Any], path: List[str], value: Any) -> None:
@@ -975,8 +907,6 @@ def save_registry(registry: TokenRegistry, output_path: str) -> None:
         "text_color_by_hex": registry.text_color_by_hex,
         "style_token_map": registry.style_token_map,
         "variable_token_map": registry.variable_token_map,
-        "semantic_token_map": registry.semantic_token_map,
-        "semantic_match_scores": registry.semantic_match_scores,
         "exact_token_paths": registry.exact_token_paths,
     }
     path = Path(output_path)

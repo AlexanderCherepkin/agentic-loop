@@ -104,10 +104,15 @@ class SemanticIndex:
     def from_component_registry(cls, registry: Dict[str, Any]) -> "SemanticIndex":
         components: List[Dict[str, Any]] = []
         for eid, entry in registry.get("local_components", {}).items():
+            description = entry.get("description") or entry.get("doc", "")
+            tags = " ".join(entry.get("tags", []))
             features = {
                 "export_name": entry.get("export_name", ""),
                 "name": entry.get("export_name", ""),
                 "file_path": entry.get("file_path", ""),
+                "description": description,
+                "doc": description,
+                "tags": tags,
                 "props": " ".join(entry.get("props", {}).keys()),
             }
             components.append({"key": eid, "features": features, "entry": entry})

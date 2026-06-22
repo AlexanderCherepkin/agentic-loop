@@ -737,6 +737,21 @@ def test_token_registry_maps_font_tokens() -> None:
     assert "leading-normal" in text.classes
 
 
+def test_no_semantic_token_fallback_in_layout_engine() -> None:
+    """A bound style/variable ID must only be resolved through exact maps, never the semantic map."""
+    tokens = {
+        "style_token_map": {},
+        "variable_token_map": {},
+        "semantic_token_map": {"v-orphan": "primary", "s-orphan": "primary"},
+        "color_by_hex": {},
+    }
+    engine = layout_engine.FigmaLayoutEngine(config={"tokens": tokens})
+    fill_node = {"boundVariables": {"fill": "v-orphan"}}
+    stroke_node = {"styles": {"stroke": "s-orphan"}}
+    assert engine._token_for_style_or_variable(fill_node, "fill") is None
+    assert engine._token_for_style_or_variable(stroke_node, "stroke") is None
+
+
 def test_complex_layout_with_tokens_emits_semantic_classes() -> None:
     data = _load_fixture("complex_layout.json")
     result = layout_engine.convert_figma_node(data, config={"tokens": _build_token_registry()})
@@ -806,6 +821,88 @@ def test_text_node_snug_fit_vertical_parent() -> None:
     }
     result = layout_engine.convert_figma_node(node)
     assert "max-w-[200px]" in result.root.children[0].classes
+
+
+def test_text_node_horizontal_parent_gets_min_w_0() -> None:
+    node = {
+        "id": "100:1",
+        "name": "Row",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "box": {"x": 0, "y": 0, "width": 300, "height": 40},
+        "children": [
+            {
+                "id": "200:1",
+                "name": "Label",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Label",
+                "box": {"x": 0, "y": 0, "width": 120, "height": 24},
+                "style": {"fontFamily": "Inter", "fontSize": 16, "fontWeight": 400},
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.children[0].classes
+    assert "whitespace-nowrap" in classes
+    assert "min-w-0" in classes
+
+
+def test_text_node_auto_resize_width_skips_max_w() -> None:
+    node = {
+        "id": "100:3",
+        "name": "Auto",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "box": {"x": 0, "y": 0, "width": 300, "height": 200},
+        "children": [
+            {
+                "id": "200:3",
+                "name": "Label",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Auto label",
+                "textAutoResize": "WIDTH_AND_HEIGHT",
+                "box": {"x": 0, "y": 0, "width": 200, "height": 48},
+                "style": {"fontFamily": "Inter", "fontSize": 16, "fontWeight": 400},
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.children[0].classes
+    assert "w-auto" in classes
+    assert "h-auto" in classes
+    assert "max-w-[200px]" not in classes
+
+
+def test_text_node_height_auto_resize_keeps_fixed_width() -> None:
+    node = {
+        "id": "100:4",
+        "name": "AutoHeight",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "box": {"x": 0, "y": 0, "width": 300, "height": 200},
+        "children": [
+            {
+                "id": "200:4",
+                "name": "Label",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Fixed width auto height",
+                "textAutoResize": "HEIGHT",
+                "box": {"x": 0, "y": 0, "width": 200, "height": 48},
+                "style": {"fontFamily": "Inter", "fontSize": 16, "fontWeight": 400},
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    classes = result.root.children[0].classes
+    assert "w-[200px]" in classes
+    assert "h-auto" in classes
+    assert "max-w-[200px]" not in classes
 
 
 def test_layout_sizing_fill_emits_w_full() -> None:

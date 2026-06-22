@@ -127,21 +127,55 @@ def _walk_ast_with_index(
     depth: int = 0,
     sibling_index: int = 0,
 ):
-    """Обходит AST-ноды с тройкой (name.lower(), depth, sibling_index)."""
+    """Обходит AST-ноды с тройкой (depth, sibling_index) для резервного сопоставления по имени."""
     yield node, depth, sibling_index
     for idx, child in enumerate(node.get("children", [])):
         yield from _walk_ast_with_index(child, depth + 1, idx)
 
 
-def _build_match_index(ast_root: Dict[str, Any]) -> Dict[Tuple[str, int, int], Dict[str, Any]]:
-    index: Dict[Tuple[str, int, int], Dict[str, Any]] = {}
+def _id_key(node: Dict[str, Any]) -> Optional[Tuple[str, Any]]:
+    figma_id = node.get("figma_id")
+    return ("id", figma_id) if figma_id else None
+
+
+def _name_key(node: Dict[str, Any], depth: int, sibling_index: int) -> Tuple[Any, ...]:
+    name = (node.get("figma_name") or node.get("name") or "").lower()
+    return ("name", name, depth, sibling_index)
+
+
+def _match_key(node: Dict[str, Any], depth: int, sibling_index: int) -> Tuple[Any, ...]:
+    """Prefer stable figma_id; fall back to (name, depth, sibling_index)."""
+    return _id_key(node) or _name_key(node, depth, sibling_index)
+
+
+def _build_match_index(ast_root: Dict[str, Any]) -> Dict[Tuple[Any, ...], Dict[str, Any]]:
+    index: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
     for node, depth, sibling_index in _walk_ast_with_index(ast_root):
-        name = (node.get("figma_name") or node.get("name") or "").lower()
-        key = (name, depth, sibling_index)
+        key = _match_key(node, depth, sibling_index)
         if key in index:
             continue
         index[key] = node
+        # Index both id and name keys when an id is present so lookups can fall back.
+        id_key = _id_key(node)
+        name_key = _name_key(node, depth, sibling_index)
+        if id_key and id_key != key:
+            index[id_key] = node
+        if name_key and name_key != key:
+            index[name_key] = node
     return index
+
+
+def _lookup_node(
+    index: Dict[Tuple[Any, ...], Dict[str, Any]],
+    node: Dict[str, Any],
+    depth: int,
+    sibling_index: int,
+) -> Optional[Dict[str, Any]]:
+    """Try stable id match first, then fall back to structural name key."""
+    id_key = _id_key(node)
+    if id_key and id_key in index:
+        return index[id_key]
+    return index.get(_name_key(node, depth, sibling_index))
 
 
 def _diff_classes(base_classes: List[str], variant_classes: List[str]) -> List[str]:
@@ -247,9 +281,7 @@ def compose_responsive_ast(
         variant_root = result.root.to_dict()
 
         for variant_node, depth, sibling_index in _walk_ast_with_index(variant_root):
-            name = (variant_node.get("figma_name") or variant_node.get("name") or "").lower()
-            key = (name, depth, sibling_index)
-            base_node = base_match_index.get(key)
+            base_node = _lookup_node(base_match_index, variant_node, depth, sibling_index)
             if not base_node:
                 report["warnings"].append({
                     "type": "unmatched_node",
