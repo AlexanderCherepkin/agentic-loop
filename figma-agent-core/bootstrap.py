@@ -240,6 +240,12 @@ class FigmaExtractor:
             if node.get("characterStyleOverrides"):
                 cleaned["characterStyleOverrides"] = list(node["characterStyleOverrides"])
 
+        # Preserve semantic metadata from Figma
+        if node.get("description"):
+            cleaned["description"] = node["description"]
+        if node.get("annotations"):
+            cleaned["annotations"] = node["annotations"]
+
         # Preserve interaction data from Figma prototype
         if node.get("reactions"):
             cleaned["reactions"] = node["reactions"]

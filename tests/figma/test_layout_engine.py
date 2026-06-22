@@ -681,6 +681,40 @@ def test_token_registry_maps_background_and_text_colors() -> None:
     assert "text-foreground" in title.classes
 
 
+def test_exact_variable_tokens_emit_dashed_classes() -> None:
+    tokens = {
+        "variable_token_map": {"v-primary": "colors.primary.500"},
+        "color_by_hex": {},
+    }
+    node = {
+        "id": "200:1",
+        "name": "Card",
+        "type": "FRAME",
+        "visible": True,
+        "fills": [{"type": "SOLID", "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+        "boundVariables": {"fill": "v-primary"},
+    }
+    result = layout_engine.convert_figma_node(node, config={"tokens": tokens})
+    assert "bg-colors-primary-500" in result.root.classes
+
+
+def test_exact_style_tokens_emit_dashed_classes() -> None:
+    tokens = {
+        "style_token_map": {"s-border": "colors.border.subtle"},
+        "color_by_hex": {},
+    }
+    node = {
+        "id": "200:2",
+        "name": "Divider",
+        "type": "FRAME",
+        "visible": True,
+        "fills": [{"type": "SOLID", "color": {"r": 0.9, "g": 0.92, "b": 0.95, "a": 1}}],
+        "styles": {"fill": "s-border"},
+    }
+    result = layout_engine.convert_figma_node(node, config={"tokens": tokens})
+    assert "bg-colors-border-subtle" in result.root.classes
+
+
 def test_token_registry_maps_font_tokens() -> None:
     node = {
         "id": "210:1",
@@ -711,6 +745,67 @@ def test_complex_layout_with_tokens_emits_semantic_classes() -> None:
     assert "bg-background" in card.classes
     badge = card.children[0]
     assert "bg-destructive" in badge.classes
+
+
+def test_layout_node_records_bbox() -> None:
+    node = {
+        "id": "200:1",
+        "name": "Card",
+        "type": "FRAME",
+        "visible": True,
+        "box": {"x": 10, "y": 20, "width": 300, "height": 150},
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert result.root.bbox == {"x": 10, "y": 20, "width": 300, "height": 150}
+    assert result.root.to_dict()["bbox"] == {"x": 10, "y": 20, "width": 300, "height": 150}
+
+
+def test_text_node_snug_fit_horizontal_parent() -> None:
+    node = {
+        "id": "100:1",
+        "name": "Row",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "HORIZONTAL",
+        "box": {"x": 0, "y": 0, "width": 300, "height": 40},
+        "children": [
+            {
+                "id": "200:1",
+                "name": "Label",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Label",
+                "box": {"x": 0, "y": 0, "width": 120, "height": 24},
+                "style": {"fontFamily": "Inter", "fontSize": 16, "fontWeight": 400},
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "whitespace-nowrap" in result.root.children[0].classes
+
+
+def test_text_node_snug_fit_vertical_parent() -> None:
+    node = {
+        "id": "100:2",
+        "name": "Column",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "box": {"x": 0, "y": 0, "width": 300, "height": 200},
+        "children": [
+            {
+                "id": "200:2",
+                "name": "Paragraph",
+                "type": "TEXT",
+                "visible": True,
+                "characters": "Paragraph",
+                "box": {"x": 0, "y": 0, "width": 200, "height": 48},
+                "style": {"fontFamily": "Inter", "fontSize": 16, "fontWeight": 400},
+            }
+        ],
+    }
+    result = layout_engine.convert_figma_node(node)
+    assert "max-w-[200px]" in result.root.children[0].classes
 
 
 def test_layout_sizing_fill_emits_w_full() -> None:
@@ -1052,3 +1147,59 @@ def test_spacing_mode_space_between_ignores_item_spacing_gap() -> None:
     assert "justify-between" in classes
     assert "gap-[32px]" not in classes
     assert "justify-center" not in classes
+
+
+def _find_node_by_figma_id(root, node_id: str):
+    if root.figma_id == node_id:
+        return root
+    for child in root.children:
+        found = _find_node_by_figma_id(child, node_id)
+        if found:
+            return found
+    return None
+
+
+def test_data_models_annotate_binding() -> None:
+    data_models = {
+        "version": "1",
+        "models": [
+            {
+                "name": "Card",
+                "occurrence_ids": ["card-1"],
+                "field_map": {"title": "title", "imageUrl": "imageUrl"},
+                "sample_data": [{"title": "Card A"}],
+            }
+        ],
+    }
+    root = {
+        "id": "page",
+        "name": "Page",
+        "type": "FRAME",
+        "visible": True,
+        "children": [
+            {
+                "id": "card-1",
+                "name": "Card 1",
+                "type": "FRAME",
+                "visible": True,
+                "children": [
+                    {"id": "t1", "name": "Title", "type": "TEXT", "visible": True, "characters": "Card A"},
+                    {"id": "i1", "name": "Cover", "type": "IMAGE", "visible": True},
+                ],
+            },
+        ],
+    }
+    engine = layout_engine.FigmaLayoutEngine(config={"data_models": data_models})
+    result = engine.convert(root)
+    card = _find_node_by_figma_id(result.root, "card-1")
+    assert card is not None
+    assert card.data_model is not None
+    assert card.data_model["model"] == "Card"
+
+    title_node = card.children[0]
+    assert title_node.data_binding == {"model": "Card", "field": "title", "item": True}
+    assert title_node.text is None
+
+    image_node = card.children[1]
+    assert image_node.data_binding == {"model": "Card", "field": "imageUrl", "item": True}
+    assert image_node.src is None

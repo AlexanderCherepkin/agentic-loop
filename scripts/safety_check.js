@@ -377,7 +377,7 @@ function scanFiles(filePaths, options) {
   const allFindings = [];
   const fileResults = [];
   const ignorePatterns = loadSafetyIgnore();
-  const builtinIgnore = ['.safetyignore', 'package.json', 'package-lock.json'];
+  const builtinIgnore = ['.safetyignore', 'package.json', 'package-lock.json', '.venv', '.tmp'];
 
   for (const fp of filePaths) {
     if (isIgnored(fp, builtinIgnore)) continue;

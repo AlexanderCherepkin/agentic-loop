@@ -44,6 +44,9 @@ class FigmaMCPServer(MCPServer):
         self.register("figma_analyze", "Analyze the cached Figma structure and return tree summary",
                       s({"file?": "string"}),
                       self.figma_analyze)
+        self.register("figma_precise_mode_audit", "Run Builder.io-style Precise Mode readiness audit on the cached Figma structure",
+                      s({"file?": "string", "node_id?": "string", "target_viewport?": "string"}),
+                      self.figma_precise_mode_audit)
         self.register("figma_generate_spec", "Generate a technical assignment (spec.md) from the cached Figma structure",
                       s({"file?": "string", "node_id?": "string", "output?": "string"}),
                       self.figma_generate_spec)
@@ -56,7 +59,7 @@ class FigmaMCPServer(MCPServer):
                          "skip_assets?": "bool"}),
                       self.figma_generate_component)
         self.register("figma_build_component_registry", "Build a Figma Component Registry from a Figma document (COMPONENT_SET, COMPONENT, INSTANCE, variants, overrides, dependency DAG)",
-                      s({"file?": "string", "output?": "string", "node_id?": "string"}),
+                      s({"file?": "string", "output?": "string", "node_id?": "string", "scan_dirs?": "array"}),
                       self.figma_build_component_registry)
         self.register("figma_extract_components", "Extract reusable React components from the Tailwind AST",
                       s({"ast_file?": "string", "output_dir?": "string", "page_ast_output?": "string",
@@ -151,6 +154,18 @@ class FigmaMCPServer(MCPServer):
         args = ["--file", file]
         return self._run_core_script("analyzer.py", args)
 
+    def figma_precise_mode_audit(self, file: str = "figma_node.json", node_id: str = "", target_viewport: str = "") -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        args = ["--file", file]
+        if node_id:
+            args.extend(["--node-id", node_id])
+        if target_viewport:
+            args.extend(["--target-viewport", target_viewport])
+        args.extend(["--output", "precise_mode_report.json"])
+        return self._run_core_script("precise_mode_auditor.py", args)
+
     def figma_generate_spec(self, file: str = "figma_node.json", node_id: str = "", output: str = "spec.md") -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
@@ -190,13 +205,15 @@ class FigmaMCPServer(MCPServer):
             args.append("--skip-assets")
         return self._run_core_script("agent.py", args)
 
-    def figma_build_component_registry(self, file: str = "figma_node.json", output: str = "component_registry.json", node_id: str = "") -> dict[str, Any]:
+    def figma_build_component_registry(self, file: str = "figma_node.json", output: str = "component_registry.json", node_id: str = "", scan_dirs: list[str] | None = None) -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
             return degraded
         args = ["--file", file, "--output", output]
         if node_id:
             args.extend(["--node-id", node_id])
+        for d in scan_dirs or []:
+            args.extend(["--scan-dir", d])
         return self._run_core_script("component_registry.py", args)
 
     def figma_extract_components(self, ast_file: str = "layout_ast.json", output_dir: str = "src/app/components",

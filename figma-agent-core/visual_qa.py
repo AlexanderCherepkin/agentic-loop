@@ -46,6 +46,74 @@ FREEZE_CSS = """
 """
 
 
+def _rgba_to_hex(r: float, g: float, b: float, a: float = 1.0) -> str:
+    """Convert 0..1 Figma RGBA floats to an 8-digit or 6-digit hex string."""
+    rh = int(round(r * 255))
+    gh = int(round(g * 255))
+    bh = int(round(b * 255))
+    if a is not None and a < 1.0:
+        ah = int(round(a * 255))
+        return f"#{rh:02x}{gh:02x}{bh:02x}{ah:02x}"
+    return f"#{rh:02x}{gh:02x}{bh:02x}"
+
+
+def _parse_css_color(value: Optional[str]) -> Optional[str]:
+    """Normalize a CSS color string (rgb/rgba/hex) to 6-digit hex, ignoring alpha."""
+    if not value:
+        return None
+    value = value.strip().lower()
+    # hex
+    if value.startswith("#"):
+        v = value[1:]
+        if len(v) == 3:
+            v = "".join(c + c for c in v)
+        if len(v) in (6, 8):
+            try:
+                return f"#{v[:6]}"
+            except Exception:
+                return None
+        return None
+    # rgb(a)
+    m = re.match(r"rgba?\s*\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)", value)
+    if m:
+        try:
+            r = int(float(m.group(1)))
+            g = int(float(m.group(2)))
+            b = int(float(m.group(3)))
+            return f"#{r:02x}{g:02x}{b:02x}"
+        except Exception:
+            return None
+    return None
+
+
+def _figma_color_to_hex(color: Optional[Dict[str, Any]]) -> Optional[str]:
+    """Convert a Figma color dict to 6-digit hex."""
+    if not color or not isinstance(color, dict):
+        return None
+    try:
+        return _rgba_to_hex(float(color["r"]), float(color["g"]), float(color["b"]), float(color.get("a", 1.0)))
+    except Exception:
+        return None
+
+
+def _extract_figma_fill_color(node: Dict[str, Any]) -> Optional[str]:
+    """Extract the first visible SOLID fill color from a Figma node."""
+    fills = node.get("fills") or []
+    for fill in fills:
+        if fill.get("visible", True) and fill.get("type") == "SOLID":
+            return _figma_color_to_hex(fill.get("color"))
+    return None
+
+
+def _extract_figma_stroke_color(node: Dict[str, Any]) -> Optional[str]:
+    """Extract the first visible SOLID stroke color from a Figma node."""
+    strokes = node.get("strokes") or []
+    for stroke in strokes:
+        if stroke.get("visible", True) and stroke.get("type") == "SOLID":
+            return _figma_color_to_hex(stroke.get("color"))
+    return None
+
+
 def _sanitize_output_dir(output_dir: str, root_dir: Optional[str] = None) -> Path:
     target = Path(output_dir).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
@@ -105,6 +173,9 @@ class VisualQaReport:
     bbox_comparison: Dict[str, Any] = field(default_factory=dict)
     font_metrics: Dict[str, Any] = field(default_factory=dict)
     image_metrics: Dict[str, Any] = field(default_factory=dict)
+    pixel_metrics: Dict[str, Any] = field(default_factory=dict)
+    snug_text_checks: List[Dict[str, Any]] = field(default_factory=list)
+    color_metrics: Dict[str, Any] = field(default_factory=dict)
     discrepancies: List[str] = field(default_factory=list)
     metrics: Dict[str, Any] = field(default_factory=dict)
 
@@ -119,6 +190,9 @@ class VisualQaReport:
             "bbox_comparison": self.bbox_comparison,
             "font_metrics": self.font_metrics,
             "image_metrics": self.image_metrics,
+            "pixel_metrics": self.pixel_metrics,
+            "snug_text_checks": self.snug_text_checks,
+            "color_metrics": self.color_metrics,
             "discrepancies": self.discrepancies,
             "metrics": self.metrics,
         }
@@ -146,6 +220,7 @@ class VisualQAEngine:
         expected_nodes: Optional[List[Dict[str, Any]]] = None,
         figma_frame: Optional[Dict[str, Any]] = None,
         figma_bboxes: Optional[List[Dict[str, Any]]] = None,
+        figma_color_nodes: Optional[List[Dict[str, Any]]] = None,
     ) -> VisualQaReport:
         if not PLAYWRIGHT_AVAILABLE:
             return self._blocked("Playwright is not installed. Install with: pip install playwright && playwright install")
@@ -175,6 +250,7 @@ class VisualQAEngine:
         bbox_comparison: Dict[str, Any] = {}
         font_metrics: Dict[str, Any] = {}
         image_metrics: Dict[str, Any] = {}
+        color_metrics: Dict[str, Any] = {}
         diff_score: Optional[float] = None
 
         try:
@@ -199,10 +275,13 @@ class VisualQAEngine:
                 metrics["load_time_ms"] = int(round((time.time() - start_time) * 1000))
 
                 dom_assertions = self._run_dom_assertions(page, expected_nodes or [])
-                layout_checks = self._run_layout_checks(page, figma_bboxes=figma_bboxes)
+                layout_checks = self._run_layout_checks(page, figma_bboxes=figma_bboxes, figma_text_nodes=expected_nodes)
                 bbox_comparison = self._build_bbox_comparison(layout_checks)
-                font_metrics = self._collect_font_metrics(page)
+                pixel_metrics = self._build_pixel_metrics(layout_checks)
+                snug_text_checks = [c for c in layout_checks if c.get("type") == "snug_text"]
+                font_metrics = self._collect_font_metrics(page, figma_text_nodes=expected_nodes)
                 image_metrics = self._collect_image_metrics(page)
+                color_metrics = self._collect_color_metrics(page, figma_color_nodes=figma_color_nodes or [])
 
                 if reference_screenshot_path and Path(reference_screenshot_path).exists():
                     diff_score = self._compute_diff(str(screenshot_path), reference_screenshot_path, discrepancies)
@@ -213,8 +292,9 @@ class VisualQAEngine:
 
         failed_assertions = [a for a in dom_assertions if not a.get("passed", False)]
         failed_layout = [c for c in layout_checks if not c.get("passed", False)]
+        failed_color = color_metrics.get("failed", 0) if isinstance(color_metrics, dict) else 0
         status = "passed"
-        if failed_assertions or failed_layout or discrepancies:
+        if failed_assertions or failed_layout or discrepancies or failed_color:
             status = "failed"
 
         self.report = VisualQaReport(
@@ -227,6 +307,9 @@ class VisualQAEngine:
             bbox_comparison=bbox_comparison,
             font_metrics=font_metrics,
             image_metrics=image_metrics,
+            pixel_metrics=pixel_metrics,
+            snug_text_checks=snug_text_checks,
+            color_metrics=color_metrics,
             discrepancies=discrepancies,
             metrics=metrics,
         )
@@ -321,6 +404,7 @@ class VisualQAEngine:
         self,
         page: Any,
         figma_bboxes: Optional[List[Dict[str, Any]]] = None,
+        figma_text_nodes: Optional[List[Dict[str, Any]]] = None,
     ) -> List[Dict[str, Any]]:
         checks: List[Dict[str, Any]] = []
         checks.extend(self._detect_overflow(page) or [])
@@ -328,6 +412,9 @@ class VisualQAEngine:
         checks.extend(self._detect_overlaps(page) or [])
         if figma_bboxes:
             checks.extend(self._compare_bboxes(page, figma_bboxes) or [])
+        if figma_text_nodes:
+            checks.extend(self._collect_font_metrics_checks(page, figma_text_nodes) or [])
+            checks.extend(self._detect_snug_text(page, figma_text_nodes) or [])
         return checks
 
     def _detect_overflow(self, page: Any) -> List[Dict[str, Any]]:
@@ -445,14 +532,27 @@ class VisualQAEngine:
             """
         )
 
-    def _compare_bboxes(
-        self,
-        page: Any,
-        figma_bboxes: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
-        page_bboxes = page.evaluate(
+    def _collect_page_bboxes(self, page: Any) -> List[Dict[str, Any]]:
+        """Collect all visible DOM bboxes, preferring elements with data-figma-id."""
+        return page.evaluate(
             """
             () => {
+                const all = document.querySelectorAll('[data-figma-id]');
+                if (all.length > 0) {
+                    return Array.from(all).map(el => {
+                        const style = window.getComputedStyle(el);
+                        const rect = el.getBoundingClientRect();
+                        return {
+                            tag: el.tagName.toLowerCase(),
+                            id: el.id || null,
+                            figma_id: el.dataset.figmaId || null,
+                            x: Math.round(rect.x),
+                            y: Math.round(rect.y),
+                            width: Math.round(rect.width),
+                            height: Math.round(rect.height),
+                        };
+                    }).filter(b => b.width > 0 && b.height > 0);
+                }
                 const structural = ['section', 'header', 'main', 'footer', 'article', 'div'];
                 const results = [];
                 for (const tag of structural) {
@@ -476,7 +576,16 @@ class VisualQAEngine:
                 return results;
             }
             """
-        )
+        ) or []
+
+    def _compare_bboxes(
+        self,
+        page: Any,
+        figma_bboxes: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        page_bboxes = self._collect_page_bboxes(page)
+        if not isinstance(page_bboxes, list):
+            page_bboxes = []
 
         checks: List[Dict[str, Any]] = []
         tolerance = self.bbox_tolerance_px
@@ -501,19 +610,29 @@ class VisualQAEngine:
                 continue
 
             page_box = candidates[0]
-            width_ok = abs(page_box["width"] - figma_box.get("width", 0)) <= tolerance
-            height_ok = abs(page_box["height"] - figma_box.get("height", 0)) <= tolerance
-            passed = width_ok and height_ok
+            dw = page_box["width"] - figma_box.get("width", 0)
+            dh = page_box["height"] - figma_box.get("height", 0)
+            dx = page_box["x"] - figma_box.get("x", 0)
+            dy = page_box["y"] - figma_box.get("y", 0)
+            width_ok = abs(dw) <= tolerance
+            height_ok = abs(dh) <= tolerance
+            position_ok = abs(dx) <= tolerance and abs(dy) <= tolerance
+            passed = width_ok and height_ok and position_ok
             check: Dict[str, Any] = {
                 "type": "bbox_mismatch",
                 "passed": passed,
                 "figma": figma_box,
                 "page": page_box,
+                "delta_x": dx,
+                "delta_y": dy,
+                "delta_width": dw,
+                "delta_height": dh,
             }
             if not passed:
                 check["discrepancy"] = (
-                    f"Size mismatch: Figma {figma_box.get('width')}x{figma_box.get('height')} "
-                    f"vs page {page_box['width']}x{page_box['height']}"
+                    f"Size/position mismatch: Figma {figma_box.get('x')},{figma_box.get('y')} "
+                    f"{figma_box.get('width')}x{figma_box.get('height')} "
+                    f"vs page {page_box['x']},{page_box['y']} {page_box['width']}x{page_box['height']}"
                 )
             checks.append(check)
         return checks
@@ -527,9 +646,165 @@ class VisualQAEngine:
             "checks": bbox_checks,
         }
 
-    def _collect_font_metrics(self, page: Any) -> Dict[str, Any]:
+    def _build_pixel_metrics(self, layout_checks: List[Dict[str, Any]]) -> Dict[str, Any]:
+        bbox_checks = [c for c in layout_checks if c.get("type") == "bbox_mismatch" and not c.get("passed", False)]
+        if not bbox_checks:
+            return {"total_drift_px": 0.0, "max_drift_px": 0.0, "mean_drift_px": 0.0, "failed_nodes": 0}
+        drift_per_node = [
+            abs(c.get("delta_x", 0))
+            + abs(c.get("delta_y", 0))
+            + abs(c.get("delta_width", 0))
+            + abs(c.get("delta_height", 0))
+            for c in bbox_checks
+        ]
+        return {
+            "total_drift_px": round(sum(drift_per_node), 2),
+            "max_drift_px": round(max(drift_per_node), 2),
+            "mean_drift_px": round(sum(drift_per_node) / len(drift_per_node), 2),
+            "failed_nodes": len(bbox_checks),
+        }
+
+    def _collect_font_metrics_checks(
+        self,
+        page: Any,
+        figma_text_nodes: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        figma_text_nodes = figma_text_nodes or []
+        by_id = {n.get("id"): n for n in figma_text_nodes if n.get("id")}
+
+        def parse_px(value: Optional[str]) -> Optional[float]:
+            if not value:
+                return None
+            try:
+                match = re.search(r"[0-9.]+(?:px)?", value)
+                if not match:
+                    return None
+                num = float(match.group().replace("px", ""))
+                if "rem" in value:
+                    num *= 16
+                return num
+            except Exception:
+                return None
+
+        def parse_weight(value: Optional[str]) -> Optional[int]:
+            if not value:
+                return None
+            try:
+                return int(float(value))
+            except Exception:
+                return None
+
         try:
-            return page.evaluate(
+            page_metrics = page.evaluate(
+                """
+                () => {
+                    const results = [];
+                    for (const el of document.querySelectorAll('[data-figma-id]')) {
+                        const style = window.getComputedStyle(el);
+                        results.push({
+                            figma_id: el.dataset.figmaId,
+                            font_family: style.fontFamily.split(',')[0].trim().replace(/["']/g, ''),
+                            font_size: style.fontSize,
+                            line_height: style.lineHeight,
+                            letter_spacing: style.letterSpacing,
+                            font_weight: style.fontWeight,
+                            x: Math.round(el.getBoundingClientRect().x),
+                            y: Math.round(el.getBoundingClientRect().y),
+                            width: Math.round(el.getBoundingClientRect().width),
+                            height: Math.round(el.getBoundingClientRect().height),
+                        });
+                    }
+                    return results;
+                }
+                """
+            )
+            if not isinstance(page_metrics, list):
+                return []
+            checks: List[Dict[str, Any]] = []
+            for page_metric in page_metrics:
+                fid = page_metric.get("figma_id")
+                figma_node = by_id.get(fid)
+                if not figma_node or not figma_node.get("is_text"):
+                    continue
+                style = figma_node.get("style", {})
+                figma_family = style.get("fontFamily")
+                figma_size = style.get("fontSize")
+                figma_line = style.get("lineHeightPx")
+                figma_ls = style.get("letterSpacing")
+                figma_weight = style.get("fontWeight")
+
+                mismatches: List[str] = []
+                if figma_family and page_metric.get("font_family") and figma_family.lower() not in page_metric["font_family"].lower():
+                    mismatches.append("family")
+                page_size = parse_px(page_metric.get("font_size"))
+                if figma_size is not None and page_size is not None and abs(page_size - float(figma_size)) > 1:
+                    mismatches.append("size")
+                page_weight = parse_weight(page_metric.get("font_weight"))
+                if figma_weight is not None and page_weight is not None and page_weight != int(figma_weight):
+                    mismatches.append("weight")
+                page_lh = parse_px(page_metric.get("line_height"))
+                if figma_line is not None and page_lh is not None and figma_size:
+                    figma_lh_ratio = round(float(figma_line) / float(figma_size), 3)
+                    page_lh_ratio = round(page_lh / page_size, 3) if page_size else 0
+                    if abs(page_lh_ratio - figma_lh_ratio) > 0.05:
+                        mismatches.append("line_height")
+                page_ls = parse_px(page_metric.get("letter_spacing"))
+                if figma_ls is not None and page_ls is not None and abs(page_ls - float(figma_ls)) > 0.5:
+                    mismatches.append("letter_spacing")
+
+                if mismatches:
+                    checks.append({
+                        "type": "font_mismatch",
+                        "passed": False,
+                        "figma_id": fid,
+                        "mismatches": mismatches,
+                        "page": page_metric,
+                        "figma": {
+                            "font_family": figma_family,
+                            "font_size": figma_size,
+                            "line_height_px": figma_line,
+                            "letter_spacing": figma_ls,
+                            "font_weight": figma_weight,
+                        },
+                    })
+            return checks
+        except Exception as e:
+            return [{"type": "font_mismatch", "passed": False, "error": str(e)}]
+
+    def _collect_font_metrics(
+        self,
+        page: Any,
+        figma_text_nodes: Optional[List[Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        figma_text_nodes = figma_text_nodes or []
+        by_id = {n.get("id"): n for n in figma_text_nodes if n.get("id")}
+
+        def parse_px(value: Optional[str]) -> Optional[float]:
+            if not value:
+                return None
+            try:
+                # handles '16px' or computed string values
+                match = re.search(r"[0-9.]+(?:px)?", value)
+                if not match:
+                    return None
+                num = float(match.group().replace("px", ""))
+                if "rem" in value:
+                    # assume root 16px; best-effort
+                    num *= 16
+                return num
+            except Exception:
+                return None
+
+        def parse_weight(value: Optional[str]) -> Optional[int]:
+            if not value:
+                return None
+            try:
+                return int(float(value))
+            except Exception:
+                return None
+
+        try:
+            summary = page.evaluate(
                 """
                 () => {
                     const families = new Set();
@@ -547,12 +822,124 @@ class VisualQAEngine:
                 }
                 """
             )
+            if not isinstance(summary, dict):
+                return {"error": "font_metrics summary unavailable"}
+            per_node: List[Dict[str, Any]] = []
+            page_metrics = page.evaluate(
+                """
+                () => {
+                    const results = [];
+                    for (const el of document.querySelectorAll('[data-figma-id]')) {
+                        const style = window.getComputedStyle(el);
+                        results.push({
+                            figma_id: el.dataset.figmaId,
+                            font_family: style.fontFamily.split(',')[0].trim().replace(/["']/g, ''),
+                            font_size: style.fontSize,
+                            line_height: style.lineHeight,
+                            letter_spacing: style.letterSpacing,
+                            font_weight: style.fontWeight,
+                            x: Math.round(el.getBoundingClientRect().x),
+                            y: Math.round(el.getBoundingClientRect().y),
+                            width: Math.round(el.getBoundingClientRect().width),
+                            height: Math.round(el.getBoundingClientRect().height),
+                        });
+                    }
+                    return results;
+                }
+                """
+            )
+            if not isinstance(page_metrics, list):
+                summary["per_node"] = []
+                return summary
+            for page_metric in page_metrics:
+                fid = page_metric.get("figma_id")
+                figma_node = by_id.get(fid)
+                if not figma_node or not figma_node.get("is_text"):
+                    continue
+                style = figma_node.get("style", {})
+                figma_family = style.get("fontFamily")
+                figma_size = style.get("fontSize")
+                figma_line = style.get("lineHeightPx")
+                figma_ls = style.get("letterSpacing")
+                figma_weight = style.get("fontWeight")
+
+                mismatches: List[str] = []
+                if figma_family and page_metric.get("font_family") and figma_family.lower() not in page_metric["font_family"].lower():
+                    mismatches.append("family")
+                page_size = parse_px(page_metric.get("font_size"))
+                if figma_size is not None and page_size is not None and abs(page_size - float(figma_size)) > 1:
+                    mismatches.append("size")
+                page_weight = parse_weight(page_metric.get("font_weight"))
+                if figma_weight is not None and page_weight is not None and page_weight != int(figma_weight):
+                    mismatches.append("weight")
+                page_lh = parse_px(page_metric.get("line_height"))
+                if figma_line is not None and page_lh is not None and figma_size:
+                    figma_lh_ratio = round(float(figma_line) / float(figma_size), 3)
+                    page_lh_ratio = round(page_lh / page_size, 3) if page_size else 0
+                    if abs(page_lh_ratio - figma_lh_ratio) > 0.05:
+                        mismatches.append("line_height")
+                page_ls = parse_px(page_metric.get("letter_spacing"))
+                if figma_ls is not None and page_ls is not None and abs(page_ls - float(figma_ls)) > 0.5:
+                    mismatches.append("letter_spacing")
+
+                if mismatches:
+                    per_node.append({
+                        "figma_id": fid,
+                        "mismatches": mismatches,
+                        "page": page_metric,
+                        "figma": {
+                            "font_family": figma_family,
+                            "font_size": figma_size,
+                            "line_height_px": figma_line,
+                            "letter_spacing": figma_ls,
+                            "font_weight": figma_weight,
+                        },
+                    })
+            summary["per_node"] = per_node
+            return summary
         except Exception as e:
             return {"error": str(e)}
 
+    def _detect_snug_text(
+        self,
+        page: Any,
+        figma_text_nodes: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        if not figma_text_nodes:
+            return []
+        by_id = {n.get("id"): n for n in figma_text_nodes if n.get("id")}
+        try:
+            page_bboxes = self._collect_page_bboxes(page)
+        except Exception:
+            return []
+        if not isinstance(page_bboxes, list):
+            return []
+
+        checks: List[Dict[str, Any]] = []
+        for page_box in page_bboxes:
+            fid = page_box.get("figma_id")
+            figma_node = by_id.get(fid) if fid else None
+            if not figma_node or not figma_node.get("is_text"):
+                continue
+            figma_box = figma_node.get("box") or figma_node.get("absoluteBoundingBox") or {}
+            fw = figma_box.get("width", 0)
+            pw = page_box.get("width", 0)
+            if fw and pw and (pw - fw) > 4:
+                checks.append({
+                    "type": "snug_text",
+                    "passed": False,
+                    "figma_id": fid,
+                    "figma_width": fw,
+                    "page_width": pw,
+                    "delta_width": pw - fw,
+                    "discrepancy": f"Rendered text width ({pw}px) exceeds Figma text bbox ({fw}px) by {pw - fw}px",
+                })
+        return checks
+
+
     def _collect_image_metrics(self, page: Any) -> Dict[str, Any]:
         try:
-            return page.evaluate(
+            result = page.evaluate(
                 """
                 () => {
                     const images = Array.from(document.querySelectorAll('img'));
@@ -564,6 +951,88 @@ class VisualQAEngine:
                 }
                 """
             )
+            return result if isinstance(result, dict) else {"error": "image metrics unavailable"}
+        except Exception as e:
+            return {"error": str(e)}
+
+    def _collect_color_metrics(
+        self,
+        page: Any,
+        figma_color_nodes: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        if not figma_color_nodes:
+            return {"total": 0, "passed": 0, "failed": 0, "checks": []}
+
+        figma_by_id = {n.get("id"): n for n in figma_color_nodes if n.get("id")}
+        try:
+            page_colors = page.evaluate(
+                """
+                () => {
+                    const results = [];
+                    for (const el of document.querySelectorAll('[data-figma-id]')) {
+                        const style = window.getComputedStyle(el);
+                        const rect = el.getBoundingClientRect();
+                        results.push({
+                            figma_id: el.dataset.figmaId,
+                            background_color: style.backgroundColor,
+                            color: style.color,
+                            border_color: style.borderColor,
+                            x: Math.round(rect.x),
+                            y: Math.round(rect.y),
+                            width: Math.round(rect.width),
+                            height: Math.round(rect.height),
+                        });
+                    }
+                    return results;
+                }
+                """
+            )
+            if not isinstance(page_colors, list):
+                return {"error": "color metrics unavailable"}
+
+            checks: List[Dict[str, Any]] = []
+            for page_color in page_colors:
+                fid = page_color.get("figma_id")
+                figma_node = figma_by_id.get(fid)
+                if not figma_node:
+                    continue
+
+                expected_fill = _extract_figma_fill_color(figma_node)
+                expected_stroke = _extract_figma_stroke_color(figma_node)
+                page_bg = _parse_css_color(page_color.get("background_color"))
+                page_fg = _parse_css_color(page_color.get("color"))
+                page_border = _parse_css_color(page_color.get("border_color"))
+
+                mismatches: List[str] = []
+                if expected_fill and page_bg and expected_fill.lower() != page_bg.lower():
+                    mismatches.append("background")
+                if expected_stroke and page_border and expected_stroke.lower() != page_border.lower():
+                    mismatches.append("border")
+
+                if mismatches:
+                    checks.append({
+                        "type": "color_mismatch",
+                        "passed": False,
+                        "figma_id": fid,
+                        "mismatches": mismatches,
+                        "page": {
+                            "background_color": page_bg,
+                            "color": page_fg,
+                            "border_color": page_border,
+                        },
+                        "figma": {
+                            "fill": expected_fill,
+                            "stroke": expected_stroke,
+                        },
+                    })
+
+            failed = len(checks)
+            return {
+                "total": len(page_colors),
+                "passed": len(page_colors) - failed,
+                "failed": failed,
+                "checks": checks,
+            }
         except Exception as e:
             return {"error": str(e)}
 
@@ -639,6 +1108,7 @@ def run_visual_qa(
     root_dir: Optional[str] = None,
     figma_frame: Optional[Dict[str, Any]] = None,
     figma_bboxes: Optional[List[Dict[str, Any]]] = None,
+    figma_color_nodes: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     merged_expected = list(expected_nodes or [])
     if ast_path:
@@ -660,6 +1130,7 @@ def run_visual_qa(
         expected_nodes=merged_expected,
         figma_frame=figma_frame,
         figma_bboxes=figma_bboxes,
+        figma_color_nodes=figma_color_nodes,
     )
     return report.to_dict()
 
@@ -695,6 +1166,11 @@ def main():
         default=None,
         help='JSON string with Figma structural bounding boxes for comparison.',
     )
+    parser.add_argument(
+        "--figma-color-nodes",
+        default=None,
+        help='JSON string with Figma nodes containing fill/stroke colors for comparison.',
+    )
     args = parser.parse_args()
 
     viewport = None
@@ -719,6 +1195,10 @@ def main():
     if args.figma_bboxes:
         figma_bboxes = json.loads(args.figma_bboxes)
 
+    figma_color_nodes = None
+    if args.figma_color_nodes:
+        figma_color_nodes = json.loads(args.figma_color_nodes)
+
     result = run_visual_qa(
         page_url=args.url,
         ast_path=args.ast,
@@ -729,6 +1209,7 @@ def main():
         allowed_domains=allowed_domains,
         figma_frame=figma_frame,
         figma_bboxes=figma_bboxes,
+        figma_color_nodes=figma_color_nodes,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

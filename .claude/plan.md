@@ -1,104 +1,137 @@
-# Интерактивные формы с валидацией — Plan
+# Plan — Content and Code Separation (Page/Section/Data Models)
 
-## Vision
-Превратить Figma-формы, которые Backend Bridge уже сопоставляет с backend-моделями, в полноценные Next.js формы с client-side + server-side валидацией, состояниями загрузки/ошибки и доступностью. Генерация должна быть детерминированной и работать как часть существующего conductor pipeline.
+## Goal
+Extend the existing Content Model stage so generated sites separate structure, content, and data models:
+1. Emit a `content_model.json` describing each section with typed fields (heading, subtitle, CTA text, CTA link, image).
+2. Render the page from an array of sections imported from a data file.
+3. Add a `data_model_extractor.py` that proposes JSON/Prisma models for repeating Figma structures (cards, nav links, authors).
+4. Add data-binding annotations in the Layout Engine so JSX can read from a data model instead of hard-coded text.
 
-## Scope
-Supported:
-- Zod-схемы, генерируемые из backend-моделей (OpenAPI/Prisma/text spec).
-- React Hook Form + zodResolver для client-side валидации.
-- Server Action (`create{Model}Action`) с встроенной Zod-проверкой и возвратом `{success, error, id}`.
-- `useFormState` / `useFormStatus` (React 19 / Next.js 15) для loading/error/success состояний.
-- Автоматический рендеринг `<form>`, `<input>`, `<textarea>`, `<select>` в `page_composer` на основе `backend_field`/`backend_action` из AST.
-- Client-side сообщения об ошибках под каждым полем на основе Zod-схемы.
-- Поддержка типов полей: text, email, number, checkbox, date, textarea, select.
+## Approach
 
-Out of scope:
-- Сложные кастомные валидаторы (regex, cross-field) на первом шаге.
-- Файловые инпуты и rich-text редакторы.
-- Интеграция с authentication / CSRF-токенами.
+### 1. Enrich `content_model.py`
+- Extend `_find_content_slots` to classify slots by role:
+  - `heading` for `h1`/`h2` text.
+  - `subtitle` for `h3`/`h4`/`p` text inside a section header.
+  - `ctaText` for `button`/`a` text.
+  - `ctaHref` for `a href` / `button` target (if available in `interactive.triggers`).
+  - `image` for `img src`.
+  - Fallback generic `textN`/`srcN` for other slots.
+- Update `_section_component_code` to generate a typed props interface with all extracted fields, and render `{props.heading}` / `{props.image}` etc.
+- Update `_build_data_code` to export `pageData` plus a `sections` array ordered list: `sections: [{ name: "Hero", component: "Hero" }, ...]`.
+- Add `_build_content_model_json` producing `content_model.json`:
+  ```json
+  {
+    "version": "1",
+    "sections": [
+      {
+        "name": "Hero",
+        "slug": "hero",
+        "component": "Hero",
+        "fields": [
+          { "name": "heading", "type": "text", "label": "Heading", "required": true },
+          { "name": "subtitle", "type": "text", "label": "Subtitle" },
+          { "name": "ctaText", "type": "text", "label": "CTA Text" },
+          { "name": "ctaHref", "type": "url", "label": "CTA Link" },
+          { "name": "image", "type": "image", "label": "Image" }
+        ]
+      }
+    ]
+  }
+  ```
+- Add new CLI arg `--content-model-output` default `content_model.json` and pass it through `conductor.py`.
+- Change `_build_page_code` to render the page by mapping over `pageData.sections`:
+  ```tsx
+  import { pageData, sections } from "./page.data";
+  import Hero from "@/app/sections/Hero";
+  // ...
+  {sections.map((s) => {
+    const Component = { Hero, Features, ... }[s.component];
+    return <Component key={s.slug} {...pageData[s.component]} />;
+  })}
+  ```
+  Keep per-section imports for type safety and tree-shaking.
 
-## Output Artifacts
-- `backend_bridge_output/lib/schemas.ts` — Zod-схемы для всех мапленных моделей.
-- `backend_bridge_output/actions/{model}Action.ts` — Server Action с Zod-валидацией.
-- `backend_bridge_output/api/{model}.ts` — CRUD route (обновлён под схему, если нужно).
-- `backend_mapping.json` — дополнен `zod_schema`, `validation_rules`.
-- `src/app/page.tsx` — форма с react-hook-form (при прохождении через pipeline).
+### 2. New module `figma-agent-core/data_model_extractor.py`
+- Input: raw `figma_node.json` (or any node tree JSON).
+- Detect repeating subtrees using a structural fingerprint:
+  - Include node type, name base, visible child count, and primitive child types.
+  - Group identical fingerprints; require `min_occurrences=2`.
+- Heuristic model naming from the common ancestor or first occurrence name:
+  - `Card` → `FeatureCard`, `PricingCard`, etc.
+  - `Link` / `Nav` → `NavLink`.
+  - `Author` / `Team` → `Author`, `TeamMember`.
+- Propose fields by inspecting leaf text and image nodes inside the repeated structure:
+  - Text children → `title`, `description` (by tag/position).
+  - Image nodes → `imageUrl`.
+  - Link-like nodes → `href`.
+- Output JSON report:
+  ```json
+  {
+    "models": [
+      {
+        "name": "NavLink",
+        "occurrences": 5,
+        "sample_figma_id": "123:1",
+        "fields": [
+          { "name": "label", "type": "String" },
+          { "name": "href", "type": "String" }
+        ],
+        "suggested_prisma": "model NavLink { id String @id @default(uuid()) label String href String }"
+      }
+    ]
+  }
+  ```
+- Provide CLI: `--file`, `--output`, `--min-occurrences`, `--top-n`.
+- Add minimal unit tests in `tests/figma/test_data_model_extractor.py`.
 
-## Architecture
+### 3. Layout Engine data-binding fields
+- Add optional `--data-model` argument to `layout_engine.py`. When provided, the engine reads `data_model.json` (or the extractor output) to annotate matching nodes.
+- In `TailwindNode` add `data_binding: Optional[Dict[str,str]]` with keys:
+  - `model` — e.g. `NavLink`
+  - `field` — e.g. `label`
+  - `index` — for list rendering
+- When a Figma node name or path matches a data model pattern, the Layout Engine:
+  - Sets `text_expr` / `src_expr` to reference the data field instead of literal text/src.
+  - Marks the parent list container with `data_source={model}` and `data_is_list=True`.
+- Update `content_model.py` `_render_node` to understand `text_expr`, `src_expr`, and `data_source`.
+- Update `page_composer.py` `_node_to_tsx` so it can render `{item.label}` inside a list map if data binding is present (fallback to hard-coded text when no binding).
 
-### `figma-agent-core/backend_bridge.py`
-1. **Расширить `ModelField`**:
-   - Добавить `min_length`, `max_length`, `min`, `max`, `pattern`, `is_enum` (опционально, извлекать из OpenAPI/Prisma/JSON по мере возможности).
-2. **Добавить `ZodSchemaGenerator`**:
-   - `generate(model_name, fields) -> str` — код TS с `import { z } from "zod"`.
-   - Маппинг типов: String → `z.string()`, Int → `z.coerce.number().int()`, Float → `z.coerce.number()`, Boolean → `z.boolean()`, DateTime → `z.coerce.date()`.
-   - Добавить `.email()` для email, `.min()`/`.max()` если заданы, `.optional()` для non-required.
-   - Экспортировать inferred type: `export type {Model}Schema = z.infer<typeof schema>`.
-3. **Обновить `ActionGenerator`**:
-   - Импортировать схему из `@/lib/schemas`.
-   - Внутри action: `const parsed = schema.safeParse(Object.fromEntries(formData))`.
-   - При ошибке вернуть `{ success: false, error: parsed.error.flatten().fieldErrors }`.
-   - При успехе: create в prisma, вернуть `{ success: true, id: item.id }`.
-   - Убрать raw `formData.forEach` без валидации.
-4. **Обновить `BackendBridge.run`**:
-   - Создавать `(output_dir / "lib").mkdir()`.
-   - Для каждой мапленной модели генерировать `lib/schemas.ts` (один файл на все модели).
-   - Добавить пути схем в `generated_files.schemas`.
-   - Дополнить `mapping` полем `zod_schemas` и `validation_rules`.
+### 4. Conductor integration
+- Add new stage `data_model` after `analyze` (optional) and pass output to `layout` via `--data-model`.
+- Extend `stage_content_model` to accept and forward `--content-model-output`.
+- Add config keys:
+  - `content_model_json_output`
+  - `data_model_enabled`
+  - `data_model_output`
+  - `data_model_min_occurrences`
 
-### `figma-agent-core/page_composer.py`
-1. **Detect validated forms**:
-   - Если нода имеет `backend_action` и хотя бы один descendant с `backend_field`, пометить как validated form.
-2. **Imports**:
-   - Добавить `"use client"` для страниц с формами.
-   - `import { useForm } from "react-hook-form"`
-   - `import { zodResolver } from "@hookform/resolvers/zod"`
-   - `import { schema, {Model}Schema } from "@/lib/schemas"`
-   - `import { useFormState, useFormStatus } from "react-dom"`
-   - `import { actionName } from "@/app/actions/..."`
-3. **State hooks**:
-   - `const [state, formAction] = useFormState(action, { success: false })`.
-   - `const { register, handleSubmit, formState: { errors } } = useForm<{Model}Schema>({ resolver: zodResolver(schema), mode: "onBlur" })`.
-4. **Render form**:
-   - Обернуть в `<form action={formAction} onSubmit={handleSubmit(() => {})}>`.
-   - Для каждого input-поля: render label, input с `name={field}`, `type={input_type}`, `{...register(field)}`.
-   - Рендерить `{errors.field && <span className="text-red-500 text-sm">{errors.field.message}</span>}`.
-   - Submit button с `useFormStatus`: `{pending ? "Submitting..." : "Submit"}`.
-   - Глобальное сообщение: `state.success ? "Saved!" : state.error ? JSON.stringify(state.error) : null`.
-5. **Input types**:
-   - Улучшить `_node_to_tsx`: если `backend_field`, определять tag по `input_type`: `input`, `textarea`, `select`.
-   - Для select рендерить options из enum-модели, если backend_mapping предоставляет values.
+### 5. Tests
+- `tests/figma/test_content_model.py`:
+  - typed field extraction (heading/cta/image)
+  - `content_model.json` output
+  - page.tsx renders `sections.map`
+- New `tests/figma/test_data_model_extractor.py`:
+  - detect repeated cards and nav links
+  - suggested model names and fields
+- `tests/figma/test_layout_engine.py`:
+  - data-binding annotations when `--data-model` provided
 
-### `figma-agent-core/layout_engine.py`
-1. **Semantic tags для форм**:
-   - В `_semantic_tag` добавить: если имя содержит form/contact/lead/signup/login/subscribe → `form`.
-   - Если backend_field и имя содержит message/comment/bio → `textarea`; select/country/role → `select`.
-2. **Validation hints**:
-   - Добавить в TailwindNode поля `min_length`, `max_length`, `min`, `max`, `pattern` и заполнять из backend_mapping или ModelField.
+## Files to create or modify
+- Create: `figma-agent-core/data_model_extractor.py`
+- Create: `tests/figma/test_data_model_extractor.py`
+- Modify: `figma-agent-core/content_model.py`
+- Modify: `figma-agent-core/layout_engine.py`
+- Modify: `figma-agent-core/page_composer.py` (data-binding render)
+- Modify: `figma-agent-core/conductor.py` (stage wiring and config)
+- Modify: `tests/figma/test_content_model.py`
+- Modify: `tests/figma/test_layout_engine.py`
 
-### `mcp_servers/backend_server.py`
-- Убедиться, что результат `backend_run_bridge` включает `generated_files.schemas` и `validation_rules`.
-- Добавить tool `backend_generate_validation` (опционально, если MCP server имеет дискретные tools).
+## Validation
+1. Run `pytest tests/figma -q` — target: all pass, current 251 + new tests.
+2. Run `node scripts/safety_check.js` on changed files.
+3. Run `graphify update .` to refresh knowledge graph.
 
-### Conductor
-- Никаких изменений не требуется: `stage_backend_bridge` и `stage_compose` уже получают/пишут нужные файлы.
-
-## Acceptance Criteria
-- `pytest tests/backend -q` проходит с новыми тестами на Zod-схемы, Server Action validation и рендеринг формы.
-- Сгенерированная страница с формой компилируется без TypeScript ошибок (при наличии зависимостей).
-- Все существующие figma/MCP/backend тесты остаются зелёными.
-- Validators 0 errors.
-- Graphify обновлён AST-only.
-- Memory file создан: `2026-06-21-form-validation.md`.
-- Commit и push по Gate 2.
-
-## Tracker Tasks
-1. Расширить `ModelField` и парсеры для validation-метаданных.
-2. Добавить `ZodSchemaGenerator` и обновить `BackendBridge.run` для генерации `lib/schemas.ts`.
-3. Обновить `ActionGenerator` для Zod-валидации и ошибок.
-4. Улучшить `_semantic_tag`/`_apply_backend_hints` в `layout_engine.py` для form/textarea/select.
-5. Обновить `page_composer.py` для react-hook-form + zodResolver + useFormState/useFormStatus.
-6. Добавить тесты в `tests/backend/`.
-7. Обновить `mcp_servers/backend_server.py` при необходимости.
-8. Прогнать тесты, validators, graphify, написать memory, закоммитить и запушить.
+## Risks / open questions
+- Page rendering as `sections.map` loses static import tree-shaking if components dictionary is not statically analyzable; using a static switch/import block preserves it.
+- Data model matching heuristics may be noisy; we will keep it optional and provide a confidence score in the extractor report.

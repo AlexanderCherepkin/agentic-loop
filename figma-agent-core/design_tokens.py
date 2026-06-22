@@ -90,6 +90,25 @@ def _safe_css_var(name: str) -> str:
     return f"--{_safe_kebab(name)}"
 
 
+def _safe_token_path(name: str) -> str:
+    """Convert a Figma variable/style name into a dotted Tailwind token path."""
+    name = name.strip().lower()
+    # preserve slash as dot, remove everything else except alphanumerics / _ / .
+    name = re.sub(r"[^a-z0-9_/.\s]+", "", name)
+    name = re.sub(r"[\s/]+", ".", name)
+    name = re.sub(r"\.+", ".", name)
+    return name.strip(".")
+
+
+def _css_var_from_path(path: str) -> str:
+    """Convert a dotted token path into a dashed CSS variable name."""
+    return _safe_css_var(path.replace(".", "-"))
+
+
+def _path_to_dashed(path: str) -> str:
+    return path.replace(".", "-")
+
+
 def _has_alpha(hex_color: str) -> bool:
     hex_color = hex_color.strip().lstrip("#")
     return len(hex_color) in (4, 8)
@@ -168,6 +187,11 @@ class TokenRegistry:
     line_heights: Dict[float, str] = field(default_factory=dict)
     color_by_hex: Dict[str, str] = field(default_factory=dict)
     text_color_by_hex: Dict[str, str] = field(default_factory=dict)
+    style_token_map: Dict[str, str] = field(default_factory=dict)
+    variable_token_map: Dict[str, str] = field(default_factory=dict)
+    semantic_token_map: Dict[str, str] = field(default_factory=dict)
+    semantic_match_scores: Dict[str, float] = field(default_factory=dict)
+    exact_token_paths: List[str] = field(default_factory=list)
 
     def to_config_map(self) -> Dict[str, Any]:
         return {
@@ -198,6 +222,11 @@ class TokenRegistry:
             "line_heights": {str(lh): name for lh, name in self.line_heights.items()},
             "color_by_hex": dict(self.color_by_hex),
             "text_color_by_hex": dict(self.text_color_by_hex),
+            "style_token_map": dict(self.style_token_map),
+            "variable_token_map": dict(self.variable_token_map),
+            "semantic_token_map": dict(self.semantic_token_map),
+            "semantic_match_scores": dict(self.semantic_match_scores),
+            "exact_token_paths": list(self.exact_token_paths),
         }
 
     def to_json(self) -> Dict[str, Any]:
@@ -211,6 +240,81 @@ def _walk_nodes(node: Dict[str, Any]) -> List[Dict[str, Any]]:
     for child in node.get("children", []):
         results.extend(_walk_nodes(child))
     return results
+
+
+def _color_value_to_hex(value: Any) -> Optional[str]:
+    if not isinstance(value, dict):
+        return None
+    if "hex" in value:
+        return value["hex"]
+    if "color" in value:
+        return _rgba_to_hex(value["color"])
+    if "r" in value and "g" in value and "b" in value:
+        return _rgba_to_hex(value)
+    return None
+
+
+def _resolve_id_to_hex(
+    nodes: List[Dict[str, Any]],
+    styles_map: Dict[str, Any],
+    variables_map: Dict[str, Any],
+) -> Dict[str, str]:
+    """Map each style/variable ID to the first raw hex color observed on a node that uses it."""
+    id_to_hex: Dict[str, str] = {}
+
+    # 1. Prefer explicit resolved colors from variable/style metadata when present.
+    for vid, meta in variables_map.items():
+        hex_color = _color_value_to_hex(meta.get("value")) or _color_value_to_hex(meta.get("resolvedValue"))
+        if not hex_color:
+            values = meta.get("valuesByMode")
+            if isinstance(values, dict):
+                for mode_value in values.values():
+                    hex_color = _color_value_to_hex(mode_value)
+                    if hex_color:
+                        break
+        if hex_color:
+            id_to_hex[vid] = hex_color
+
+    for sid, meta in styles_map.items():
+        hex_color = _color_value_to_hex(meta.get("value")) or _color_value_to_hex(meta.get("resolvedValue"))
+        if hex_color:
+            id_to_hex[sid] = hex_color
+
+    def record_for_node(node: Dict[str, Any], hex_color: str, kind: str):
+        style_id = (node.get("styles") or {}).get(kind)
+        if style_id and style_id not in id_to_hex:
+            id_to_hex.setdefault(style_id, hex_color)
+        var_id = (node.get("boundVariables") or {}).get(kind)
+        if var_id and var_id not in id_to_hex:
+            id_to_hex.setdefault(var_id, hex_color)
+
+    for node in nodes:
+        for fill in node.get("fills", []):
+            if fill.get("type") != "SOLID":
+                continue
+            hex_color = fill.get("hex") or _rgba_to_hex(fill.get("color"))
+            if not hex_color:
+                continue
+            record_for_node(node, hex_color, "fill")
+
+        for stroke in node.get("strokes", []):
+            if stroke.get("type") != "SOLID":
+                continue
+            hex_color = stroke.get("hex") or _rgba_to_hex(stroke.get("color"))
+            if not hex_color:
+                continue
+            record_for_node(node, hex_color, "stroke")
+
+        style = node.get("style") or {}
+        for fill in style.get("fills", []):
+            if fill.get("type") != "SOLID":
+                continue
+            hex_color = fill.get("hex") or _rgba_to_hex(fill.get("color"))
+            if not hex_color:
+                continue
+            record_for_node(node, hex_color, "text")
+
+    return id_to_hex
 
 
 def _context_weights(context: str) -> Dict[str, float]:
@@ -515,6 +619,65 @@ def _collect_typography(
     return families, sizes, line_heights
 
 
+def _extract_exact_variable_color_tokens(
+    nodes: List[Dict[str, Any]],
+    styles_map: Dict[str, Any],
+    variables_map: Dict[str, Any],
+) -> Tuple[Dict[str, ColorToken], Dict[str, str], Dict[str, str]]:
+    """Create ColorTokens directly from Figma style/variable names (hierarchical path)."""
+    id_to_hex = _resolve_id_to_hex(nodes, styles_map, variables_map)
+    tokens: Dict[str, ColorToken] = {}
+    style_token_map: Dict[str, str] = {}
+    variable_token_map: Dict[str, str] = {}
+
+    def make_token(path: str, hex_color: str, source: str) -> ColorToken:
+        r, g, b = _hex_to_rgb_tuple(hex_color)
+        rgb = f"rgb({int(r*255)}, {int(g*255)}, {int(b*255)})"
+        return ColorToken(
+            name=path,
+            hex=hex_color,
+            rgb=rgb,
+            css_var=_css_var_from_path(path),
+            contexts=[],
+            source=source,
+            is_alpha=_has_alpha(hex_color),
+        )
+
+    for vid, meta in variables_map.items():
+        name = meta.get("name")
+        if not name:
+            continue
+        collection = meta.get("collection")
+        full_name = f"{collection}/{name}" if collection else name
+        hex_color = id_to_hex.get(vid)
+        if not hex_color:
+            continue
+        path = _safe_token_path(full_name)
+        if not path:
+            continue
+        tokens[path] = make_token(path, hex_color, "variable")
+        variable_token_map[vid] = path
+
+    for sid, meta in styles_map.items():
+        name = meta.get("name")
+        if not name:
+            continue
+        hex_color = id_to_hex.get(sid)
+        if not hex_color:
+            continue
+        path = _safe_token_path(name)
+        if not path:
+            continue
+        # A style and a variable could define the same path; variable wins.
+        if path in tokens:
+            style_token_map[sid] = path
+            continue
+        tokens[path] = make_token(path, hex_color, "style")
+        style_token_map[sid] = path
+
+    return tokens, style_token_map, variable_token_map
+
+
 def _assign_typography_tokens(
     families: Set[str],
     sizes: Dict[int, Set[int]],
@@ -604,9 +767,20 @@ class FigmaTokenExtractor:
         nodes = _walk_nodes(self.root)
         registry = TokenRegistry()
 
+        # 1. Exact Figma style/variable tokens (hierarchical, name-driven) take precedence.
+        exact_tokens, exact_style_map, exact_var_map = _extract_exact_variable_color_tokens(
+            nodes, self.styles_map, self.variables_map
+        )
+        registry.colors.update(exact_tokens)
+        registry.style_token_map.update(exact_style_map)
+        registry.variable_token_map.update(exact_var_map)
+        registry.exact_token_paths.extend(sorted(exact_tokens.keys()))
+
+        # 2. Heuristic fallback for raw colors that are not bound to a style/variable.
         usages = _collect_color_usages(nodes, self.styles_map, self.variables_map)
         colors = _assign_color_tokens(usages, nodes)
-        registry.colors = colors
+        for name, token in colors.items():
+            registry.colors.setdefault(name, token)
         registry.color_by_hex = {token.hex.lower().strip().lstrip("#"): name for name, token in colors.items()}
         # text colors may be same token as surface; build separate reverse map
         for name, token in colors.items():
@@ -620,13 +794,89 @@ class FigmaTokenExtractor:
         registry.font_weights = font_weights
         registry.line_heights = line_height_tokens
 
+        # 3. Semantic matcher fallback (only for IDs not already matched exactly).
+        registry.semantic_token_map, registry.semantic_match_scores = self._build_semantic_token_map(registry.colors)
+        for sid, name in self._build_style_token_map(registry.colors).items():
+            if sid not in registry.style_token_map:
+                registry.style_token_map[sid] = name
+        for vid, name in self._build_variable_token_map(registry.colors).items():
+            if vid not in registry.variable_token_map:
+                registry.variable_token_map[vid] = name
+
         return registry
+
+    def _build_semantic_token_map(
+        self,
+        colors: Dict[str, ColorToken],
+    ) -> Tuple[Dict[str, str], Dict[str, float]]:
+        """Map Figma variable/style IDs to existing semantic tokens using names + descriptions."""
+        mapping: Dict[str, str] = {}
+        scores: Dict[str, float] = {}
+        if not colors:
+            return mapping, scores
+        try:
+            from semantic_matcher import SemanticIndex, SemanticMatcher
+
+            index = SemanticIndex.from_token_registry({"colors": colors})
+            matcher = SemanticMatcher(index, threshold=0.5)
+        except Exception:
+            return mapping, scores
+
+        for vid, meta in {**self.variables_map, **self.styles_map}.items():
+            name = meta.get("name")
+            if not name:
+                continue
+            description = meta.get("description", "")
+            contexts = " ".join(meta.get("contexts", []))
+            existing, score, _ = matcher.find_token(name, description, contexts)
+            if existing and existing in colors:
+                mapping[vid] = existing
+                scores[vid] = score
+        return mapping, scores
+
+    def _build_style_token_map(self, colors: Dict[str, ColorToken]) -> Dict[str, str]:
+        mapping: Dict[str, str] = {}
+        for sid, meta in self.styles_map.items():
+            name = meta.get("name")
+            if not name:
+                continue
+            sem = _semantic_name_from_style(name)
+            if sem and sem in colors:
+                mapping[sid] = sem
+            kebab = _safe_kebab(name)
+            if kebab in colors and sid not in mapping:
+                mapping[sid] = kebab
+        return mapping
+
+    def _build_variable_token_map(self, colors: Dict[str, ColorToken]) -> Dict[str, str]:
+        mapping: Dict[str, str] = {}
+        for vid, meta in self.variables_map.items():
+            name = meta.get("name")
+            if not name:
+                continue
+            sem = _semantic_name_from_style(name)
+            if sem and sem in colors:
+                mapping[vid] = sem
+            kebab = _safe_kebab(name)
+            if kebab in colors and vid not in mapping:
+                mapping[vid] = kebab
+        return mapping
+
+
+def _set_nested(obj: Dict[str, Any], path: List[str], value: Any) -> None:
+    for key in path[:-1]:
+        obj = obj.setdefault(key, {})
+    obj[path[-1]] = value
 
 
 def generate_tailwind_config(registry: TokenRegistry) -> str:
     colors = registry.colors
     color_config: Dict[str, Any] = {}
     for name, token in colors.items():
+        if "." in name:
+            # Hierarchical exact token, e.g. colors.primary.500
+            _set_nested(color_config, name.split("."), f"var({token.css_var})")
+            continue
         if name in {"background", "foreground", "border", "input", "ring"}:
             color_config[name] = f"var({token.css_var})"
         else:
@@ -723,6 +973,11 @@ def save_registry(registry: TokenRegistry, output_path: str) -> None:
         "line_heights": {str(lh): name for lh, name in registry.line_heights.items()},
         "color_by_hex": registry.color_by_hex,
         "text_color_by_hex": registry.text_color_by_hex,
+        "style_token_map": registry.style_token_map,
+        "variable_token_map": registry.variable_token_map,
+        "semantic_token_map": registry.semantic_token_map,
+        "semantic_match_scores": registry.semantic_match_scores,
+        "exact_token_paths": registry.exact_token_paths,
     }
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)

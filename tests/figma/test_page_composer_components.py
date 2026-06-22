@@ -95,3 +95,21 @@ def test_compose_skips_component_context_definitions() -> None:
     assert 'import Button from "@/components/ui/Button"' in code
     assert "<Button variant=\"Primary\" />" in code
     assert "<div className=\"hidden\">" not in code
+
+
+def test_compose_uses_mapper_import_path_and_props() -> None:
+    ast = _minimal_ast_with_instance()
+    ast["root"]["children"][0]["children"][0]["component_set_id"] = "10:1"
+    mapper = {
+        "mappings": {
+            "10:1": {
+                "react_component": {
+                    "import_path": "@/components/ui/MappedButton",
+                    "export_name": "MappedButton",
+                }
+            }
+        }
+    }
+    code = page_composer.compose_page(ast, title="Test", component_mapper=mapper)
+    assert 'import MappedButton from "@/components/ui/MappedButton"' in code
+    assert "<MappedButton variant=\"Primary\" size=\"Large\" />" in code

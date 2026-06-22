@@ -508,11 +508,14 @@ class ComponentGenerator:
         output_dir: str = "src/components/ui",
         root_dir: str = ".",
         layout_config: Optional[Dict[str, Any]] = None,
+        mapper_file: Optional[str] = None,
     ):
         self.figma_document = figma_document
         self.output_dir = _validate_target_dir(output_dir, root_dir)
         self.layout_config = layout_config or {}
+        self.mapper_file = mapper_file
         self._registry_data: Optional[Dict[str, Any]] = None
+        self._mapper_data: Optional[Dict[str, Any]] = None
         self._generated: List[ExtractedComponent] = []
 
     @property
@@ -522,19 +525,30 @@ class ComponentGenerator:
             self._registry_data = mod.RegistryBuilder(self.figma_document).build()
         return self._registry_data
 
+    @property
+    def mapper(self) -> Optional[Dict[str, Any]]:
+        if self._mapper_data is None and self.mapper_file:
+            try:
+                self._mapper_data = json.loads(Path(self.mapper_file).read_text(encoding="utf-8"))
+            except Exception:
+                self._mapper_data = {}
+        return self._mapper_data
+
     def generate(self) -> Tuple[Dict[str, Any], List[ExtractedComponent]]:
         registry_mod = _import_component_registry()
         layout_mod = _import_layout_engine()
 
         registry = self.registry
         wrapper = registry_mod.ComponentRegistry(registry)
-        config = {**self.layout_config, "component_registry": registry}
+        config = {**self.layout_config, "component_registry": registry, "component_mapper": self.mapper}
         engine = layout_mod.FigmaLayoutEngine(config)
 
         generated: List[ExtractedComponent] = []
         for entry_id in registry.get("dependency_order", []):
             entry = registry["components"].get(entry_id)
             if not entry or entry.get("is_library"):
+                continue
+            if entry.get("action") == "reuse":
                 continue
             node = self._resolve_component_node(entry)
             if not node:
@@ -613,10 +627,17 @@ export default function {name}(props: {name}Props) {{
     def _collect_imports(self, entry: Dict[str, Any]) -> List[str]:
         imports = ['import React from "react"']
         registry = self.registry
+        mapper = self.mapper or {}
+        mappings = mapper.get("mappings", {})
         for dep_id in entry.get("dependencies", []):
             dep_entry = registry.get("components", {}).get(dep_id)
-            if dep_entry:
-                imports.append(f'import {{ {dep_entry["pascal_name"]} }} from "./{dep_entry["pascal_name"]}";')
+            if not dep_entry:
+                continue
+            mapping = mappings.get(dep_id, {})
+            react_component = mapping.get("react_component", {})
+            export_name = react_component.get("export_name", dep_entry["pascal_name"])
+            import_path = react_component.get("import_path", f"./{dep_entry['pascal_name']}")
+            imports.append(f'import {{ {export_name} }} from "{import_path}";')
         return imports
 
     def _apply_text_overrides(self, ast: Dict[str, Any]) -> Dict[str, Any]:
@@ -769,6 +790,11 @@ def main():
         default="figma_node.json",
         help="Путь к JSON-файлу Figma-структуры для --generate-ui.",
     )
+    parser.add_argument(
+        "--mapper-file",
+        default="figma_component_map.json",
+        help="Путь к figma_component_map.json для использования существующих компонентов.",
+    )
     args = parser.parse_args()
 
     if args.generate_ui:
@@ -781,6 +807,7 @@ def main():
             doc,
             output_dir=args.output_dir,
             root_dir=args.workspace_root,
+            mapper_file=args.mapper_file,
         )
         registry, components = gen.generate()
         print(f"[GENERATE-UI] {len(components)} component(s) written to {args.output_dir}")

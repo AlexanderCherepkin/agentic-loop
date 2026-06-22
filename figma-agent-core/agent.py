@@ -34,6 +34,36 @@ def _to_pascal_case(name: str) -> str:
     return result
 
 
+def _extract_annotation_text(annotations: List[Dict[str, Any]]) -> str:
+    """Concatenate annotation labels/descriptions into a semantic hint."""
+    parts: List[str] = []
+    for annotation in annotations or []:
+        label = annotation.get("label") or ""
+        description = annotation.get("description") or ""
+        if isinstance(label, str):
+            parts.append(label.strip())
+        if isinstance(description, str):
+            parts.append(description.strip())
+    return " ".join(p for p in parts if p)
+
+
+def _build_semantic_summary(node: Dict[str, Any]) -> str:
+    """Build a concise semantic summary from node metadata for the LLM prompt."""
+    parts: List[str] = []
+    semantic_name = analyzer.infer_semantic_name(node)
+    parts.append(f"Semantic component name: {semantic_name}")
+
+    description = node.get("description")
+    if description:
+        parts.append(f"Description: {description}")
+
+    annotation_text = _extract_annotation_text(node.get("annotations"))
+    if annotation_text:
+        parts.append(f"Annotations: {annotation_text}")
+
+    return "\n".join(parts)
+
+
 def _maybe_bootstrap(filepath: str) -> bool:
     """Если JSON-контекст отсутствует и есть токен с URL, автоматически запускает bootstrap.py."""
     if Path(filepath).exists():
@@ -134,7 +164,11 @@ class FigmaAgent:
         self.system_prompt = (
             "You are an expert Next.js and Tailwind CSS developer acting as a Figma-to-code agent.\n"
             "You receive a Figma node tree enriched with design tokens: fills (hex/rgb), font styles, "
-            "AutoLayout properties, bounding boxes, and local image paths (publicPath).\n\n"
+            "AutoLayout properties, bounding boxes, local image paths (publicPath), and semantic metadata.\n\n"
+            "Semantic metadata:\n"
+            "- Each node may include 'description' (author-provided intent) and 'annotations' (design comments/labels).\n"
+            "- Use 'description' and 'annotations' to understand the purpose of a section/component.\n"
+            "- Prefer the semantic name derived from metadata when choosing component names and HTML tags.\n\n"
             "You have access to the following tools:\n"
             "- WRITE_FILE(component_name='Name', code='''...''') — saves a generated .tsx component.\n"
             "- FETCH_NODE(node_id='123:456') — returns details of a specific Figma node by id.\n"
@@ -146,7 +180,8 @@ class FigmaAgent:
             "- Use REAL font sizes and weights from style objects.\n"
             "- For image/vector nodes that have publicPath, use an <img src='/images/...' /> tag with that path.\n"
             "- Default export, valid Next.js TypeScript component.\n"
-            "- Use semantic HTML tags where appropriate.\n\n"
+            "- Use semantic HTML tags where appropriate.\n"
+            "- Name components semantically: e.g. HeroSection, PricingCard, FeatureList, NavBar, not Container1 or Frame23.\n\n"
             "When you want to inspect a node, output:\n"
             "ACTION: FETCH_NODE(node_id='662:808')\n"
             "OBSERVATION: <summarize what you learned>\n\n"
@@ -197,7 +232,7 @@ class FigmaAgent:
         print(f"[AGENT] Context size: {len(context):,} chars")
         return context, selected_node
 
-    def call_llm(self, task: str, context_data: str) -> str:
+    def call_llm(self, task: str, context_data: str, semantic_summary: str = "") -> str:
         print("[AGENT] Starting task analysis...")
         print(f"[TASK] {task}")
 
@@ -211,9 +246,13 @@ class FigmaAgent:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json; charset=utf-8"
         }
+        user_content = f"Figma Context Data:\n{context_data}\n\n"
+        if semantic_summary:
+            user_content += f"Semantic Metadata:\n{semantic_summary}\n\n"
+        user_content += f"Task: {task}"
         messages = [
             {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": f"Figma Context Data:\n{context_data}\n\nTask: {task}"}
+            {"role": "user", "content": user_content}
         ]
         payload = {
             "model": self.model_name,
@@ -375,7 +414,8 @@ class FigmaAgent:
         output_name: Optional[str] = None,
         selected_node: Optional[Dict[str, Any]] = None,
     ):
-        ai_response = self.call_llm(task, context_data)
+        semantic_summary = _build_semantic_summary(selected_node) if selected_node else ""
+        ai_response = self.call_llm(task, context_data, semantic_summary=semantic_summary)
 
         print("\n=== AI AGENT EXECUTION TRACE ===")
         print(ai_response)
@@ -392,7 +432,7 @@ class FigmaAgent:
         # Fallback: если LLM не использовал WRITE_FILE, но выдал код в markdown-блоке.
         fallback_name = output_name
         if not fallback_name and selected_node:
-            fallback_name = _to_pascal_case(selected_node.get("name", "Component"))
+            fallback_name = analyzer.infer_semantic_name(selected_node)
 
         if not fallback_name:
             print("[AGENT] No WRITE_FILE tool call and no output name available; component file creation skipped.")
@@ -451,16 +491,18 @@ def main():
         download_assets=not args.skip_assets,
     )
 
-    output_name = args.output_name or _to_pascal_case(selected_node.get("name", "Component"))
+    output_name = args.output_name or analyzer.infer_semantic_name(selected_node)
 
     if args.spec:
         spec_path = spec_writer.generate_spec(selected_node, output_path="spec.md")
         print(f"[AGENT] Specification saved to: {spec_path}")
         return
 
+    semantic_hint = _build_semantic_summary(selected_node)
     task = args.task or (
         f"Analyze the '{selected_node.get('name', 'selected')}' Figma section and create a React + Tailwind "
-        f"component named '{output_name}'."
+        f"component named '{output_name}'.\n"
+        f"Use this semantic context when deciding structure and tags:\n{semantic_hint}"
     )
 
     print(f"[AGENT] Auto output name: {output_name}")

@@ -101,6 +101,14 @@ def constraint_to_classes(node: Dict[str, Any]) -> List[str]:
         if value is not None and value > 0:
             classes.append(f"{prefix}-[{int(round(value))}px]")
 
+    box = node.get("box") or node.get("absoluteBoundingBox") or {}
+    width = _px(box.get("width"))
+    height = _px(box.get("height"))
+    if lsh == "FIXED" and width is not None and width > 0:
+        classes.append(f"w-[{int(round(width))}px]")
+    if lsv == "FIXED" and height is not None and height > 0:
+        classes.append(f"h-[{int(round(height))}px]")
+
     return classes
 
 
@@ -138,7 +146,16 @@ def _build_match_index(ast_root: Dict[str, Any]) -> Dict[Tuple[str, int, int], D
 
 def _diff_classes(base_classes: List[str], variant_classes: List[str]) -> List[str]:
     base_set = set(base_classes)
-    return [c for c in variant_classes if c not in base_set]
+    diffs = [c for c in variant_classes if c not in base_set]
+    # Preserve layout-direction changes as responsive variants (e.g. md:flex-row vs flex-col).
+    direction_classes = {"flex-row", "flex-col", "flex-wrap", "flex-nowrap", "flex-col-reverse", "flex-row-reverse"}
+    base_directions = [c for c in base_classes if c in direction_classes]
+    variant_directions = [c for c in variant_classes if c in direction_classes]
+    if base_directions != variant_directions:
+        for c in variant_directions:
+            if c not in diffs:
+                diffs.append(c)
+    return diffs
 
 
 def _prefix_classes(classes: List[str], token: str) -> List[str]:

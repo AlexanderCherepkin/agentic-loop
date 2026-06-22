@@ -131,12 +131,46 @@ def stage_download_figma_reference(
 def stage_component_registry(
     file: str = "figma_node.json",
     output: str = "component_registry.json",
+    mapper_output: str = "figma_component_map.json",
     node_id: Optional[str] = None,
+    scan_dirs: Optional[List[str]] = None,
+    semantic_threshold: float = 0.5,
     dry_run: bool = False,
 ) -> bool:
     """Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instances, DAG)."""
     logger.info("=== STAGE: component_registry ===")
-    command = [sys.executable, "component_registry.py", "--file", file, "--output", output]
+    command = [sys.executable, "component_registry.py", "--file", file, "--output", output, "--mapper-output", mapper_output, "--semantic-threshold", str(semantic_threshold)]
+    if node_id:
+        command.extend(["--node-id", node_id])
+    for d in scan_dirs or []:
+        command.extend(["--scan-dir", d])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_data_model(
+    file: str = "figma_node.json",
+    node_id: Optional[str] = None,
+    output: str = "data_model.json",
+    min_occurrences: int = 2,
+    top_n: int = 10,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 1d: обнаружение повторяющихся Figma-структур и предложение JSON/Prisma моделей данных."""
+    logger.info("=== STAGE: data_model ===")
+    command = [
+        sys.executable,
+        "data_model_extractor.py",
+        "--file", file,
+        "--output", output,
+        "--min-occurrences", str(min_occurrences),
+        "--top-n", str(top_n),
+    ]
     if node_id:
         command.extend(["--node-id", node_id])
 
@@ -146,6 +180,35 @@ def stage_component_registry(
 
     result = _run_command(command, timeout=120)
     return result.returncode == 0
+
+
+def stage_precise_mode_audit(
+    file: str = "figma_node.json",
+    node_id: Optional[str] = None,
+    target_viewport: Optional[str] = None,
+    dry_run: bool = False,
+) -> Dict[str, Any]:
+    """Этап 1c: аудит готовности Precise Mode перед генерацией кода."""
+    logger.info("=== STAGE: precise_mode_audit ===")
+    command = [sys.executable, "precise_mode_auditor.py", "--file", file]
+    if node_id:
+        command.extend(["--node-id", node_id])
+    if target_viewport:
+        command.extend(["--target-viewport", target_viewport])
+    command.extend(["--output", "precise_mode_report.json"])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return {"success": True, "status": "ready", "dry_run": True}
+
+    result = _run_command(command, timeout=120)
+    report: Dict[str, Any] = {"success": result.returncode == 0}
+    if Path("precise_mode_report.json").exists():
+        try:
+            report["precise_mode"] = json.loads(Path("precise_mode_report.json").read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning(f"Could not read precise_mode_report.json: {e}")
+    return report
 
 
 def stage_analyze(file: str = "figma_node.json", dry_run: bool = False) -> bool:
@@ -164,6 +227,7 @@ def stage_analyze(file: str = "figma_node.json", dry_run: bool = False) -> bool:
 def stage_generate_components(
     figma_file: str = "figma_node.json",
     output_dir: str = "src/components/ui",
+    mapper_file: str = "figma_component_map.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 2b: генерация React-компонентов из реальных Figma Component Sets."""
@@ -174,6 +238,7 @@ def stage_generate_components(
         "--generate-ui",
         "--figma-file", figma_file,
         "--output-dir", output_dir,
+        "--mapper-file", mapper_file,
     ]
 
     if dry_run:
@@ -245,6 +310,8 @@ def stage_layout(
     assets_file: str = "asset_registry.json",
     backend_mapping_file: str = "backend_mapping.json",
     components_registry_file: str = "component_registry.json",
+    components_mapper_file: str = "figma_component_map.json",
+    data_models_file: str = "data_model.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 3b: детерминированная генерация Tailwind AST из Figma-ноды."""
@@ -260,6 +327,10 @@ def stage_layout(
         command.extend(["--backend-mapping", backend_mapping_file])
     if Path(components_registry_file).exists():
         command.extend(["--components", components_registry_file])
+    if Path(components_mapper_file).exists():
+        command.extend(["--components-mapper", components_mapper_file])
+    if Path(data_models_file).exists():
+        command.extend(["--data-models", data_models_file])
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -424,6 +495,7 @@ def stage_compose(
     output: str = "src/app/page.tsx",
     layout_output: str = "src/app/layout.tsx",
     title: Optional[str] = None,
+    components_mapper_file: str = "figma_component_map.json",
     dry_run: bool = False,
 ) -> bool:
     """Этап 3c: сборка Tailwind AST в Next.js page.tsx + layout.tsx."""
@@ -445,6 +517,55 @@ def stage_compose(
     ]
     if title:
         command.extend(["--title", title])
+    if Path(components_mapper_file).exists():
+        command.extend(["--components-mapper", components_mapper_file])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
+def stage_content_model(
+    ast_file: str = "interactive_ast.json",
+    fallback_ast_file: str = "page_ast.json",
+    responsive_ast_file: str = "responsive_ast.json",
+    sections_dir: str = "src/app/sections",
+    page_output: str = "src/app/page.tsx",
+    data_output: str = "src/app/page.data.ts",
+    content_model_output: str = "content_model.json",
+    workspace_root: str = ".",
+    components_mapper_file: str = "figma_component_map.json",
+    data_models_file: str = "data_model.json",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 3c-alt: разделение страницы на Page + Section-компоненты + Data."""
+    logger.info("=== STAGE: content_model ===")
+    target_ast = responsive_ast_file
+    if not Path(target_ast).exists():
+        target_ast = ast_file
+    if not Path(target_ast).exists():
+        target_ast = fallback_ast_file
+    command = [
+        sys.executable,
+        "content_model.py",
+        "--ast",
+        target_ast,
+        "--output-dir",
+        sections_dir,
+        "--page-output",
+        page_output,
+        "--data-output",
+        data_output,
+        "--content-model-output",
+        content_model_output,
+        "--workspace-root",
+        workspace_root,
+    ]
+    if Path(components_mapper_file).exists():
+        command.extend(["--components-mapper", components_mapper_file])
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -716,7 +837,9 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "download_figma_reference", "component_registry", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    if config.get("content_model"):
+        stages_to_run = ["content_model" if s == "compose" else s for s in stages_to_run]
     if only:
         stages_to_run = [only] if isinstance(only, str) else only
 
@@ -731,6 +854,22 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             report["stages"]["bootstrap"] = {"success": ok}
             if not ok:
                 logger.error("Bootstrap stage failed. Stopping pipeline.")
+                break
+
+        elif stage == "precise_mode_audit":
+            audit_result = stage_precise_mode_audit(
+                file=file,
+                node_id=node_id,
+                target_viewport=config.get("target_viewport"),
+                dry_run=dry_run,
+            )
+            report["stages"]["precise_mode_audit"] = audit_result
+            precise_status = audit_result.get("precise_mode", {}).get("status") if audit_result.get("success") else None
+            if precise_status == "not_ready" and config.get("precise_mode_halt", True):
+                logger.error("Precise Mode audit reports not_ready. Halting pipeline.")
+                break
+            if not audit_result.get("success"):
+                logger.error("Precise Mode audit stage failed. Halting pipeline.")
                 break
 
         elif stage == "download_figma_reference":
@@ -755,10 +894,27 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             ok = stage_component_registry(
                 file=file,
                 output=config.get("component_registry_output", "component_registry.json"),
+                mapper_output=config.get("component_mapper_output", "figma_component_map.json"),
                 node_id=node_id,
+                scan_dirs=[
+                    config.get("components_ui_output_dir", "src/components/ui"),
+                    config.get("components_output_dir", "src/app/components"),
+                ],
+                semantic_threshold=config.get("component_semantic_threshold", 0.5),
                 dry_run=dry_run,
             )
             report["stages"]["component_registry"] = {"success": ok}
+
+        elif stage == "data_model":
+            ok = stage_data_model(
+                file=file,
+                node_id=node_id,
+                output=config.get("data_model_output", "data_model.json"),
+                min_occurrences=config.get("data_model_min_occurrences", 2),
+                top_n=config.get("data_model_top_n", 10),
+                dry_run=dry_run,
+            )
+            report["stages"]["data_model"] = {"success": ok}
 
         elif stage == "analyze":
             ok = stage_analyze(file=file, dry_run=dry_run)
@@ -803,6 +959,8 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 assets_file=str(assets_file),
                 backend_mapping_file=backend_mapping_file,
                 components_registry_file=config.get("component_registry_output", "component_registry.json"),
+                components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
+                data_models_file=config.get("data_model_output", "data_model.json"),
                 dry_run=dry_run,
             )
             report["stages"]["layout"] = {"success": ok}
@@ -843,6 +1001,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             ok = stage_generate_components(
                 figma_file=file,
                 output_dir=config.get("components_ui_output_dir", "src/components/ui"),
+                mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
                 dry_run=dry_run,
             )
             report["stages"]["generate_components"] = {"success": ok}
@@ -877,9 +1036,26 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 output=config.get("compose_output", "src/app/page.tsx"),
                 layout_output=config.get("compose_layout_output", "src/app/layout.tsx"),
                 title=config.get("compose_title"),
+                components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
                 dry_run=dry_run,
             )
             report["stages"]["compose"] = {"success": ok}
+
+        elif stage == "content_model":
+            ok = stage_content_model(
+                ast_file=config.get("interactive_ast_output", "interactive_ast.json"),
+                fallback_ast_file=config.get("layout_output", "layout_ast.json"),
+                responsive_ast_file=config.get("responsive_output", "responsive_ast.json"),
+                sections_dir=config.get("content_model_sections_dir", "src/app/sections"),
+                page_output=config.get("content_model_page_output", "src/app/page.tsx"),
+                data_output=config.get("content_model_data_output", "src/app/page.data.ts"),
+                content_model_output=config.get("content_model_json_output", "content_model.json"),
+                workspace_root=config.get("content_model_workspace_root", "."),
+                components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
+                data_models_file=config.get("data_model_output", "data_model.json"),
+                dry_run=dry_run,
+            )
+            report["stages"]["content_model"] = {"success": ok}
 
         elif stage == "compliance":
             files = config.get("compliance_files") or []
@@ -1099,6 +1275,12 @@ def main():
         "--component-registry-output",
         default="component_registry.json",
         help="Путь для сохранения Component Registry."
+    )
+    parser.add_argument(
+        "--component-semantic-threshold",
+        type=float,
+        default=0.5,
+        help="Minimum semantic similarity score (0-1) for matching Figma components to local components."
     )
     parser.add_argument(
         "--components-ui-output-dir",
@@ -1333,6 +1515,7 @@ def main():
         "tokens_globals_css": args.tokens_globals_css,
         "layout_output": args.layout_output,
         "component_registry_output": args.component_registry_output,
+        "component_semantic_threshold": args.component_semantic_threshold,
         "components_ui_output_dir": args.components_ui_output_dir,
         "responsive_output": args.responsive_output,
         "responsive_report": args.responsive_report,

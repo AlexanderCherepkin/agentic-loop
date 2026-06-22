@@ -1,11 +1,90 @@
 
 import json
+import re
 import argparse
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
 OUTPUT_FILE = "figma_node.json"
+
+
+GENERIC_NAME_PATTERNS = (
+    r"^(Frame|Group|Container|Rectangle|Ellipse|Vector|Text|Component|Instance|Page|Section|Layer)\s*\d*$",
+    r"^(Frame|Group|Container|Rectangle|Ellipse|Vector|Text|Component|Instance|Page|Section|Layer)\s*/\s*\d*$",
+)
+
+
+def _clean_name(name: Any) -> str:
+    """Remove emoji, special chars, and collapse whitespace."""
+    text = str(name or "").strip()
+    # Strip common Figma numeric suffixes like "Frame / 1" or "Frame 1".
+    text = re.sub(r"\s*/\s*\d+\s*$", "", text).strip()
+    text = re.sub(r"\s+\d+\s*$", "", text).strip()
+    # Remove emoji and most special characters; keep letters, digits, spaces, hyphens, underscores.
+    text = re.sub(r"[^\w\s\-]", " ", text, flags=re.UNICODE)
+    # Collapse whitespace.
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def _is_generic_name(name: str) -> bool:
+    if not name:
+        return True
+    for pattern in GENERIC_NAME_PATTERNS:
+        if re.search(pattern, name, re.IGNORECASE):
+            return True
+    return False
+
+
+def _extract_annotation_text(annotations: List[Dict[str, Any]]) -> str:
+    """Concatenate annotation labels/descriptions into a semantic hint."""
+    parts: List[str] = []
+    for annotation in annotations or []:
+        label = annotation.get("label") or ""
+        description = annotation.get("description") or ""
+        if isinstance(label, str):
+            parts.append(label.strip())
+        if isinstance(description, str):
+            parts.append(description.strip())
+    return " ".join(p for p in parts if p)
+
+
+def infer_semantic_name(node: Dict[str, Any], fallback: str = "Component") -> str:
+    """Derive a semantic PascalCase name from name, description, and annotations."""
+    name = _clean_name(node.get("name", ""))
+    description = _clean_name(node.get("description", ""))
+    annotations_text = _extract_annotation_text(node.get("annotations"))
+
+    candidates = [name, description, annotations_text]
+    chosen = ""
+    for candidate in candidates:
+        if candidate and not _is_generic_name(candidate):
+            chosen = candidate
+            break
+
+    if not chosen:
+        # Fallback: derive from node type or first meaningful child text.
+        node_type = str(node.get("type", fallback)).lower()
+        if node_type in ("frame", "group", "component", "instance", "section"):
+            chosen = fallback
+        else:
+            chosen = node_type.capitalize() or fallback
+
+    return _to_pascal_case(chosen)
+
+
+def _to_pascal_case(name: str) -> str:
+    """Convert an arbitrary string to a valid PascalCase identifier."""
+    name = name.strip()
+    name = re.sub(r"[^\w\s_]+", " ", name)
+    name = re.sub(r"[\s_]+", " ", name).strip()
+    words = name.split(" ")
+    result = "".join(word[:1].upper() + word[1:] for word in words if word)
+    result = re.sub(r"[^A-Za-z0-9]+", "", result)
+    if not result or not result[0].isalpha():
+        result = "Figma" + result
+    return result
 
 
 def load_figma_json(filepath: str = OUTPUT_FILE) -> dict:
@@ -51,8 +130,11 @@ def get_node_details(node_id: str, filepath: str = OUTPUT_FILE) -> Optional[Dict
     return {
         "id": node.get("id"),
         "name": node.get("name"),
+        "semantic_name": infer_semantic_name(node),
         "type": node.get("type"),
         "visible": node.get("visible", True),
+        "description": node.get("description") or None,
+        "annotations": node.get("annotations") or None,
         "layoutMode": node.get("layoutMode"),
         "itemSpacing": node.get("itemSpacing"),
         "paddingTop": node.get("paddingTop", 0),
@@ -66,7 +148,12 @@ def get_node_details(node_id: str, filepath: str = OUTPUT_FILE) -> Optional[Dict
         "fontSize": node.get("fontSize"),
         "fontWeight": node.get("fontWeight"),
         "children": [
-            {"id": c.get("id"), "name": c.get("name"), "type": c.get("type")}
+            {
+                "id": c.get("id"),
+                "name": c.get("name"),
+                "semantic_name": infer_semantic_name(c),
+                "type": c.get("type"),
+            }
             for c in node.get("children", [])
             if c.get("visible", True)
         ],
@@ -77,7 +164,9 @@ def inspect_node(node: dict, depth: int = 0, show_ids: bool = True):
     indent = "  " * depth
     node_type = node.get("type", "UNKNOWN")
     node_name = node.get("name", "Без названия")
+    semantic_name = node.get("semantic_name") or infer_semantic_name(node)
     node_id = f" ({node.get('id')})" if show_ids else ""
+    semantic_hint = f" [{semantic_name}]" if semantic_name and semantic_name != _to_pascal_case(node_name) else ""
 
     layout_info = ""
     if node.get("layoutMode"):
@@ -87,7 +176,17 @@ def inspect_node(node: dict, depth: int = 0, show_ids: bool = True):
     if node_type == "TEXT" and "characters" in node:
         text_content = f' -> "{node["characters"][:60]}"'
 
-    print(f"{indent}• [{node_type}]{layout_info} {node_name}{node_id}{text_content}")
+    print(f"{indent}• [{node_type}]{layout_info} {node_name}{node_id}{semantic_hint}{text_content}")
+
+    description = node.get("description")
+    if description:
+        print(f"{indent}  desc: {description[:120]}")
+
+    annotations = node.get("annotations")
+    if annotations:
+        annotation_text = _extract_annotation_text(annotations)
+        if annotation_text:
+            print(f"{indent}  annotations: {annotation_text[:120]}")
 
     if "children" in node:
         for child in node["children"]:
@@ -95,9 +194,14 @@ def inspect_node(node: dict, depth: int = 0, show_ids: bool = True):
 
 
 def list_top_level_nodes(node: Dict[str, Any]) -> List[Dict[str, str]]:
-    """Возвращает список топ-уровневых нод с id и типом."""
+    """Возвращает список топ-уровневых нод с id, типом и семантическим именем."""
     return [
-        {"id": child.get("id"), "name": child.get("name"), "type": child.get("type")}
+        {
+            "id": child.get("id"),
+            "name": child.get("name"),
+            "semantic_name": infer_semantic_name(child),
+            "type": child.get("type"),
+        }
         for child in node.get("children", [])
         if child.get("visible", True)
     ]

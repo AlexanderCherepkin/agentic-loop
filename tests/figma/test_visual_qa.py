@@ -372,3 +372,320 @@ def test_visual_qa_bbox_comparison_fails_outside_tolerance(tmp_path: Path) -> No
 
     assert report.status == "failed"
     assert report.bbox_comparison["failed"] == 1
+
+
+def test_visual_qa_pixel_metrics_report_deltas(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page_bboxes = [{"tag": "section", "figma_id": "1:1", "x": 4, "y": 2, "width": 100, "height": 200}]
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        page_bboxes,
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    figma_bboxes = [{"id": "1:1", "x": 0, "y": 0, "width": 130, "height": 230}]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                    bbox_tolerance_px=8,
+                )
+                report = engine.run(
+                    "http://localhost:3000",
+                    figma_bboxes=figma_bboxes,
+                )
+
+    assert report.status == "failed"
+    assert report.pixel_metrics["failed_nodes"] == 1
+    assert report.pixel_metrics["total_drift_px"] == 4 + 2 + 30 + 30
+    check = report.bbox_comparison["checks"][0]
+    assert check["delta_x"] == 4
+    assert check["delta_y"] == 2
+    assert check["delta_width"] == -30
+    assert check["delta_height"] == -30
+
+
+def test_visual_qa_font_mismatch_check(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    el = MagicMock()
+    el.inner_text.return_value = "Hello"
+    page.query_selector_all.return_value = [el]
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        [
+            {
+                "figma_id": "10:1",
+                "font_family": "Arial",
+                "font_size": "14px",
+                "line_height": "14px",
+                "letter_spacing": "0px",
+                "font_weight": "400",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 20,
+            }
+        ],
+        [],
+        {"font_families": ["Arial"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    expected = [
+        {
+            "id": "10:1",
+            "selector": "h1",
+            "expected_count": 1,
+            "exact_text": "Hello",
+            "is_text": True,
+            "style": {
+                "fontFamily": "Inter",
+                "fontSize": 18,
+                "lineHeightPx": 27,
+                "letterSpacing": 1,
+                "fontWeight": 700,
+            },
+        }
+    ]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                result = visual_qa.run_visual_qa(
+                    "http://localhost:3000",
+                    expected_nodes=expected,
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+
+    assert result["status"] == "failed"
+    font_checks = [c for c in result["layout_checks"] if c.get("type") == "font_mismatch"]
+    assert len(font_checks) == 1
+    assert set(font_checks[0]["mismatches"]) == {"family", "size", "weight", "line_height", "letter_spacing"}
+
+
+def test_visual_qa_snug_text_check(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    el = MagicMock()
+    el.inner_text.return_value = "Hello"
+    page.query_selector_all.return_value = [el]
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        [],
+        [
+            {
+                "tag": "span",
+                "figma_id": "20:1",
+                "x": 0,
+                "y": 0,
+                "width": 180,
+                "height": 20,
+            }
+        ],
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+    ]
+
+    expected = [
+        {
+            "id": "20:1",
+            "selector": "span",
+            "expected_count": 1,
+            "exact_text": "Hello",
+            "is_text": True,
+            "box": {"width": 142, "height": 20},
+        }
+    ]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                result = visual_qa.run_visual_qa(
+                    "http://localhost:3000",
+                    expected_nodes=expected,
+                    output_dir=str(output_dir),
+                    root_dir=str(tmp_path),
+                )
+
+    assert result["status"] == "failed"
+    snug_checks = [c for c in result["layout_checks"] if c.get("type") == "snug_text"]
+    assert len(snug_checks) == 1
+    assert snug_checks[0]["delta_width"] == 38
+
+
+def test_rgba_to_hex() -> None:
+    assert visual_qa._rgba_to_hex(1, 1, 1) == "#ffffff"
+    assert visual_qa._rgba_to_hex(0, 0, 0, 1) == "#000000"
+    assert visual_qa._rgba_to_hex(0.23, 0.51, 0.96, 1.0) == "#3b82f5"
+    assert visual_qa._rgba_to_hex(1, 0, 0, 0.5) == "#ff000080"
+
+
+def test_parse_css_color() -> None:
+    assert visual_qa._parse_css_color("rgb(59, 130, 245)") == "#3b82f5"
+    assert visual_qa._parse_css_color("rgba(59, 130, 245, 0.8)") == "#3b82f5"
+    assert visual_qa._parse_css_color("#3b82f5") == "#3b82f5"
+    assert visual_qa._parse_css_color("#f00") == "#ff0000"
+    assert visual_qa._parse_css_color("transparent") is None
+
+
+def test_extract_figma_fill_color() -> None:
+    node = {
+        "fills": [
+            {"type": "SOLID", "visible": True, "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}},
+        ]
+    }
+    assert visual_qa._extract_figma_fill_color(node) == "#3b82f5"
+
+
+def test_extract_figma_stroke_color() -> None:
+    node = {
+        "strokes": [
+            {"type": "SOLID", "visible": True, "color": {"r": 1, "g": 0, "b": 0, "a": 1}},
+        ]
+    }
+    assert visual_qa._extract_figma_stroke_color(node) == "#ff0000"
+
+
+def test_visual_qa_color_mismatch_detected(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        [],
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+        [
+            {
+                "figma_id": "30:1",
+                "background_color": "rgb(255, 0, 0)",
+                "color": "rgb(0, 0, 0)",
+                "border_color": "rgb(0, 0, 255)",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 100,
+            }
+        ],
+    ]
+
+    figma_color_nodes = [
+        {
+            "id": "30:1",
+            "fills": [{"type": "SOLID", "visible": True, "color": {"r": 0, "g": 1, "b": 0, "a": 1}}],
+            "strokes": [{"type": "SOLID", "visible": True, "color": {"r": 0, "g": 0, "b": 0, "a": 1}}],
+        }
+    ]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                report = engine.run(
+                    "http://localhost:3000",
+                    figma_color_nodes=figma_color_nodes,
+                )
+
+    assert report.status == "failed"
+    assert report.color_metrics["total"] == 1
+    assert report.color_metrics["failed"] == 1
+    checks = report.color_metrics["checks"]
+    assert any("background" in c["mismatches"] for c in checks)
+    assert any("border" in c["mismatches"] for c in checks)
+
+
+def test_visual_qa_color_match_passes(tmp_path: Path) -> None:
+    output_dir = tmp_path / "qa"
+    sync_p, page, browser = _build_mock_playwright(tmp_path)
+    fake_image = tmp_path / "fake.png"
+    fake_image.write_bytes(b"png")
+
+    page.evaluate.return_value = None
+    page.wait_for_function.return_value = None
+    page.evaluate.side_effect = [
+        None,
+        None,
+        [],
+        [],
+        [],
+        {"font_families": ["Inter"], "body_font_size": "16px", "body_line_height": "1.5"},
+        [],
+        {"total_images": 0, "loaded_images": 0, "broken_images": 0},
+        [
+            {
+                "figma_id": "31:1",
+                "background_color": "rgb(59, 130, 245)",
+                "color": "rgb(0, 0, 0)",
+                "border_color": "rgb(255, 255, 255)",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 100,
+            }
+        ],
+    ]
+
+    figma_color_nodes = [
+        {
+            "id": "31:1",
+            "fills": [{"type": "SOLID", "visible": True, "color": {"r": 0.23, "g": 0.51, "b": 0.96, "a": 1}}],
+        }
+    ]
+
+    with patch.object(visual_qa, "PLAYWRIGHT_AVAILABLE", True):
+        with patch.object(visual_qa, "PIL_AVAILABLE", False):
+            with patch("figma_visual_qa.sync_playwright", return_value=sync_p):
+                engine = visual_qa.VisualQAEngine(output_dir=str(output_dir), root_dir=str(tmp_path))
+                report = engine.run(
+                    "http://localhost:3000",
+                    figma_color_nodes=figma_color_nodes,
+                )
+
+    assert report.status == "passed"
+    assert report.color_metrics["total"] == 1
+    assert report.color_metrics["passed"] == 1
+    assert report.color_metrics["failed"] == 0

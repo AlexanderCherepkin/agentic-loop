@@ -547,6 +547,7 @@ class PipelineRunner:
         self._max_iterations = max_iterations
         session_id = session_id or uuid.uuid4().hex
         t_start = time.perf_counter()
+        self._t_start = t_start
         metrics = SessionMetrics(session_id=session_id)
         trace: list[IterationTrace] = []
         audit_anchor = uuid.uuid4().hex
@@ -651,8 +652,9 @@ class PipelineRunner:
                     current_phase = "execution"
                     continue
 
-                state["iteration"] += 1
-                metrics.iterations = state["iteration"]
+                if current_phase == "execution":
+                    state["iteration"] += 1
+                    metrics.iterations = state["iteration"]
 
                 if state["iteration"] > max_iterations:
                     return await self._finalize_and_return(
@@ -764,6 +766,8 @@ class PipelineRunner:
                                    termination_status: TerminationStatus,
                                    metrics: SessionMetrics, audit_anchor: str,
                                    trace: list[IterationTrace], session_id: str) -> PipelineResult:
+        if metrics.time_elapsed_ms <= 0:
+            metrics.time_elapsed_ms = (time.perf_counter() - self._t_start) * 1000
         result = PipelineResult(
             final_response=final_response,
             termination_status=termination_status,

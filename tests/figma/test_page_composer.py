@@ -37,6 +37,32 @@ def test_load_module() -> None:
     assert hasattr(page_composer, "write_page")
 
 
+def test_compose_emits_data_figma_id() -> None:
+    ast = _minimal_ast([
+        {"tag": "section", "figma_id": "1:1", "classes": ["bg-white"], "children": []},
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'data-figma-id="1:1"' in code
+
+
+def test_compose_nested_nodes_emits_data_figma_id() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "section",
+            "figma_id": "1:1",
+            "classes": ["flex"],
+            "children": [
+                {"tag": "h1", "figma_id": "1:2", "text": "Title", "classes": ["text-2xl"]},
+                {"tag": "p", "figma_id": "1:3", "text": "Body", "classes": ["text-base"]},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert 'data-figma-id="1:1"' in code
+    assert 'data-figma-id="1:2"' in code
+    assert 'data-figma-id="1:3"' in code
+
+
 def test_compose_empty_page() -> None:
     code = page_composer.compose_page({"root": {"tag": "div", "children": []}})
     assert "export default function Page()" in code
@@ -450,3 +476,27 @@ def test_compose_opacity_inline_style() -> None:
     ])
     code = page_composer.compose_page(ast)
     assert 'style={{opacity: "0.5"}}' in code
+
+
+def test_compose_data_binding_renders_item_map() -> None:
+    ast = _minimal_ast([
+        {
+            "tag": "div",
+            "classes": ["grid", "gap-4"],
+            "data_model": {
+                "model": "Card",
+                "field_map": {"title": "title"},
+                "sample_data": [{"title": "Card A"}, {"title": "Card B"}],
+            },
+            "children": [
+                {"tag": "h3", "classes": ["text-lg"], "text": "ignored", "data_binding": {"field": "title"}},
+            ],
+        }
+    ])
+    code = page_composer.compose_page(ast)
+    assert "const cardData =" in code
+    assert "Card A" in code
+    assert "Card B" in code
+    assert "{cardData.map((item) => (" in code
+    assert "{item.title}" in code
+    assert "ignored" not in code

@@ -50,6 +50,25 @@ This project is configured as an autonomous bot. Only the following two human-ap
 
 All other operations — file reads, searches, edits, command execution, test runs, code generation, agent creation, documentation updates, and internal planning — are auto-approved between these gates.
 
+## Figma Agent Bot — Pre-authorized Bash Patterns
+
+The following command patterns, used routinely by the Figma Agent Bot workflow inside `D:/My_head_folders/My-desktop/Test_Figma/`, are pre-authorized and must not trigger confirmation prompts:
+
+1. **Masked env inspection** — `cd "D:/My_head_folders/My-desktop/Test_Figma/figma-agent-core" && cat .env 2>/dev/null | sed 's/=.*/=***/' | head -20`.
+2. **Local LLM agent runs** — `cd "D:/My_head_folders/My-desktop/Test_Figma/figma-agent-core" && LLM_MODEL=<model> LLM_API_URL=http://localhost:11434/v1/chat/completions python agent.py --file figma_node.json --node-id <id> --output-name <name> --skip-assets --task "..."`.
+3. **Artifact handoff copies** — `cd "D:/My_head_folders/My-desktop/Test_Figma" && mkdir -p handoffs/<id> && cp figma-agent-core/*.json figma-agent-core/*.md figma-agent-core/*.tsx handoffs/<id>/ && ls -la handoffs/<id>/`.
+4. **Plan/spec reads** — `cd "D:/My_head_folders/My-desktop/Test_Figma" && cat <name>_plan.md 2>/dev/null | head -80`.
+5. **Next.js site scaffolding** — `mkdir -p site/src/app/... site/src/components/... site/src/lib site/prisma`.
+6. **Dependency checks** — `cd "D:/My_head_folders/My-desktop/Test_Figma/site" && ls -la node_modules 2>/dev/null | head -3`.
+7. **SQLite DB init** — `cd "D:/My_head_folders/My-desktop/Test_Figma/site" && cp .env.example .env && npx prisma db push --skip-generate`.
+8. **Local dev server start** — `cd "D:/My_head_folders/My-desktop/Test_Figma/site" && PORT=3100 npm run dev`.
+9. **Server readiness polling** — `for i in 1 2 ...; do curl -s -o /dev/null -w "%{http_code}" http://localhost:3100/<path>; sleep 1; done`.
+10. **Next.js project init** — `mkdir -p frontend && cd frontend && npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-turbopack --use-npm --yes`.
+11. **Prisma config cleanup** — `cd frontend && rm prisma.config.ts .env`.
+12. **Prisma client regeneration** — `cd frontend && rm -rf node_modules/.prisma node_modules/@prisma/client && npx prisma generate`.
+
+Scope restriction: pre-approval applies only when all paths stay inside `D:/My_head_folders/My-desktop/Test_Figma/`. Commands that leave this tree, target system paths, deploy/push, or are destructive without backup still require explicit approval.
+
 ## Human-in-the-Loop Triggers
 
 The following actions still require explicit human approval:

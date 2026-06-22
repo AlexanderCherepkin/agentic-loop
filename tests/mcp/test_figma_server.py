@@ -44,7 +44,7 @@ def test_figma_server_initializes(figma_server: FigmaMCPServer) -> None:
     assert figma_server.name == "figma"
     assert figma_server._initialized is True
     tools = figma_server.get_tools_list()
-    assert len(tools) == 11
+    assert len(tools) == 12
     names = {t["name"] for t in tools}
     expected = {
         "figma_bootstrap",
@@ -58,6 +58,7 @@ def test_figma_server_initializes(figma_server: FigmaMCPServer) -> None:
         "figma_map_interactions",
         "figma_download_assets",
         "figma_run_pipeline",
+        "figma_precise_mode_audit",
     }
     assert names == expected
 

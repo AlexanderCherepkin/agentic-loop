@@ -194,6 +194,59 @@ def _safe_name(name: Any) -> str:
     return re.sub(r"[^\w\-]", "_", str(name or "unnamed")).strip("_") or "unnamed"
 
 
+def _has_image_fill(node: Dict[str, Any]) -> bool:
+    for f in node.get("fills", []) or []:
+        if f.get("type") == "IMAGE":
+            return True
+    return False
+
+
+def _infer_data_role(node: Dict[str, Any]) -> str:
+    """Map a leaf Figma node to a data-model field role."""
+    name = _safe_name(node.get("name", "")).lower()
+    node_type = node.get("type", "")
+    if node_type == "IMAGE" or _has_image_fill(node):
+        return "imageUrl"
+    triggers = node.get("prototype", {}).get("triggers", []) or []
+    for trigger in triggers:
+        if trigger.get("type") in ("URL", "NODE"):
+            return "href"
+    if "title" in name or "heading" in name or "headline" in name:
+        return "title"
+    if "subtitle" in name:
+        return "subtitle"
+    if "cta" in name or "button" in name:
+        return "ctaText"
+    if "name" in name:
+        return "name"
+    if "label" in name:
+        return "label"
+    if "description" in name or "body" in name or "copy" in name:
+        return "description"
+    return "text"
+
+
+def _load_data_models(value: Any) -> Dict[str, Dict[str, Any]]:
+    """Build a lookup from Figma node id to its data model definition."""
+    data: Optional[Dict[str, Any]] = None
+    if isinstance(value, dict):
+        data = value
+    elif isinstance(value, (str, Path)):
+        path = Path(value)
+        if path.exists():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                data = None
+    if not data:
+        return {}
+    mapping: Dict[str, Dict[str, Any]] = {}
+    for model in data.get("models", []):
+        for node_id in model.get("occurrence_ids", []):
+            mapping[str(node_id)] = model
+    return mapping
+
+
 @dataclass
 class TailwindNode:
     tag: str = "div"
@@ -224,12 +277,16 @@ class TailwindNode:
     figma_name: Optional[str] = None
     figma_type: Optional[str] = None
     component_ref: Optional[str] = None
+    figma_component_key: Optional[str] = None
     component_set_id: Optional[str] = None
     component_id: Optional[str] = None
     variant_props: Dict[str, str] = field(default_factory=dict)
     overrides: List[Dict[str, Any]] = field(default_factory=list)
     is_instance: bool = False
     component_context: Optional[str] = None
+    bbox: Optional[Dict[str, Optional[float]]] = None
+    data_model: Optional[Dict[str, Any]] = None
+    data_binding: Optional[Dict[str, Any]] = None
 
     def add_class(self, *classes: str) -> None:
         for cls in classes:
@@ -261,6 +318,8 @@ class TailwindNode:
             result["figma_type"] = self.figma_type
         if self.component_ref is not None:
             result["component_ref"] = self.component_ref
+        if self.figma_component_key is not None:
+            result["figma_component_key"] = self.figma_component_key
         if self.component_set_id is not None:
             result["component_set_id"] = self.component_set_id
         if self.component_id is not None:
@@ -273,6 +332,12 @@ class TailwindNode:
             result["is_instance"] = self.is_instance
         if self.component_context is not None:
             result["component_context"] = self.component_context
+        if self.bbox is not None:
+            result["bbox"] = self.bbox
+        if self.data_model is not None:
+            result["data_model"] = self.data_model
+        if self.data_binding is not None:
+            result["data_binding"] = self.data_binding
         if self.asset_type is not None:
             result["asset_type"] = self.asset_type
         if self.asset_width is not None:
@@ -350,7 +415,44 @@ class FigmaLayoutEngine:
             except Exception as e:
                 print(f"[LAYOUT] could not load component registry: {e}")
 
-    def _class_for_color(self, prefix: str, hex_color: Optional[str]) -> Optional[str]:
+        self.component_mapper: Optional[Any] = None
+        mapper_path = self.config.get("component_mapper")
+        if mapper_path:
+            try:
+                mod = _import_component_registry()
+                if isinstance(mapper_path, dict):
+                    self.component_mapper = mapper_path
+                else:
+                    self.component_mapper = json.loads(Path(mapper_path).read_text(encoding="utf-8"))
+            except Exception as e:
+                print(f"[LAYOUT] could not load component mapper: {e}")
+
+        self.data_models = _load_data_models(self.config.get("data_models"))
+
+    def _token_for_style_or_variable(self, node: Optional[Dict[str, Any]], kind: str) -> Optional[str]:
+        if not node or not self.tokens:
+            return None
+        style_id = (node.get("styles") or {}).get(kind)
+        if style_id:
+            # Exact style binding first, then semantic matcher fallback.
+            for token_map in ("style_token_map", "semantic_token_map"):
+                name = self.tokens.get(token_map, {}).get(style_id)
+                if name:
+                    return name
+        var_id = (node.get("boundVariables") or {}).get(kind)
+        if var_id:
+            for token_map in ("variable_token_map", "semantic_token_map"):
+                name = self.tokens.get(token_map, {}).get(var_id)
+                if name:
+                    return name
+        return None
+
+    def _class_for_color(self, prefix: str, hex_color: Optional[str], node: Optional[Dict[str, Any]] = None, kind: str = "fill") -> Optional[str]:
+        token_name = self._token_for_style_or_variable(node, kind)
+        if token_name:
+            # Dotted token paths (e.g. colors.primary.500) become dash-separated classes.
+            class_segment = token_name.replace(".", "-")
+            return f"{prefix}-{class_segment}"
         token_name = _token_for_hex(hex_color, self.tokens.get("color_by_hex") if self.tokens else None)
         if token_name:
             return f"{prefix}-{token_name}"
@@ -423,18 +525,30 @@ class FigmaLayoutEngine:
         node: Dict[str, Any],
         parent_box: Optional[Dict[str, Any]] = None,
         depth: int = 0,
+        parent_layout_mode: Optional[str] = None,
+        data_context: Optional[Dict[str, Any]] = None,
     ) -> Optional[TailwindNode]:
         if not isinstance(node, dict) or not node.get("visible", True):
             return None
+
+        node_id = node.get("id")
+        model = self.data_models.get(str(node_id)) if node_id else None
+        if model:
+            data_context = {
+                "model": model.get("name", "DataItem"),
+                "field_map": model.get("field_map", {}),
+                "sample_data": model.get("sample_data", []),
+                "item_var": "item",
+            }
 
         node_type = node.get("type", "UNKNOWN")
         name = _safe_name(node.get("name"))
 
         if node_type == "TEXT":
-            return self._convert_text(node)
+            return self._convert_text(node, parent_layout_mode=parent_layout_mode, data_context=data_context)
 
         if node_type == "IMAGE" or node.get("isAsset"):
-            return self._convert_asset(node)
+            return self._convert_asset(node, data_context=data_context)
 
         if node_type in ("RECTANGLE", "ELLIPSE"):
             return self._convert_shape(node)
@@ -443,14 +557,28 @@ class FigmaLayoutEngine:
             has_image_fill = any(f.get("type") == "IMAGE" for f in (node.get("fills") or []))
             if not has_image_fill:
                 return self._convert_shape(node)
-            return self._convert_asset(node)
+            return self._convert_asset(node, data_context=data_context)
 
         tw_node = TailwindNode(
             tag=self._semantic_tag(node, depth),
-            figma_id=node.get("id"),
+            figma_id=node_id,
             figma_name=name,
             figma_type=node.get("type"),
         )
+        if data_context and model:
+            tw_node.data_model = {
+                "model": data_context["model"],
+                "field_map": data_context["field_map"],
+                "sample_data": data_context["sample_data"],
+                "list": True,
+            }
+        if node.get("box"):
+            tw_node.bbox = {
+                "x": node["box"].get("x"),
+                "y": node["box"].get("y"),
+                "width": node["box"].get("width"),
+                "height": node["box"].get("height"),
+            }
 
         box = node.get("box") or node.get("absoluteBoundingBox")
         absolute_box = node.get("absoluteBoundingBox") or box
@@ -470,11 +598,19 @@ class FigmaLayoutEngine:
         if node.get("clipContent"):
             tw_node.add_class("overflow-hidden")
 
-        for child in node.get("children", []):
-            child_parent_box = absolute_box if absolute_box else box
-            converted = self._convert_node(child, parent_box=child_parent_box, depth=depth + 1)
-            if converted:
-                tw_node.children.append(converted)
+        if not tw_node.component_ref:
+            layout_mode = node.get("layoutMode")
+            for child in node.get("children", []):
+                child_parent_box = absolute_box if absolute_box else box
+                converted = self._convert_node(
+                    child,
+                    parent_box=child_parent_box,
+                    depth=depth + 1,
+                    parent_layout_mode=layout_mode,
+                    data_context=data_context,
+                )
+                if converted:
+                    tw_node.children.append(converted)
 
         return tw_node
 
@@ -507,7 +643,12 @@ class FigmaLayoutEngine:
             return "header"
         return "div"
 
-    def _convert_text(self, node: Dict[str, Any]) -> TailwindNode:
+    def _convert_text(
+        self,
+        node: Dict[str, Any],
+        parent_layout_mode: Optional[str] = None,
+        data_context: Optional[Dict[str, Any]] = None,
+    ) -> TailwindNode:
         characters = node.get("characters", "")
         tw_node = TailwindNode(
             tag=self._text_tag(node),
@@ -517,8 +658,9 @@ class FigmaLayoutEngine:
         )
         box = node.get("box") or node.get("absoluteBoundingBox")
         self._apply_size(tw_node, box, node)
+        self._apply_text_snug_fit(tw_node, node, box, parent_layout_mode=parent_layout_mode)
         style = node.get("style", {})
-        self._apply_text_style(tw_node, style)
+        self._apply_text_style(tw_node, style, node)
         self._apply_position(tw_node, node, None)
         self._apply_backend_hints(tw_node, node)
 
@@ -527,7 +669,40 @@ class FigmaLayoutEngine:
         if override_table and char_overrides and any(o for o in char_overrides):
             tw_node.rich_text = self._build_rich_text(characters, char_overrides, override_table, style)
 
+        if data_context:
+            role = _infer_data_role(node)
+            field = data_context["field_map"].get(role, role)
+            tw_node.data_binding = {"model": data_context["model"], "field": field, "item": True}
+            tw_node.text = None
+            tw_node.rich_text = None
+
         return tw_node
+
+    def _apply_text_snug_fit(
+        self,
+        tw_node: TailwindNode,
+        node: Dict[str, Any],
+        box: Optional[Dict[str, Any]],
+        parent_layout_mode: Optional[str] = None,
+    ) -> None:
+        """Heuristic: if Figma text box is wider than its content, constrain width."""
+        if not box:
+            return
+        width = _px(box.get("width"))
+        if not width or width <= 0:
+            return
+        text = (node.get("characters") or "").strip()
+        if not text:
+            return
+        # crude single-line heuristic: no newlines and parent lays out horizontally
+        is_horizontal = parent_layout_mode == "HORIZONTAL"
+        has_newline = "\n" in text
+        if is_horizontal and not has_newline:
+            tw_node.add_class("whitespace-nowrap")
+            return
+        # otherwise cap max width to Figma bbox
+        tw_node.add_class(f"max-w-[{int(round(width))}px]")
+        tw_node.inline_styles["maxWidth"] = f"{int(round(width))}px"
 
     def _build_rich_text(
         self,
@@ -599,7 +774,11 @@ class FigmaLayoutEngine:
             return None
         return self.assets.get("assets", {}).get(ref)
 
-    def _convert_asset(self, node: Dict[str, Any]) -> TailwindNode:
+    def _convert_asset(
+        self,
+        node: Dict[str, Any],
+        data_context: Optional[Dict[str, Any]] = None,
+    ) -> TailwindNode:
         node_id = node.get("id", "")
         ref = node.get("imageRef") or node_id
         resolved = self._resolve_asset(ref)
@@ -622,6 +801,13 @@ class FigmaLayoutEngine:
         self._apply_size(tw_node, box, node)
         self._apply_position(tw_node, node, None)
         self._apply_backend_hints(tw_node, node)
+
+        if data_context:
+            field = data_context["field_map"].get("imageUrl", "imageUrl")
+            tw_node.data_binding = {"model": data_context["model"], "field": field, "item": True}
+            tw_node.src = None
+            tw_node.inline_svg = None
+
         return tw_node
 
     def _convert_shape(self, node: Dict[str, Any]) -> TailwindNode:
@@ -808,29 +994,82 @@ class FigmaLayoutEngine:
             return
 
         positioning = node.get("layoutPositioning")
-        if positioning == "ABSOLUTE":
+        constraints = node.get("constraints") or {}
+        is_absolute = positioning == "ABSOLUTE"
+        has_fixed_constraints = bool(
+            constraints.get("horizontal") or constraints.get("vertical")
+        )
+        is_non_autolayout_child = not node.get("layoutMode") and not is_absolute
+
+        if is_absolute:
             pass
         elif node.get("layoutMode"):
+            return
+        elif not has_fixed_constraints and not is_non_autolayout_child:
             return
 
         box = node.get("box") or node.get("absoluteBoundingBox")
         if not box or not parent_box:
+            if is_absolute or has_fixed_constraints:
+                tw_node.add_class("absolute")
             return
 
         parent_x = _px(parent_box.get("x")) or 0
         parent_y = _px(parent_box.get("y")) or 0
+        parent_w = _px(parent_box.get("width")) or 0
+        parent_h = _px(parent_box.get("height")) or 0
         x = _px(box.get("x")) or 0
         y = _px(box.get("y")) or 0
+        w = _px(box.get("width")) or 0
+        h = _px(box.get("height")) or 0
 
         rel_x = int(round(x - parent_x))
         rel_y = int(round(y - parent_y))
 
-        if rel_x == 0 and rel_y == 0:
-            return
-
         tw_node.add_class("absolute")
-        tw_node.inline_styles["left"] = f"{rel_x}px"
-        tw_node.inline_styles["top"] = f"{rel_y}px"
+
+        horizontal = constraints.get("horizontal")
+        vertical = constraints.get("vertical")
+
+        if horizontal == "LEFT":
+            tw_node.inline_styles["left"] = f"{rel_x}px"
+        elif horizontal == "RIGHT":
+            tw_node.inline_styles["right"] = f"{int(round(parent_w - rel_x - w))}px"
+        elif horizontal == "LEFT_RIGHT":
+            tw_node.inline_styles["left"] = f"{rel_x}px"
+            tw_node.inline_styles["right"] = f"{int(round(parent_w - rel_x - w))}px"
+        elif horizontal == "CENTER":
+            offset = int(round(x - parent_x - parent_w / 2 + w / 2))
+            tw_node.inline_styles["left"] = f"calc(50% + {offset}px)"
+        elif horizontal == "SCALE":
+            left_pct = (rel_x / parent_w * 100) if parent_w else 0
+            right_pct = ((parent_w - rel_x - w) / parent_w * 100) if parent_w else 0
+            width_pct = (w / parent_w * 100) if parent_w else 0
+            tw_node.inline_styles["left"] = f"{left_pct:.2f}%"
+            tw_node.inline_styles["right"] = f"{right_pct:.2f}%"
+            tw_node.inline_styles["width"] = f"{width_pct:.2f}%"
+
+        if vertical == "TOP":
+            tw_node.inline_styles["top"] = f"{rel_y}px"
+        elif vertical == "BOTTOM":
+            tw_node.inline_styles["bottom"] = f"{int(round(parent_h - rel_y - h))}px"
+        elif vertical == "TOP_BOTTOM":
+            tw_node.inline_styles["top"] = f"{rel_y}px"
+            tw_node.inline_styles["bottom"] = f"{int(round(parent_h - rel_y - h))}px"
+        elif vertical == "CENTER":
+            offset = int(round(y - parent_y - parent_h / 2 + h / 2))
+            tw_node.inline_styles["top"] = f"calc(50% + {offset}px)"
+        elif vertical == "SCALE":
+            top_pct = (rel_y / parent_h * 100) if parent_h else 0
+            bottom_pct = ((parent_h - rel_y - h) / parent_h * 100) if parent_h else 0
+            height_pct = (h / parent_h * 100) if parent_h else 0
+            tw_node.inline_styles["top"] = f"{top_pct:.2f}%"
+            tw_node.inline_styles["bottom"] = f"{bottom_pct:.2f}%"
+            tw_node.inline_styles["height"] = f"{height_pct:.2f}%"
+
+        if not horizontal and not vertical:
+            tw_node.inline_styles["left"] = f"{rel_x}px"
+            tw_node.inline_styles["top"] = f"{rel_y}px"
 
 
     def _apply_fills(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
@@ -844,7 +1083,7 @@ class FigmaLayoutEngine:
                     if rgba:
                         tw_node.inline_styles["backgroundColor"] = rgba
                 else:
-                    cls = self._class_for_color("bg", hex_color)
+                    cls = self._class_for_color("bg", hex_color, node, "fill")
                     if cls:
                         tw_node.add_class(cls)
                 opacity = fill.get("opacity")
@@ -877,7 +1116,7 @@ class FigmaLayoutEngine:
         for stroke in strokes:
             if stroke.get("type") == "SOLID":
                 hex_color = stroke.get("hex") or _color_to_hex(stroke.get("color"))
-                cls = self._class_for_color("border", hex_color)
+                cls = self._class_for_color("border", hex_color, node, "stroke")
                 if cls:
                     tw_node.add_class(cls)
                 width = _px(node.get("strokeWeight", 1))
@@ -977,9 +1216,18 @@ class FigmaLayoutEngine:
             entry = self.component_registry.lookup_by_instance(node)
             if entry:
                 tw_node.component_ref = entry.get("pascal_name")
+                tw_node.figma_component_key = entry.get("figma_component_key")
                 tw_node.is_instance = True
                 tw_node.variant_props = node.get("variantProperties") or {}
                 tw_node.overrides = node.get("overrides") or []
+                if self.component_mapper:
+                    mapping = self.component_mapper.get("mappings", {}).get(entry.get("id"))
+                    if mapping:
+                        reg_mod = _import_component_registry()
+                        tw_node.component_ref = mapping.get("react_component", {}).get("export_name", tw_node.component_ref)
+                        tw_node.figma_component_key = mapping.get("figma_component_key", tw_node.figma_component_key)
+                        tw_node.variant_props = reg_mod.ComponentMapper.props_for_instance(mapping, tw_node.variant_props)
+                        tw_node.is_instance = True
 
     def _apply_backend_hints(self, tw_node: TailwindNode, node: Dict[str, Any]) -> None:
         node_id = node.get("id")
@@ -1016,7 +1264,7 @@ class FigmaLayoutEngine:
         if tw_node.enum_values or any(k in name_lower for k in ("select", "country", "role", "status")):
             tw_node.input_type = "select"
 
-    def _text_style_classes(self, style: Dict[str, Any]) -> List[str]:
+    def _text_style_classes(self, style: Dict[str, Any], node: Optional[Dict[str, Any]] = None) -> List[str]:
         """Возвращает Tailwind-классы для Figma TypeStyle (без side-эффектов)."""
         classes: List[str] = []
         font_size = _px(style.get("fontSize"))
@@ -1054,7 +1302,7 @@ class FigmaLayoutEngine:
         for fill in fills:
             if fill.get("type") == "SOLID":
                 hex_color = fill.get("hex") or _color_to_hex(fill.get("color"))
-                cls = self._class_for_color("text", hex_color)
+                cls = self._class_for_color("text", hex_color, node, "text")
                 if cls:
                     classes.append(cls)
                 break
@@ -1081,8 +1329,8 @@ class FigmaLayoutEngine:
 
         return classes
 
-    def _apply_text_style(self, tw_node: TailwindNode, style: Dict[str, Any]) -> None:
-        for cls in self._text_style_classes(style):
+    def _apply_text_style(self, tw_node: TailwindNode, style: Dict[str, Any], node: Optional[Dict[str, Any]] = None) -> None:
+        for cls in self._text_style_classes(style, node):
             tw_node.add_class(cls)
 
 
@@ -1136,6 +1384,16 @@ def main():
         default="component_registry.json",
         help="Путь к component_registry.json (опционально).",
     )
+    parser.add_argument(
+        "--components-mapper",
+        default="figma_component_map.json",
+        help="Путь к figma_component_map.json (опционально).",
+    )
+    parser.add_argument(
+        "--data-models",
+        default=None,
+        help="Путь к data_model.json для привязки повторяющихся структур к данным (опционально).",
+    )
     args = parser.parse_args()
 
     import analyzer
@@ -1165,6 +1423,15 @@ def main():
         config["backend_mapping"] = backend_mapping
     if args.components:
         config["component_registry"] = args.components
+    mapper_path = Path(args.components_mapper) if args.components_mapper else None
+    if mapper_path and not mapper_path.exists():
+        fallback = Path("figma_component_mappings.json")
+        if fallback.exists():
+            mapper_path = fallback
+    if mapper_path and mapper_path.exists():
+        config["component_mapper"] = str(mapper_path)
+    if args.data_models and Path(args.data_models).exists():
+        config["data_models"] = str(Path(args.data_models).resolve())
     result = convert_figma_node(node, config=config)
     output_path = Path(args.output)
     with open(output_path, "w", encoding="utf-8") as f:

@@ -71,6 +71,20 @@ def _visual_qa_needs_refinement(report: Dict[str, Any], diff_threshold: float) -
     return False
 
 
+def _qa_score(report: Dict[str, Any]) -> Optional[float]:
+    """Возвращает нормализованный score: diff_score, или drift px, или число failed checks."""
+    diff_score = report.get("diff_score")
+    if diff_score is not None:
+        return float(diff_score)
+    pixel_metrics = report.get("pixel_metrics", {})
+    drift = pixel_metrics.get("total_drift_px")
+    if drift is not None:
+        return float(drift)
+    failed_checks = sum(1 for c in report.get("layout_checks", []) if not c.get("passed", True))
+    failed_assertions = sum(1 for a in report.get("dom_assertions", []) if not a.get("passed", True))
+    return float(failed_checks + failed_assertions) if (failed_checks or failed_assertions) else None
+
+
 def _apply_layout_adjustments(
     ast: Dict[str, Any],
     report: Dict[str, Any],
@@ -173,18 +187,76 @@ def _apply_layout_adjustments(
                 "figma_id": figma_id,
                 "reason": _check_reason(check),
             })
-        elif check_type in ("bbox_mismatch", "bbox_missing"):
+        elif check_type == "bbox_mismatch":
             page = check.get("page") or {}
             figma = check.get("figma") or {}
             page_w = page.get("width", 0)
             figma_w = figma.get("width", 0)
-            if figma_w and page_w > figma_w + 8 and "w-full" in classes:
+            page_h = page.get("height", 0)
+            figma_h = figma.get("height", 0)
+            exact_adjusted = False
+            if figma_w and abs(page_w - figma_w) > 2:
+                _replace_size_class(classes, "w", figma_w)
+                exact_adjusted = True
+            if figma_h and abs(page_h - figma_h) > 2:
+                _replace_size_class(classes, "h", figma_h)
+                exact_adjusted = True
+            if not exact_adjusted and figma_w and page_w > figma_w + 8 and "w-full" in classes:
                 classes.remove("w-full")
                 classes.append(f"w-[{figma_w}px]")
             if "p-4" not in classes and not any(c.startswith("p-") for c in classes):
                 classes.append("p-4")
             adjustments.append({
                 "type": "bbox_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+                "exact_size": exact_adjusted,
+            })
+        elif check_type == "bbox_missing":
+            adjustments.append({
+                "type": "bbox_missing",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+            })
+        elif check_type == "font_mismatch":
+            page = check.get("page") or {}
+            mismatches = check.get("mismatches", [])
+            figma = check.get("figma") or {}
+            for m in mismatches:
+                if m == "size":
+                    size = figma.get("font_size")
+                    if size:
+                        _replace_size_class(classes, "text", int(round(float(size))))
+                elif m == "weight":
+                    weight = figma.get("font_weight")
+                    if weight:
+                        _replace_size_class(classes, "font", int(weight), unit="")
+                elif m == "line_height":
+                    lh = figma.get("line_height_px")
+                    size = figma.get("font_size")
+                    if lh and size:
+                        ratio = round(float(lh) / float(size), 3)
+                        _replace_size_class(classes, "leading", ratio, unit="")
+                elif m == "letter_spacing":
+                    ls = figma.get("letter_spacing")
+                    if ls is not None:
+                        _replace_size_class(classes, "tracking", int(round(float(ls))))
+            adjustments.append({
+                "type": "font_fix",
+                "figma_id": figma_id,
+                "reason": _check_reason(check),
+                "mismatches": mismatches,
+            })
+        elif check_type == "snug_text":
+            figma_width = check.get("figma_width")
+            if figma_width:
+                # Prefer whitespace-nowrap if node looks like a single-line label.
+                if "whitespace-nowrap" not in classes and ("flex" in classes or "flex-row" in " ".join(classes)):
+                    classes.append("whitespace-nowrap")
+                else:
+                    _replace_size_class(classes, "max-w", int(round(figma_width)))
+            adjustments.append({
+                "type": "snug_text_fix",
                 "figma_id": figma_id,
                 "reason": _check_reason(check),
             })
@@ -209,6 +281,13 @@ def _find_node_by_figma_id(node: Dict[str, Any], figma_id: str) -> Optional[Dict
         if found:
             return found
     return None
+
+
+def _replace_size_class(classes: List[str], prefix: str, value: Any, unit: str = "px") -> None:
+    """Удаляет существующие классы размера prefix и добавляет exact arbitrary class."""
+    keep = [c for c in classes if not (c.startswith(prefix + "-") or c.startswith(prefix + "["))]
+    keep.append(f"{prefix}-[{value}{unit}]")
+    classes[:] = keep
 
 
 def _run_compose(
@@ -285,6 +364,8 @@ def run_refinement_loop(
 
     final_qa_report: Optional[Dict[str, Any]] = None
     all_adjustments: List[Dict[str, Any]] = []
+    previous_score: Optional[float] = None
+    stagnant_iterations = 0
 
     for iteration in range(1, max_iterations + 1):
         if on_compose:
@@ -337,6 +418,24 @@ def run_refinement_loop(
             if adjustments:
                 _save_json(ast_file, ast)
         all_adjustments.extend(adjustments)
+
+        current_score = _qa_score(qa_report)
+        if previous_score is not None and current_score is not None and current_score >= previous_score and adjustments:
+            stagnant_iterations += 1
+        else:
+            stagnant_iterations = 0
+        if stagnant_iterations >= 2:
+            report = RefinementReport(
+                status="needs_human",
+                iterations=iteration,
+                final_visual_qa=final_qa_report,
+                adjustments=all_adjustments,
+                escalation_reason="Visual QA score did not improve after adjustments; manual review required",
+                max_iterations=max_iterations,
+            )
+            _save_json(Path(report_output), report.to_dict())
+            return report.to_dict()
+        previous_score = current_score
 
     report = RefinementReport(
         status="needs_human",

@@ -63,7 +63,8 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
 │   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
 │   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
-│   │   └── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
+│   │   ├── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
+│   │   └── component_mapper.md           #     Map Figma Component Sets to React components and write mapper files
 │   ├── execution/                        #   Execution layer (4 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
@@ -143,9 +144,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 28 |
+| tooll_subagents | 30 |
 | tools_* | 110 |
-| **Total** | **171** |
+| **Total** | **173** |
 
 ## Naming Convention
 - snake_case filenames
@@ -166,13 +167,13 @@ User Request
 
 ## Implementation Status
 
-All 171 agents are fully implemented following the Algorithmic template:
+All 174 agents are fully implemented following the Algorithmic template:
 - `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (28) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (9 with `figma_design_analyst.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, and `component_registry.md`), execution (4), observability (4), self_correction (4), result (4)
+- `tooll_subagents/` (31) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (11 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, and `component_mapper.md`), execution (4), observability (4), self_correction (4), result (4)
 - `tools_*` (110) — 11 categories × 10 agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation

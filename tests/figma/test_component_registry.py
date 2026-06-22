@@ -110,3 +110,107 @@ def test_component_registry_lookup() -> None:
     entry = reg.lookup_by_instance(instance)
     assert entry is not None
     assert entry["pascal_name"] == "Button"
+
+
+def test_registry_entry_includes_component_key_and_variant_prop_map() -> None:
+    doc = _load_fixture("component_set.json")
+    builder = registry_module.RegistryBuilder(doc)
+    data = builder.build()
+
+    entry = data["components"]["10:1"]
+    assert entry["figma_component_key"] == "10:1"
+    assert entry["variant_prop_map"] == {"Variant": "variant", "Size": "size"}
+    assert entry["default_props"] == {"variant": "primary", "size": "small"}
+
+
+def test_registry_entry_uses_figma_key_when_present() -> None:
+    doc = _load_fixture("component_set.json")
+    doc["children"][0]["key"] = "abc-button-key"
+    doc["children"][0]["description"] = "Primary action button"
+    builder = registry_module.RegistryBuilder(doc)
+    data = builder.build()
+
+    entry = data["components"]["10:1"]
+    assert entry["figma_component_key"] == "abc-button-key"
+    assert entry["description"] == "Primary action button"
+
+
+def test_build_and_write_creates_per_component_mapper_files(tmp_path: Path) -> None:
+    doc = _load_fixture("component_set.json")
+    mapper_dir = tmp_path / "__mappers__"
+    builder = registry_module.RegistryBuilder(
+        doc,
+        output_path=tmp_path / "registry.json",
+        mapper_output_path=tmp_path / "figma_component_map.json",
+        per_component_mapper_dir=mapper_dir,
+        aggregate_mapper_path=tmp_path / "figma_component_mappings.json",
+    )
+    builder.build_and_write()
+
+    assert (mapper_dir / "Button.mapper.json").exists()
+    assert (mapper_dir / "IconButton.mapper.json").exists()
+
+    button_mapper = json.loads((mapper_dir / "Button.mapper.json").read_text(encoding="utf-8"))
+    assert button_mapper["$schema"] == "https://agentic-loop.dev/schemas/component-mapper.json"
+    assert button_mapper["figma_component_id"] == "10:1"
+    assert button_mapper["pascal_name"] == "Button"
+    assert "prop_mapping" in button_mapper
+    assert button_mapper["prop_mapping"] == {"Variant": "variant", "Size": "size"}
+
+
+def test_component_registry_loads_with_aggregate_mapper(tmp_path: Path) -> None:
+    doc = _load_fixture("component_set.json")
+    builder = registry_module.RegistryBuilder(
+        doc,
+        output_path=tmp_path / "registry.json",
+        mapper_output_path=tmp_path / "figma_component_map.json",
+    )
+    builder.build_and_write()
+
+    reg = registry_module.ComponentRegistry.load(
+        tmp_path / "registry.json",
+        mapper_path=tmp_path / "figma_component_map.json",
+    )
+    mapping = reg.lookup_mapping("10:1")
+    assert mapping is not None
+    assert mapping["pascal_name"] == "Button"
+
+
+def test_component_registry_loads_with_per_component_mappers(tmp_path: Path) -> None:
+    doc = _load_fixture("component_set.json")
+    mapper_dir = tmp_path / "__mappers__"
+    builder = registry_module.RegistryBuilder(
+        doc,
+        output_path=tmp_path / "registry.json",
+        mapper_output_path=tmp_path / "figma_component_map.json",
+        per_component_mapper_dir=mapper_dir,
+        aggregate_mapper_path=tmp_path / "figma_component_mappings.json",
+    )
+    builder.build_and_write()
+
+    # Overlay a per-component mapper that changes the import path.
+    button_mapper = json.loads((mapper_dir / "Button.mapper.json").read_text(encoding="utf-8"))
+    button_mapper["react_component"]["import_path"] = "@/components/ui/Button"
+    (mapper_dir / "Button.mapper.json").write_text(json.dumps(button_mapper, indent=2), encoding="utf-8")
+
+    reg = registry_module.ComponentRegistry.load_with_per_component_mappers(
+        tmp_path / "registry.json",
+        aggregate_mapper_path=tmp_path / "figma_component_mappings.json",
+        per_component_mapper_dir=mapper_dir,
+    )
+    mapping = reg.lookup_mapping("10:1")
+    assert mapping is not None
+    assert mapping["react_component"]["import_path"] == "@/components/ui/Button"
+
+
+def test_props_for_instance_uses_per_component_value_mapping() -> None:
+    mapping = {
+        "prop_mapping": {"Variant": "variant", "Size": "size"},
+        "value_mapping": {
+            "variant": {"Primary": "primary", "Secondary": "secondary"},
+            "size": {"Small": "sm", "Large": "lg"},
+        },
+        "default_props": {"variant": "primary"},
+    }
+    props = registry_module.ComponentMapper.props_for_instance(mapping, {"Variant": "Secondary", "Size": "Large"})
+    assert props == {"variant": "secondary", "size": "lg"}

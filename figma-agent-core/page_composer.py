@@ -91,6 +91,27 @@ def _node_text(node: Dict[str, Any]) -> str:
     return ""
 
 
+def _resolve_component_name(node: Dict[str, Any], mapper: Optional[Dict[str, Any]] = None) -> str:
+    """Return the React component name, using mapper export_name if available."""
+    name = node.get("component_ref") or node.get("component_name", "Unknown")
+    if not mapper:
+        return name
+    mappings = mapper.get("mappings", {})
+    mapping_key = node.get("component_set_id") or node.get("component_id")
+    if mapping_key and mapping_key in mappings:
+        return mappings[mapping_key].get("react_component", {}).get("export_name", name)
+    return name
+
+
+def _apply_component_mappings(root: Dict[str, Any], mapper: Optional[Dict[str, Any]] = None) -> None:
+    """Rewrite component_ref names to mapped export_name in-place."""
+    if not mapper:
+        return
+    for node in _collect_all_nodes(root):
+        if node.get("component_ref"):
+            node["component_ref"] = _resolve_component_name(node, mapper)
+
+
 def _extract_text_nodes(node: Dict[str, Any]) -> List[Dict[str, Any]]:
     if node.get("text") is not None or node.get("rich_text"):
         return [node]
@@ -166,13 +187,20 @@ def _detect_backend_imports(ast: Dict[str, Any]) -> List[str]:
     return sorted(imports)
 
 
-def _detect_component_imports(ast: Dict[str, Any]) -> List[str]:
+def _detect_component_imports(ast: Dict[str, Any], mapper: Optional[Dict[str, Any]] = None) -> List[str]:
     root = ast.get("root", ast)
     imports: set = set()
+    mappings = (mapper or {}).get("mappings", {})
     for node in _collect_all_nodes(root):
         if node.get("component_ref"):
-            name = node["component_ref"]
-            imports.add(f'import {name} from "@/components/ui/{name}"')
+            name = _resolve_component_name(node, mapper)
+            import_path = f"@/components/ui/{name}"
+            set_id = node.get("component_set_id")
+            comp_id = node.get("component_id")
+            mapping_key = set_id or comp_id
+            if mapping_key and mapping_key in mappings:
+                import_path = mappings[mapping_key].get("react_component", {}).get("import_path", import_path)
+            imports.add(f'import {name} from "{import_path}"')
         elif node.get("component"):
             name = node.get("component_name", node.get("tag", "Unknown"))
             path = node.get("component_path", f"@/app/components/{name}")
@@ -263,6 +291,25 @@ def _build_form_hooks(forms: List[Dict[str, Any]]) -> List[str]:
     return hooks
 
 
+def _build_data_model_consts(ast: Dict[str, Any]) -> List[str]:
+    """Generate local data arrays for repeated Figma structures detected by the data model extractor."""
+    root = ast.get("root", ast)
+    consts: List[str] = []
+    seen: set = set()
+    for node in _collect_all_nodes(root):
+        dm = node.get("data_model")
+        if not dm:
+            continue
+        name = dm.get("model")
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        var = _to_camel_case_prop(name) + "Data"
+        sample_data = dm.get("sample_data") or []
+        consts.append(f"const {var} = {json.dumps(sample_data, ensure_ascii=False)};")
+    return consts
+
+
 def _detect_form_imports(forms: List[Dict[str, Any]]) -> List[str]:
     if not forms:
         return []
@@ -308,6 +355,8 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
         classes.extend(variants.get(token, []))
     class_attr = f' className="{_class_string(classes)}"' if classes else ""
     style_attr = _render_inline_styles(node.get("inline_styles", {}))
+    figma_id = node.get("figma_id")
+    data_attr = f' data-figma-id={_safe_prop(figma_id)}' if figma_id else ""
 
     text = node.get("text")
     src = node.get("src")
@@ -327,6 +376,8 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
     required = node.get("required", False)
     interactive = node.get("interactive")
     conditional_state = node.get("conditional_render")
+    data_binding = node.get("data_binding")
+    data_model = node.get("data_model")
 
     if backend_action:
         tag = "form"
@@ -354,8 +405,11 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
         if form_key:
             extra_attrs += f" {{...register_{form_key}({_safe_prop(backend_field)})}}"
 
-    if tag == "img" and src:
-        if asset_type == "raster" and asset_width and asset_height:
+    if tag == "img" and (src or data_binding):
+        if data_binding:
+            field = data_binding["field"]
+            extra_attrs += f' src={{item.{field}}} alt={_safe_prop(alt)}'
+        elif asset_type == "raster" and asset_width and asset_height:
             tag = "Image"
             extra_attrs += (
                 f' src={_safe_prop(src)} alt={_safe_prop(alt)}'
@@ -392,7 +446,7 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
                 f"<span className=\"text-red-500 text-sm\">{{errors_{form_key}.{backend_field}.message}}</span>}}}}"
             )
         return _wrap_conditional(
-            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs} />{field_error}",
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr} />{field_error}",
             conditional_state,
             start_indent,
         )
@@ -406,7 +460,7 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
             )
         inner = _escape_jsx_text(str(text or ""))
         return _wrap_conditional(
-            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{inner}</{tag}>{field_error}",
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>{inner}</{tag}>{field_error}",
             conditional_state,
             start_indent,
         )
@@ -425,13 +479,13 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
         for value in node.get("enum_values", []):
             options += f'<option value={_safe_prop(value)}>{_escape_jsx_text(value)}</option>'
         return _wrap_conditional(
-            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{placeholder_option}{options}</{tag}>{field_error}",
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>{placeholder_option}{options}</{tag}>{field_error}",
             conditional_state,
             start_indent,
         )
 
     if inline_svg and tag == "img":
-        wrapper = f'{start_indent}<div{class_attr}{style_attr}>\n{inner_indent}{inline_svg}\n{start_indent}</div>'
+        wrapper = f'{start_indent}<div{class_attr}{style_attr}{data_attr}>\n{inner_indent}{inline_svg}\n{start_indent}</div>'
         return _wrap_conditional(wrapper, conditional_state, start_indent)
 
     if node.get("component_ref"):
@@ -461,6 +515,8 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
             start_indent,
         )
 
+    # Inline data-figma-id on component wrappers would be redundant; components own their own DOM.
+
     rich_text = node.get("rich_text")
     if rich_text:
         rendered_spans: List[str] = []
@@ -484,10 +540,25 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
         if rendered_spans:
             body = "\n".join(rendered_spans)
             return _wrap_conditional(
-                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n{body}\n{start_indent}</{tag}>",
+                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>\n{body}\n{start_indent}</{tag}>",
                 conditional_state,
                 start_indent,
             )
+
+    if data_model and children:
+        var = _to_camel_case_prop(data_model["model"]) + "Data"
+        child_form_key = form_key if form_key else (node.get("backend_action") and _form_key(node.get("figma_name") or "form"))
+        rendered_children = "\n".join(_node_to_tsx(child, depth + 1, child_form_key) for child in children)
+        body = (
+            f"{start_indent}  <{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>\n"
+            f"{rendered_children}\n"
+            f"{start_indent}  </{tag}>"
+        )
+        return (
+            f"{start_indent}{{{var}.map((item) => (\n"
+            f"{body}\n"
+            f"{start_indent}))}}"
+        )
 
     if children:
         child_form_key = form_key if form_key else (node.get("backend_action") and _form_key(node.get("figma_name") or "form"))
@@ -502,7 +573,7 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
             )
         return _wrap_conditional(
             (
-                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n"
+                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>\n"
                 f"{rendered_children}\n"
                 f"{form_status}{start_indent}</{tag}>"
             ),
@@ -510,23 +581,36 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
             start_indent,
         )
 
+    if data_binding:
+        field = data_binding["field"]
+        inner = f"{{item.{field}}}"
+        if tag in ("span", "p", "a", "label", "h1", "h2", "h3", "h4", "h5", "h6", "li"):
+            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>{inner}</{tag}>"
+        else:
+            rendered = (
+                f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>\n"
+                f"{inner_indent}{inner}\n"
+                f"{start_indent}</{tag}>"
+            )
+        return _wrap_conditional(rendered, conditional_state, start_indent)
+
     if text is not None:
         escaped_text = _escape_jsx_text(str(text))
         if tag in ("span", "p", "a", "label"):
-            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>{escaped_text}</{tag}>"
+            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>{escaped_text}</{tag}>"
         else:
-            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}>\n{inner_indent}{escaped_text}\n{start_indent}</{tag}>"
+            rendered = f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr}>\n{inner_indent}{escaped_text}\n{start_indent}</{tag}>"
         return _wrap_conditional(rendered, conditional_state, start_indent)
 
     if tag == "img":
         return _wrap_conditional(
-            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs} />",
+            f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr} />",
             conditional_state,
             start_indent,
         )
 
     return _wrap_conditional(
-        f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs} />",
+        f"{start_indent}<{tag}{class_attr}{style_attr}{extra_attrs}{data_attr} />",
         conditional_state,
         start_indent,
     )
@@ -618,15 +702,17 @@ def _infer_page_title(ast: Dict[str, Any]) -> str:
     return "Landing"
 
 
-def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
+def compose_page(ast: Dict[str, Any], title: Optional[str] = None, component_mapper: Optional[Dict[str, Any]] = None) -> str:
     """Превращает Tailwind AST в Next.js page.tsx."""
     page_title = title or _infer_page_title(ast)
     imports = _detect_image_imports(ast)
     imports.extend(_detect_backend_imports(ast))
     imports.extend(_detect_font_imports(ast))
-    imports.extend(_detect_component_imports(ast))
+    imports.extend(_detect_component_imports(ast, component_mapper))
 
     root = ast.get("root", ast)
+    _apply_component_mappings(root, component_mapper)
+
     interactive_nodes = [n for n in _collect_all_nodes(root) if n.get("interactive")]
     interactive_imports, needs_router = _detect_interactive_imports(ast)
     imports.extend(interactive_imports)
@@ -659,8 +745,9 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None) -> str:
             sections.append(rendered)
 
     state_hooks = _build_state_hooks(interactive_nodes)
+    state_hooks.extend(_build_data_model_consts(ast))
     form_hooks = _build_form_hooks(forms)
-    is_client = bool(interactive_nodes) or bool(forms)
+    is_client = bool(interactive_nodes) or bool(forms) or bool(state_hooks)
     return _wrap_page(
         page_title,
         imports,
@@ -756,10 +843,18 @@ def main():
         default=None,
         help="Заголовок страницы (по умолчанию извлекается из первого заголовка AST).",
     )
+    parser.add_argument(
+        "--components-mapper",
+        default="figma_component_map.json",
+        help="Путь к figma_component_map.json для импортов компонентов.",
+    )
     args = parser.parse_args()
 
     ast = json.loads(Path(args.ast).read_text(encoding="utf-8"))
-    code = compose_page(ast, title=args.title)
+    mapper: Optional[Dict[str, Any]] = None
+    if args.components_mapper and Path(args.components_mapper).exists():
+        mapper = json.loads(Path(args.components_mapper).read_text(encoding="utf-8"))
+    code = compose_page(ast, title=args.title, component_mapper=mapper)
     written_path = write_page(code, args.output)
     print(f"[COMPOSE] Page written to {written_path}")
 

@@ -139,6 +139,71 @@ def test_constraint_to_classes_with_stretch_constraints() -> None:
     assert "h-full" in classes
 
 
+def test_constraint_to_classes_fixed_with_constraints_emits_absolute() -> None:
+    node = {
+        "id": "1:5",
+        "name": "Badge",
+        "type": "FRAME",
+        "visible": True,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "constraints": {"horizontal": "RIGHT", "vertical": "BOTTOM"},
+        "box": {"x": 720, "y": 20, "width": 60, "height": 24},
+    }
+    classes = responsive_composer.constraint_to_classes(node)
+    # FIXED + explicit constraints keep arbitrary fixed size.
+    assert "w-[60px]" in classes
+    assert "h-[24px]" in classes
+
+
+def test_compose_responsive_ast_generates_direction_variants() -> None:
+    base = {
+        "id": "1:1",
+        "name": "Mobile Hero",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "box": {"x": 0, "y": 0, "width": 375, "height": 600},
+        "children": [
+            {
+                "id": "1:2",
+                "name": "Card",
+                "type": "FRAME",
+                "visible": True,
+                "layoutMode": "VERTICAL",
+                "box": {"x": 20, "y": 100, "width": 335, "height": 40},
+            }
+        ],
+    }
+    tablet = {
+        "id": "2:1",
+        "name": "Tablet Hero",
+        "type": "FRAME",
+        "visible": True,
+        "layoutMode": "VERTICAL",
+        "box": {"x": 0, "y": 0, "width": 768, "height": 600},
+        "children": [
+            {
+                "id": "2:2",
+                "name": "Card",
+                "type": "FRAME",
+                "visible": True,
+                "layoutMode": "HORIZONTAL",
+                "box": {"x": 40, "y": 100, "width": 688, "height": 48},
+            }
+        ],
+    }
+    figma_root = {"id": "0:1", "name": "Page", "type": "PAGE", "children": [base, tablet]}
+    layout_ast = layout_engine.convert_figma_node(base).to_dict()
+    responsive_ast, report = responsive_composer.compose_responsive_ast(layout_ast, figma_root)
+
+    card = responsive_ast["root"]["children"][0]
+    md_variants = card.get("responsive_variants", {}).get("md", [])
+    assert "md:flex-row" in md_variants
+    assert "md:w-[688px]" in md_variants
+    assert "md:h-[48px]" in md_variants
+
+
 def test_compose_responsive_ast_applies_constraints_to_base() -> None:
     base = {
         "id": "1:1",

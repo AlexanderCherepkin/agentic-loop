@@ -4,25 +4,25 @@
   "type": "FRAME",
   "styles": {
     "s-background": {
-      "name": "color/background"
+      "name": "colors/background"
     },
     "s-foreground": {
-      "name": "color/foreground"
+      "name": "colors/foreground"
     },
     "s-primary": {
-      "name": "color/primary"
+      "name": "colors/primary"
     },
     "s-secondary": {
-      "name": "color/secondary"
+      "name": "colors/secondary"
     },
     "s-muted": {
-      "name": "color/muted"
+      "name": "colors/muted"
     },
     "s-destructive": {
-      "name": "color/destructive"
+      "name": "colors/destructive"
     },
     "s-border": {
-      "name": "color/border"
+      "name": "colors/border"
     }
   },
   "variables": {
