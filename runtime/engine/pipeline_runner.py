@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import importlib.util
-import sys
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -13,9 +13,9 @@ from typing import Any
 from ..contracts.agent_spec import AgentSpec
 from ..contracts.message import Message, MessageType
 from .agent_loader import AgentLoader
-from .llm_engine import LLMEngine, LLMConfig, LLMProvider, LLMResponse
+from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
-from .state_manager import StateManager, OperationStatus
+from .state_manager import StateManager
 
 # Optional MCP integration
 try:
@@ -44,35 +44,6 @@ def _load_figma_config_module():
 _figma_config_mod = _load_figma_config_module()
 HAS_FIGMA_CONFIG = _figma_config_mod is not None
 
-# Optional Worker Pool for context isolation
-try:
-    from ..workers.worker_pool import WorkerPool, WorkerJob, WorkerResult
-    from ..workers.context_isolator import ContextIsolator
-    HAS_WORKER_POOL = True
-except ImportError:
-    HAS_WORKER_POOL = False
-
-# Optional Context Compression
-try:
-    from ..workers.context_compressor import ContextCompressor
-    HAS_CONTEXT_COMPRESSOR = True
-except ImportError:
-    HAS_CONTEXT_COMPRESSOR = False
-
-# Optional Memory Manager
-try:
-    from ..memory.memory_manager import MemoryManager
-    HAS_MEMORY = True
-except ImportError:
-    HAS_MEMORY = False
-
-# Optional Observability
-try:
-    from ..observability import get_logger, MetricsCollector
-    HAS_OBS = True
-except ImportError:
-    HAS_OBS = False
-
 
 class TerminationStatus(str, Enum):
     SUCCESS = "success"
@@ -83,10 +54,7 @@ class TerminationStatus(str, Enum):
 
 class PipelineStatus(str, Enum):
     RUNNING = "running"
-    PAUSED = "paused"
     COMPLETED = "completed"
-    FAILED = "failed"
-    STALLED = "stalled"
 
 
 @dataclass
@@ -102,8 +70,6 @@ class PhaseTransitionManager:
     Default sequence: planning → execution → observability → self_correction → result.
     Agent outputs can override the next phase (e.g., skip replanning, escalate to result).
     """
-
-    DEFAULT_SEQUENCE = ["planning", "execution", "observability", "self_correction", "result"]
 
     def __init__(self, max_iterations: int = 5):
         self.max_iterations = max_iterations
@@ -304,24 +270,6 @@ class SessionMetrics:
     tokens_consumed: int = 0
     safety_checks_passed: int = 0
     safety_checks_failed: int = 0
-    agent_latencies: dict[str, list[float]] = field(default_factory=dict)  # agent_path -> [latencies]
-
-    def record_agent_latency(self, agent_path: str, latency_ms: float) -> None:
-        self.agent_latencies.setdefault(agent_path, []).append(latency_ms)
-
-    @property
-    def latency_summary(self) -> dict[str, dict[str, float]]:
-        """Return {agent: {count, avg_ms, max_ms, min_ms}} for all agents invoked."""
-        summary: dict[str, dict[str, float]] = {}
-        for path, times in self.agent_latencies.items():
-            if times:
-                summary[path] = {
-                    "count": len(times),
-                    "avg_ms": round(sum(times) / len(times), 2),
-                    "max_ms": round(max(times), 2),
-                    "min_ms": round(min(times), 2),
-                }
-        return summary
 
 
 @dataclass
@@ -367,11 +315,10 @@ class PipelineRunner:
         self.workspace = workspace_root
         self._max_iterations = max_iterations
         self._agent_cache: dict[str, AgentSpec] = {}
-        self._project_rules = self._load_project_rules()
-        self._mcp_registry = None
-        self._worker_pool = None
-        self._isolator = None
-        self._compressor = None
+        rules_data = self._load_project_rules()
+        self._project_rules = {k: rules_data[k] for k in ("source", "content_hash", "sections")} if rules_data else None
+        self._system_context = rules_data.get("system_context") if rules_data else None
+        self._evaluator = EvaluationEngine(llm.config) if llm.config.use_evaluator else None
 
         self._mcp_gateway = None
         if HAS_MCP:
@@ -381,34 +328,27 @@ class PipelineRunner:
             except Exception:
                 pass
 
-        if HAS_WORKER_POOL:
-            self._isolator = ContextIsolator()
-            self._worker_pool = WorkerPool(max_workers=max_workers, isolator=self._isolator)
-
-        if HAS_CONTEXT_COMPRESSOR:
-            self._compressor = ContextCompressor(llm_engine=llm, compress_every_n=5)
-            self._compressor_next_idx = 0
-        else:
-            self._compressor_next_idx = 0
-
-        self._memory: MemoryManager | None = None
-        if HAS_MEMORY and llm.config.provider != LLMProvider.MOCK:
-            try:
-                self._memory = MemoryManager(llm_engine=llm)
-            except Exception:
-                pass
-
     def _load_project_rules(self) -> dict[str, Any] | None:
-        """Load lightweight project rules from workspace root."""
-        path = Path(self.workspace) / "project_rules.md"
-        if not path.exists():
+        """Load lightweight project rules and CLAUDE.md from workspace root."""
+        rules_path = Path(self.workspace) / "project_rules.md"
+        claude_path = Path(self.workspace) / "CLAUDE.md"
+        rules_text = rules_path.read_text(encoding="utf-8") if rules_path.exists() else ""
+        claude_text = claude_path.read_text(encoding="utf-8") if claude_path.exists() else ""
+        if not rules_text and not claude_text:
             return None
         try:
-            text = path.read_text(encoding="utf-8")
+            sections = self._parse_project_rules(rules_text) if rules_text else {}
+            project_summary = self._summarize_markdown(rules_text)
+            claude_summary = self._summarize_markdown(claude_text)
             return {
-                "source": str(path),
-                "content_hash": hash(text) & 0xFFFFFFFF,
-                "sections": self._parse_project_rules(text),
+                "source": str(rules_path) if rules_path.exists() else None,
+                "content_hash": hash(rules_text) & 0xFFFFFFFF if rules_text else 0,
+                "sections": sections,
+                "claude_md_source": str(claude_path) if claude_path.exists() else None,
+                "claude_md_content_hash": hash(claude_text) & 0xFFFFFFFF if claude_text else 0,
+                "project_rules_summary": project_summary,
+                "claude_md_summary": claude_summary,
+                "system_context": self._build_system_context(project_summary, claude_summary),
             }
         except Exception:
             return None
@@ -428,6 +368,60 @@ class PipelineRunner:
                 sections[current].append(line.strip())
         return sections
 
+    @staticmethod
+    def _summarize_markdown(text: str, max_chars: int = 2400) -> str:
+        """Compress markdown to headings, lists, tables, and short directives."""
+        if not text:
+            return ""
+        kept: list[str] = []
+        in_code_fence = False
+        for raw in text.splitlines():
+            line = raw.rstrip()
+            if not line:
+                continue
+            stripped = line.lstrip()
+            if stripped.startswith("```"):
+                in_code_fence = not in_code_fence
+                continue
+            if in_code_fence or raw.startswith("  "):
+                kept.append(line)
+                continue
+            if stripped.startswith(("# ", "## ", "### ", "#### ", "- ", "* ", "| ")):
+                kept.append(line)
+                continue
+            if re.match(r"^\d+\.\s", stripped):
+                kept.append(line)
+                continue
+            if len(stripped) <= 120 and any(marker in stripped for marker in ("—", "→", ":", "|", "must", "always", "never", "Gate", "Rules", "Conventions", "Safety", "Scope")):
+                kept.append(line)
+                continue
+        summary = "\n".join(kept)
+        if len(summary) > max_chars:
+            summary = summary[:max_chars].rsplit("\n", 1)[0] + "\n..."
+        return summary
+
+    @staticmethod
+    def _build_system_context(project_summary: str, claude_summary: str, max_total_chars: int = 4000) -> str:
+        """Assemble the summarized project rules and CLAUDE.md into one system block."""
+        parts = [
+            "# Project System Context\n",
+            "The following project-wide rules and CLAUDE.md directives are mandatory for every agent in this session.",
+        ]
+        if project_summary:
+            parts.append("\n## Project Rules\n" + project_summary)
+        if claude_summary:
+            parts.append("\n## CLAUDE.md Directives\n" + claude_summary)
+        context = "\n".join(parts)
+        if len(context) > max_total_chars:
+            context = context[:max_total_chars].rsplit("\n", 1)[0] + "\n..."
+        return context
+
+    def _system_context_for_phase(self, phase: str) -> str | None:
+        """Return the shared system context for phases that must obey project-wide rules."""
+        if phase not in ("planning", "execution"):
+            return None
+        return self._system_context
+
     @property
     def mcp_enabled(self) -> bool:
         return self._mcp_gateway is not None and self.llm.config.mcp_enabled
@@ -443,10 +437,6 @@ class PipelineRunner:
         if not core_dir.exists():
             return False
         return _figma_config_mod.is_figma_configured()
-
-    @property
-    def worker_pool_enabled(self) -> bool:
-        return self._worker_pool is not None
 
     async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations."""
@@ -469,79 +459,6 @@ class PipelineRunner:
             categories = [c for c in categories if c != "figma"]
         return categories
 
-    # Priority mapping: lower number = higher priority (safety first)
-    _TASK_PRIORITIES: dict[str, int] = {
-        "safety": 1,
-        "validation": 2,
-        "planning": 3,
-        "execution": 4,
-        "read": 5,
-        "search": 5,
-        "replace": 6,
-        "memory": 6,
-        "runcom": 7,
-        "runtest": 7,
-        "terminal": 7,
-        "database": 7,
-        "web": 7,
-        "browser": 7,
-        "figma": 5,
-        "manangr": 8,
-        "self_correction": 3,
-    }
-
-    async def execute_isolated(self, agent_path: str, inputs: dict[str, Any],
-                               task_category: str = "read") -> WorkerResult | None:
-        """Execute an agent in an isolated worker process.
-
-        The agent runs in a separate subprocess. Raw output stays there.
-        Only a JSON summary returns — the parent context window stays clean.
-        """
-        if not self._worker_pool:
-            return None
-
-        spec = self._get_agent(agent_path)
-        complexity = "heavy" if len(str(inputs)) > 5000 else "normal"
-        priority = self._TASK_PRIORITIES.get(task_category, 5)
-
-        job = WorkerJob(
-            agent_path=agent_path,
-            agent_spec={
-                "name": spec.name,
-                "role": spec.role,
-                "decision_flow": [
-                    {"number": s.number, "title": s.title, "description": s.description}
-                    for s in spec.decision_flow
-                ],
-                "failure_modes": [
-                    {"condition": f.condition, "response": f.response}
-                    for f in spec.failure_modes
-                ],
-                "contract": {
-                    "receives": [
-                        {"name": p.name, "type_hint": p.type_hint, "description": p.description}
-                        for p in spec.contract.receives
-                    ],
-                    "returns": [
-                        {"name": p.name, "type_hint": p.type_hint, "description": p.description}
-                        for p in spec.contract.returns
-                    ],
-                    "side_effects": spec.contract.side_effects,
-                },
-            },
-            inputs=inputs,
-            task_category=task_category,
-            complexity=complexity,
-            priority=priority,
-        )
-
-        return await self._worker_pool.dispatch(job)
-
-    def _get_agent(self, path: str) -> AgentSpec:
-        if path not in self._agent_cache:
-            self._agent_cache[path] = self.loader.load_agent(path)
-        return self._agent_cache[path]
-
     async def run(self, user_input: str, session_id: str | None = None,
                   max_iterations: int = 5) -> PipelineResult:
         self._max_iterations = max_iterations
@@ -552,23 +469,7 @@ class PipelineRunner:
         trace: list[IterationTrace] = []
         audit_anchor = uuid.uuid4().hex
 
-        # Observability: mark session start
-        if HAS_OBS:
-            from ..observability import get_logger, MetricsCollector
-            _obs_log = get_logger("pipeline_runner")
-            _obs_metrics = MetricsCollector()
-        else:
-            _obs_log = None
-            _obs_metrics = None
-
-        if _obs_log:
-            _obs_log.info("Pipeline run started", session_id=session_id, max_iterations=max_iterations)
-        if _obs_metrics:
-            _obs_metrics.gauge("sessions.active").inc()
-
         await self.bus.start()
-        if self._worker_pool:
-            await self._worker_pool.start()
 
         try:
             self.state.create(f"session:{session_id}", {
@@ -579,17 +480,8 @@ class PipelineRunner:
 
             await self._publish_progress("phase.start", {"phase": "session_init", "session_id": session_id})
 
-            # Cross-session memory enrichment
-            memory_context: list[dict[str, Any]] = []
-            if self._memory:
-                memory_context = self._memory.get_relevant_memories(user_input, limit=5)
-                await self._publish_progress("memory.loaded", {
-                    "count": len(memory_context), "session_id": session_id,
-                })
-            augmented_input = self._augment_with_memory(user_input, memory_context)
-
             # Phase 1: Safety pre-check
-            safety_passed = await self._run_safety_pre_check(augmented_input, session_id, trace, metrics)
+            safety_passed = await self._run_safety_pre_check(user_input, session_id, trace, metrics)
             if not safety_passed:
                 return PipelineResult(
                     final_response="Request blocked by safety pre-check.",
@@ -603,7 +495,7 @@ class PipelineRunner:
 
             # Phase 2: Design intake & optional full-pipeline short-circuit
             await self._publish_progress("phase.start", {"phase": "design_intake", "session_id": session_id})
-            design_descriptor = await self._run_design_intake(augmented_input, session_id, trace, metrics)
+            design_descriptor = await self._run_design_intake(user_input, session_id, trace, metrics)
             await self._publish_progress("phase.end", {"phase": "design_intake", "session_id": session_id})
 
             if design_descriptor:
@@ -626,7 +518,7 @@ class PipelineRunner:
 
             # Phase 3: Plan
             await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
-            plan = await self._run_planning(augmented_input, session_id, trace, metrics,
+            plan = await self._run_planning(user_input, session_id, trace, metrics,
                                             design_descriptor=design_descriptor)
             await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
 
@@ -634,7 +526,7 @@ class PipelineRunner:
             transition_manager = PhaseTransitionManager(max_iterations=max_iterations)
             state: dict[str, Any] = {
                 "plan": plan,
-                "user_input": augmented_input,
+                "user_input": user_input,
                 "session_id": session_id,
                 "iteration": 0,
             }
@@ -645,7 +537,7 @@ class PipelineRunner:
                 # Handle replanning requests from conditional edges
                 if current_phase == "planning":
                     await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
-                    plan = await self._run_planning(augmented_input, session_id, trace, metrics)
+                    plan = await self._run_planning(user_input, session_id, trace, metrics)
                     state["plan"] = plan
                     await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
                     # After replanning, always move to execution unless overridden
@@ -681,34 +573,6 @@ class PipelineRunner:
                 if transition.next_phase == "result":
                     result_text = state.get("result", state.get("observation", {}).get("result", transition.reason))
 
-                # Context Compression: feed new traces to compressor
-                if self._compressor:
-                    while self._compressor_next_idx < len(trace):
-                        self._compressor.add_trace(trace[self._compressor_next_idx].__dict__)
-                        self._compressor_next_idx += 1
-                    if self._compressor.should_compress(state["iteration"]):
-                        summary = await self._compressor.compress()
-                        if summary:
-                            trace.append(IterationTrace(
-                                iteration=state["iteration"],
-                                phase="context_compression",
-                                agent_path="tools_memory/memory_store/context_compressor.md",
-                                inputs={"original_count": summary.original_count},
-                                outputs={
-                                    "summary": summary.summary,
-                                    "compressed_tokens": summary.compressed_tokens_estimate,
-                                    "fidelity": summary.fidelity_estimate,
-                                    "tokens_saved": self._compressor.stats.get("total_tokens_saved", 0),
-                                },
-                                latency_ms=0,
-                                success=True,
-                            ))
-                            await self._publish_progress("context.compression", {
-                                "iteration": state["iteration"],
-                                "tokens_saved": self._compressor.stats.get("total_tokens_saved", 0),
-                                "session_id": session_id,
-                            })
-
                 current_phase = transition.next_phase
 
             # Phase 4: Safety post-check
@@ -723,11 +587,6 @@ class PipelineRunner:
                 "completed_at": time.time(),
             }, scope="session")
 
-            if _obs_log:
-                _obs_log.info("Pipeline completed", session_id=session_id, status="success", time_ms=metrics.time_elapsed_ms)
-            if _obs_metrics:
-                _obs_metrics.gauge("sessions.active").dec()
-                _obs_metrics.histogram("session.duration_ms").observe(metrics.time_elapsed_ms)
             return await self._finalize_and_return(
                 user_input, result_text, TerminationStatus.SUCCESS,
                 metrics, audit_anchor, trace, session_id,
@@ -735,32 +594,12 @@ class PipelineRunner:
 
         except Exception as e:
             metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
-            if _obs_log:
-                _obs_log.error("Pipeline failed", session_id=session_id, error=str(e), time_ms=metrics.time_elapsed_ms)
-            if _obs_metrics:
-                _obs_metrics.gauge("sessions.active").dec()
-                _obs_metrics.histogram("session.duration_ms").observe(metrics.time_elapsed_ms)
             return await self._finalize_and_return(
                 user_input, f"Pipeline failed: {e}", TerminationStatus.FAILURE,
                 metrics, audit_anchor, trace, session_id,
             )
         finally:
-            if self._worker_pool:
-                await self._worker_pool.stop()
             await self.bus.stop()
-
-    def _augment_with_memory(self, user_input: str, memories: list[dict[str, Any]]) -> str:
-        if not memories:
-            return user_input
-        lines = ["[Relevant past memories]"]
-        for m in memories:
-            snippet = m.get("body", "") or m.get("title", "")
-            if snippet:
-                lines.append(f"  - [{m.get('type', 'mem')}] {snippet[:180]}")
-        lines.append("")
-        lines.append("[Current request]")
-        lines.append(user_input)
-        return "\n".join(lines)
 
     async def _finalize_and_return(self, user_input: str, final_response: str,
                                    termination_status: TerminationStatus,
@@ -768,29 +607,13 @@ class PipelineRunner:
                                    trace: list[IterationTrace], session_id: str) -> PipelineResult:
         if metrics.time_elapsed_ms <= 0:
             metrics.time_elapsed_ms = (time.perf_counter() - self._t_start) * 1000
-        result = PipelineResult(
+        return PipelineResult(
             final_response=final_response,
             termination_status=termination_status,
             session_metrics=metrics,
             audit_anchor=audit_anchor,
             trace=trace,
         )
-        if self._memory:
-            try:
-                await asyncio.to_thread(
-                    self._memory.enrich_session,
-                    {
-                        "user_input": user_input,
-                        "final_response": final_response,
-                        "trace": [t.__dict__ for t in trace],
-                        "metrics": metrics.__dict__,
-                        "termination_status": termination_status.value,
-                    },
-                )
-                await self._publish_progress("memory.stored", {"session_id": session_id})
-            except Exception:
-                pass
-        return result
 
     async def _run_safety_pre_check(self, user_input: str, session_id: str,
                                     trace: list[IterationTrace], metrics: SessionMetrics) -> bool:
@@ -838,6 +661,7 @@ class PipelineRunner:
         """Trigger the full Figma-to-code pipeline via MCP figma_run_pipeline."""
         source_value = design_descriptor.get("source_value", "")
         backend_spec = design_descriptor.get("backend_spec") or {}
+        image_enrichment = design_descriptor.get("image_enrichment") or {}
         args: dict[str, Any] = {
             "output_name": session_id[:8],
             "dry_run": False,
@@ -859,6 +683,15 @@ class PipelineRunner:
                 args["prisma"] = spec_path
             else:
                 args["backend_spec_text"] = spec_path
+        if image_enrichment.get("enabled"):
+            args["enable_image_enrichment"] = True
+            args["image_provider"] = image_enrichment.get("provider", "unsplash")
+            if image_enrichment.get("api_key"):
+                args["image_provider_api_key"] = image_enrichment["api_key"]
+            if image_enrichment.get("output_dir"):
+                args["image_enrichment_output_dir"] = image_enrichment["output_dir"]
+            if image_enrichment.get("max_images"):
+                args["image_enrichment_max_images"] = image_enrichment["max_images"]
         return await self.execute_mcp_tool("figma_run_pipeline", args)
 
     def _extract_figma_file_key(self, source_value: str) -> str:
@@ -870,6 +703,11 @@ class PipelineRunner:
         import re
         match = re.search(r"node-id=([0-9-:]+)", source_value)
         return match.group(1).replace("-", ":") if match else ""
+
+    def _get_agent(self, path: str) -> AgentSpec:
+        if path not in self._agent_cache:
+            self._agent_cache[path] = self.loader.load_agent(path)
+        return self._agent_cache[path]
 
     def _format_design_pipeline_result(self, design_descriptor: dict[str, Any],
                                        pipeline_result: dict[str, Any]) -> str:
@@ -969,14 +807,45 @@ class PipelineRunner:
     async def _run_validation(self, state: dict[str, Any],
                               trace: list[IterationTrace], metrics: SessionMetrics) -> None:
         observation = state.get("observation", {})
+
+        # Fast /goal evaluator: cheap critic checks whether the evidence satisfies the goal.
+        goal_evaluation: dict[str, Any] | None = None
+        if self._evaluator:
+            try:
+                evaluator_response = await self._evaluator.evaluate(
+                    goal=state.get("user_input", ""),
+                    artifacts=observation,
+                    criteria=state.get("plan", {}).get("success_criteria"),
+                )
+                goal_evaluation = {
+                    "verdict": {
+                        "pass": evaluator_response.pass_,
+                        "reason": evaluator_response.reason,
+                        "confidence": evaluator_response.confidence,
+                    },
+                    "criteria_checklist": evaluator_response.criteria_checklist,
+                }
+            except Exception as e:
+                goal_evaluation = {
+                    "verdict": {"pass": False, "reason": f"Evaluator error: {e}", "confidence": 0.0},
+                    "criteria_checklist": [],
+                }
+
         result = await self._invoke_agent(
             "tooll_subagents/self_correction/result_validation.md",
-            {"observation": observation, "original_request": state.get("user_input")},
+            {
+                "observation": observation,
+                "original_request": state.get("user_input"),
+                "goal_evaluation": goal_evaluation,
+                "iteration_count": state.get("iteration", 0),
+                "max_iterations": self._max_iterations,
+            },
             trace, "validation", metrics,
         )
         validation: dict[str, Any] = dict(observation)
         if result and result.parsed:
             validation.update(result.parsed)
+        validation["goal_evaluation"] = goal_evaluation
         state["validation"] = validation
         if "result" in validation:
             state["result"] = validation["result"]
@@ -1015,44 +884,16 @@ class PipelineRunner:
             await self._invoke_agent(agent_path, {"result": result_text, "session_id": session_id},
                                      trace, "mutual_check", metrics)
 
-    def _is_tool_agent(self, agent_path: str) -> bool:
-        """Determine if agent is a tools_* agent that should run isolated."""
-        return agent_path.startswith("tools_")
-
-    def _extract_category(self, agent_path: str) -> str:
-        """Extract task category from agent path: tools_read/... -> read"""
-        if agent_path.startswith("tools_"):
-            parts = agent_path.replace("\\", "/").split("/")
-            if parts:
-                return parts[0].replace("tools_", "")
-        if agent_path.startswith("figma_"):
-            return "figma"
-        if "execution" in agent_path:
-            return "execution"
-        if "planning" in agent_path:
-            return "planning"
-        if "safety" in agent_path:
-            return "safety"
-        if "self_correction" in agent_path:
-            return "self_correction"
-        return "read"
-
     async def _invoke_agent(self, agent_path: str, inputs: dict[str, Any],
                             trace: list[IterationTrace], phase: str,
                             metrics: SessionMetrics | None = None) -> LLMResponse | None:
         t0 = time.perf_counter()
 
-        # Route tools_* agents through isolated worker processes
-        if self._worker_pool and self._is_tool_agent(agent_path):
-            return await self._invoke_isolated(agent_path, inputs, trace, phase, t0, metrics)
-
-        # Reasoning agents use LLM Engine directly
+        extra_context = self._system_context_for_phase(phase)
         try:
             spec = self._get_agent(agent_path)
-            result = await self.llm.execute(spec, inputs)
+            result = await self.llm.execute(spec, inputs, extra_context=extra_context)
             latency = (time.perf_counter() - t0) * 1000
-            if metrics:
-                metrics.record_agent_latency(agent_path, latency)
             trace.append(IterationTrace(
                 iteration=len([t for t in trace if t.phase == phase]) + 1,
                 phase=phase,
@@ -1068,12 +909,9 @@ class PipelineRunner:
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,
                 "session_id": session_id, "latency_ms": round(latency, 2), "success": True,
             })
-            await self._publish_audit(agent_path, inputs, result.parsed, "success")
             return result
         except Exception as e:
             latency = (time.perf_counter() - t0) * 1000
-            if metrics:
-                metrics.record_agent_latency(agent_path, latency)
             trace.append(IterationTrace(
                 iteration=len([t for t in trace if t.phase == phase]) + 1,
                 phase=phase,
@@ -1090,87 +928,7 @@ class PipelineRunner:
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,
                 "session_id": session_id, "latency_ms": round(latency, 2), "success": False,
             })
-            await self._publish_audit(agent_path, inputs, None, f"failed: {e}")
             return None
-
-    async def _invoke_isolated(self, agent_path: str, inputs: dict[str, Any],
-                               trace: list[IterationTrace], phase: str,
-                               t0: float, metrics: SessionMetrics | None = None) -> LLMResponse | None:
-        """Invoke agent in isolated worker process. Returns summary only."""
-        category = self._extract_category(agent_path)
-        try:
-            worker_result = await self.execute_isolated(agent_path, inputs, category)
-
-            if worker_result and worker_result.is_success:
-                latency = (time.perf_counter() - t0) * 1000
-                if metrics:
-                    metrics.record_agent_latency(agent_path, latency)
-                # Build LLMResponse-compatible result from worker summary
-                parsed = worker_result.parsed_output or {}
-                parsed["_summary"] = worker_result.summary
-                parsed["_tokens_saved"] = self._worker_pool._estimate_saved_tokens(worker_result) if self._worker_pool else 0
-                parsed["_isolated"] = True
-                parsed["_worker_id"] = worker_result.worker_id
-                parsed["_model"] = worker_result.model
-
-                trace.append(IterationTrace(
-                    iteration=len([t for t in trace if t.phase == phase]) + 1,
-                    phase=phase,
-                    agent_path=agent_path,
-                    inputs=inputs,
-                    outputs=parsed,
-                    latency_ms=latency,
-                    success=True,
-                ))
-                session_id = inputs.get("session_id", "")
-                iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
-                await self._publish_progress("agent.invoke", {
-                    "iteration": iteration, "phase": phase, "agent_path": agent_path,
-                    "session_id": session_id, "latency_ms": round(latency, 2), "success": True, "isolated": True,
-                })
-                await self._publish_audit(agent_path, inputs, parsed, "success_isolated")
-
-                return LLMResponse(
-                    content=worker_result.summary,
-                    parsed=parsed,
-                    model=worker_result.model,
-                    tokens_used=worker_result.tokens_used,
-                    latency_ms=latency,
-                )
-            else:
-                error_msg = worker_result.error if worker_result else "Worker returned no result"
-                raise RuntimeError(error_msg)
-        except Exception as e:
-            latency = (time.perf_counter() - t0) * 1000
-            if metrics:
-                metrics.record_agent_latency(agent_path, latency)
-            trace.append(IterationTrace(
-                iteration=len([t for t in trace if t.phase == phase]) + 1,
-                phase=phase,
-                agent_path=agent_path,
-                inputs=inputs,
-                outputs=None,
-                latency_ms=latency,
-                success=False,
-                error=str(e),
-            ))
-            session_id = inputs.get("session_id", "")
-            iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
-            await self._publish_progress("agent.invoke", {
-                "iteration": iteration, "phase": phase, "agent_path": agent_path,
-                "session_id": session_id, "latency_ms": round(latency, 2), "success": False, "isolated": True,
-            })
-            await self._publish_audit(agent_path, inputs, None, f"isolated_failed: {e}")
-            return None
-
-    async def _publish_audit(self, agent_path: str, inputs: dict[str, Any],
-                             outputs: dict[str, Any] | None, status: str):
-        msg = Message(
-            message_type=MessageType.EVENT,
-            topic="audit",
-            payload={"agent": agent_path, "inputs": inputs, "outputs": outputs, "status": status},
-        )
-        await self.bus.publish(msg)
 
     async def _publish_progress(self, event_type: str, payload: dict[str, Any]):
         """Publish progress event for TUI and external observers."""

@@ -35,7 +35,8 @@ Loop-control agent that decides whether the ReAct cycle should continue with a r
 7. **Evaluate failure with no hope** — if `validation_status=failed` and `retry_recommended=false` or budget exhausted, `decision=terminate_failure` with diagnostic `termination_reason`.
 8. **Evaluate inconclusive** — if `validation_status=inconclusive` and iteration_count low, `decision=recurse` with information-gathering plan; if iterations high, `decision=escalate_human`.
 9. **Diminishing returns check** — if `validation_status` unchanged across last 2 iterations (no improvement), `decision=terminate_partial` to prevent infinite loop; log stagnation.
-10. **Return** — emit decision, reason, deliverable, next action.
+10. **Repeated gap detection** — inspect `gap_analysis` from `validation_result`. If any gap reason or description substring has appeared in the previous two cycles' `gap_analysis` (deduplicated by normalized string), the same root cause has failed twice; override to `decision=escalate_human` with `next_action=different_approach` (e.g. route to `assistance_request.md` or `control/human_oversight.md`), unless `user_escalation_flag=true`, which already escalates at step 1.
+11. **Return** — emit decision, reason, deliverable, next action.
 
 ## Failure Modes
 
@@ -46,3 +47,4 @@ Loop-control agent that decides whether the ReAct cycle should continue with a r
 | Validation result and plan adjustment both null | `decision=escalate_human`; cannot determine state |
 | Terminate decision but no deliverable exists | `decision=terminate_failure`; `deliverable` includes apology and diagnostic request |
 | Recurse loop detected (>3 identical adjustments) | `decision=escalate_human`; log pattern to `feedback_aggregator.md` |
+| Same gap reason appears in two consecutive cycles | `decision=escalate_human`; `next_action=different_approach`; route to `assistance_request.md` or `control/human_oversight.md` |

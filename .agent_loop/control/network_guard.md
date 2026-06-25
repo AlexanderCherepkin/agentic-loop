@@ -43,3 +43,5 @@ Runtime enforcement agent that controls outbound and inbound network connectivit
 | Bandwidth counter corrupted | Reset counter from last known good state; apply conservative cap |
 | Firewall rule installation fails | `connection_verdict=deny`, escalate to `resource_monitor.md` |
 | HTTPS certificate pinning mismatch | `connection_verdict=deny`, `block_reason="CERT_MISMATCH"` |
+| Figma asset download batch not pre-approved by `tooll_subagents/planning/asset_agent.md` | `connection_verdict=rate_limited`; require plan token before allowing `api.figma.com/images` bulk requests |
+| External image search/download not pre-approved by `tooll_subagents/planning/image_enrichment_agent.md` | `connection_verdict=rate_limited`; require plan token before allowing provider image API / download hosts |

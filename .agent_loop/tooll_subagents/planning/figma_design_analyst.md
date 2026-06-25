@@ -49,6 +49,7 @@ Planning agent that transforms a design descriptor into a structured code bluepr
 3. **Precise Mode readiness audit** — call `figma_precise_mode_audit` via MCP (or invoke `figma_precise_mode_auditor.md`) to produce `precise_mode_report.json`. If `status=not_ready` or `next_phase_hint=halt_for_cleanup`, abort and return the report as the blueprint with `status=failed`, routing back to the user/designer for cleanup. If `status=needs_cleanup`, continue but attach all warnings to `diagnostics` and set `status=partial` unless later stages pass.
 4. **Run analysis stage** — call `figma_analyze` via MCP to produce `analysis_report.txt` and semantic tree.
 5. **Generate specification** — if `output_mode` is `technical_assignment` or `both`, call `figma_generate_spec` via MCP and store `specification`.
+5a. **Spec-only short-circuit** — if `output_mode` is exactly `technical_assignment`, skip all code-generation stages (tokens, responsive composition, component registry, component mapper, UI/component extraction, interaction mapping, asset pipeline, backend bridge). Derive the `structure_map` from the analyzer output, set `status=complete` when `specification` exists, attach any warnings to `diagnostics`, and return with `next_phase_hint=planning`.
 6. **Extract design tokens** — call `figma_extract_tokens` via MCP to produce `design_tokens.json`, `tailwind.config.ts`, and `globals.css`. Populate `design_tokens` with artifact paths and enrich `color_palette`/`typography` from the registry.
 7. **Compose responsive variants** — call `figma_responsive_compose` via MCP (or invoke `tooll_subagents/planning/responsive_composer.md`) to read sibling breakpoint frames and Figma constraints, producing `responsive_ast.json` with `responsive_variants` (`sm:` / `md:` / `lg:` / `xl:`) consumed by the Section Composer.
 8. **Build Component Registry** — call `figma_build_component_registry` via MCP (or invoke `tooll_subagents/planning/component_registry.md`) to collect `COMPONENT_SET`, `COMPONENT`, `INSTANCE`, `variantProperties`, and `overrides`; write `component_registry.json`; produce dependency DAG for bottom-up generation.
@@ -61,7 +62,8 @@ Planning agent that transforms a design descriptor into a structured code bluepr
       - `single_section` → one component for the selected node.
       - `all_sections` → batch component generation for every top-level section.
       - `whole_page` → generate a page-level component wrapping top-level sections.
-13. **Collect assets** — call `figma_download_assets` via MCP; run `asset_pipeline.py` to download/optimize SVG/PNG into `public/assets/figma/`, map fonts to `next/font/google`, and write `asset_registry.json`; map returned public paths into the blueprint.
+13. **Collect assets** — call `figma_download_assets` via MCP; run `asset_pipeline.py` to download/optimize SVG/PNG into `public/assets/figma/`, map fonts to `next/font/google`, and write `asset_registry.json`; map returned public paths into the blueprint. For planning/observability, invoke `asset_agent.md` (`tooll_subagents/planning/asset_agent.md`) to produce a safe asset-download plan (batching, 429 backoff, skip-existing, optimization) before execution.
+13a. **Enrich missing card images** (optional, when `enable_image_enrichment` is on) — invoke `image_enrichment_agent.md` (`tooll_subagents/planning/image_enrichment_agent.md`) to build a bounded, pre-approved plan for external image search. If approved, call `image_enrichment.py` via MCP before the `layout` stage to fill `data_model.json` `imageUrl`/`imageAlt` fields for card rows that have no real Figma asset; images are saved only under `public/assets/enriched/`.
 14. **Build structure map** — derive tree from analyzer output: frames, components, text nodes, and AutoLayout rules.
 15. **Assess completeness** — mark `complete` if all requested artifacts produced; `partial` if some assets/components failed; `failed` if bootstrap or core generation failed.
 16. **Return** — emit `design_blueprint` and route hint.
@@ -74,7 +76,7 @@ Planning agent that transforms a design descriptor into a structured code bluepr
 | Figma API rate-limited | Retry once with backoff; if still blocked, `status=partial` and cache existing data |
 | MCP gateway unavailable | `status=failed`; route to `control/human_oversight.md` if design work is critical |
 | Component generation fails for a single section | Mark that component failed, continue batch; `status=partial` |
-| Asset download fails | Record missing public paths; continue; `status=partial` if assets were expected |
+| Asset download fails | Record missing public paths; continue; `status=partial` if assets were expected; route diagnostics to `tooll_subagents/planning/asset_agent.md` |
 | Generated code fails syntax validation | Log to `mutual_check/quality_assessor.md`; do not auto-merge; include code in blueprint for upstream review |
 | Design token extraction fails | Log to `audit_logger.md`; set `status=partial`; continue with layout/components using arbitrary Tailwind values |
 | Precise Mode audit returns `not_ready` | Return `status=failed`; include full readiness report in `diagnostics`; route back to designer |

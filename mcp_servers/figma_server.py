@@ -83,7 +83,10 @@ class FigmaMCPServer(MCPServer):
                          "output_name?": "string", "dry_run?": "bool",
                          "figma_url?": "string", "file_key?": "string",
                          "openapi?": "string", "prisma?": "string", "backend_spec_text?": "string",
-                         "backend_output_dir?": "string", "backend_mapping_file?": "string"}),
+                         "backend_output_dir?": "string", "backend_mapping_file?": "string",
+                         "enable_image_enrichment?": "bool", "image_provider?": "string",
+                         "image_provider_api_key?": "string", "image_enrichment_output_dir?": "string",
+                         "image_enrichment_max_images?": "int"}),
                       self.figma_run_pipeline)
 
     @staticmethod
@@ -303,7 +306,10 @@ class FigmaMCPServer(MCPServer):
                            figma_url: str = "", file_key: str = "",
                            openapi: str = "", prisma: str = "", backend_spec_text: str = "",
                            backend_output_dir: str = "backend_bridge_output",
-                           backend_mapping_file: str = "backend_mapping.json") -> dict[str, Any]:
+                           backend_mapping_file: str = "backend_mapping.json",
+                           enable_image_enrichment: bool = False, image_provider: str = "unsplash",
+                           image_provider_api_key: str = "", image_enrichment_output_dir: str = "",
+                           image_enrichment_max_images: int = 20) -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
             return degraded
@@ -318,6 +324,14 @@ class FigmaMCPServer(MCPServer):
             args.extend(["--output-name", output_name])
         if skip_assets:
             args.append("--skip-assets")
+        if enable_image_enrichment:
+            args.append("--enable-image-enrichment")
+            args.extend(["--image-provider", image_provider])
+            if image_provider_api_key:
+                args.extend(["--image-provider-api-key", image_provider_api_key])
+            if image_enrichment_output_dir:
+                args.extend(["--image-enrichment-output-dir", image_enrichment_output_dir])
+            args.extend(["--image-enrichment-max-images", str(image_enrichment_max_images)])
         if openapi:
             args.extend(["--openapi", openapi])
         if prisma:

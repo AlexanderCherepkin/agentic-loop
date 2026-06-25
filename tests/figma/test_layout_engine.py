@@ -1300,3 +1300,40 @@ def test_data_models_annotate_binding() -> None:
     image_node = card.children[1]
     assert image_node.data_binding == {"model": "Card", "field": "imageUrl", "item": True}
     assert image_node.src is None
+
+
+def test_data_model_image_alt_binding() -> None:
+    data_models = {
+        "version": "1",
+        "models": [
+            {
+                "name": "Card",
+                "occurrence_ids": ["card-1"],
+                "field_map": {"title": "title", "imageUrl": "imageUrl", "imageAlt": "imageAlt"},
+                "sample_data": [{"title": "Card A", "imageUrl": "", "imageAlt": ""}],
+            }
+        ],
+    }
+    root = {
+        "id": "page",
+        "name": "Page",
+        "type": "FRAME",
+        "visible": True,
+        "children": [
+            {
+                "id": "card-1",
+                "name": "Card 1",
+                "type": "FRAME",
+                "visible": True,
+                "children": [
+                    {"id": "t1", "name": "Title", "type": "TEXT", "visible": True, "characters": "Card A"},
+                    {"id": "i1", "name": "Cover", "type": "IMAGE", "visible": True},
+                ],
+            },
+        ],
+    }
+    engine = layout_engine.FigmaLayoutEngine(config={"data_models": data_models})
+    result = engine.convert(root)
+    card = _find_node_by_figma_id(result.root, "card-1")
+    image_node = card.children[1]
+    assert image_node.alt_binding == {"model": "Card", "field": "imageAlt", "item": True}

@@ -40,3 +40,5 @@ Runtime enforcement agent that confines all file operations to approved director
 | Identity ACL store unreachable | `permission=denied` for non-sandbox; `sandbox_only` for sandbox with warning |
 | Admin override present but expired | Reject override, `permission=denied`, escalate to `human_oversight.md` |
 | Race condition during path canonicalization | Retry once with file-lock; if still racing, `permission=denied` |
+| Asset download plan targets outside `public/` | `permission=denied` unless explicitly approved by `tooll_subagents/planning/asset_agent.md` and logged to `audit_logger.md` |
+| Image enrichment download targets outside `public/assets/enriched/` | `permission=denied` unless explicitly approved by `tooll_subagents/planning/image_enrichment_agent.md` and logged to `audit_logger.md` |

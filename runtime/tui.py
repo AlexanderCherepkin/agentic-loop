@@ -43,9 +43,6 @@ class TUIState:
     agent_path: str = ""
     agents_visited: list[dict[str, Any]] = field(default_factory=list)
     logs: list[str] = field(default_factory=list)
-    safety_passed: int = 0
-    safety_failed: int = 0
-    tokens_saved: int = 0
     start_time: float = field(default_factory=time.time)
     status: str = "idle"
 
@@ -76,11 +73,9 @@ class AgenticTUI:
         self._running = True
         await self._bus.start()
         self._bus.subscribe("tui-monitor", self._on_message, [
-            "audit",
             "phase.start",
             "phase.end",
             "agent.invoke",
-            "context.compression",
         ])
 
     async def stop(self):
@@ -92,17 +87,7 @@ class AgenticTUI:
         payload = msg.payload or {}
         topic = msg.topic or "unknown"
 
-        # Update internal state from audit events
-        if topic == "audit":
-            status = payload.get("status", "")
-            agent = payload.get("agent", "unknown")
-            if "success" in status:
-                self.state.safety_passed += 1
-            elif "failed" in status or "error" in status:
-                self.state.safety_failed += 1
-            self._add_log(f"[{status.upper():12}] {agent}")
-
-        elif topic == "phase.start":
+        if topic == "phase.start":
             phase = payload.get("phase", "unknown")
             self.state.phase = phase
             self._add_log(f"[PHASE START] {phase}")
@@ -117,11 +102,6 @@ class AgenticTUI:
             self.state.agent_path = agent
             self.state.iteration = max(self.state.iteration, iteration)
             self._progress.update(self._iter_task, completed=self.state.iteration)
-
-        elif topic == "context.compression":
-            saved = payload.get("tokens_saved", 0)
-            self.state.tokens_saved += saved
-            self._add_log(f"[COMPRESS   ] Saved {saved} tokens")
 
     def _add_log(self, line: str):
         ts = time.strftime("%H:%M:%S")
@@ -156,12 +136,6 @@ class AgenticTUI:
                     p_node.add(a)
                 if len(agents) > 6:
                     p_node.add(f"[dim]... and {len(agents) - 6} more[/dim]")
-
-        # Stats
-        stats_node = root.add("[bold]Stats[/bold]")
-        stats_node.add(f"Tokens saved: [green]{self.state.tokens_saved}[/green]")
-        stats_node.add(f"Safety passed: [green]{self.state.safety_passed}[/green]")
-        stats_node.add(f"Safety failed: [red]{self.state.safety_failed}[/red]")
 
         return root
 

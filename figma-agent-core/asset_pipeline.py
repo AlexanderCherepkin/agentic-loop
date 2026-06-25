@@ -5,11 +5,19 @@ import json
 import shutil
 import argparse
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-import requests
 from dotenv import load_dotenv
+
+import importlib.util
+_spec = importlib.util.spec_from_file_location(
+    "figma_http_client", str(Path(__file__).parent / "figma_http_client.py")
+)
+_figma_http_client_module = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_figma_http_client_module)
+FigmaHTTPClient = _figma_http_client_module.FigmaHTTPClient
 
 
 load_dotenv()
@@ -19,6 +27,9 @@ DEFAULT_PUBLIC_DIR = "public"
 DEFAULT_ASSETS_DIR = "assets/figma"
 DEFAULT_REGISTRY_FILE = "asset_registry.json"
 DEFAULT_IMAGES_FORMAT = "png"
+DEFAULT_BATCH_SIZE = 25
+DEFAULT_REQUEST_DELAY = 1.0
+DEFAULT_MAX_RETRIES = 5
 
 
 # Популярные Google Fonts, которые next/font/google умеет импортировать.
@@ -74,6 +85,10 @@ def _asset_dest_path(node_id: str, name: str, extension: str, assets_dir: Path) 
     stem = _safe_filename(name)
     unique = f"{stem}_{node_id.replace(':', '_').replace('-', '_')}"
     return assets_dir / f"{unique}.{extension}"
+
+
+def _cache_key(node_id: str, fmt: str, scale: float) -> str:
+    return f"{node_id}:{fmt}:{scale}"
 
 
 def _public_path(dest: Path, public_dir: Path) -> str:
@@ -194,36 +209,111 @@ class FontCollector:
 
 
 class AssetDownloader:
-    """Скачивание ассетов через Figma Images API."""
+    """Скачивание ассетов через Figma Images API с rate-limit и кэшированием."""
 
-    def __init__(self, token: Optional[str] = None, url: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        token: Optional[str] = None,
+        url: Optional[str] = None,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+        request_delay: float = DEFAULT_REQUEST_DELAY,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        skip_existing: bool = True,
+    ) -> None:
         self.token = token or os.environ.get("FIGMA_TOKEN")
         self.url = url or os.environ.get("FIGMA_URL")
         self.file_key = self._parse_file_key(self.url) if self.url else None
+        self.batch_size = max(1, batch_size)
+        self.request_delay = request_delay
+        self.skip_existing = skip_existing
+        self._client: Optional[FigmaHTTPClient] = None
+        if self.token:
+            self._client = FigmaHTTPClient(
+                token=self.token,
+                request_delay=request_delay,
+                max_retries=max_retries,
+            )
 
     @staticmethod
     def _parse_file_key(url: str) -> Optional[str]:
         match = re.search(r"/file/([^/?#]+)", url) or re.search(r"/design/([^/?#]+)", url)
         return match.group(1) if match else None
 
-    def get_image_urls(self, node_ids: List[str], fmt: str = "png", scale: float = 1.0) -> Dict[str, str]:
-        if not self.file_key or not self.token or not node_ids:
-            return {}
-        ids_param = ",".join(node_ids)
-        endpoint = f"https://api.figma.com/v1/images/{self.file_key}?ids={ids_param}&format={fmt}&scale={scale}"
-        try:
-            response = requests.get(endpoint, headers={"X-Figma-Token": self.token}, timeout=60)
-            if response.status_code != 200:
-                print(f"[WARNING] Figma images API returned {response.status_code}: {response.text}")
-                return {}
-            return response.json().get("images", {})
-        except Exception as e:
-            print(f"[ERROR] Failed to fetch image URLs: {e}")
+    def _is_cached(
+        self,
+        node_id: str,
+        fmt: str,
+        scale: float,
+        assets_dir: Path,
+    ) -> Optional[Path]:
+        if not self.skip_existing:
+            return None
+        # Для поиска уже существующих файлов кэша не нужно имя ноды — достаточно
+        # уникальной части node_id в имени файла.
+        safe_id = node_id.replace(":", "_").replace("-", "_")
+        for candidate in assets_dir.glob(f"*_{safe_id}.{fmt}"):
+            return candidate
+        return None
+
+    def get_image_urls(
+        self,
+        node_ids: List[str],
+        fmt: str = "png",
+        scale: float = 1.0,
+        assets_dir: Optional[Path] = None,
+    ) -> Dict[str, str]:
+        if not self.file_key or not self._client or not node_ids:
             return {}
 
+        remaining: List[str] = []
+        cached_urls: Dict[str, str] = {}
+        for node_id in node_ids:
+            if assets_dir is not None:
+                cached = self._is_cached(node_id, fmt, scale, assets_dir)
+                if cached:
+                    # Возвращаем dummy URL, чтобы downstream понял, что файл уже есть.
+                    cached_urls[node_id] = f"file://{cached.resolve().as_posix()}"
+                    continue
+            remaining.append(node_id)
+
+        if not remaining:
+            return cached_urls
+
+        results: Dict[str, str] = {}
+        base_url = "https://api.figma.com/v1"
+        for i in range(0, len(remaining), self.batch_size):
+            chunk = remaining[i : i + self.batch_size]
+            ids_param = ",".join(chunk)
+            endpoint = f"{base_url}/images/{self.file_key}?ids={ids_param}&format={fmt}&scale={scale}"
+            try:
+                response = self._client.get(endpoint)
+                if response.status_code != 200:
+                    print(f"[WARNING] Figma images API returned {response.status_code}: {response.text}")
+                    # Продолжаем следующий chunk, а не падаем целиком.
+                    continue
+                results.update(response.json().get("images", {}))
+            except Exception as e:
+                print(f"[ERROR] Failed to fetch image URLs for chunk {i//self.batch_size + 1}: {e}")
+                # Продолжаем; частичный результат лучше полного провала.
+                continue
+        return {**cached_urls, **results}
+
     def download(self, url: str, dest: Path) -> bool:
+        if url.startswith("file://"):
+            try:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                existing = Path(url.replace("file://", ""))
+                if existing == dest or existing.resolve() == dest.resolve():
+                    return dest.exists()
+                shutil.copy2(existing, dest)
+                return True
+            except Exception:
+                return False
+
+        if not self._client:
+            return False
         try:
-            response = requests.get(url, timeout=60)
+            response = self._client.get(url)
             if response.status_code != 200:
                 return False
             dest.parent.mkdir(parents=True, exist_ok=True)
@@ -232,6 +322,10 @@ class AssetDownloader:
             return True
         except Exception:
             return False
+
+    def close(self) -> None:
+        if self._client:
+            self._client.close()
 
 
 class InlineSvgExtractor:
@@ -425,9 +519,17 @@ class AssetPipeline:
 
         urls: Dict[str, str] = {}
         if raster_assets:
-            urls.update(self.downloader.get_image_urls([a["id"] for a in raster_assets], fmt="png"))
+            urls.update(self.downloader.get_image_urls(
+                [a["id"] for a in raster_assets],
+                fmt="png",
+                assets_dir=self.assets_dir,
+            ))
         if svg_assets:
-            urls.update(self.downloader.get_image_urls([a["id"] for a in svg_assets], fmt="svg"))
+            urls.update(self.downloader.get_image_urls(
+                [a["id"] for a in svg_assets],
+                fmt="svg",
+                assets_dir=self.assets_dir,
+            ))
 
         for asset in assets:
             ref = asset["ref"]
@@ -437,6 +539,19 @@ class AssetPipeline:
             if not url:
                 print(f"[WARNING] No download URL for asset {asset['id']} ({asset['name']})")
                 registry["stats"]["skipped"] += 1
+                continue
+
+            # Если файл уже существует и skip_existing — не перезаписываем.
+            if self.downloader.skip_existing and dest.exists():
+                optimized = False
+                if self.optimizer.enabled:
+                    optimized = self.optimizer.optimize(dest, asset["format"])
+                public_path = _public_path(dest, self.public_dir)
+                entry = self._build_registry_entry(asset, public_path, optimized, skipped=False)
+                registry["assets"][ref] = entry
+                registry["stats"]["downloaded"] += 1
+                if optimized:
+                    registry["stats"]["optimized"] += 1
                 continue
 
             if self.downloader.download(url, dest):
@@ -491,6 +606,48 @@ class AssetPipeline:
 
         return registry
 
+    def _build_registry_entry(
+        self,
+        asset: Dict[str, Any],
+        public_path: str,
+        optimized: bool,
+        skipped: bool,
+    ) -> Dict[str, Any]:
+        entry: Dict[str, Any] = {
+            "publicPath": public_path,
+            "type": asset["type"],
+            "format": asset["format"],
+            "width": asset["width"],
+            "height": asset["height"],
+            "originalName": asset["name"],
+            "optimized": optimized,
+            "skipped": skipped,
+            "strategy": "img",
+        }
+        if asset["format"] == "svg":
+            dest = self.public_dir / public_path.lstrip("/")
+            content = self._inline_extractor.extract(dest) if dest.exists() else None
+            strategy = self._svg_classifier.classify(
+                {
+                    "name": asset["name"],
+                    "width": asset["width"],
+                    "height": asset["height"],
+                },
+                content,
+                byte_size=dest.stat().st_size if dest.exists() else 0,
+            )
+            entry["strategy"] = strategy
+            if strategy == "inline" and content:
+                entry["inlineSvg"] = content
+            elif strategy == "icon":
+                if content:
+                    entry["inlineSvg"] = content
+                svg_text = content or (dest.read_text(encoding="utf-8") if dest.exists() else "")
+                icon_file = self._write_icon_component(asset["name"], svg_text)
+                entry["componentPath"] = icon_file
+                entry["componentName"] = _to_pascal_case_icon_name(asset["name"])
+        return entry
+
     def _write_icon_component(self, name: str, svg_content: str) -> Path:
         self.components_dir.mkdir(parents=True, exist_ok=True)
         component_name = _to_pascal_case_icon_name(name)
@@ -508,6 +665,11 @@ export default function {component_name}(props: React.SVGProps<SVGSVGElement>) {
         file_path = self.components_dir / f"{component_name}.tsx"
         file_path.write_text(code, encoding="utf-8")
         return file_path
+
+    def __del__(self):
+        # Закрываем HTTP-сессию при сборке мусора, чтобы не держать соединения.
+        if self.downloader:
+            self.downloader.close()
 
 
 def write_registry(registry: Dict[str, Any], path: Path) -> None:
@@ -528,6 +690,10 @@ def main() -> None:
     parser.add_argument("--skip-download", action="store_true", help="Build registry without downloading (uses synthetic publicPath values).")
     parser.add_argument("--no-optimize", action="store_true", help="Disable svgo/sharp optimization.")
     parser.add_argument("--format", default=DEFAULT_IMAGES_FORMAT, help="Default raster format (png).")
+    parser.add_argument("--asset-batch-size", type=int, default=DEFAULT_BATCH_SIZE, help="Max IDs per Figma Images API batch request.")
+    parser.add_argument("--asset-request-delay", type=float, default=DEFAULT_REQUEST_DELAY, help="Delay seconds between batched requests.")
+    parser.add_argument("--asset-max-retries", type=int, default=DEFAULT_MAX_RETRIES, help="Max retries on 429/transient errors.")
+    parser.add_argument("--skip-existing-assets", action=argparse.BooleanOptionalAction, default=True, help="Skip download if local asset already exists.")
     args = parser.parse_args()
 
     file_path = Path(args.file)
@@ -538,7 +704,14 @@ def main() -> None:
     with open(file_path, "r", encoding="utf-8") as f:
         figma_data = json.load(f)
 
-    downloader = AssetDownloader(token=args.figma_token, url=args.figma_url)
+    downloader = AssetDownloader(
+        token=args.figma_token,
+        url=args.figma_url,
+        batch_size=args.asset_batch_size,
+        request_delay=args.asset_request_delay,
+        max_retries=args.asset_max_retries,
+        skip_existing=args.skip_existing_assets,
+    )
     optimizer = AssetOptimizer(enabled=not args.no_optimize)
     pipeline = AssetPipeline(
         public_dir=args.public_dir,

@@ -1,12 +1,20 @@
 import os
 import re
-import requests
+import importlib.util
 from pathlib import Path
 from typing import Dict, List, Optional
 
 
 DEFAULT_PUBLIC_DIR = "public"
 DEFAULT_IMAGES_DIR = "images"
+
+
+def _load_asset_pipeline():
+    here = Path(__file__).resolve().parent
+    spec = importlib.util.spec_from_file_location("figma_asset_pipeline", str(here / "asset_pipeline.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _safe_filename(name: str, extension: str) -> str:
@@ -21,15 +29,23 @@ def _safe_filename(name: str, extension: str) -> str:
 def download_asset(url: str, dest_path: Path, timeout: int = 60) -> bool:
     """Скачивает ассет по URL и сохраняет в dest_path."""
     try:
-        response = requests.get(url, timeout=timeout)
-        if response.status_code != 200:
-            return False
-        dest_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(dest_path, "wb") as f:
-            f.write(response.content)
-        return True
+        module = _load_asset_pipeline()
+        downloader = module.AssetDownloader()
+        return downloader.download(url, dest_path)
     except Exception:
-        return False
+        # Fallback для обратной совместимости: простой requests.get.
+        import requests
+
+        try:
+            response = requests.get(url, timeout=timeout)
+            if response.status_code != 200:
+                return False
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(dest_path, "wb") as f:
+                f.write(response.content)
+            return True
+        except Exception:
+            return False
 
 
 def save_asset(node_id: str, node_name: str, extension: str, image_url: str, public_dir: str = DEFAULT_PUBLIC_DIR) -> str:
@@ -61,17 +77,10 @@ def get_image_urls_from_figma(
     """
     if not node_ids:
         return {}
-    base_url = "https://api.figma.com/v1"
-    ids_param = ",".join(node_ids)
-    endpoint = f"{base_url}/images/{file_key}?ids={ids_param}&scale={scale}&format={format}"
-    headers = {"X-Figma-Token": figma_token}
     try:
-        response = requests.get(endpoint, headers=headers, timeout=60)
-        if response.status_code != 200:
-            print(f"[WARNING] Figma images API returned {response.status_code}: {response.text}")
-            return {}
-        data = response.json()
-        return data.get("images", {})
+        module = _load_asset_pipeline()
+        downloader = module.AssetDownloader(token=figma_token, url=f"https://www.figma.com/file/{file_key}")
+        return downloader.get_image_urls(node_ids, fmt=format, scale=scale)
     except Exception as e:
         print(f"[ERROR] Failed to fetch image URLs: {e}")
         return {}

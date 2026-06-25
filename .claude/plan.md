@@ -1,137 +1,95 @@
-# Plan — Content and Code Separation (Page/Section/Data Models)
+# Plan — Fallback Image Enrichment for Card Data Models
 
 ## Goal
-Extend the existing Content Model stage so generated sites separate structure, content, and data models:
-1. Emit a `content_model.json` describing each section with typed fields (heading, subtitle, CTA text, CTA link, image).
-2. Render the page from an array of sections imported from a data file.
-3. Add a `data_model_extractor.py` that proposes JSON/Prisma models for repeating Figma structures (cards, nav links, authors).
-4. Add data-binding annotations in the Layout Engine so JSX can read from a data model instead of hard-coded text.
+Add an optional **image-enrichment** stage to the Figma-to-code pipeline so generated sites with card-like repeating structures are not left with empty image slots. When a detected data model contains an `imageUrl` field and the Figma source has no downloadable image (or the image is missing), the bot should:
+1. Build a search query from the card text + page context.
+2. Download a matching royalty-free image from an external provider.
+3. Save it under `public/assets/enriched/` and register it locally.
+4. Fill the data model `sample_data` so Layout Engine / Section Composer render real images via `{item.imageUrl}`.
+
+The feature must be **opt-in**, safe (network/file guards), and pluggable (provider interface).
 
 ## Approach
 
-### 1. Enrich `content_model.py`
-- Extend `_find_content_slots` to classify slots by role:
-  - `heading` for `h1`/`h2` text.
-  - `subtitle` for `h3`/`h4`/`p` text inside a section header.
-  - `ctaText` for `button`/`a` text.
-  - `ctaHref` for `a href` / `button` target (if available in `interactive.triggers`).
-  - `image` for `img src`.
-  - Fallback generic `textN`/`srcN` for other slots.
-- Update `_section_component_code` to generate a typed props interface with all extracted fields, and render `{props.heading}` / `{props.image}` etc.
-- Update `_build_data_code` to export `pageData` plus a `sections` array ordered list: `sections: [{ name: "Hero", component: "Hero" }, ...]`.
-- Add `_build_content_model_json` producing `content_model.json`:
-  ```json
-  {
-    "version": "1",
-    "sections": [
-      {
-        "name": "Hero",
-        "slug": "hero",
-        "component": "Hero",
-        "fields": [
-          { "name": "heading", "type": "text", "label": "Heading", "required": true },
-          { "name": "subtitle", "type": "text", "label": "Subtitle" },
-          { "name": "ctaText", "type": "text", "label": "CTA Text" },
-          { "name": "ctaHref", "type": "url", "label": "CTA Link" },
-          { "name": "image", "type": "image", "label": "Image" }
-        ]
-      }
-    ]
-  }
-  ```
-- Add new CLI arg `--content-model-output` default `content_model.json` and pass it through `conductor.py`.
-- Change `_build_page_code` to render the page by mapping over `pageData.sections`:
-  ```tsx
-  import { pageData, sections } from "./page.data";
-  import Hero from "@/app/sections/Hero";
-  // ...
-  {sections.map((s) => {
-    const Component = { Hero, Features, ... }[s.component];
-    return <Component key={s.slug} {...pageData[s.component]} />;
-  })}
-  ```
-  Keep per-section imports for type safety and tree-shaking.
+### 1. New core module `figma-agent-core/image_enrichment.py`
+- `ImageEnrichmentPipeline` class with a CLI entry point.
+- Inputs:
+  - `data_model.json` (from `data_model_extractor.py`)
+  - `figma_node.json`
+  - `asset_registry.json` (optional, to reuse real Figma images first)
+  - `spec.md` (optional, for page-domain context)
+- Outputs:
+  - enriched `data_model.json`
+  - `enriched_image_registry.json` (paths, provider, query, attribution)
+  - downloaded files in `public/assets/enriched/`
 
-### 2. New module `figma-agent-core/data_model_extractor.py`
-- Input: raw `figma_node.json` (or any node tree JSON).
-- Detect repeating subtrees using a structural fingerprint:
-  - Include node type, name base, visible child count, and primitive child types.
-  - Group identical fingerprints; require `min_occurrences=2`.
-- Heuristic model naming from the common ancestor or first occurrence name:
-  - `Card` → `FeatureCard`, `PricingCard`, etc.
-  - `Link` / `Nav` → `NavLink`.
-  - `Author` / `Team` → `Author`, `TeamMember`.
-- Propose fields by inspecting leaf text and image nodes inside the repeated structure:
-  - Text children → `title`, `description` (by tag/position).
-  - Image nodes → `imageUrl`.
-  - Link-like nodes → `href`.
-- Output JSON report:
-  ```json
-  {
-    "models": [
-      {
-        "name": "NavLink",
-        "occurrences": 5,
-        "sample_figma_id": "123:1",
-        "fields": [
-          { "name": "label", "type": "String" },
-          { "name": "href", "type": "String" }
-        ],
-        "suggested_prisma": "model NavLink { id String @id @default(uuid()) label String href String }"
-      }
-    ]
-  }
-  ```
-- Provide CLI: `--file`, `--output`, `--min-occurrences`, `--top-n`.
-- Add minimal unit tests in `tests/figma/test_data_model_extractor.py`.
+Key components inside the module:
+- `QueryBuilder` — deterministic keyword extraction from card `title`/`description`/`section name` + `spec.md` domain hints. Keeps queries short (≤4 keywords) to match stock-photo APIs.
+- `ImageProvider` interface — first concrete provider: `UnsplashProvider` (uses `UNSPLASH_ACCESS_KEY`, supports attribution fields). Add a `MockImageProvider` for tests.
+- `LocalAssetResolver` — for each data-model occurrence, check whether a Figma IMAGE child exists and already has a public path in `asset_registry.json`; if so, reuse it instead of searching the web.
+- `EnrichmentWriter` — copies/downloads image into `public/assets/enriched/`, names files safely (`{model}_{idx}_{hash}.{ext}`), writes registry.
+- `DataModelEnricher` — fills `sample_data[i].imageUrl` and adds a new `imageAlt` field per row. Tracks diagnostics (skipped, no match, reused Figma asset).
 
-### 3. Layout Engine data-binding fields
-- Add optional `--data-model` argument to `layout_engine.py`. When provided, the engine reads `data_model.json` (or the extractor output) to annotate matching nodes.
-- In `TailwindNode` add `data_binding: Optional[Dict[str,str]]` with keys:
-  - `model` — e.g. `NavLink`
-  - `field` — e.g. `label`
-  - `index` — for list rendering
-- When a Figma node name or path matches a data model pattern, the Layout Engine:
-  - Sets `text_expr` / `src_expr` to reference the data field instead of literal text/src.
-  - Marks the parent list container with `data_source={model}` and `data_is_list=True`.
-- Update `content_model.py` `_render_node` to understand `text_expr`, `src_expr`, and `data_source`.
-- Update `page_composer.py` `_node_to_tsx` so it can render `{item.label}` inside a list map if data binding is present (fallback to hard-coded text when no binding).
+### 2. Add `image_enrichment` conductor stage before `layout`
+- New function `stage_image_enrichment(...)` in `figma-agent-core/conductor.py`.
+- New CLI flags:
+  - `--enable-image-enrichment` (default `False`)
+  - `--image-provider` (default `unsplash`, choices: `unsplash`, `mock`)
+  - `--image-provider-api-key` / env `UNSPLASH_ACCESS_KEY`
+  - `--image-enrichment-output-dir` (default `public/assets/enriched`)
+  - `--image-enrichment-max-images` (default 20)
+  - `--image-enrichment-delay` (default 1.0s between provider requests)
+- Insert stage into `run_pipeline` after `data_model` and before `layout`.
+- Update `mcp_servers/figma_server.py` `figma_run_pipeline` schema to accept and forward enrichment flags.
 
-### 4. Conductor integration
-- Add new stage `data_model` after `analyze` (optional) and pass output to `layout` via `--data-model`.
-- Extend `stage_content_model` to accept and forward `--content-model-output`.
-- Add config keys:
-  - `content_model_json_output`
-  - `data_model_enabled`
-  - `data_model_output`
-  - `data_model_min_occurrences`
+### 3. Layout Engine and composers support `imageAlt` data binding
+- `figma-agent-core/layout_engine.py`:
+  - Add optional `alt_binding` field to `TailwindNode` / `to_dict`.
+  - When an image node is inside a data-model context and the model has an `imageAlt` field, set `alt_binding` to that field.
+- `figma-agent-core/page_composer.py` and `figma-agent-core/content_model.py`:
+  - For `img` with `data_binding`, render `src={item.imageUrl}` and, when `alt_binding` exists, `alt={item.imageAlt}`; otherwise keep existing static `alt`.
 
-### 5. Tests
-- `tests/figma/test_content_model.py`:
-  - typed field extraction (heading/cta/image)
-  - `content_model.json` output
-  - page.tsx renders `sections.map`
-- New `tests/figma/test_data_model_extractor.py`:
-  - detect repeated cards and nav links
-  - suggested model names and fields
-- `tests/figma/test_layout_engine.py`:
-  - data-binding annotations when `--data-model` provided
+### 4. New planning/safety agent `image_enrichment_agent.md`
+- File: `.agent_loop/tooll_subagents/planning/image_enrichment_agent.md` following the Algorithmic template.
+- Role: pre-approve external image search plans (queries, expected domains, target public dir, rate limits).
+- Add Failure Mode to `file_system_guard.md`: enrichment downloads outside `public/assets/enriched/` are denied.
+- Add Failure Mode to `network_guard.md`: external image search/download not pre-approved by `image_enrichment_agent.md` is rate-limited/blocked.
+- Update `figma_design_analyst.md` Stage 13a to invoke `image_enrichment_agent.md` when `--enable-image-enrichment` is on.
+
+### 5. Runtime wiring
+- `runtime/engine/pipeline_runner.py`:
+  - Forward enrichment flags from `design_descriptor` (e.g., `image_enrichment: { provider, api_key }`) to the `figma_run_pipeline` MCP call.
+  - Keep default disabled so existing behavior is unchanged.
+
+### 6. Tests
+- `tests/figma/test_image_enrichment.py`:
+  - Mock provider returns a tiny local image.
+  - Verify `data_model.json` sample rows get `imageUrl`/`imageAlt`.
+  - Verify downloaded file lands in `public/assets/enriched/`.
+  - Verify existing Figma asset path is reused when available.
+- Update `tests/figma/test_content_model.py` / `test_layout_engine.py` to assert `alt_binding` render.
+- Full suite: `pytest tests/figma -q`.
+
+### 7. Validation / graphify
+- Run `node scripts/validate_cross_references.js` to ensure `image_enrichment_agent.md` is not isolated.
+- Run `pytest tests/figma -q`.
+- Run `graphify update .`.
 
 ## Files to create or modify
-- Create: `figma-agent-core/data_model_extractor.py`
-- Create: `tests/figma/test_data_model_extractor.py`
-- Modify: `figma-agent-core/content_model.py`
+- Create: `figma-agent-core/image_enrichment.py`
+- Create: `tests/figma/test_image_enrichment.py`
+- Create: `.agent_loop/tooll_subagents/planning/image_enrichment_agent.md`
+- Modify: `figma-agent-core/conductor.py`
 - Modify: `figma-agent-core/layout_engine.py`
-- Modify: `figma-agent-core/page_composer.py` (data-binding render)
-- Modify: `figma-agent-core/conductor.py` (stage wiring and config)
-- Modify: `tests/figma/test_content_model.py`
-- Modify: `tests/figma/test_layout_engine.py`
-
-## Validation
-1. Run `pytest tests/figma -q` — target: all pass, current 251 + new tests.
-2. Run `node scripts/safety_check.js` on changed files.
-3. Run `graphify update .` to refresh knowledge graph.
+- Modify: `figma-agent-core/page_composer.py`
+- Modify: `figma-agent-core/content_model.py`
+- Modify: `mcp_servers/figma_server.py`
+- Modify: `runtime/engine/pipeline_runner.py`
+- Modify: `.agent_loop/tooll_subagents/planning/figma_design_analyst.md`
+- Modify: `.agent_loop/control/file_system_guard.md`
+- Modify: `.agent_loop/control/network_guard.md`
 
 ## Risks / open questions
-- Page rendering as `sections.map` loses static import tree-shaking if components dictionary is not statically analyzable; using a static switch/import block preserves it.
-- Data model matching heuristics may be noisy; we will keep it optional and provide a confidence score in the extractor report.
+- External stock-photo APIs require keys and have rate limits; default is disabled so pipelines without keys behave exactly as before.
+- Attribution/licensing: Unsplash results include photographer metadata; we will store it in `enriched_image_registry.json` and can render it later if project rules require it.
+- Relevance of auto-generated search queries depends on card text quality; we will log diagnostics and allow future manual override via the existing `figma_overrides.json` mechanism.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agentic Loop Runtime — LLM-powered multi-agent execution engine.
+Agentic Loop Runtime — lightweight LLM-powered multi-agent execution engine.
 
 Reads Markdown agent specifications from .agent_loop/ and executes them
 as state machines via LLM API calls. Each agent spec becomes a system prompt,
@@ -43,13 +43,6 @@ try:
 except ImportError:
     HAS_TUI = False
 
-# Observability
-try:
-    from runtime.observability import get_logger, MetricsCollector, GracefulShutdown, HealthCheck
-    HAS_OBS = True
-except ImportError:
-    HAS_OBS = False
-
 
 def resolve_root() -> Path:
     candidates = [
@@ -68,7 +61,7 @@ def resolve_root() -> Path:
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Agentic Loop Runtime — LLM-powered multi-agent execution engine"
+        description="Agentic Loop Runtime — lightweight LLM-powered multi-agent execution engine"
     )
     p.add_argument("request", nargs="?", help="User request to process")
     p.add_argument("--session-id", default=None, help="Session ID (resume existing or start new)")
@@ -144,38 +137,10 @@ async def main():
                 pass
 
         bus.subscribe("ndjson-stream", _ndjson_subscriber, topics=[
-            "phase.start", "phase.end", "agent.invoke", "context.compression",
-            "memory.loaded", "memory.stored", "audit",
+            "phase.start", "phase.end", "agent.invoke",
         ])
 
     runner = PipelineRunner(loader=loader, llm=llm, bus=bus, state=state)
-
-    # Observability setup
-    log = get_logger("runtime.main") if HAS_OBS else None
-    metrics = MetricsCollector() if HAS_OBS else None
-    health = HealthCheck() if HAS_OBS else None
-    gs = GracefulShutdown(timeout=15.0) if HAS_OBS else None
-
-    if gs:
-        gs.register_cleanup(bus.stop)
-        gs.register_cleanup(state.close)
-        if runner.worker_pool_enabled and runner._worker_pool:
-            gs.register_cleanup(runner._worker_pool.stop)
-        gs.enable()
-
-    if log:
-        log.info("Runtime initialized", agent_loop_root=str(root), provider=args.provider, model=model)
-
-    if health:
-        health.mark_component("agent_loader", True)
-        health.mark_component("llm_engine", True)
-        health.mark_component("message_bus", True)
-        health.mark_component("state_manager", True)
-        health.mark_component("pipeline_runner", True)
-        if runner.worker_pool_enabled and runner._worker_pool:
-            health.mark_component("worker_pool", True)
-        if runner._memory:
-            health.mark_component("memory_manager", True)
 
     if args.validate:
         print("=== Runtime Component Validation ===\n")
@@ -284,38 +249,6 @@ async def main():
         state.delete("test_key", scope="test", hard=True)
         state.close()
 
-        # 4. ContextCompressor (offline, no LLM)
-        print("\n4. ContextCompressor: buffering + manual fallback summarization ...")
-        from runtime.workers.context_compressor import ContextCompressor
-        comp = ContextCompressor(llm_engine=None, compress_every_n=3)
-        comp.add_trace({"phase": "execution", "agent_path": "tools_read/read_file.md", "success": True, "latency_ms": 45, "outputs": {"content": "file data"}})
-        comp.add_trace({"phase": "observation", "agent_path": "tools_read/read_file.md", "success": True, "latency_ms": 12, "outputs": {"status": "ok"}})
-        comp.add_trace({"phase": "validation", "agent_path": "mutual_check/result_validator.md", "success": True, "latency_ms": 89, "outputs": {"valid": True}})
-        assert comp.should_compress(3) is True
-        summary = await comp.compress()
-        assert summary is not None
-        assert summary.original_count == 3
-        assert len(summary.summary) > 0
-        assert comp.stats["total_compressed"] == 3
-        print(f"   Compressed {summary.original_count} traces into {len(summary.summary)} chars")
-        print(f"   Estimated tokens saved: {comp.stats['total_tokens_saved']}")
-        print(f"   Summary sample: {summary.summary[:120]}...")
-        print("   ContextCompressor: OK")
-
-        # 5. Observability
-        if health:
-            print("\n5. Observability: health + metrics ...")
-            health.mark_component("agent_loader", True)
-            health.mark_component("message_bus", True)
-            health.mark_component("state_manager", True)
-            health.mark_component("context_compressor", True)
-            print(f"   Health status: {health.status().status}")
-            print(f"   Health JSON: {health.to_json()}")
-
-        if metrics:
-            metrics.counter("validation.runs").inc()
-            print(f"   Metrics snapshot (JSON): {metrics.to_json()}")
-
         print("\n=== All validations passed ===")
         print(f"Components ready. Use --demo or interactive mode with LLM API keys.")
         return
@@ -323,10 +256,6 @@ async def main():
     if args.demo:
         request = args.request or "Analyze the current project structure and summarize what you find."
         print(f"\n[Demo] Running with request: {request}\n")
-        if log:
-            log.info("Demo mode started", request=request)
-        if metrics:
-            metrics.counter("demo.runs").inc()
 
         tui_task = None
         if args.tui and HAS_TUI:
@@ -337,8 +266,6 @@ async def main():
         try:
             result = await runner.run(request, max_iterations=args.max_iterations)
         except Exception as e:
-            if log:
-                log.error("Demo run failed", error=str(e))
             raise
         print("=" * 60)
 
@@ -348,17 +275,6 @@ async def main():
                 await asyncio.wait_for(tui_task, timeout=2.0)
             except asyncio.TimeoutError:
                 pass
-
-        if log:
-            log.info("Demo run completed",
-                     session_id=result.session_metrics.session_id,
-                     status=result.termination_status.value,
-                     iterations=result.session_metrics.iterations,
-                     time_ms=result.session_metrics.time_elapsed_ms)
-        if metrics:
-            metrics.counter("pipeline.runs").inc()
-            metrics.gauge("sessions.active").set(0)
-            metrics.histogram("session.duration_ms").observe(result.session_metrics.time_elapsed_ms)
 
         print(f"\nStatus: {result.termination_status.value}")
         print(f"Iterations: {result.session_metrics.iterations}")
@@ -374,8 +290,6 @@ async def main():
 
     if not args.request:
         print("Entering interactive mode. Type 'exit' to quit, 'help' for commands.")
-        if log:
-            log.info("Interactive mode started")
         session_id = args.session_id
         while True:
             try:
@@ -403,37 +317,15 @@ async def main():
                 result = await runner.run(user_input, session_id=session_id,
                                           max_iterations=args.max_iterations)
             except Exception as e:
-                if log:
-                    log.error("Interactive run failed", error=str(e))
                 raise
             session_id = result.session_metrics.session_id
-            if log:
-                log.info("Request processed",
-                         session_id=session_id,
-                         status=result.termination_status.value,
-                         iterations=result.session_metrics.iterations)
-            if metrics:
-                metrics.counter("interactive.requests").inc()
-                metrics.histogram("session.duration_ms").observe(result.session_metrics.time_elapsed_ms)
             print(f"[{result.termination_status.value}] {result.final_response[:300]}")
     else:
-        if log:
-            log.info("Single-request mode", request=args.request)
         try:
             result = await runner.run(args.request, session_id=args.session_id,
                                       max_iterations=args.max_iterations)
         except Exception as e:
-            if log:
-                log.error("Single-request run failed", error=str(e))
             raise
-        if log:
-            log.info("Request completed",
-                     session_id=result.session_metrics.session_id,
-                     status=result.termination_status.value,
-                     iterations=result.session_metrics.iterations)
-        if metrics:
-            metrics.counter("single.requests").inc()
-            metrics.histogram("session.duration_ms").observe(result.session_metrics.time_elapsed_ms)
         print(json.dumps({
             "status": result.termination_status.value,
             "session_id": result.session_metrics.session_id,

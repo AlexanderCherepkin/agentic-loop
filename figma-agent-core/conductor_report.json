@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-06-22T14:21:14.939126+00:00",
+  "started_at": "2026-06-25T21:27:34.964717+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -18,6 +18,10 @@
     },
     "data_model": {
       "success": true
+    },
+    "image_enrichment": {
+      "success": true,
+      "skipped": true
     },
     "analyze": {
       "success": true
@@ -93,10 +97,20 @@
     "api_depth": 2,
     "skip_assets": false,
     "skip_assets_download": false,
+    "enable_image_enrichment": false,
+    "image_provider": "unsplash",
+    "image_provider_api_key": null,
+    "image_enrichment_output_dir": "public/assets/enriched",
+    "image_enrichment_max_images": 20,
+    "skip_existing_image_enrichment": true,
     "optimize_assets": true,
     "public_dir": "public",
     "assets_dir": "assets/figma",
     "assets_registry_file": "asset_registry.json",
+    "asset_batch_size": 25,
+    "asset_request_delay": 1.0,
+    "asset_max_retries": 5,
+    "skip_existing_assets": true,
     "spec_output": "spec.md",
     "tokens_output_dir": ".",
     "tokens_registry_file": "design_tokens.json",
@@ -144,6 +158,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-06-22T14:21:14.942637+00:00",
+  "finished_at": "2026-06-25T21:27:34.967716+00:00",
   "duration_seconds": 0.0
 }

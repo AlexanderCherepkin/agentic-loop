@@ -1,16 +1,16 @@
-# Graph Report - Agentic_Loop_Graph  (2026-06-22)
+# Graph Report - Agentic_Loop_Graph  (2026-06-26)
 
 ## Corpus Check
-- 384 files · ~227,299 words
+- 397 files · ~235,894 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4398 nodes · 7298 edges · 358 communities (335 shown, 23 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 563 edges (avg confidence: 0.51)
+- 4591 nodes · 7602 edges · 368 communities (345 shown, 23 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 573 edges (avg confidence: 0.51)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9c83d0f2`
+- Built from commit: `b0bc354b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -369,15 +369,23 @@
 - [[_COMMUNITY_Community 355|Community 355]]
 - [[_COMMUNITY_Community 356|Community 356]]
 - [[_COMMUNITY_Community 357|Community 357]]
+- [[_COMMUNITY_Community 358|Community 358]]
+- [[_COMMUNITY_Community 359|Community 359]]
+- [[_COMMUNITY_Community 360|Community 360]]
+- [[_COMMUNITY_Community 361|Community 361]]
+- [[_COMMUNITY_Community 362|Community 362]]
+- [[_COMMUNITY_Community 363|Community 363]]
+- [[_COMMUNITY_Community 366|Community 366]]
+- [[_COMMUNITY_Community 367|Community 367]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `MCPServer` - 68 edges
-2. `PipelineRunner` - 56 edges
-3. `StateManager` - 56 edges
-4. `MCPRegistry` - 53 edges
-5. `MessageBus` - 50 edges
-6. `PhaseTransitionManager` - 50 edges
-7. `AgentLoader` - 46 edges
+2. `StateManager` - 55 edges
+3. `PipelineRunner` - 53 edges
+4. `MCPRegistry` - 52 edges
+5. `PhaseTransitionManager` - 51 edges
+6. `MessageBus` - 49 edges
+7. `AgentLoader` - 44 edges
 8. `LLMEngine` - 44 edges
 9. `getDb()` - 42 edges
 10. `FigmaLayoutEngine` - 39 edges
@@ -397,11 +405,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (358 total, 23 thin omitted)
+## Communities (368 total, 23 thin omitted)
 
 ### Community 0 - "MCP Web/Search/DB Servers"
-Cohesion: 0.14
-Nodes (14): ComponentRegistry, _extract_exports_and_props(), _find(), InstanceEntry, _is_component(), _is_component_set(), _is_instance(), _normalize_component_name() (+6 more)
+Cohesion: 0.21
+Nodes (6): ComponentRegistry, _is_component(), _is_component_set(), _is_instance(), Any, Return the merged mapper entry for a component, preferring per-component mapper
 
 ### Community 1 - "Memory Store Pipeline"
 Cohesion: 0.10
@@ -412,32 +420,32 @@ Cohesion: 0.08
 Nodes (20): ActionGenerator, BackendBridge, BackendSpec, Endpoint, main(), Model, ModelField, OpenApiParser (+12 more)
 
 ### Community 3 - "Runtime Engine Core"
-Cohesion: 0.10
-Nodes (28): Message, MessageType, MessageBus, OperationStatus, StateManager, Panel, main(), parse_args() (+20 more)
+Cohesion: 0.08
+Nodes (33): DeliveryGuarantee, DeliveryReceipt, Message, MessageStatus, MessageType, OperationStatus, StateManager, StateResult (+25 more)
 
 ### Community 4 - "Replace File Pipeline"
 Cohesion: 0.14
 Nodes (14): _load_fixture(), _load_layout_engine_module(), _load_override_module(), _load_registry_module(), Unit tests for figma-agent-core/mapper_override.py., test_add_override_replaces_duplicate(), test_component_registry_build_and_write_applies_override(), test_component_registry_load_with_overrides() (+6 more)
 
 ### Community 5 - "Agent Loop Architecture"
-Cohesion: 0.10
-Nodes (30): AgentLoader, LLMConfig, LLMEngine, LLMProvider, LLMResponse, LLM execution engine with circuit breaker and provider fallback.      Fallback c, Build ordered list of fallback providers based on available API keys., Direct API call without AgentSpec wrapping. Returns raw text. (+22 more)
+Cohesion: 0.07
+Nodes (36): AgentLoader, CircuitBreaker, CircuitBreakerConfig, EvaluationEngine, EvaluatorResponse, LLMConfig, LLMEngine, LLMResponse (+28 more)
 
 ### Community 6 - "Message Bus Contracts"
 Cohesion: 0.07
-Nodes (57): CompletedProcess, _collect_top_level_sections(), main(), Any, Этап 1a: скачивание референсного скриншота Figma-фрейма через Images API., Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instanc, Этап 1d: обнаружение повторяющихся Figma-структур и предложение JSON/Prisma моде, Этап 1c: аудит готовности Precise Mode перед генерацией кода. (+49 more)
+Nodes (59): CompletedProcess, _collect_top_level_sections(), main(), Any, Этап 1a: скачивание референсного скриншота Figma-фрейма через Images API., Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instanc, Этап 1d: обнаружение повторяющихся Figma-структур и предложение JSON/Prisma моде, Этап 1d-enrich: подбор изображений для data_model-карточек без картинок. (+51 more)
 
 ### Community 7 - "Safety Audit Logger"
 Cohesion: 0.12
-Nodes (16): IterationTrace, PipelineRunner, Determine if agent is a tools_* agent that should run isolated., Extract task category from agent path: tools_read/... -> read, Invoke agent in isolated worker process. Returns summary only., Publish progress event for TUI and external observers., Return {agent: {count, avg_ms, max_ms, min_ms}} for all agents invoked., True when figma-agent-core is present and Figma credentials are configured. (+8 more)
+Nodes (16): IterationTrace, PipelineRunner, Load lightweight project rules and CLAUDE.md from workspace root., Parse project_rules.md into sections., Compress markdown to headings, lists, tables, and short directives., Assemble the summarized project rules and CLAUDE.md into one system block., Return the shared system context for phases that must obey project-wide rules., True when figma-agent-core is present and Figma credentials are configured. (+8 more)
 
 ### Community 8 - "Engine Circuit Breaker"
 Cohesion: 0.10
 Nodes (50): _apply_component_mappings(), _build_data_model_consts(), _build_form_hooks(), _build_handler(), _build_state_hooks(), _class_string(), _collect_all_nodes(), _collect_fonts() (+42 more)
 
 ### Community 9 - "Control Human Oversight"
-Cohesion: 0.09
-Nodes (24): _asset_dest_path(), AssetDownloader, AssetExtractor, AssetOptimizer, AssetPipeline, _extract_box_size(), FontCollector, InlineSvgExtractor (+16 more)
+Cohesion: 0.06
+Nodes (32): _asset_dest_path(), AssetDownloader, AssetExtractor, AssetOptimizer, AssetPipeline, _extract_box_size(), FontCollector, InlineSvgExtractor (+24 more)
 
 ### Community 10 - "Pipeline Runner"
 Cohesion: 0.12
@@ -460,12 +468,12 @@ Cohesion: 0.09
 Nodes (35): _load_page_composer(), _minimal_ast(), Unit tests for figma-agent-core/page_composer.py.  Loads the module via importli, test_compose_backdrop_filter_inline_style(), test_compose_component_reference(), test_compose_component_with_props(), test_compose_data_binding_renders_item_map(), test_compose_emits_data_figma_id() (+27 more)
 
 ### Community 16 - "Agent Loop Tools Database"
-Cohesion: 0.11
-Nodes (4): PhaseTransitionManager, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
+Cohesion: 0.09
+Nodes (7): PhaseTransition, PhaseTransitionManager, Resolve a value from the state dict.          Tries the dotted path first, then, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Decide the next ReAct phase and optional safety override., Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
 
 ### Community 17 - "Community 17"
-Cohesion: 0.12
-Nodes (8): MCPServer, MCPTool, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe, Eager registration: server is already constructed., ServerInfo
+Cohesion: 0.14
+Nodes (6): MCPServer, MCPTool, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe
 
 ### Community 18 - "Agent Loop Tools Terminal"
 Cohesion: 0.10
@@ -476,8 +484,8 @@ Cohesion: 0.14
 Nodes (15): BackendMCPServer, BackendMCPServer, Any, MCP server that wraps the Backend Spec Bridge.      Provides tools to parse back, backend_server(), degraded_server(), project_root(), pytest tests for the Backend MCP server.  These tests mock subprocess invocation (+7 more)
 
 ### Community 20 - "Agent Loop Tools Manangr"
-Cohesion: 0.12
-Nodes (18): ContractSpec, DecisionStep, AgentLoader, FailureMode, Parameter, PipelineRunner, AgentSpec, Path (+10 more)
+Cohesion: 0.20
+Nodes (7): ContractSpec, DecisionStep, AgentLoader, FailureMode, Parameter, AgentSpec, Path
 
 ### Community 21 - "Agent Loop Tools Web"
 Cohesion: 0.16
@@ -492,8 +500,8 @@ Cohesion: 0.15
 Nodes (19): cache_age_minutes(), check_figma_connection(), extract_effects(), extract_fills(), extract_text_style(), FigmaExtractor, find_node_by_id(), load_existing_cache() (+11 more)
 
 ### Community 24 - "Agent Loop Mutual Check"
-Cohesion: 0.12
-Nodes (37): ContentModelResult, _apply_component_mappings(), _apply_slot(), _assign_prop_names(), build_content_model(), _build_content_model_json(), _build_data_code(), _build_page_code() (+29 more)
+Cohesion: 0.11
+Nodes (41): ContentModelResult, _apply_component_mappings(), _apply_slot(), _assign_prop_names(), build_content_model(), _build_content_model_json(), _build_data_code(), _build_page_code() (+33 more)
 
 ### Community 25 - "Agent Loop Control Layer"
 Cohesion: 0.18
@@ -502,6 +510,10 @@ Nodes (8): Any, Path, AuditEvent, AuditLogger, GuardrailRule, SafetyChain, Safet
 ### Community 26 - "Agent Loop ReAct User Phase"
 Cohesion: 0.08
 Nodes (25): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+17 more)
+
+### Community 27 - "Agent Loop ReAct Planning"
+Cohesion: 0.14
+Nodes (16): DeliveryReceipt, DeadLetterEntry, MessageBus, Subscriber, PipelineRunner, Message, _make_runner(), Integration tests for Figma wiring inside PipelineRunner.  These tests verify th (+8 more)
 
 ### Community 28 - "Agent Loop ReAct Execution"
 Cohesion: 0.21
@@ -524,8 +536,8 @@ Cohesion: 0.13
 Nodes (12): Any, CompressionSummary, ContextCompressor, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+4 more)
 
 ### Community 33 - "MCP Servers Bootstrap"
-Cohesion: 0.06
-Nodes (22): ContextIsolator, Any, Path, ContextBudget, ContextIsolator, IsolatedContext, ModelTier, Rough token estimation: ~4 chars per token for English text. (+14 more)
+Cohesion: 0.09
+Nodes (18): CircuitBreakerOpenError, CircuitState, ServerInfo, TestCircuitBreaker, TestMCPHealthCheck, TestWorkerJobPriority, TestWorkerPoolBackpressure, Dispatch a job to a worker. Returns summary when done.          Backpressure: if (+10 more)
 
 ### Community 34 - "MCP Base Server"
 Cohesion: 0.16
@@ -536,16 +548,16 @@ Cohesion: 0.24
 Nodes (19): _apply_layout_adjustments(), _check_reason(), _extract_figma_id(), _find_node_by_figma_id(), _load_json(), _load_module(), main(), Any (+11 more)
 
 ### Community 36 - "Runtime Memory Manager"
-Cohesion: 0.12
-Nodes (15): CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, MockLLMEngine, Deterministic mock LLM engine for integration testing without API keys.      Ret, Any, AgentSpec (+7 more)
+Cohesion: 0.08
+Nodes (13): ContextIsolator, Any, Path, ContextBudget, ContextIsolator, IsolatedContext, ModelTier, Rough token estimation: ~4 chars per token for English text. (+5 more)
 
 ### Community 37 - "Observability Environment Result"
 Cohesion: 0.26
 Nodes (16): check_file(), _check_import_path_safety(), _check_patterns(), _check_placeholders(), _check_project_rules(), ComplianceReport, _extract_text_literals(), _is_inside_workspace() (+8 more)
 
 ### Community 38 - "Observability Lifecycle"
-Cohesion: 0.22
-Nodes (19): _build_match_index(), compose_responsive_ast(), constraint_to_classes(), detect_breakpoint_frames(), _diff_classes(), _find_figma_node(), _load_json(), main() (+11 more)
+Cohesion: 0.18
+Nodes (25): _build_match_index(), compose_responsive_ast(), constraint_to_classes(), detect_breakpoint_frames(), _diff_classes(), _find_figma_node(), _id_key(), _load_json() (+17 more)
 
 ### Community 39 - "Graphify Query Reference"
 Cohesion: 0.19
@@ -560,8 +572,8 @@ Cohesion: 0.27
 Nodes (18): _attach_interactions(), _build_interaction(), _camel_case(), _collect_routes(), _extract_navigation_info(), _extract_overlay_info(), _extract_reaction_type(), _extract_url_info() (+10 more)
 
 ### Community 42 - "Memory Embedding Agent"
-Cohesion: 0.15
-Nodes (12): _base_frame(), _load_module(), Unit tests for figma-agent-core/responsive_composer.py.  Loads the module via im, _tablet_frame(), test_compose_responsive_ast_generates_breakpoint_variants(), test_compose_responsive_ast_no_breakpoints_short_circuits(), test_compose_responsive_ast_skips_base_token_frame(), test_compose_responsive_ast_warns_unmatched_node() (+4 more)
+Cohesion: 0.11
+Nodes (19): _base_frame(), _load_module(), Unit tests for figma-agent-core/responsive_composer.py.  Loads the module via im, Stable figma_id is preferred when matching nodes across breakpoint frames., When grid_for_wrap is enabled, wrapped frames are rendered as CSS Grid., Without the grid_for_wrap flag, wrap frames keep the legacy flex-wrap layout., _tablet_frame(), test_compose_responsive_ast_generates_breakpoint_variants() (+11 more)
 
 ### Community 43 - "Memory FTS Index"
 Cohesion: 0.18
@@ -664,16 +676,16 @@ Cohesion: 0.27
 Nodes (14): _load_component_extractor(), _minimal_ast(), Unit tests for figma-agent-core/component_extractor.py.  Loads the module via im, test_component_name_sanitization(), test_figma_component_type_extraction(), test_min_duplicates_threshold(), test_named_pattern_extraction(), test_nested_deduplication() (+6 more)
 
 ### Community 68 - "Message Bus Delivery Receipt"
-Cohesion: 0.16
-Nodes (14): _load_refinement(), Unit tests for figma-agent-core/refinement_loop.py.  Loads the module via import, test_applies_deterministic_adjustments(), test_bbox_mismatch_applies_exact_size(), test_blocked_visual_qa_triggers_refinement_then_human(), test_convergence_guard_escalates_when_score_stagnates(), test_dom_assertion_failure_triggers_refinement(), test_fails_fast_when_compose_fails() (+6 more)
+Cohesion: 0.15
+Nodes (16): _load_refinement(), Unit tests for figma-agent-core/refinement_loop.py.  Loads the module via import, test_applies_deterministic_adjustments(), test_bbox_mismatch_applies_exact_size(), test_blocked_visual_qa_triggers_refinement_then_human(), test_convergence_guard_escalates_when_score_stagnates(), test_dom_assertion_failure_triggers_refinement(), test_fails_fast_when_compose_fails() (+8 more)
 
 ### Community 69 - "Observability Metrics"
 Cohesion: 0.21
 Nodes (13): End-to-end integration tests for Agentic Loop runtime.  Runs the full ReAct pipe, Recursion/termination agent should terminate on iteration >= 2., Full ReAct pipeline with mock provider should finish in <1s., Safety pre-check agents should all pass with mock responses., Every trace entry must have required fields., StateManager should persist session data., _resolve_root(), _run_pipeline() (+5 more)
 
 ### Community 70 - "State Manager Session Create"
-Cohesion: 0.13
-Nodes (8): MCPRegistry, MCPRegistry, Any, MCPServer, Health check one or all servers. Returns {name: bool}., Quick check if the server owning a tool is healthy., Registry and discovery for all MCP servers across tools_* categories.      Suppo, Lazy registration: server is constructed only on first access.
+Cohesion: 0.09
+Nodes (19): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Run a quick self-test on every registered server. (+11 more)
 
 ### Community 71 - "Graph Pilot Token Guards"
 Cohesion: 0.17
@@ -704,7 +716,7 @@ Cohesion: 0.14
 Nodes (6): _load_registry_module(), Unit tests for Component Mapping: Figma component key → React component + props., test_registry_builder_writes_mapper_file(), test_registry_builder_writes_per_component_and_aggregate_mappers(), Any, Path
 
 ### Community 78 - "Claude Project Instructions"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (5): _load_semantic_matcher(), Unit tests for semantic matching layer used by Design System Intelligence., test_save_and_load_index(), Any, Path
 
 ### Community 79 - "Config Models"
@@ -736,12 +748,12 @@ Cohesion: 0.17
 Nodes (22): _clean_name(), _extract_annotation_text(), find_node_by_id(), get_node_details(), infer_semantic_name(), inspect_node(), _is_generic_name(), list_top_level_nodes() (+14 more)
 
 ### Community 86 - "MCP Filesystem Package"
-Cohesion: 0.19
-Nodes (5): _load_fixture(), test_asset_extractor_finds_all_assets(), test_asset_extractor_formats(), test_font_collector_maps_inter(), test_pipeline_skip_download_builds_registry()
+Cohesion: 0.11
+Nodes (13): _load_fixture(), Если файл уже существует, не перезаписываем и не ломаем реестр., AssetDownloader.get_image_urls должен разбивать node_ids на chunks., Для уже существующих файлов API не вызывается и возвращается file:// URL., IMAGE fills sharing the same imageRef must yield a single asset entry., test_asset_extractor_deduplicates_by_image_ref(), test_asset_extractor_finds_all_assets(), test_asset_extractor_formats() (+5 more)
 
 ### Community 87 - "MCP Commander Package"
-Cohesion: 0.21
-Nodes (16): _load_fixture(), _load_registry_module(), Unit tests for figma-agent-core/component_registry.py., test_build_and_write_creates_per_component_mapper_files(), test_component_registry_loads_with_aggregate_mapper(), test_component_registry_loads_with_per_component_mappers(), test_component_registry_lookup(), test_registry_collects_instances() (+8 more)
+Cohesion: 0.19
+Nodes (18): _load_fixture(), _load_registry_module(), Unit tests for figma-agent-core/component_registry.py., test_build_and_write_creates_per_component_mapper_files(), test_component_registry_loads_with_aggregate_mapper(), test_component_registry_loads_with_per_component_mappers(), test_component_registry_lookup(), test_extract_exports_and_props_reads_jsdoc_description() (+10 more)
 
 ### Community 88 - "MCP Commander Package Duplicate"
 Cohesion: 0.27
@@ -760,16 +772,16 @@ Cohesion: 0.26
 Nodes (3): Any, MCP server for tools_runcom — command execution pipeline (sandboxed)., RuncomMCPServer
 
 ### Community 92 - "MCP Replace Package Duplicate"
-Cohesion: 0.13
-Nodes (14): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Run a quick self-test on every registered server. (+6 more)
+Cohesion: 0.27
+Nodes (3): Any, MCP server for tools_runtest — test execution pipeline (framework-dispatch)., RuntestMCPServer
 
 ### Community 93 - "Agent Loop Result Action Report Duplicate"
 Cohesion: 0.25
 Nodes (3): Any, MCP server for tools_terminal — terminal I/O pipeline (session-stateful)., TerminalMCPServer
 
 ### Community 94 - "Install Git Hooks Script"
-Cohesion: 0.17
-Nodes (11): 1. Enrich `content_model.py`, 2. New module `figma-agent-core/data_model_extractor.py`, 3. Layout Engine data-binding fields, 4. Conductor integration, 5. Tests, Approach, Files to create or modify, Goal (+3 more)
+Cohesion: 0.15
+Nodes (12): 1. New core module `figma-agent-core/image_enrichment.py`, 2. Add `image_enrichment` conductor stage before `layout`, 3. Layout Engine and composers support `imageAlt` data binding, 4. New planning/safety agent `image_enrichment_agent.md`, 5. Runtime wiring, 6. Tests, 7. Validation / graphify, Approach (+4 more)
 
 ### Community 95 - "MCP Commander Execute Command"
 Cohesion: 0.26
@@ -780,8 +792,8 @@ Cohesion: 0.17
 Nodes (11): Agent Counts, Agent Loop Architecture, Cross-Reference Integrity, Directory Tree, Flow, Implementation Status, Key Decisions, Naming Convention (+3 more)
 
 ### Community 97 - "MCP Filesystem List Directory"
-Cohesion: 0.21
-Nodes (11): collect_assets_from_tree(), download_asset(), get_image_urls_from_figma(), Path, Превращает имя ноды в безопасное имя файла., Скачивает ассет по URL и сохраняет в dest_path., Скачивает ассет и сохраняет его в public/images/.     Возвращает путь, который м, Запрашивает URL'ы экспорта ассетов через Figma Images API.     Возвращает {node_ (+3 more)
+Cohesion: 0.23
+Nodes (12): collect_assets_from_tree(), download_asset(), get_image_urls_from_figma(), _load_asset_pipeline(), Path, Превращает имя ноды в безопасное имя файла., Скачивает ассет по URL и сохраняет в dest_path., Скачивает ассет и сохраняет его в public/images/.     Возвращает путь, который м (+4 more)
 
 ### Community 98 - "MCP Database List Tables"
 Cohesion: 0.17
@@ -844,8 +856,8 @@ Cohesion: 0.38
 Nodes (9): _load_extractor_module(), _load_fixture(), Unit tests for ComponentGenerator in figma-agent-core/component_extractor.py., test_generated_button_has_interface_and_props(), test_generated_button_includes_text_override_prop(), test_generator_creates_registry_and_files(), test_generator_orders_dependencies_before_dependents(), Any (+1 more)
 
 ### Community 113 - "Community 113"
-Cohesion: 0.25
-Nodes (9): _load_content_model(), Unit tests for figma-agent-core/content_model.py.  Loads the module via importli, test_data_model_binding_in_section(), test_rejects_path_traversal(), test_skips_component_context_nodes(), test_splits_ast_into_page_sections_and_data(), test_uses_mapper_import_path_for_component_refs(), Any (+1 more)
+Cohesion: 0.24
+Nodes (10): _load_content_model(), Unit tests for figma-agent-core/content_model.py.  Loads the module via importli, test_alt_binding_on_data_bound_image(), test_data_model_binding_in_section(), test_rejects_path_traversal(), test_skips_component_context_nodes(), test_splits_ast_into_page_sections_and_data(), test_uses_mapper_import_path_for_component_refs() (+2 more)
 
 ### Community 114 - "Community 114"
 Cohesion: 0.24
@@ -1022,6 +1034,10 @@ Nodes (8): Contract, Decision Flow, Failure Modes, File Context, Receives, Retur
 ### Community 157 - "Community 157"
 Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Memory Enrichment, Receives, Returns, Role, Side Effects
+
+### Community 158 - "Community 158"
+Cohesion: 0.11
+Nodes (23): ABC, _build_provider(), _collect_image_refs(), DataModelEnricher, _extract_page_context(), _find_node_by_id(), ImageEnrichmentPipeline, ImageProvider (+15 more)
 
 ### Community 159 - "Community 159"
 Cohesion: 0.22
@@ -1230,6 +1246,10 @@ Nodes (7): _load_fixture(), test_complex_layout_absolute_badge(), test_complex_l
 ### Community 211 - "Community 211"
 Cohesion: 0.29
 Nodes (6): 🧭 graph-pilot — Graphify без зубрёжки 40 команд, Зачем это, Как поставить (2 минуты), Когда Graphify тебе НЕ нужен, Три грабли Graphify, которые скилл снимает, Что внутри
+
+### Community 212 - "Community 212"
+Cohesion: 0.33
+Nodes (9): _load_enrichment(), _make_data_model(), Unit tests for figma-agent-core/image_enrichment.py., test_enriches_empty_image_urls(), test_respects_max_images(), test_reuses_figma_asset_when_available(), test_run_enrichment_cli_writes_files(), Any (+1 more)
 
 ### Community 213 - "Community 213"
 Cohesion: 0.47
@@ -1676,72 +1696,92 @@ Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
 ### Community 325 - "Community 325"
-Cohesion: 0.14
-Nodes (21): build_parser(), cmd_approve(), cmd_demo(), cmd_health(), cmd_mcp_connect(), cmd_metrics(), cmd_run(), cmd_status() (+13 more)
+Cohesion: 0.18
+Nodes (16): build_parser(), cmd_approve(), cmd_demo(), cmd_mcp_connect(), cmd_run(), cmd_status(), cmd_validate(), fmt_duration() (+8 more)
 
 ### Community 346 - "Community 346"
 Cohesion: 0.23
 Nodes (16): add_override(), apply_override(), _load_optional(), load_override_set(), MapperOverrideError, merge_overrides_into_mapper(), OverrideRule, OverrideSet (+8 more)
 
+### Community 347 - "Community 347"
+Cohesion: 0.67
+Nodes (3): _find_node_by_figma_id(), test_data_model_image_alt_binding(), test_data_models_annotate_binding()
+
 ### Community 348 - "Community 348"
 Cohesion: 0.15
-Nodes (22): AgentSpec, ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope (+14 more)
+Nodes (23): AgentSpec, ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope (+15 more)
 
 ### Community 349 - "Community 349"
 Cohesion: 0.39
 Nodes (8): _field_weight(), _jaccard(), _levenshtein_ratio(), _ngram_set(), _normalize_text(), Compute weighted semantic similarity between two feature dictionaries., _semantic_score(), _tokenize()
 
 ### Community 350 - "Community 350"
-Cohesion: 0.23
-Nodes (8): ComponentMapper, _normalize_prop_name(), _normalize_prop_value(), Builds a Figma component key → React component + props mapper file., Convert an absolute file path to a project import path., Translate Figma instance variant properties to React props., Convert Figma variant property name to a React prop name (camelCase)., Normalize Figma variant value to a React prop string value.
-
-### Community 351 - "Community 351"
-Cohesion: 0.27
-Nodes (3): RegistryBuilder, RegistryEntry, _to_pascal()
+Cohesion: 0.13
+Nodes (12): ComponentMapper, _normalize_prop_name(), _normalize_prop_value(), Path, Builds a Figma component key → React component + props mapper file., Read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`., Return a new aggregate mapper where per-component files override aggregate entri, Convert an absolute file path to a project import path. (+4 more)
 
 ### Community 352 - "Community 352"
 Cohesion: 0.15
 Nodes (9): Exception, ComponentRegistryError, Any, Path, Return best matching existing component, score, and reason., High-level matcher used by registry/token builders., Index existing design-system artifacts for semantic matching., SemanticIndex (+1 more)
 
 ### Community 353 - "Community 353"
-Cohesion: 0.42
-Nodes (4): DeliveryReceipt, DeadLetterEntry, Subscriber, Message
+Cohesion: 0.17
+Nodes (15): _extract_exports_and_props(), _extract_jsdoc_blocks(), _find(), _find_jsdoc_before(), InstanceEntry, _normalize_component_name(), _parse_jsdoc(), Map normalized component names to existing local files/exports. (+7 more)
 
 ### Community 354 - "Community 354"
-Cohesion: 0.31
-Nodes (10): _load_auditor_module(), _make_node(), Unit tests for figma-agent-core/precise_mode_auditor.py., test_audit_returns_expected_report_keys(), test_critical_issue_overrides_score(), test_loose_text_is_needs_cleanup(), test_missing_auto_layout_is_not_ready(), test_ready_design_returns_ready() (+2 more)
-
-### Community 355 - "Community 355"
-Cohesion: 0.24
-Nodes (4): Path, Read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`., Return a new aggregate mapper where per-component files override aggregate entri, Load registry and overlay per-component `*.mapper.json` and manual overrides on
+Cohesion: 0.25
+Nodes (13): _load_auditor_module(), _make_node(), Unit tests for figma-agent-core/precise_mode_auditor.py., test_audit_returns_expected_report_keys(), test_auto_width_text_is_considered_snug(), test_content_box_within_tolerance_is_snug(), test_critical_issue_overrides_score(), test_fixed_width_text_with_loose_content_box_is_flagged() (+5 more)
 
 ### Community 356 - "Community 356"
 Cohesion: 0.28
 Nodes (7): _load_extractor_module(), Unit tests for figma-agent-core/content_model_extractor.py., test_extract_content_model_propagates_component_mapper(), test_extract_content_model_rejects_outside_workspace(), test_extract_content_model_returns_page_sections_and_data(), Any, Path
 
 ### Community 357 - "Community 357"
-Cohesion: 0.43
-Nodes (3): PhaseTransition, Decide the next ReAct phase and optional safety override., Resolve a value from the state dict.          Tries the dotted path first, then
+Cohesion: 0.17
+Nodes (3): _load_config(), Unit tests for figma-agent-core/config.py., Any
+
+### Community 358 - "Community 358"
+Cohesion: 0.25
+Nodes (9): _load_backend_bridge(), Unit tests for figma-agent-core/backend_bridge.py., test_backend_bridge_run_generates_artifacts(), test_openapi_parser_reads_json_spec(), test_prisma_parser_reads_schema(), test_text_spec_parser_reads_entities_and_endpoints(), test_zod_schema_generator_emits_validation(), Any (+1 more)
+
+### Community 359 - "Community 359"
+Cohesion: 0.24
+Nodes (8): _load_file_writer(), Unit tests for figma-agent-core/file_writer.py., test_validate_target_dir_allows_inside_root(), test_validate_target_dir_rejects_outside_root(), test_write_component_creates_file(), test_write_component_returns_error_for_invalid_name(), Any, Path
+
+### Community 360 - "Community 360"
+Cohesion: 0.20
+Nodes (5): _load_spec_writer(), Unit tests for figma-agent-core/spec_writer.py., test_generate_spec_writes_markdown(), Any, Path
+
+### Community 361 - "Community 361"
+Cohesion: 0.22
+Nodes (8): Asset Agent, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side Effects
+
+### Community 362 - "Community 362"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Failure Modes, Goal Evaluator, Receives, Returns, Role, Side effects
+
+### Community 366 - "Community 366"
+Cohesion: 0.22
+Nodes (8): Contract, Decision Flow, Failure Modes, Image Enrichment Agent, Receives, Returns, Role, Side effects
 
 ## Knowledge Gaps
-- **1415 isolated node(s):** `fs`, `path`, `ROOT`, `fs`, `path` (+1410 more)
+- **1440 isolated node(s):** `fs`, `path`, `ROOT`, `fs`, `path` (+1435 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **23 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `CircuitBreakerOpenError` connect `Runtime Memory Manager` to `Community 352`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **Why does `MCPRegistry` connect `State Manager Session Create` to `Runtime Memory Manager`, `Community 357`, `Agent Loop Architecture`, `Safety Audit Logger`, `MCP Replace Package Duplicate`, `Agent Loop Tools Database`, `Community 17`, `Community 348`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `MemoryManager` connect `MCP Manangr Server` to `Agent Loop Architecture`, `Graph Pilot Token Guards`, `Runtime Python Requirements`, `Community 236`, `MCP Web Auth Headers`, `MCP Replace Create Backup`, `Community 345`, `Community 348`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **Why does `CircuitBreakerOpenError` connect `MCP Servers Bootstrap` to `Community 352`, `Community 348`, `Agent Loop Architecture`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `MCPRegistry` connect `State Manager Session Create` to `MCP Servers Bootstrap`, `Agent Loop Architecture`, `Safety Audit Logger`, `Agent Loop Tools Database`, `Community 17`, `Community 348`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `ComponentRegistryError` connect `Community 352` to `Community 353`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 38 inferred relationships involving `MCPServer` (e.g. with `BackendMCPServer` and `Any`) actually correct?**
   _`MCPServer` has 38 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 14 inferred relationships involving `PipelineRunner` (e.g. with `AgentLoader` and `LLMConfig`) actually correct?**
-  _`PipelineRunner` has 14 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 31 inferred relationships involving `StateManager` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
-  _`StateManager` has 31 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 29 inferred relationships involving `MCPRegistry` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
-  _`MCPRegistry` has 29 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 30 inferred relationships involving `StateManager` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
+  _`StateManager` has 30 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 15 inferred relationships involving `PipelineRunner` (e.g. with `AgentLoader` and `EvaluationEngine`) actually correct?**
+  _`PipelineRunner` has 15 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 28 inferred relationships involving `MCPRegistry` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
+  _`MCPRegistry` has 28 INFERRED edges - model-reasoned connections that need verification._

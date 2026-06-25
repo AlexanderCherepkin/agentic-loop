@@ -183,6 +183,48 @@ def stage_data_model(
     return result.returncode == 0
 
 
+def stage_image_enrichment(
+    data_model_file: str = "data_model.json",
+    figma_file: str = "figma_node.json",
+    spec_file: str = "spec.md",
+    public_dir: str = "public",
+    assets_registry_file: str = "asset_registry.json",
+    provider: str = "unsplash",
+    provider_api_key: Optional[str] = None,
+    output_dir: str = "public/assets/enriched",
+    max_images: int = 20,
+    skip_existing: bool = True,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 1d-enrich: подбор изображений для data_model-карточек без картинок."""
+    logger.info("=== STAGE: image_enrichment ===")
+    asset_registry_path = Path(public_dir) / assets_registry_file
+    command = [
+        sys.executable,
+        "image_enrichment.py",
+        "--data-model", data_model_file,
+        "--figma-file", figma_file,
+        "--spec-file", spec_file,
+        "--output", data_model_file,
+        "--provider", provider,
+        "--output-dir", output_dir,
+        "--max-images", str(max_images),
+    ]
+    if asset_registry_path.exists():
+        command.extend(["--asset-registry", str(asset_registry_path)])
+    if provider_api_key:
+        command.extend(["--provider-api-key", provider_api_key])
+    if not skip_existing:
+        command.append("--no-skip-existing")
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=300)
+    return result.returncode == 0
+
+
 def stage_precise_mode_audit(
     file: str = "figma_node.json",
     node_id: Optional[str] = None,
@@ -797,6 +839,10 @@ def stage_assets(
     registry_file: str = "asset_registry.json",
     skip_download: bool = False,
     optimize: bool = True,
+    asset_batch_size: int = 25,
+    asset_request_delay: float = 1.0,
+    asset_max_retries: int = 5,
+    skip_existing_assets: bool = True,
     dry_run: bool = False,
 ) -> bool:
     """Этап 5: скачивание, оптимизация и регистрация ассетов."""
@@ -812,11 +858,19 @@ def stage_assets(
         assets_dir,
         "--registry",
         registry_file,
+        "--asset-batch-size",
+        str(asset_batch_size),
+        "--asset-request-delay",
+        str(asset_request_delay),
+        "--asset-max-retries",
+        str(asset_max_retries),
     ]
     if skip_download:
         command.append("--skip-download")
     if not optimize:
         command.append("--no-optimize")
+    if not skip_existing_assets:
+        command.append("--no-skip-existing-assets")
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -841,7 +895,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
     if config.get("content_model"):
         stages_to_run = ["content_model" if s == "compose" else s for s in stages_to_run]
     if only:
@@ -920,6 +974,26 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 dry_run=dry_run,
             )
             report["stages"]["data_model"] = {"success": ok}
+
+        elif stage == "image_enrichment":
+            if config.get("enable_image_enrichment"):
+                ok = stage_image_enrichment(
+                    data_model_file=config.get("data_model_output", "data_model.json"),
+                    figma_file=file,
+                    spec_file=config.get("spec_output", "spec.md"),
+                    public_dir=config.get("public_dir", "public"),
+                    assets_registry_file=config.get("assets_registry_file", "asset_registry.json"),
+                    provider=config.get("image_provider", "unsplash"),
+                    provider_api_key=config.get("image_provider_api_key"),
+                    output_dir=config.get("image_enrichment_output_dir", "public/assets/enriched"),
+                    max_images=config.get("image_enrichment_max_images", 20),
+                    skip_existing=config.get("skip_existing_image_enrichment", True),
+                    dry_run=dry_run,
+                )
+                report["stages"]["image_enrichment"] = {"success": ok}
+            else:
+                logger.info("Image enrichment disabled. Skipping.")
+                report["stages"]["image_enrichment"] = {"success": True, "skipped": True}
 
         elif stage == "analyze":
             ok = stage_analyze(file=file, dry_run=dry_run)
@@ -1157,6 +1231,10 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 registry_file=config.get("assets_registry_file", "asset_registry.json"),
                 skip_download=config.get("skip_assets_download", False),
                 optimize=config.get("optimize_assets", True),
+                asset_batch_size=config.get("asset_batch_size", 25),
+                asset_request_delay=config.get("asset_request_delay", 1.0),
+                asset_max_retries=config.get("asset_max_retries", 5),
+                skip_existing_assets=config.get("skip_existing_assets", True),
                 dry_run=dry_run,
             )
             report["stages"]["assets"] = {"success": ok}
@@ -1227,6 +1305,38 @@ def main():
         help="Asset Pipeline: построить реестр без реального скачивания (synthetic publicPath)."
     )
     parser.add_argument(
+        "--enable-image-enrichment",
+        action="store_true",
+        help="Включить подбор внешних изображений для data_model-карточек.",
+    )
+    parser.add_argument(
+        "--image-provider",
+        default="unsplash",
+        choices=["unsplash", "mock"],
+        help="Провайдер внешних изображений (по умолчанию unsplash).",
+    )
+    parser.add_argument(
+        "--image-provider-api-key",
+        default=None,
+        help="API-ключ провайдера изображений (или env UNSPLASH_ACCESS_KEY).",
+    )
+    parser.add_argument(
+        "--image-enrichment-output-dir",
+        default="public/assets/enriched",
+        help="Директория для скачанных enriched-изображений.",
+    )
+    parser.add_argument(
+        "--image-enrichment-max-images",
+        type=int,
+        default=20,
+        help="Максимальное число внешних изображений для скачивания.",
+    )
+    parser.add_argument(
+        "--no-skip-existing-image-enrichment",
+        action="store_true",
+        help="Перезагружать enriched-изображения даже если локальный файл уже есть.",
+    )
+    parser.add_argument(
         "--optimize-assets",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -1246,6 +1356,30 @@ def main():
         "--assets-registry-file",
         default="asset_registry.json",
         help="Имя JSON-реестра ассетов (по умолчанию asset_registry.json)."
+    )
+    parser.add_argument(
+        "--asset-batch-size",
+        type=int,
+        default=25,
+        help="Максимальное число ID в одном batch-запросе к Figma Images API (по умолчанию 25)."
+    )
+    parser.add_argument(
+        "--asset-request-delay",
+        type=float,
+        default=1.0,
+        help="Задержка в секундах между batch-запросами к Figma Images API (по умолчанию 1.0)."
+    )
+    parser.add_argument(
+        "--asset-max-retries",
+        type=int,
+        default=5,
+        help="Максимальное число retry при 429/транзиентных ошибках Figma API (по умолчанию 5)."
+    )
+    parser.add_argument(
+        "--skip-existing-assets",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Пропускать уже скачанные локальные ассеты (по умолчанию True)."
     )
     parser.add_argument(
         "--spec-output",
@@ -1515,10 +1649,20 @@ def main():
         "api_depth": args.api_depth,
         "skip_assets": args.skip_assets,
         "skip_assets_download": args.skip_assets_download,
+        "enable_image_enrichment": args.enable_image_enrichment,
+        "image_provider": args.image_provider,
+        "image_provider_api_key": args.image_provider_api_key,
+        "image_enrichment_output_dir": args.image_enrichment_output_dir,
+        "image_enrichment_max_images": args.image_enrichment_max_images,
+        "skip_existing_image_enrichment": not args.no_skip_existing_image_enrichment,
         "optimize_assets": args.optimize_assets,
         "public_dir": args.public_dir,
         "assets_dir": args.assets_dir,
         "assets_registry_file": args.assets_registry_file,
+        "asset_batch_size": args.asset_batch_size,
+        "asset_request_delay": args.asset_request_delay,
+        "asset_max_retries": args.asset_max_retries,
+        "skip_existing_assets": args.skip_existing_assets,
         "spec_output": args.spec_output,
         "tokens_output_dir": args.tokens_output_dir,
         "tokens_registry_file": args.tokens_registry_file,

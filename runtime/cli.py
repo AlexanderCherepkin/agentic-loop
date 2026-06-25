@@ -4,7 +4,7 @@ Agentic Loop CLI — command-line interface for the runtime engine.
 
 Commands:
     run <task>          Execute a task through the agent pipeline
-    status              Show active sessions and worker stats
+    status              Show active sessions
     approve <id>        Approve a pending human-approval gate
     validate            Run runtime component validators
     demo                Run demo with sample request
@@ -26,8 +26,6 @@ import time
 from pathlib import Path
 
 from runtime.engine.state_manager import StateManager, OperationStatus
-from runtime.workers.worker_pool import WorkerPool
-from runtime.workers.context_compressor import ContextCompressor
 
 
 def _state_path() -> str:
@@ -74,7 +72,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    """Show active sessions and runtime stats."""
+    """Show active sessions."""
     state = StateManager(db_path=_state_path())
 
     print("\n=== Agentic Loop Status ===\n")
@@ -106,72 +104,12 @@ def cmd_status(args: argparse.Namespace) -> int:
                 marker = "[OK]" if approved else "[PENDING]"
                 print(f"    {aid:40}  {marker}")
 
-    # Show ContextCompressor stats if any
     print("\n  Runtime components:")
     print("    StateManager:   OK")
     print("    MessageBus:     OK")
-    print("    WorkerPool:     OK (if initialized)")
-    print("    ContextCompressor: OK (if initialized)")
-
-    # Observability quick summary
-    try:
-        from runtime.observability import HealthCheck, MetricsCollector
-        h = HealthCheck()
-        h.mark_component("cli_status", True)
-        print(f"\n  Health: {h.status().status}")
-        m = MetricsCollector()
-        print(f"  Metrics: {len(m.snapshot().counters)} counters, {len(m.snapshot().gauges)} gauges")
-    except ImportError:
-        pass
+    print("    PipelineRunner: OK")
 
     state.close()
-    return 0
-
-
-def cmd_health(args: argparse.Namespace) -> int:
-    """Show runtime health status (for load balancers / monitoring)."""
-    try:
-        from runtime.observability import HealthCheck
-    except ImportError:
-        print("[CLI] Observability module not available.")
-        return 1
-
-    h = HealthCheck()
-    # Simulate component checks based on what we can verify
-    h.mark_component("state_manager", True)
-    h.mark_component("cli", True)
-    # Attempt to mark others if runtime is importable
-    try:
-        from runtime.engine.agent_loader import AgentLoader
-        from runtime.main import resolve_root
-        root = resolve_root()
-        loader = AgentLoader(root)
-        agents = loader.load_all_agents()
-        h.mark_component("agent_loader", len(agents) > 0)
-    except Exception:
-        h.mark_component("agent_loader", False)
-
-    print(h.to_json())
-    return 0 if h.status().status in ("healthy", "degraded") else 1
-
-
-def cmd_metrics(args: argparse.Namespace) -> int:
-    """Dump metrics in JSON or Prometheus format."""
-    try:
-        from runtime.observability import MetricsCollector
-    except ImportError:
-        print("[CLI] Observability module not available.")
-        return 1
-
-    m = MetricsCollector()
-    # Populate with some runtime-relevant placeholders
-    m.counter("cli.metrics_calls").inc()
-    m.gauge("cli.ready").set(1)
-
-    if args.format == "prometheus":
-        print(m.to_prometheus())
-    else:
-        print(m.to_json())
     return 0
 
 
@@ -268,7 +206,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_p.set_defaults(func=cmd_run)
 
     # status
-    status_p = sub.add_parser("status", help="Show active sessions and stats")
+    status_p = sub.add_parser("status", help="Show active sessions")
     status_p.set_defaults(func=cmd_status)
 
     # approve
@@ -285,19 +223,9 @@ def build_parser() -> argparse.ArgumentParser:
     demo_p.add_argument("--max-iterations", type=int, default=3)
     demo_p.set_defaults(func=cmd_demo)
 
-    # health
-    health_p = sub.add_parser("health", help="Show runtime health status")
-    health_p.set_defaults(func=cmd_health)
-
     # mcp-connect
     mcp_p = sub.add_parser("mcp-connect", help="Connect to MCP servers and list tools")
     mcp_p.set_defaults(func=cmd_mcp_connect)
-
-    # metrics
-    metrics_p = sub.add_parser("metrics", help="Dump metrics snapshot")
-    metrics_p.add_argument("--format", default="json", choices=["json", "prometheus"],
-                           help="Output format")
-    metrics_p.set_defaults(func=cmd_metrics)
 
     return parser
 

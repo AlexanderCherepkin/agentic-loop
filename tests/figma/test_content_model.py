@@ -257,3 +257,51 @@ def test_data_model_binding_in_section(tmp_path: Path) -> None:
     assert card_field["type"] == "list"
     assert card_field["label"] == "Card items"
     assert card_field["role"].endswith("Data")
+
+
+def test_alt_binding_on_data_bound_image(tmp_path: Path) -> None:
+    ast = {
+        "root": {
+            "tag": "div",
+            "children": [
+                {
+                    "tag": "section",
+                    "figma_name": "Features",
+                    "classes": [],
+                    "children": [
+                        {
+                            "tag": "div",
+                            "data_model": {
+                                "model": "FeatureCard",
+                                "field_map": {"title": "title", "imageUrl": "imageUrl", "imageAlt": "imageAlt"},
+                                "sample_data": [
+                                    {"title": "Card A", "imageUrl": "/public/assets/enriched/card_a.jpg", "imageAlt": "Card A photo"},
+                                ],
+                            },
+                            "children": [
+                                {
+                                    "tag": "img",
+                                    "classes": ["w-full"],
+                                    "data_binding": {"field": "imageUrl"},
+                                    "alt_binding": {"field": "imageAlt"},
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ],
+        }
+    }
+    result = content_model.build_content_model(
+        ast,
+        output_dir=str(tmp_path / "sections"),
+        page_output=str(tmp_path / "page.tsx"),
+        data_output=str(tmp_path / "page.data.ts"),
+        content_model_output=str(tmp_path / "content_model.json"),
+        root_dir=str(tmp_path),
+    )
+    features_file = tmp_path / "sections" / "Features.tsx"
+    features_code = features_file.read_text(encoding="utf-8")
+    assert "src={item.imageUrl}" in features_code
+    assert "alt={item.imageAlt}" in features_code
+    assert "Card A photo" in result.data["Features"]["featurecardData"][0]["imageAlt"]

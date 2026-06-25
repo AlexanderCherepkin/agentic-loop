@@ -408,7 +408,12 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
     if tag == "img" and (src or data_binding):
         if data_binding:
             field = data_binding["field"]
-            extra_attrs += f' src={{item.{field}}} alt={_safe_prop(alt)}'
+            extra_attrs += f' src={{item.{field}}}'
+            if alt_binding:
+                alt_field = alt_binding["field"]
+                extra_attrs += f' alt={{item.{alt_field}}}'
+            else:
+                extra_attrs += f' alt={_safe_prop(alt)}'
         elif asset_type == "raster" and asset_width and asset_height:
             tag = "Image"
             extra_attrs += (

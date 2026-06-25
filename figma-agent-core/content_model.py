@@ -140,7 +140,11 @@ def _render_node(
             extra_attrs += f' src={_safe_prop(src)}'
         extra_attrs += f' alt={_safe_prop(alt)}'
     elif tag == "img" and data_binding:
-        extra_attrs += f' src={{item.{data_binding["field"]}}} alt={_safe_prop(node.get("alt", ""))}'
+        extra_attrs += f' src={{item.{data_binding["field"]}}}'
+        if node.get("alt_binding"):
+            extra_attrs += f' alt={{item.{node["alt_binding"]["field"]}}}'
+        else:
+            extra_attrs += f' alt={_safe_prop(node.get("alt", ""))}'
 
     if node.get("component_ref"):
         name = node["component_ref"]

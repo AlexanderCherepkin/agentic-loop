@@ -47,6 +47,43 @@ def test_asset_extractor_formats():
     assert by_id["2:1"]["width"] == 752
 
 
+def test_asset_extractor_deduplicates_by_image_ref():
+    """IMAGE fills sharing the same imageRef must yield a single asset entry."""
+    data = {
+        "name": "Root",
+        "type": "FRAME",
+        "visible": True,
+        "children": [
+            {
+                "id": "10:1",
+                "name": "A",
+                "type": "RECTANGLE",
+                "visible": True,
+                "fills": [{"type": "IMAGE", "imageRef": "abc123"}],
+            },
+            {
+                "id": "10:2",
+                "name": "B",
+                "type": "RECTANGLE",
+                "visible": True,
+                "fills": [{"type": "IMAGE", "imageRef": "abc123"}],
+            },
+            {
+                "id": "10:3",
+                "name": "C",
+                "type": "RECTANGLE",
+                "visible": True,
+                "fills": [{"type": "IMAGE", "imageRef": "def456"}],
+            },
+        ],
+    }
+    assets = asset_pipeline.AssetExtractor().extract(data)
+    refs = {a["ref"] for a in assets}
+    assert "abc123" in refs
+    assert "def456" in refs
+    assert len([a for a in assets if a["ref"] == "abc123"]) == 1
+
+
 def test_font_collector_maps_inter():
     data = _load_fixture("assets_simple.json")
     fonts = asset_pipeline.FontCollector().collect(data)
@@ -71,6 +108,76 @@ def test_pipeline_skip_download_builds_registry(tmp_path):
         assert ref in registry["assets"]
         assert registry["assets"][ref]["publicPath"].startswith("/assets/figma/")
         assert "strategy" in registry["assets"][ref]
+
+
+def test_pipeline_skips_existing_assets(tmp_path):
+    """Если файл уже существует, не перезаписываем и не ломаем реестр."""
+    data = _load_fixture("assets_simple.json")
+    public_dir = tmp_path / "public"
+    assets_dir = public_dir / "assets" / "figma"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    # Подготовим существующий SVG-файл для VECTOR-ноды 2:2.
+    existing = assets_dir / "Logo_Icon_2_2.svg"
+    existing.write_text('<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>', encoding="utf-8")
+
+    pipeline = asset_pipeline.AssetPipeline(
+        public_dir=str(public_dir),
+        skip_download=False,
+        downloader=asset_pipeline.AssetDownloader(skip_existing=True),
+    )
+    registry = pipeline.run(data)
+
+    assert "2:2" in registry["assets"]
+    assert registry["assets"]["2:2"]["publicPath"] == "/assets/figma/Logo_Icon_2_2.svg"
+    assert registry["assets"]["2:2"]["skipped"] is False
+    assert existing.read_text(encoding="utf-8") == '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>'
+    # API-запрос не прошел, но уже существующий asset не пострадал.
+
+
+def test_downloader_batches_requests(monkeypatch):
+    """AssetDownloader.get_image_urls должен разбивать node_ids на chunks."""
+    calls = []
+
+    class FakeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def get(self, url, **kwargs):
+            calls.append(url)
+            class Resp:
+                status_code = 200
+                text = '{"images": {}}'
+                headers = {}
+                def json(self):
+                    return {"images": {}}
+            return Resp()
+
+    monkeypatch.setattr(asset_pipeline, "FigmaHTTPClient", FakeClient)
+    downloader = asset_pipeline.AssetDownloader(
+        token="token",
+        url="https://www.figma.com/file/abc123",
+        batch_size=3,
+    )
+    ids = [f"1:{i}" for i in range(10)]
+    downloader.get_image_urls(ids, fmt="png")
+    assert len(calls) == 4  # 10 / 3 -> 4 chunks
+
+
+def test_downloader_uses_cache_urls_for_existing_files(tmp_path):
+    """Для уже существующих файлов API не вызывается и возвращается file:// URL."""
+    assets_dir = tmp_path / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    existing = assets_dir / "img_1_1.png"
+    existing.write_bytes(b"png")
+
+    # Без client файл считается закэшированным.
+    downloader = asset_pipeline.AssetDownloader(skip_existing=True)
+    urls = downloader.get_image_urls(
+        ["1:1"],
+        fmt="png",
+        assets_dir=assets_dir,
+    )
+    assert urls["1:1"].startswith("file://")
 
 
 def test_optimizer_graceful_fallback_when_tools_missing(tmp_path):

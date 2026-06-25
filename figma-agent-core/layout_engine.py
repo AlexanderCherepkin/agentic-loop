@@ -287,6 +287,7 @@ class TailwindNode:
     bbox: Optional[Dict[str, Optional[float]]] = None
     data_model: Optional[Dict[str, Any]] = None
     data_binding: Optional[Dict[str, Any]] = None
+    alt_binding: Optional[Dict[str, Any]] = None
 
     def add_class(self, *classes: str) -> None:
         for cls in classes:
@@ -338,6 +339,8 @@ class TailwindNode:
             result["data_model"] = self.data_model
         if self.data_binding is not None:
             result["data_binding"] = self.data_binding
+        if self.alt_binding is not None:
+            result["alt_binding"] = self.alt_binding
         if self.asset_type is not None:
             result["asset_type"] = self.asset_type
         if self.asset_width is not None:
@@ -831,6 +834,9 @@ class FigmaLayoutEngine:
         if data_context:
             field = data_context["field_map"].get("imageUrl", "imageUrl")
             tw_node.data_binding = {"model": data_context["model"], "field": field, "item": True}
+            alt_field = data_context["field_map"].get("imageAlt")
+            if alt_field:
+                tw_node.alt_binding = {"model": data_context["model"], "field": alt_field, "item": True}
             tw_node.src = None
             tw_node.inline_svg = None
 

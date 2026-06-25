@@ -39,6 +39,10 @@ class LLMConfig:
     api_key: str | None = None
     max_retries: int = 3
     mcp_enabled: bool = False
+    # Fast evaluator model for /goal-style pass/fail verdicts.
+    evaluator_provider: LLMProvider = LLMProvider.ANTHROPIC
+    evaluator_model: str = "claude-haiku-4-5-20251001"
+    use_evaluator: bool = True
 
 
 class MockLLMEngine:
@@ -79,6 +83,10 @@ class MockLLMEngine:
         "observability/runtime_output.md": {"output": "mock runtime output", "status": "ok"},
         "self_correction/error_handler.md": {"error_type": "none", "recovery_action": "continue"},
         "self_correction/adjustment_planner.md": {"adjusted_plan": [{"step": 1, "agent": "tools_read/read_file.md"}]},
+        "self_correction/goal_evaluator.md": {
+            "verdict": {"pass": False, "reason": "mock evaluator waiting for real evidence", "confidence": 0.5},
+            "criteria_checklist": [],
+        },
         "self_correction/result_validation.md": {"valid": True, "score": 0.95},
         "self_correction/recursion_or_termination.md": {"decision": "recurse", "reason": "mock"},
         "result_formatter.md": {"formatted": "mock formatted result", "status": "ok"},
@@ -92,7 +100,7 @@ class MockLLMEngine:
         "content_checker.md": {"appropriate": True, "flags": []},
     }
 
-    async def execute(self, spec: AgentSpec, inputs: dict[str, Any]) -> LLMResponse:
+    async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
         await asyncio.sleep(0.01)  # Simulate tiny latency
         agent_path = getattr(spec, "source_path", "") or ""
         base_latency = 15.0
@@ -182,11 +190,13 @@ class LLMEngine:
                 chain.append(LLMConfig(provider=prov, model=model, api_key=key))
         return chain
 
-    async def execute(self, spec: AgentSpec, inputs: dict[str, Any]) -> LLMResponse:
+    async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
         if self.config.provider == LLMProvider.MOCK:
-            return await MockLLMEngine().execute(spec, inputs)
+            return await MockLLMEngine().execute(spec, inputs, extra_context=extra_context)
 
         system_prompt = spec.to_system_prompt()
+        if extra_context:
+            system_prompt = f"{extra_context}\n\n{system_prompt}"
         user_message = spec.to_input_message(inputs)
 
         # Primary provider with circuit breaker
@@ -305,3 +315,106 @@ class LLMEngine:
                 except (json.JSONDecodeError, ValueError):
                     pass
             return {"raw_output": text}
+
+
+@dataclass
+class EvaluatorResponse:
+    """Strict pass/fail verdict produced by the fast /goal evaluator."""
+
+    pass_: bool
+    reason: str
+    confidence: float = 0.0
+    criteria_checklist: list[dict[str, Any]] = field(default_factory=list)
+    raw_output: str = ""
+
+
+class EvaluationEngine:
+    """Lightweight evaluator using a smaller/cheaper model for strict JSON verdicts.
+
+    Implements the Claude-Code /goal pattern: a fast critic checks whether the
+    evidence produced so far satisfies the stated goal, returning only
+    {"pass": bool, "reason": str, ...}. It is deliberately isolated from the
+    main LLMEngine so that the expensive generator and the cheap critic can
+    use different models and budgets.
+    """
+
+    DEFAULT_EVALUATOR_PROMPT = """You are a strict, fast evaluator. Your only job is to decide whether the evidence below satisfies the stated goal.
+
+Rules:
+- Respond ONLY with valid JSON.
+- Do not explain, do not add commentary outside the JSON.
+- Use the exact shape:
+{
+  "pass": true or false,
+  "reason": "one-line explanation if false; 'Goal satisfied' if true",
+  "confidence": 0.0 to 1.0,
+  "criteria_checklist": [
+    {"criterion": "...", "passed": true or false, "evidence": "..."}
+  ]
+}
+- A criterion passes only if there is concrete evidence, not hope or assumption.
+- If evidence is missing or ambiguous, mark the criterion failed and set pass=false."""
+
+    def __init__(self, config: LLMConfig | None = None):
+        base = config or LLMConfig()
+        self.config = LLMConfig(
+            provider=base.evaluator_provider,
+            model=base.evaluator_model,
+            max_tokens=1024,
+            temperature=0.0,
+            api_key=base.api_key,
+            max_retries=2,
+            mcp_enabled=False,
+        )
+        self._engine = LLMEngine(config=self.config)
+
+    async def evaluate(self, goal: str, artifacts: dict[str, Any], criteria: list[str] | None = None) -> EvaluatorResponse:
+        """Return a strict pass/fail verdict for the given goal and evidence."""
+        user_message = json.dumps(
+            {
+                "goal": goal,
+                "criteria": criteria or [],
+                "artifacts": artifacts,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+
+        try:
+            raw = await self._engine.raw_chat_completion(
+                self.DEFAULT_EVALUATOR_PROMPT,
+                user_message,
+                max_tokens=1024,
+                temperature=0.0,
+            )
+        except Exception as e:
+            return EvaluatorResponse(
+                pass_=False,
+                reason=f"Evaluator engine failed: {e}",
+                confidence=0.0,
+                raw_output="",
+            )
+
+        parsed = self._engine._extract_json(raw) or {}
+        if not isinstance(parsed, dict):
+            parsed = {"raw_output": str(parsed)}
+
+        verdict = parsed.get("verdict", parsed)
+        if not isinstance(verdict, dict):
+            verdict = {}
+
+        pass_ = bool(verdict.get("pass", False))
+        reason = str(verdict.get("reason", parsed.get("reason", "No reason provided")))
+        confidence = float(verdict.get("confidence", parsed.get("confidence", 0.0)))
+        checklist = verdict.get("criteria_checklist") or parsed.get("criteria_checklist") or []
+
+        if not reason:
+            reason = "Goal satisfied" if pass_ else "Evaluator did not provide a reason"
+
+        return EvaluatorResponse(
+            pass_=pass_,
+            reason=reason,
+            confidence=confidence,
+            criteria_checklist=checklist if isinstance(checklist, list) else [],
+            raw_output=raw,
+        )
