@@ -45,6 +45,7 @@ class MCPRegistry:
         "tools_browser": "Headless browser pipeline",
         "figma": "Figma-to-code pipeline",
         "backend": "Backend Spec Bridge pipeline",
+        "headroom": "Headroom context compression pipeline",
     }
 
     def __init__(self):

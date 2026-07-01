@@ -30,6 +30,7 @@ from .memory_server import MemoryMCPServer
 from .browser_server import BrowserMCPServer
 from .figma_server import FigmaMCPServer
 from .backend_server import BackendMCPServer
+from .headroom_server import HeadroomMCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -48,6 +49,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "tools_browser": BrowserMCPServer,
         "figma": FigmaMCPServer,
         "backend": BackendMCPServer,
+        "headroom": HeadroomMCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -80,6 +82,7 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
         "tools_browser": "Headless browser pipeline — 10 tools",
         "figma": "Figma-to-code pipeline — 9 tools",
         "backend": "Backend Spec Bridge pipeline — 6 tools",
+        "headroom": "Headroom context compression pipeline — 3 tools",
     }
 
     for category in descriptions:
@@ -197,6 +200,12 @@ async def test_all_servers(registry: MCPRegistry):
     if backend:
         r = await backend.call_tool("backend_analyze_spec", {})
         results["backend"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test headroom server (degraded is acceptable if headroom-ai not installed)
+    headroom = registry.get_server("headroom")
+    if headroom:
+        r = await headroom.call_tool("headroom_compress", {"content": "hello world"})
+        results["headroom"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
     return results
 

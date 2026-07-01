@@ -25,6 +25,7 @@ Any change must preserve the three-circuit safety model (`safety-control → mut
 - **Headless browser automation** via `tools_browser/headless_automation` (Playwright) for dynamic pages, screenshots, and DOM extraction; falls back to `tools_web` if Playwright is unavailable.
 - **Lighthouse audits** via `tools_lighthouse/audit` for any generated front-end. Target: 100% on Performance, Accessibility, Best Practices, and SEO. Convergence guard: 8 iterations; on failure, escalate to human with the final failure log.
 - **MCP servers** are loaded lazily: only construct and expose a server category when a tool from that category is actually invoked.
+- **Headroom context compression** via the `headroom` MCP category (or `runtime/engine/headroom_client.py`) for large tool outputs, logs, RAG chunks, and multi-agent handoffs when `HEADROOM_ENABLED` is true. Falls back to plaintext passthrough if `headroom-ai` is not installed.
 - **Validators** (`validate_cross_references.js`, `validate_consistency.js`) must pass with zero errors before any work is considered complete.
 
 ## Safety Defaults
@@ -54,6 +55,20 @@ The system follows the Ponytail "lazy senior developer" protocol as a cross-cutt
 - **Guardrails:** never trade simplicity for security, data validation, error handling, accessibility, existing tests, or database integrity.
 - **Slash commands:** `/ponytail [lite|full|ultra|off]`, `/ponytail-review`, `/ponytail-audit`.
 - **Convention:** mark deliberate simplifications with a `ponytail:` comment that names the known ceiling and the upgrade path.
+
+## Headroom Protocol
+
+Headroom (`headroom-ai`) is an optional local LLM context-compression layer that uses reversible CCR (Compress-Cache-Retrieve) to shrink tool outputs, logs, RAG chunks, and multi-agent handoffs by 60–95%.
+
+- **Default state:** enabled when `HEADROOM_ENABLED` is not explicitly set to `false`, `0`, `off`, or `no`.
+- **Optional dependency:** `runtime/requirements-headroom.txt`. If the package is missing, the ReAct loop continues without compression.
+- **Entry points:**
+  - `headroom_injector.md` planning agent decides where compression is worthwhile.
+  - `headroom_compressor.md` observation agent compresses large artifacts and stores a CCR hash.
+  - `headroom_retriever.md` observation agent restores original content on demand.
+  - `runtime/engine/headroom_client.py` provides the runtime Python SDK wrapper and `SharedContext` for inter-agent handoffs.
+  - MCP tools `headroom_compress`, `headroom_retrieve`, `headroom_stats` via `mcp_servers/headroom_server.py`.
+- **Safety rule:** safety-control, mutual_check, and control layers always see uncompressed originals unless an explicit compression step is part of the approved plan. The LLM engine (`runtime/engine/llm_engine.py`) exposes `maybe_compress_messages` as an explicit helper; it does not auto-compress inputs.
 
 ## Review & Deployment Approval Gates
 

@@ -11,6 +11,7 @@ from typing import Any
 from ..contracts.agent_spec import AgentSpec
 
 from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig
+from .headroom_client import HeadroomClient, HeadroomConfig
 
 
 class LLMProvider(str, Enum):
@@ -43,6 +44,9 @@ class LLMConfig:
     evaluator_provider: LLMProvider = LLMProvider.ANTHROPIC
     evaluator_model: str = "claude-haiku-4-5-20251001"
     use_evaluator: bool = True
+    # Headroom context compression (optional; agents call explicitly).
+    headroom_enabled: bool = field(default_factory=lambda: os.getenv("HEADROOM_ENABLED", "true").lower() not in ("false", "0", "off", "no"))
+    headroom_threshold_tokens: int = 500
 
 
 class MockLLMEngine:
@@ -189,6 +193,24 @@ class LLMEngine:
             if key and prov != self.config.provider:
                 chain.append(LLMConfig(provider=prov, model=model, api_key=key))
         return chain
+
+    def maybe_compress_messages(
+        self,
+        messages: list[dict[str, Any]],
+        target_ratio: float | None = None,
+    ) -> dict[str, Any]:
+        """Explicit Headroom compression helper for callers that want to shrink
+        heavy context before the LLM call.
+
+        This is NOT applied automatically inside `execute()` or
+        `raw_chat_completion()` so that safety, control, and audit flows always
+        see the original text unless an upstream agent explicitly requests
+        compression via `headroom_compressor.md` or the MCP `headroom_compress`
+        tool. Returns a passthrough result when Headroom is unavailable or
+        `headroom_enabled` is false.
+        """
+        client = HeadroomClient(HeadroomConfig(enabled=self.config.headroom_enabled))
+        return client.compress_messages(messages, target_ratio=target_ratio)
 
     async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
         if self.config.provider == LLMProvider.MOCK:

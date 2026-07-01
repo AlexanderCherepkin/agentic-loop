@@ -54,7 +54,7 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
 │   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
-│   ├── planning/                         #   Planning layer (12 agents)
+│   ├── planning/                         #   Planning layer (13 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
@@ -64,19 +64,22 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
 │   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
 │   │   ├── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
-│   │   └── component_mapper.md           #     Map Figma Component Sets to React components and write mapper files
+│   │   ├── component_mapper.md           #     Map Figma Component Sets to React components and write mapper files
 │   │   ├── ponytail_injector.md          #     Inject Ponytail protocol into code-generation system prompts
-│   │   └── ponytail_audit.md             #     Repository-wide over-engineering audit (read-only)
+│   │   ├── ponytail_audit.md             #     Repository-wide over-engineering audit (read-only)
+│   │   └── headroom_injector.md          #     Decide where Headroom context compression should be applied
 │   ├── execution/                        #   Execution layer (4 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
 │   │   ├── human_approval.md             #     Tactical human approval gate
 │   │   └── action_logging.md             #     Log execution actions
-│   ├── observability/                    #   Observation layer (4 agents)
+│   ├── observability/                    #   Observation layer (6 agents)
 │   │   ├── environment_result.md         #     Capture environment state
 │   │   ├── runtime_output.md             #     Capture runtime output
 │   │   ├── file_context.md               #     Capture file changes
-│   │   └── memory_enrichment.md          #     Enrich with memory context
+│   │   ├── memory_enrichment.md          #     Enrich with memory context
+│   │   ├── headroom_compressor.md        #     Compress large artifacts via Headroom CCR
+│   │   └── headroom_retriever.md         #     Restore original content by Headroom hash
 │   ├── self_correction/                  #   Self-correction layer (5 agents)
 │   │   ├── result_validation.md          #     Validate results
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
@@ -144,6 +147,7 @@ User Request
                 → tools_lighthouse/audit (Lighthouse hard-gate audit + report parsing + correction prompts)
                 → mcp_servers/gateway.py (lazy MCP dispatch)
                 → mcp_servers/figma_server.py (Figma-to-code pipeline)
+                → mcp_servers/headroom_server.py (optional Headroom context-compression CCR tools)
               → tooll_subagents/observability/ (result capture)
               → tooll_subagents/self_correction/ (validate → adjust → loop or finish)
                 → PhaseTransitionManager (runtime conditional phase routing)
@@ -160,9 +164,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 33 |
+| tooll_subagents | 36 |
 | tools_* | 121 |
-| **Total** | **187** |
+| **Total** | **190** |
 
 ## Naming Convention
 - snake_case filenames
@@ -182,16 +186,17 @@ User Request
 10. Lighthouse category: `tools_lighthouse/audit` adds a 12th tool category that runs Lighthouse via Playwright, parses reports, enforces 100% hard gate across Performance, Accessibility, Best Practices, and SEO, and feeds compact correction prompts back into the self-correction loop with a default convergence guard of 8 iterations
 11. Conditional Edges: `runtime/engine/pipeline_runner.py` uses a `PhaseTransitionManager` to route between ReAct phases based on agent outputs instead of a hardcoded sequence
 12. Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Ladder of Laziness into code-generation system prompts via `ponytail_injector.md`, while `ponytail_review.md` and `ponytail_audit.md` provide over-engineering review and audit capabilities
+13. Headroom protocol: optional local LLM CCR layer exposed as MCP category `headroom` (`headroom_compress`, `headroom_retrieve`, `headroom_stats`) and as `runtime/engine/headroom_client.py`; integrated into ReAct planning, execution, observability, and `main_loop.md` context compaction; degrades to plaintext passthrough when `headroom-ai` is not installed
 
 ## Implementation Status
 
-All 184 agents are fully implemented following the Algorithmic template:
-- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions and Lighthouse hard-gate integration
+All 190 agents are fully implemented following the Algorithmic template:
+- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, and Headroom context-compaction integration
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (33) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (12 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, and `ponytail_audit.md`), execution (4), observability (4), self_correction (5 with `ponytail_review.md`), result (4)
+- `tooll_subagents/` (36) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (13 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, `ponytail_audit.md`, and `headroom_injector.md`), execution (4), observability (6 with `headroom_compressor.md` and `headroom_retriever.md`), self_correction (5 with `ponytail_review.md`), result (4)
 - `tools_*` (121) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
