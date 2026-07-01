@@ -23,6 +23,7 @@ Any change must preserve the three-circuit safety model (`safety-control → mut
 - **Tests** via `tools_runtest/run_tests` after any code change.
 - **External web calls** via `tools_web/web_request` for static/REST content.
 - **Headless browser automation** via `tools_browser/headless_automation` (Playwright) for dynamic pages, screenshots, and DOM extraction; falls back to `tools_web` if Playwright is unavailable.
+- **Lighthouse audits** via `tools_lighthouse/audit` for any generated front-end. Target: 100% on Performance, Accessibility, Best Practices, and SEO. Convergence guard: 8 iterations; on failure, escalate to human with the final failure log.
 - **MCP servers** are loaded lazily: only construct and expose a server category when a tool from that category is actually invoked.
 - **Validators** (`validate_cross_references.js`, `validate_consistency.js`) must pass with zero errors before any work is considered complete.
 
@@ -32,9 +33,27 @@ Any change must preserve the three-circuit safety model (`safety-control → mut
 - Network egress is denied unless `control/network_guard.md` explicitly allows the destination and purpose.
 - Filesystem writes are restricted to the workspace and explicit output directories; `.ssh`, `.aws`, browser profiles, and system paths are blocked by `control/file_system_guard.md`.
 - Browser sessions run in ephemeral Playwright contexts; screenshots and downloads are written only to `<workspace>/.tmp/browser/`.
+- Lighthouse audit reports are written to `<workspace>/.tmp/lighthouse/` during the run and retained in `<workspace>/.logs/lighthouse/` afterward. Failed-iteration logs are kept for prompt/skill training and are not deleted automatically; rotation occurs when `.logs/lighthouse/` exceeds 500 MB.
 - External URLs for browser navigation require allow-list approval by `control/network_guard.md`; auth tokens, cookies, and localStorage secrets are redacted by `safety-control/data_leak_preventer.md` before any output leaves the system.
 - Destructive commands (`rm -rf`, `mkfs`, `dd`, `> /dev/sda`, privilege escalation) are blocked by `safety-control/command_guard.md`.
 - Token/PII leaks are scanned by `safety-control/data_leak_preventer.md` before output reaches the user.
+
+## Ponytail Protocol
+
+The system follows the Ponytail "lazy senior developer" protocol as a cross-cutting policy layer:
+
+- **Default mode:** `full` (env `PONYTAIL_DEFAULT_MODE` overrides: `lite`, `full`, `ultra`, `off`).
+- **The 7-step Ladder of Laziness** must be applied before writing or refactoring code:
+  1. YAGNI — does the feature need to exist at all?
+  2. REUSE — does the codebase already contain this logic?
+  3. STDLIB — can the standard library solve this?
+  4. NATIVE PLATFORM — does the browser/platform provide a native feature?
+  5. EXISTING DEPENDENCY — is an already-installed package available?
+  6. ONE-LINER — can this be clean in one line?
+  7. MINIMUM WORKING CODE — only if all above fail.
+- **Guardrails:** never trade simplicity for security, data validation, error handling, accessibility, existing tests, or database integrity.
+- **Slash commands:** `/ponytail [lite|full|ultra|off]`, `/ponytail-review`, `/ponytail-audit`.
+- **Convention:** mark deliberate simplifications with a `ponytail:` comment that names the known ceiling and the upgrade path.
 
 ## Review & Deployment Approval Gates
 
@@ -79,3 +98,12 @@ The following actions still require explicit human approval:
 
 All other actions — including destructive filesystem operations within the workspace, network egress to configured allow-list destinations, browser automation on trusted domains, CAPTCHA handling, and privilege changes requested by the autonomous bot — are auto-approved inside the autonomous run.
 - Any operation explicitly flagged as critical by `control/human_oversight.md`.
+
+## Front-end Quality Defaults
+
+- For every generated front-end, the system must produce or reuse a safe-component layer under `src/components/safe/`:
+  - `SafeLink.tsx` — renders `<a>` with `rel="noopener noreferrer"`, valid `href`, and accessible label.
+  - `ResponsivePicture.tsx` — renders optimized images with explicit `width`/`height`, `loading="lazy"` or `fetchpriority="high"`, modern formats fallback, and mandatory `alt`.
+  - `TouchSafeElement.tsx` — wraps clickables to guarantee ≥48×48 px touch target, correct ARIA, and keyboard focusability.
+- System prompt rule for front-end generation: "For links, images, and interactive elements use only components from `src/components/safe/`. Raw `<a>`, `<img>`, or `<div onclick>` are prohibited."
+- Lighthouse hard-gate applies to all generated front-ends: 100% on Performance, Accessibility, Best Practices, and SEO. Convergence guard = 8 iterations; failure escalates to human with final failure log.

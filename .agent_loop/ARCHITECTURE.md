@@ -54,7 +54,7 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
 │   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
-│   ├── planning/                         #   Planning layer (9 agents)
+│   ├── planning/                         #   Planning layer (12 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
@@ -65,6 +65,8 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
 │   │   ├── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
 │   │   └── component_mapper.md           #     Map Figma Component Sets to React components and write mapper files
+│   │   ├── ponytail_injector.md          #     Inject Ponytail protocol into code-generation system prompts
+│   │   └── ponytail_audit.md             #     Repository-wide over-engineering audit (read-only)
 │   ├── execution/                        #   Execution layer (4 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
@@ -75,18 +77,19 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── runtime_output.md             #     Capture runtime output
 │   │   ├── file_context.md               #     Capture file changes
 │   │   └── memory_enrichment.md          #     Enrich with memory context
-│   ├── self_correction/                  #   Self-correction layer (4 agents)
+│   ├── self_correction/                  #   Self-correction layer (5 agents)
 │   │   ├── result_validation.md          #     Validate results
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
 │   │   ├── recursion_or_termination.md   #     Decide: loop or finish
 │   │   └── assistance_request.md         #     Request human help
+│   │   ├── ponytail_review.md            #     Over-engineering review for generated/refactored code
 │   └── result/                           #   Output layer (4 agents)
 │       ├── solution.md                   #     Final solution
 │       ├── modified_files.md             #     List modified files
 │       ├── action_report.md              #     Report actions taken
 │       └── summary_recommendations.md    #     Summary and recommendations
 │
-└── tools_*/                              # Tool sub-agents (~100 agents)
+└── tools_*/                              # Tool sub-agents (~110 agents)
     ├── tools_read/read_file/             #   File reading — linear pipeline (10 agents + read_optimizer)
     ├── tools_search/search_code/         #   Code search — diamond pipeline (10 agents + search_optimizer)
     ├── tools_replace/replace_in_file/    #   File editing — safety-gated pipeline (10 agents + edit_optimizer)
@@ -97,18 +100,30 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
     ├── tools_database/database_query/    #   Database queries — query-lifecycle pipeline (10 agents + db_optimizer)
     ├── tools_web/web_request/            #   Web requests — request-lifecycle pipeline (10 agents + web_optimizer)
     ├── tools_memory/memory_store/        #   Memory storage — store-lifecycle pipeline (10 agents + memory_optimizer)
-    └── tools_browser/headless_automation/  #   Headless browser — automation pipeline (10 agents + browser_optimizer)
-        ├── session_manager.md            #     Launch/dispose Playwright contexts
-        ├── navigation_engine.md        #     Load URLs and wait for dynamic content
-        ├── screenshot_agent.md           #     Capture viewport/full-page/element screenshots
-        ├── dom_extractor.md              #     Extract dynamic DOM content after JS execution
-        ├── selector_resolver.md          #     Resolve CSS/XPath selectors with retries
-        ├── interaction_agent.md          #     Safe clicks, typing, scroll, form submission
-        ├── network_interceptor.md        #     Capture and filter network traffic
-        ├── cookie_storage_agent.md       #     Manage cookies/local/session storage
-        ├── captcha_challenge_agent.md    #     Detect CAPTCHA/login walls and escalate
-        ├── error_handler.md              #     Classify browser failures and trigger cleanup
-        └── browser_optimizer.md          #     Batch operations and reuse contexts
+    ├── tools_browser/headless_automation/  #   Headless browser — automation pipeline (10 agents + browser_optimizer)
+    │   ├── session_manager.md            #     Launch/dispose Playwright contexts
+    │   ├── navigation_engine.md          #     Load URLs and wait for dynamic content
+    │   ├── screenshot_agent.md           #     Capture viewport/full-page/element screenshots
+    │   ├── dom_extractor.md              #     Extract dynamic DOM content after JS execution
+    │   ├── selector_resolver.md          #     Resolve CSS/XPath selectors with retries
+    │   ├── interaction_agent.md          #     Safe clicks, typing, scroll, form submission
+    │   ├── network_interceptor.md        #     Capture and filter network traffic
+    │   ├── cookie_storage_agent.md       #     Manage cookies/local/session storage
+    │   ├── captcha_challenge_agent.md    #     Detect CAPTCHA/login walls and escalate
+    │   ├── error_handler.md              #     Classify browser failures and trigger cleanup
+    │   └── browser_optimizer.md          #     Batch operations and reuse contexts
+    └── tools_lighthouse/audit/           #   Lighthouse hard-gate pipeline (10 agents + lighthouse_optimizer)
+        ├── session_manager.md            #     Launch/dispose Playwright contexts for audits
+        ├── navigation_engine.md          #     Stabilize page before audit
+        ├── audit_runner.md               #     Run Lighthouse via Playwright
+        ├── report_parser.md              #     Filter 500 KB report down to failed audits
+        ├── metric_guard_performance.md   #     Enforce Performance = 100%
+        ├── metric_guard_a11y.md          #     Enforce Accessibility = 100%
+        ├── metric_guard_best_practices.md #     Enforce Best Practices = 100%
+        ├── metric_guard_seo.md           #     Enforce SEO = 100%
+        ├── correction_prompt_builder.md  #     Build compact correction prompt
+        ├── loop_terminator.md            #     Convergence guard (8 iterations max)
+        └── lighthouse_optimizer.md       #     Pipeline strategist and log rotation
 ```
 
 ## Flow
@@ -126,6 +141,7 @@ User Request
               → tooll_subagents/execution/ (tool invocation)
                 → tools_*/ (specialized tool agents)
                 → tools_browser/headless_automation (Playwright dynamic pages)
+                → tools_lighthouse/audit (Lighthouse hard-gate audit + report parsing + correction prompts)
                 → mcp_servers/gateway.py (lazy MCP dispatch)
                 → mcp_servers/figma_server.py (Figma-to-code pipeline)
               → tooll_subagents/observability/ (result capture)
@@ -144,9 +160,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 30 |
-| tools_* | 110 |
-| **Total** | **173** |
+| tooll_subagents | 33 |
+| tools_* | 121 |
+| **Total** | **187** |
 
 ## Naming Convention
 - snake_case filenames
@@ -156,25 +172,27 @@ User Request
 ## Key Decisions
 1. Three-circuit safety: safety-control → mutual_check → control
 2. ReAct cycle decomposed into atomic sub-steps per folder
-3. Tools as microservices: 10 categories × 10 agents with optimizer per category
+3. Tools as microservices: 11 categories × 10+ agents with optimizer per category
 4. Self-correction loop closes the cycle (validate → adjust → loop/terminate)
 5. Human-in-the-loop split: strategic oversight (control) vs tactical approval (execution)
 6. Double "l" in `tooll_subagents` and "manangr" typo preserved as-is in codebase
 7. Lazy MCP gateway: `mcp_servers/gateway.py` exposes category metadata to the planner and materializes servers only when a tool is invoked, reducing planner token budget
 8. `project_rules.md` in repo root is lightweight context loaded at session start and used as fallback policy source by `control/policy_enforcer.md`; updates require `human_approval.md`
 9. Headless browser category: `tools_browser/headless_automation` adds Playwright-based dynamic page automation as the 11th tool category; runtime-only `mcp_servers/browser_server.py` keeps it optional and lazy
-10. Conditional Edges: `runtime/engine/pipeline_runner.py` uses a `PhaseTransitionManager` to route between ReAct phases based on agent outputs instead of a hardcoded sequence
+10. Lighthouse category: `tools_lighthouse/audit` adds a 12th tool category that runs Lighthouse via Playwright, parses reports, enforces 100% hard gate across Performance, Accessibility, Best Practices, and SEO, and feeds compact correction prompts back into the self-correction loop with a default convergence guard of 8 iterations
+11. Conditional Edges: `runtime/engine/pipeline_runner.py` uses a `PhaseTransitionManager` to route between ReAct phases based on agent outputs instead of a hardcoded sequence
+12. Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Ladder of Laziness into code-generation system prompts via `ponytail_injector.md`, while `ponytail_review.md` and `ponytail_audit.md` provide over-engineering review and audit capabilities
 
 ## Implementation Status
 
-All 174 agents are fully implemented following the Algorithmic template:
-- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions
+All 184 agents are fully implemented following the Algorithmic template:
+- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions and Lighthouse hard-gate integration
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (31) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (11 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, and `component_mapper.md`), execution (4), observability (4), self_correction (4), result (4)
-- `tools_*` (110) — 11 categories × 10 agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation
+- `tooll_subagents/` (33) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (12 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, and `ponytail_audit.md`), execution (4), observability (4), self_correction (5 with `ponytail_review.md`), result (4)
+- `tools_*` (121) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 
@@ -198,7 +216,7 @@ Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Fail
 
 ### Cross-Reference Integrity
 
-All 171 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
+All 187 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
 
 **Test results (2026-06-10):**
 - Broken links: 0 (6 known false positives filtered — `README.md`, `API.md`, `CHANGELOG.md`, `MEMORY.md`, `project_rules.md` are documentation targets, not agents)
