@@ -37,7 +37,8 @@ Execution driver that dispatches selected tool agents with properly formatted pa
       - `/ponytail-audit` — invoke `ponytail_audit.md` for the workspace.
       - Unknown command — log and abort with `next_action=abort`.
    b. If the tool is a Headroom MCP tool (`headroom_compress`, `headroom_retrieve`, `headroom_stats`), marshal parameters and submit via `mcp_servers/gateway.py` to the `headroom` category. If the category is unavailable, return a degraded passthrough result (`available=false`) and continue execution.
-   c. If the tool is a browser tool (name starts with `browser_` or is listed in `tools_browser/headless_automation`), marshal parameters and submit via `mcp_servers/gateway.py`.
+   c. If the tool is a Memanto MCP tool (`memanto_remember`, `memanto_recall`, `memanto_answer`, `memanto_create_agent`), marshal parameters and submit via `mcp_servers/gateway.py` to the `memanto` category. If the category is unavailable, return a degraded fallback result and continue execution.
+   d. If the tool is a browser tool (name starts with `browser_` or is listed in `tools_browser/headless_automation`), marshal parameters and submit via `mcp_servers/gateway.py`.
    d. If the tool is any other MCP tool (present in `mcp_gateway`) and `mcp_gateway` is provided, marshal parameters and submit to `mcp_servers/gateway.py` via `orchestrator/dispatcher.md`.
    e. Otherwise, marshal parameters into tool-specific format for local tool agents.
    f. Submit to orchestrator/dispatcher.md with timeout shard.

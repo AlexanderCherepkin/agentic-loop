@@ -11,11 +11,13 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 - `memory_policy`: enum (`minimal`, `standard`, `comprehensive`) — controls retention depth
 - `memory_tags`: list of topical keywords for retrieval indexing
 - `headroom_enabled`: boolean | None — explicit Headroom toggle; falls back to `HEADROOM_ENABLED` env, then `true`
+- `memanto_enabled`: boolean | None — explicit Memanto toggle; falls back to `MEMANTO_ENABLED` env, then `true`
 
 ### Returns
 - `memory_entries`: list of created or updated memory records with IDs and confidence scores
 - `compression_ratio`: float — how much the raw observations were compressed into memory
 - `headroom_hash`: string | None — CCR hash if Headroom compressed the observation bundle; can be retrieved via `headroom_retriever.md` or `runtime/engine/headroom_client.py`
+- `memanto_ids`: list of string — IDs of memories stored in Memanto; can be retrieved via `memanto_recall.md` or `runtime/engine/memanto_client.py`
 - `recall_keys`: list of identifiers that can be used to retrieve this context later
 - `enrichment_status`: enum (`complete`, `partial`, `failed`) — whether all observations were successfully memorized
 
@@ -29,6 +31,7 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 1. **Classify observation types** — categorize artifacts into: facts (file paths, values), decisions (chosen tool, approved plan), constraints (policies, limitations), lessons (what worked, what failed), and user preferences (style, format, priority).
 2. **Filter by policy** — `minimal` retains only decisions and critical facts; `standard` adds constraints and lessons; `comprehensive` retains all categorized observations with context.
    - **Headroom pre-compression** — before summarizing, if `headroom_enabled=true` and the observation bundle exceeds `min(500, token_budget // 10)` tokens, invoke `headroom_compressor.md` (or `runtime/engine/headroom_client.py`) to produce a reversible compressed form. Store the returned `hash` as `headroom_hash` and include the compressed representation in the memory entry. If Headroom is unavailable or the bundle is below threshold, skip this step and store plaintext.
+   - **Memanto long-term persistence** — if `memanto_enabled=true`, route durable facts (decisions, constraints, user preferences, project rules, failures/recoveries) to `memanto_remember.md` with appropriate `memory_type` and `tags`. Collect returned IDs as `memanto_ids`. Continue to also write to `tools_memory/memory_store/memory_writer.md` so short-term session memory stays available even if Memanto is down. If Memanto is unavailable, queue the records for later batch write and set `memanto_ids=[]`.
 3. **Deduplicate** — check for semantically similar existing memory entries; update rather than duplicate if similarity > 0.9.
 4. **Summarize** — compress raw observations into concise, retrieval-optimized statements with preserved key identifiers.
 5. **Assign tags and keys** — attach `memory_tags`, source timestamp, and expiration policy to each entry.
@@ -48,3 +51,5 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 | Deduplication false-positive (distinct but similar facts) | Split merged entry; store both versions with disambiguation tags; log to `feedback_aggregator.md` |
 | Headroom compression fails | Store plaintext summary; set `headroom_hash=null`; log failure to `audit_logger.md`; continue enrichment |
 | Headroom retrieval hash missing but compressed form referenced | Treat as missing context; store compressed placeholder and queue `headroom_retriever.md` for next turn |
+| Memanto remember fails | Keep in-memory queue; set `memanto_ids=[]`; log failure to `audit_logger.md`; continue enrichment |
+| Memanto unavailable | Batch durable records for later upload; continue with regular `memory_writer.md` |

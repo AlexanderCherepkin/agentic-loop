@@ -1,9 +1,9 @@
 # CLAUDE.md — Agentic Loop
 
 This is a **multi-agent AI system** with hierarchical safety-first architecture.
-190 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
+193 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
 following the Algorithmic template (Role + Contract + Decision Flow + Failure Modes).
-All 190 agents across all 6 layers are fully implemented with the Algorithmic template.
+All 193 agents across all 6 layers are fully implemented with the Algorithmic template.
 No remaining stubs.
 
 ## First Action (always)
@@ -61,7 +61,7 @@ Never auto-approve (still require confirmation):
 | safety-control | 9 | Input safety (sanitization, permissions, threats) | FILLED |
 | safety-control/mutual_check | 10 | Cross-validation (audit, consistency, compliance) | FILLED |
 | control | 7 | Runtime enforcement (scope, policy, resources) | FILLED |
-| tooll_subagents | 36 | ReAct cycle: user→planning→execution→observability→self_correction→result, including Ponytail injector/review/audit and Headroom injector/compressor/retriever | FILLED |
+| tooll_subagents | 39 | ReAct cycle: user→planning→execution→observability→self_correction→result, including Ponytail injector/review/audit, Headroom injector/compressor/retriever, and Memanto remember/recall/answer | FILLED |
 | tools_read | 10 | Read-file pipeline (path→encoding→read→chunk→parse→extract→integrity→cache→format) | FILLED |
 | tools_replace | 10 | Replace-file pipeline (backup→pattern→edit→diff→rank→validate→write→verify→rollback) | FILLED |
 | tools_search | 10 | Search pipeline (scope→regex+semantic→relevance→dedup→snippet→diff) | FILLED |
@@ -74,7 +74,7 @@ Never auto-approve (still require confirmation):
 | tools_memory | 10 | Memory store pipeline (read→write→index→embedding→compress→evict→summarize→recall→consistency→optimizer) | FILLED |
 | tools_browser | 10 | Headless browser pipeline (session→navigation→screenshot→dom→selector→interaction→network→cookies→captcha→error→optimizer) | FILLED |
 | tools_lighthouse | 11 | Lighthouse hard-gate pipeline (session→navigation→audit→parse→performance→a11y→best-practices→seo→correction-prompt→loop-terminator→optimizer) | FILLED |
-| **Total** | **190** | | **190 filled, 0 stubs** |
+| **Total** | **193** | | **193 filled, 0 stubs** |
 
 ## Core Architecture
 
@@ -90,6 +90,7 @@ Human-in-the-loop split: human_oversight.md (strategic, in control/) vs human_ap
 Lazy MCP gateway: `mcp_servers/gateway.py` exposes category metadata and materializes servers only on tool invocation (token budget saver).
 Headless browser: `tools_browser/headless_automation` via Playwright MCP server for dynamic pages and screenshots. Optional dependency: `runtime/requirements-browser.txt`.
 Headroom context compression: optional local LLM CCR layer exposed as MCP category `headroom` (`headroom_compress`, `headroom_retrieve`, `headroom_stats`) and as `runtime/engine/headroom_client.py` with `SharedContext` for inter-agent handoffs. Integrated into `main_loop.md` context compaction, `tool_plan_selection.md`, `tool_invocation.md`, `memory_enrichment.md`, and `llm_engine.py`. Falls back to plaintext passthrough if `headroom-ai` is not installed. Optional dependency: `runtime/requirements-headroom.txt`.
+Memanto semantic memory: optional active memory agent exposed as MCP category `memanto` (`memanto_create_agent`, `memanto_remember`, `memanto_recall`, `memanto_answer`) and as `runtime/engine/memanto_client.py`. Integrated into `main_loop.md` session lifecycle, `tool_plan_selection.md` recall-before-planning, `tool_invocation.md` MCP routing, and `memory_enrichment.md` long-term persistence. Falls back to in-memory store when the Memanto server is unreachable. Optional dependency: `runtime/requirements-memanto.txt`.
 Lighthouse hard gate: `tools_lighthouse/audit` runs Lighthouse via Playwright, parses 500 KB reports into compact correction prompts, and enforces 100% on Performance, Accessibility, Best Practices, and SEO with a 5-iteration convergence guard. Integrated into `self_correction/result_validation.md` and `recursion_or_termination.md`.
 Backend Spec Bridge: `figma-agent-core/backend_bridge.py` parses OpenAPI/Prisma/text specs, maps UI forms to backend models, and generates `prisma/schema.prisma`, `app/api/*.ts` routes, and `app/actions/*Action.ts` Server Actions. MCP category `backend` registered in `mcp_servers/backend_server.py`.
 Visual QA V2: `figma-agent-core/figma_reference_downloader.py` fetches Figma reference screenshots; `figma-agent-core/visual_qa.py` runs stable Chromium (exact viewport, font/image loading wait, disabled animations), structural layout checks (overflow, clipped text, overlaps, bbox mismatch), and feeds structured reports into `figma-agent-core/refinement_loop.py` for deterministic AST adjustments.
@@ -109,6 +110,7 @@ Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Lad
 - **Cross-cutting optimizer** — each `tools_*` category has one strategist agent (e.g., `read_optimizer`, `project_optimizer`, `db_optimizer`) that coordinates the pipeline
 - **Ponytail protocol** — code-generation agents receive the 7-step Ladder of Laziness in their system prompt (mode `lite`/`full`/`ultra`/`off`); over-engineering is reviewed in self-correction
 - **Headroom protocol** — optional context compression for large tool outputs, logs, RAG chunks, and multi-agent handoffs; enabled by default via `HEADROOM_ENABLED`; safety/control/audit layers always receive uncompressed originals unless an explicit compression step is planned
+- **Memanto protocol** — optional active semantic memory for durable cross-session facts; enabled via `MEMANTO_ENABLED`/`MEMANTO_URL`; degrades to in-memory fallback when the server is unavailable; safety/control/audit layers never route sensitive data through Memanto unless explicitly allowed by policy
 
 ## Cross-Session Memory
 
@@ -122,16 +124,16 @@ Read memory when resuming work. Update memory when architecture changes or key d
 
 ## Current Progress & Next Steps
 
-1. **FILLED (190 agents)** — All layers fully implemented:
+1. **FILLED (193 agents)** — All layers fully implemented:
    - `main_loop.md` (1) — ReAct head agent with Lighthouse hard-gate and Headroom context-compaction integration
    - `orchestrator/` (6) — Router, dispatcher, pipeline coordinator, state manager, API gateway, message bus
    - `safety-control/` (9) — Input sanitization, permissions, threats, leaks, output review, bias, safety assessment, content checking
    - `mutual_check/` (10) — Audit, verification, consistency, validation, performance, quotas, anomalies, quality, feedback, compliance
    - `control/` (7) — File system, network, resources, human oversight, policy, scope, input aggregation
-   - `tooll_subagents/` (36) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `figma_precise_mode_auditor.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, Visual QA V2 refinements in `result_validation.md`, Lighthouse convergence guard in `recursion_or_termination.md`, Ponytail protocol agents (`ponytail_injector.md`, `ponytail_review.md`, `ponytail_audit.md`), and Headroom agents (`headroom_injector.md`, `headroom_compressor.md`, `headroom_retriever.md`)
+   - `tooll_subagents/` (39) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `figma_precise_mode_auditor.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, Visual QA V2 refinements in `result_validation.md`, Lighthouse convergence guard in `recursion_or_termination.md`, Ponytail protocol agents (`ponytail_injector.md`, `ponytail_review.md`, `ponytail_audit.md`), Headroom agents (`headroom_injector.md`, `headroom_compressor.md`, `headroom_retriever.md`), and Memanto agents (`memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`)
    - `tools_*` (121) — 12 categories × 10+ tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 2. **STUBS (0 agents)** — No remaining placeholders. All agents follow the Algorithmic template.
-3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Lighthouse hard-gate pipeline, safe-component generation, Backend Spec Bridge, Responsive Composer, Component Registry, automatic Figma reference download, stable Chromium Visual QA, structural layout checks, conditional ReAct phase transitions, Ponytail cross-cutting optimization protocol, and optional Headroom context-compression layer with reversible CCR, MCP tools, and runtime client.
+3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Lighthouse hard-gate pipeline, safe-component generation, Backend Spec Bridge, Responsive Composer, Component Registry, automatic Figma reference download, stable Chromium Visual QA, structural layout checks, conditional ReAct phase transitions, Ponytail cross-cutting optimization protocol, optional Headroom context-compression layer with reversible CCR, MCP tools, and runtime client, and optional Memanto semantic-memory pipeline with MCP tools, runtime client, and ReAct integration.
 
 ## Active Skills
 

@@ -15,6 +15,7 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 - `compaction_interval`: integer — compress ReAct history into summary every N iterations (default 3)
 - `ponytail_mode`: string | None — explicit Ponytail intensity (`lite`, `full`, `ultra`, `off`). Falls back to `PONYTAIL_DEFAULT_MODE` env, then `full`.
 - `headroom_enabled`: boolean | None — explicit Headroom context-compression toggle. Falls back to `HEADROOM_ENABLED` env, then `true`.
+- `memanto_enabled`: boolean | None — explicit Memanto semantic-memory toggle. Falls back to `MEMANTO_ENABLED` env, then `true`.
 
 ### Returns
 - `final_response`: user-facing solution, explanation, or artifact
@@ -26,11 +27,12 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 - Initializes and terminates session state via `orchestrator/state_manager.md`
 - Drives all `orchestrator/`, `safety-control/`, `mutual_check/`, `control/`, `tooll_subagents/`, and `tools_*` invocations
 - Triggers context compaction via `tools_memory/memory_store/context_compressor.md`, `summarizer.md`, and `eviction_policy.md` every N iterations
+- Persists long-term session facts to Memanto via `memanto_remember.md` when `memanto_enabled=true`
 - Consumes token budget and API quota
 
 ## Decision Flow
 
-1. **Initialize session** — call `orchestrator/state_manager.md` to create or resume session; load `session_context` and `system_wide_policies`. Resolve the effective Ponytail mode from `ponytail_mode`, env `PONYTAIL_DEFAULT_MODE`, or default `full`; pass it to `tooll_subagents/user/context.md` as `ponytail_mode`. Resolve the effective Headroom toggle from `headroom_enabled`, env `HEADROOM_ENABLED`, or default `true`; pass it to `tooll_subagents/user/context.md` as `headroom_enabled`.
+1. **Initialize session** — call `orchestrator/state_manager.md` to create or resume session; load `session_context` and `system_wide_policies`. Resolve the effective Ponytail mode from `ponytail_mode`, env `PONYTAIL_DEFAULT_MODE`, or default `full`; pass it to `tooll_subagents/user/context.md` as `ponytail_mode`. Resolve the effective Headroom toggle from `headroom_enabled`, env `HEADROOM_ENABLED`, or default `true`; pass it to `tooll_subagents/user/context.md` as `headroom_enabled`. Resolve the effective Memanto toggle from `memanto_enabled`, env `MEMANTO_ENABLED`, or default `true`; pass it to `tooll_subagents/user/context.md` as `memanto_enabled`. If `memanto_enabled=true`, ensure the Memanto agent namespace exists via `memanto_create_agent` and, on resuming a session, invoke `memanto_recall.md` with the session ID and `query="recent context"` to preload relevant prior state.
 2. **Ingest user input** — pass `raw_user_input` to `tooll_subagents/user/request.md` for parsing, `context.md` for enrichment, and `limitations.md` for capability gap analysis.
 3. **Safety pre-check** — route parsed request through `safety-control/` (input_sanitizer, threat_detector, bias_detector) and `control/` (scope_manager, policy_enforcer). If blocked, halt with `termination_status=escalated_human` or `failure`.
 4. **Design-intake branch (conditional)** — pass parsed request to `tooll_subagents/user/design_intake.md`:
@@ -42,12 +44,12 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
        b. Invoke `tooll_subagents/planning/design_to_code_planner.md` with the `design_blueprint` to produce a `handoff_package`.
        c. If `handoff_type == technical_assignment`, treat the package as the task definition and continue to the Plan phase with `design_blueprint` attached.
        d. If `handoff_type == full_code` or `mixed`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`.
-5. **Plan phase** — invoke `tooll_subagents/planning/` (task_decomposition, cost_risk_assessment, tool_plan_selection, internal_monologue) to produce initial task graph and tool plan. If a design blueprint is present, `tool_plan_selection` must include Figma MCP tools. For front-end generation tasks, `tool_plan_selection` must also include `tools_lighthouse/audit/lighthouse_optimizer.md` and, if no safe-component layer exists, a sub-task to generate `src/components/safe/` (`SafeLink`, `ResponsivePicture`, `TouchSafeElement`). For any coding task, `tool_plan_selection` must include `ponytail_injector.md` so the code-generating agent's system prompt receives the Ponytail protocol. If `headroom_enabled=true`, `tool_plan_selection` must also include `headroom_injector.md` to identify large tool outputs/RAG chunks and insert `headroom_compressor.md` / `headroom_retriever.md` steps.
+5. **Plan phase** — invoke `tooll_subagents/planning/` (task_decomposition, cost_risk_assessment, tool_plan_selection, internal_monologue) to produce initial task graph and tool plan. If a design blueprint is present, `tool_plan_selection` must include Figma MCP tools. For front-end generation tasks, `tool_plan_selection` must also include `tools_lighthouse/audit/lighthouse_optimizer.md` and, if no safe-component layer exists, a sub-task to generate `src/components/safe/` (`SafeLink`, `ResponsivePicture`, `TouchSafeElement`). For any coding task, `tool_plan_selection` must include `ponytail_injector.md` so the code-generating agent's system prompt receives the Ponytail protocol. If `headroom_enabled=true`, `tool_plan_selection` must also include `headroom_injector.md` to identify large tool outputs/RAG chunks and insert `headroom_compressor.md` / `headroom_retriever.md` steps. If `memanto_enabled=true`, `tool_plan_selection` must include `memanto_recall.md` before task decomposition so the planner can retrieve relevant long-term constraints, prior decisions, and user preferences; it must also insert `memanto_remember.md` after significant state changes (decisions, constraints, completed milestones) and `memanto_answer.md` at the end-of-session summary step.
 6. **Enter ReAct loop** — for each iteration up to `max_iterations`:
    a. **Check budget** — if `token_budget` exhausted, break and set `termination_status=partial`.
    b. **Mutual pre-check** — pass plan through `mutual_check/` (consistency_checker, quota_manager, anomaly_detector) and `control/` (resource_monitor, permission_checker). If rejected, attempt `tooll_subagents/self_correction/plan_adjustment.md`.
    c. **Execute phase** — invoke `tooll_subagents/execution/` (tool_invocation, safety_guardrails, human_approval, action_logging) to run the selected tool pipeline.
-   d. **Observe phase** — collect results via `tooll_subagents/observability/` (environment_result, runtime_output, file_context, memory_enrichment).
+   d. **Observe phase** — collect results via `tooll_subagents/observability/` (environment_result, runtime_output, file_context, memory_enrichment). If `memanto_enabled=true`, route durable facts and decisions through `memanto_remember.md` in addition to the regular `memory_enrichment.md` so they become queryable across sessions.
    e. **Validate phase** — invoke `tooll_subagents/self_correction/result_validation.md` with `lighthouse_max_iterations=8` to assess success against original request; if a front-end artifact is present and no Lighthouse report was supplied, trigger the `tools_lighthouse/audit/` pipeline.
    f. **Decide loop or terminate** — call `tooll_subagents/self_correction/recursion_or_termination.md` with `lighthouse_iteration_count` and `lighthouse_max_iterations=8`:
       - `recurse` → feed adjusted plan from `plan_adjustment.md` into next iteration.
@@ -65,7 +67,7 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 8. **Safety post-check** — route final output through `safety-control/output_reviewer.md`, `data_leak_preventer.md`, and `content_checker.md`.
 9. **Final mutual check** — pass through `mutual_check/quality_assessor.md` and `result_validator.md`.
 10. **Deliver** — return `final_response`, `termination_status`, `session_metrics`, and `audit_anchor`.
-11. **Cleanup** — archive session state, release quota locks, and log completion to `audit_logger.md`.
+11. **Cleanup** — archive session state, release quota locks, and log completion to `audit_logger.md`. If `memanto_enabled=true`, invoke `memanto_answer.md` with `query="What should the next session know about this task?"` and store the resulting summary via `memanto_remember.md` under type `context` with tags `["session_summary", "handoff"]` so the next session can recall it.
 
 ## Failure Modes
 
@@ -84,4 +86,5 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 | Eviction would remove steps still referenced by active plan | Defer eviction for referenced steps; compact only non-referenced segments; log partial compaction to `audit_logger.md` |
 | Ponytail injection fails or returns invalid mode | Fall back to base system prompt, set mode `full`, and log to `audit_logger.md`; continue planning |
 | Headroom compression unavailable or fails | Skip Headroom compression this iteration; fall back to `context_compressor.md` if needed; log to `audit_logger.md` and continue |
+| Memanto unavailable or remember/recall/answer fails | Skip Memanto operation; fall back to in-memory store or regular `memory_enrichment.md`; log to `audit_logger.md` and continue |
 

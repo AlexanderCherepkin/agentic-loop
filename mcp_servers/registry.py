@@ -46,6 +46,7 @@ class MCPRegistry:
         "figma": "Figma-to-code pipeline",
         "backend": "Backend Spec Bridge pipeline",
         "headroom": "Headroom context compression pipeline",
+        "memanto": "Memanto semantic memory pipeline",
     }
 
     def __init__(self):

@@ -26,6 +26,7 @@ Any change must preserve the three-circuit safety model (`safety-control → mut
 - **Lighthouse audits** via `tools_lighthouse/audit` for any generated front-end. Target: 100% on Performance, Accessibility, Best Practices, and SEO. Convergence guard: 8 iterations; on failure, escalate to human with the final failure log.
 - **MCP servers** are loaded lazily: only construct and expose a server category when a tool from that category is actually invoked.
 - **Headroom context compression** via the `headroom` MCP category (or `runtime/engine/headroom_client.py`) for large tool outputs, logs, RAG chunks, and multi-agent handoffs when `HEADROOM_ENABLED` is true. Falls back to plaintext passthrough if `headroom-ai` is not installed.
+- **Memanto semantic memory** via the `memanto` MCP category (or `runtime/engine/memanto_client.py`) for long-term, queryable storage of facts, decisions, constraints, and user preferences when `MEMANTO_ENABLED` is true. Falls back to an in-memory store if the Memanto server is not running.
 - **Validators** (`validate_cross_references.js`, `validate_consistency.js`) must pass with zero errors before any work is considered complete.
 
 ## Safety Defaults
@@ -69,6 +70,21 @@ Headroom (`headroom-ai`) is an optional local LLM context-compression layer that
   - `runtime/engine/headroom_client.py` provides the runtime Python SDK wrapper and `SharedContext` for inter-agent handoffs.
   - MCP tools `headroom_compress`, `headroom_retrieve`, `headroom_stats` via `mcp_servers/headroom_server.py`.
 - **Safety rule:** safety-control, mutual_check, and control layers always see uncompressed originals unless an explicit compression step is part of the approved plan. The LLM engine (`runtime/engine/llm_engine.py`) exposes `maybe_compress_messages` as an explicit helper; it does not auto-compress inputs.
+
+## Memanto Protocol
+
+Memanto (`memanto`) is an optional active memory agent that provides long-term, queryable semantic memory across sessions using the `remember` / `recall` / `answer` primitives.
+
+- **Default state:** enabled when `MEMANTO_ENABLED` is not explicitly set to `false`, `0`, `off`, or `no`.
+- **Optional dependency:** `runtime/requirements-memanto.txt`. If the Memanto server is not running and the packages are missing, the ReAct loop continues with an in-memory fallback.
+- **Deployment:** run fully local via `memanto serve` (Docker + Ollama) or use Moorcheh Cloud with an API key.
+- **Entry points:**
+  - `memanto_remember.md` observation agent persists durable facts/decisions/constraints.
+  - `memanto_recall.md` observation agent retrieves relevant prior context on demand.
+  - `memanto_answer.md` observation agent synthesizes grounded answers from memory.
+  - `runtime/engine/memanto_client.py` provides the runtime wrapper with in-memory fallback.
+  - MCP tools `memanto_remember`, `memanto_recall`, `memanto_answer`, `memanto_create_agent` via `mcp_servers/memanto_server.py`.
+- **Safety rule:** Memanto stores only post-safety, non-sensitive facts. The `data_leak_preventer.md` scan is applied before any memory leaves the system.
 
 ## Review & Deployment Approval Gates
 

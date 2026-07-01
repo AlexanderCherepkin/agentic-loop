@@ -73,13 +73,16 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
 │   │   ├── human_approval.md             #     Tactical human approval gate
 │   │   └── action_logging.md             #     Log execution actions
-│   ├── observability/                    #   Observation layer (6 agents)
+│   ├── observability/                    #   Observation layer (9 agents)
 │   │   ├── environment_result.md         #     Capture environment state
 │   │   ├── runtime_output.md             #     Capture runtime output
 │   │   ├── file_context.md               #     Capture file changes
 │   │   ├── memory_enrichment.md          #     Enrich with memory context
 │   │   ├── headroom_compressor.md        #     Compress large artifacts via Headroom CCR
-│   │   └── headroom_retriever.md         #     Restore original content by Headroom hash
+│   │   ├── headroom_retriever.md         #     Restore original content by Headroom hash
+│   │   ├── memanto_remember.md           #     Persist durable facts to Memanto semantic memory
+│   │   ├── memanto_recall.md             #     Retrieve relevant prior context from Memanto
+│   │   └── memanto_answer.md             #     Synthesize grounded answers from Memanto memory
 │   ├── self_correction/                  #   Self-correction layer (5 agents)
 │   │   ├── result_validation.md          #     Validate results
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
@@ -140,7 +143,7 @@ User Request
           → control/ (scope, policy, resource enforcement)
             → orchestrator/dispatcher.md
               → tooll_subagents/user/ (user context + project_rules.md + design_intake)
-              → tooll_subagents/planning/ (task decomposition + figma_design_analyst + design_to_code_planner)
+              → tooll_subagents/planning/ (task decomposition + figma_design_analyst + design_to_code_planner + memanto_recall)
               → tooll_subagents/execution/ (tool invocation)
                 → tools_*/ (specialized tool agents)
                 → tools_browser/headless_automation (Playwright dynamic pages)
@@ -148,10 +151,11 @@ User Request
                 → mcp_servers/gateway.py (lazy MCP dispatch)
                 → mcp_servers/figma_server.py (Figma-to-code pipeline)
                 → mcp_servers/headroom_server.py (optional Headroom context-compression CCR tools)
-              → tooll_subagents/observability/ (result capture)
+                → mcp_servers/memanto_server.py (optional Memanto semantic-memory tools)
+              → tooll_subagents/observability/ (result capture + memanto_remember)
               → tooll_subagents/self_correction/ (validate → adjust → loop or finish)
                 → PhaseTransitionManager (runtime conditional phase routing)
-              → tooll_subagents/result/ (final output)
+              → tooll_subagents/result/ (final output + memanto_answer)
   → User Response
 ```
 
@@ -164,9 +168,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 36 |
+| tooll_subagents | 39 |
 | tools_* | 121 |
-| **Total** | **190** |
+| **Total** | **193** |
 
 ## Naming Convention
 - snake_case filenames
@@ -187,6 +191,7 @@ User Request
 11. Conditional Edges: `runtime/engine/pipeline_runner.py` uses a `PhaseTransitionManager` to route between ReAct phases based on agent outputs instead of a hardcoded sequence
 12. Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Ladder of Laziness into code-generation system prompts via `ponytail_injector.md`, while `ponytail_review.md` and `ponytail_audit.md` provide over-engineering review and audit capabilities
 13. Headroom protocol: optional local LLM CCR layer exposed as MCP category `headroom` (`headroom_compress`, `headroom_retrieve`, `headroom_stats`) and as `runtime/engine/headroom_client.py`; integrated into ReAct planning, execution, observability, and `main_loop.md` context compaction; degrades to plaintext passthrough when `headroom-ai` is not installed
+14. Memanto protocol: optional active semantic-memory agent exposed as MCP category `memanto` (`memanto_create_agent`, `memanto_remember`, `memanto_recall`, `memanto_answer`) and as `runtime/engine/memanto_client.py`; integrated into ReAct planning recall, observability remember, and end-of-session answer; degrades to in-memory fallback when the Memanto server is unreachable. Optional dependency: `runtime/requirements-memanto.txt`
 
 ## Implementation Status
 
@@ -196,10 +201,11 @@ All 190 agents are fully implemented following the Algorithmic template:
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (36) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (13 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, `ponytail_audit.md`, and `headroom_injector.md`), execution (4), observability (6 with `headroom_compressor.md` and `headroom_retriever.md`), self_correction (5 with `ponytail_review.md`), result (4)
+- `tooll_subagents/` (39) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (13 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, `ponytail_audit.md`, and `headroom_injector.md`), execution (4), observability (9 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, and `memanto_answer.md`), self_correction (5 with `ponytail_review.md`), result (4)
 - `tools_*` (121) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
+- `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
 
 Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Failure Modes.
 
@@ -214,6 +220,8 @@ Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Fail
 - `mcp_servers/figma_server.py` — optional Figma-to-code pipeline server wrapping `figma-agent-core/`; lazy-loaded and reports degraded if `figma-agent-core/` is missing or `FIGMA_TOKEN`/`FIGMA_URL` are unset.
 - `mcp_servers/backend_server.py` — optional Backend Spec Bridge server wrapping `figma-agent-core/backend_bridge.py`; lazy-loaded and reports degraded if `figma-agent-core/` is missing or no backend spec is provided.
 - `runtime/requirements-browser.txt` — optional Playwright dependency file; core `runtime/requirements.txt` stays lightweight.
+- `runtime/requirements-memanto.txt` — optional Memanto SDK/server dependency file.
+- `runtime/engine/memanto_client.py` — singleton HTTP client for Memanto REST API with in-memory fallback when the server is unavailable.
 - `runtime/engine/pipeline_runner.py` — also hosts `PhaseTransitionManager` for conditional ReAct phase routing.
 - `project_rules.md` — lightweight project-level context file in repo root (Scope, Conventions, Tooling Preferences, Safety Defaults, Human-in-the-Loop Triggers).
 

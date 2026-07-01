@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MCP Bootstrap — wires all 11 MCP servers into the registry and connects them to the runtime.
+MCP Bootstrap — wires all 15 MCP servers into the registry and connects them to the runtime.
 
 Usage:
     python -m mcp_servers.bootstrap           # Register all servers, print summary
@@ -31,6 +31,7 @@ from .browser_server import BrowserMCPServer
 from .figma_server import FigmaMCPServer
 from .backend_server import BackendMCPServer
 from .headroom_server import HeadroomMCPServer
+from .memanto_server import MemantoMCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -50,6 +51,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "figma": FigmaMCPServer,
         "backend": BackendMCPServer,
         "headroom": HeadroomMCPServer,
+        "memanto": MemantoMCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -59,7 +61,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
 
 
 def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
-    """Create and populate the MCP registry with all 11 servers.
+    """Create and populate the MCP registry with all 15 servers.
 
     Args:
         workspace_root: project root path.
@@ -83,6 +85,7 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
         "figma": "Figma-to-code pipeline — 9 tools",
         "backend": "Backend Spec Bridge pipeline — 6 tools",
         "headroom": "Headroom context compression pipeline — 3 tools",
+        "memanto": "Memanto semantic memory pipeline — 4 tools",
     }
 
     for category in descriptions:
@@ -206,6 +209,12 @@ async def test_all_servers(registry: MCPRegistry):
     if headroom:
         r = await headroom.call_tool("headroom_compress", {"content": "hello world"})
         results["headroom"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test memanto server (degraded is acceptable if memanto serve is not running)
+    memanto = registry.get_server("memanto")
+    if memanto:
+        r = await memanto.call_tool("memanto_recall", {"query": "test"})
+        results["memanto"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
     return results
 
