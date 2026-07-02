@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MCP Bootstrap — wires all 15 MCP servers into the registry and connects them to the runtime.
+MCP Bootstrap — wires all 16 MCP servers into the registry and connects them to the runtime.
 
 Usage:
     python -m mcp_servers.bootstrap           # Register all servers, print summary
@@ -32,6 +32,7 @@ from .figma_server import FigmaMCPServer
 from .backend_server import BackendMCPServer
 from .headroom_server import HeadroomMCPServer
 from .memanto_server import MemantoMCPServer
+from .mem0_server import Mem0MCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -52,6 +53,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "backend": BackendMCPServer,
         "headroom": HeadroomMCPServer,
         "memanto": MemantoMCPServer,
+        "mem0": Mem0MCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -61,7 +63,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
 
 
 def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
-    """Create and populate the MCP registry with all 15 servers.
+    """Create and populate the MCP registry with all 16 servers.
 
     Args:
         workspace_root: project root path.
@@ -86,6 +88,7 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
         "backend": "Backend Spec Bridge pipeline — 6 tools",
         "headroom": "Headroom context compression pipeline — 3 tools",
         "memanto": "Memanto semantic memory pipeline — 4 tools",
+        "mem0": "Mem0 long-term memory pipeline — 4 tools",
     }
 
     for category in descriptions:
@@ -215,6 +218,12 @@ async def test_all_servers(registry: MCPRegistry):
     if memanto:
         r = await memanto.call_tool("memanto_recall", {"query": "test"})
         results["memanto"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test mem0 server (degraded is acceptable if mem0ai is not installed)
+    mem0 = registry.get_server("mem0")
+    if mem0:
+        r = await mem0.call_tool("mem0_search", {"query": "test"})
+        results["mem0"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
     return results
 

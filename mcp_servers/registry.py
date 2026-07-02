@@ -47,6 +47,7 @@ class MCPRegistry:
         "backend": "Backend Spec Bridge pipeline",
         "headroom": "Headroom context compression pipeline",
         "memanto": "Memanto semantic memory pipeline",
+        "mem0": "Mem0 long-term memory pipeline",
     }
 
     def __init__(self):

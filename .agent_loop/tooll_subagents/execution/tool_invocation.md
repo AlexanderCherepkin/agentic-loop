@@ -38,6 +38,7 @@ Execution driver that dispatches selected tool agents with properly formatted pa
       - Unknown command — log and abort with `next_action=abort`.
    b. If the tool is a Headroom MCP tool (`headroom_compress`, `headroom_retrieve`, `headroom_stats`), marshal parameters and submit via `mcp_servers/gateway.py` to the `headroom` category. If the category is unavailable, return a degraded passthrough result (`available=false`) and continue execution.
    c. If the tool is a Memanto MCP tool (`memanto_remember`, `memanto_recall`, `memanto_answer`, `memanto_create_agent`), marshal parameters and submit via `mcp_servers/gateway.py` to the `memanto` category. If the category is unavailable, return a degraded fallback result and continue execution.
+   c1. If the tool is a Mem0 MCP tool (`mem0_add`, `mem0_search`, `mem0_get_all`, `mem0_delete`), marshal parameters and submit via `mcp_servers/gateway.py` to the `mem0` category. If the category is unavailable, return a degraded fallback result and continue execution.
    d. If the tool is a browser tool (name starts with `browser_` or is listed in `tools_browser/headless_automation`), marshal parameters and submit via `mcp_servers/gateway.py`.
    d. If the tool is any other MCP tool (present in `mcp_gateway`) and `mcp_gateway` is provided, marshal parameters and submit to `mcp_servers/gateway.py` via `orchestrator/dispatcher.md`.
    e. Otherwise, marshal parameters into tool-specific format for local tool agents.

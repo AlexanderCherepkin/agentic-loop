@@ -27,6 +27,7 @@ Any change must preserve the three-circuit safety model (`safety-control → mut
 - **MCP servers** are loaded lazily: only construct and expose a server category when a tool from that category is actually invoked.
 - **Headroom context compression** via the `headroom` MCP category (or `runtime/engine/headroom_client.py`) for large tool outputs, logs, RAG chunks, and multi-agent handoffs when `HEADROOM_ENABLED` is true. Falls back to plaintext passthrough if `headroom-ai` is not installed.
 - **Memanto semantic memory** via the `memanto` MCP category (or `runtime/engine/memanto_client.py`) for long-term, queryable storage of facts, decisions, constraints, and user preferences when `MEMANTO_ENABLED` is true. Falls back to an in-memory store if the Memanto server is not running.
+- **Mem0 long-term memory** via the `mem0` MCP category (or `runtime/engine/mem0_client.py`) for hybrid semantic + keyword retrieval of user preferences, project facts, and session context when `MEM0_ENABLED` is true. Supports local Chroma/Qdrant embedded stores or the Mem0 Cloud API. Falls back to an in-memory store if `mem0ai` is not installed or the API is unreachable.
 - **Validators** (`validate_cross_references.js`, `validate_consistency.js`) must pass with zero errors before any work is considered complete.
 
 ## Safety Defaults
