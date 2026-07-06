@@ -53,11 +53,12 @@ def test_mock_pipeline_completes():
 
 def test_mock_pipeline_safety_pre_check():
     """Safety pre-check agents should all pass with mock responses."""
+    from runtime.engine.pipeline_runner import PipelineRunner
     result = asyncio.run(_run_pipeline("test task", max_iterations=1))
 
     assert result is not None
     safety_pre = [t for t in result.trace if t.phase == "safety_pre_check"]
-    assert len(safety_pre) == 5
+    assert len(safety_pre) == len(PipelineRunner.SAFETY_AGENTS)
     assert all(t.success for t in safety_pre)
     assert result.session_metrics.safety_checks_failed == 0
 

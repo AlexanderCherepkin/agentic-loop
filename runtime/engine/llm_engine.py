@@ -99,9 +99,12 @@ class MockLLMEngine:
         "mutual_check/result_validator.md": {"valid": True, "score": 0.95},
         "mutual_check/consistency_checker.md": {"consistent": True, "notes": []},
         "mutual_check/quality_assessor.md": {"quality_score": 0.92},
-        "output_reviewer.md": {"approved": True, "issues": []},
-        "data_leak_preventer.md": {"leak_detected": False, "sensitive": []},
-        "content_checker.md": {"appropriate": True, "flags": []},
+        "output_reviewer.md": {"review_status": "approved", "rejection_categories": [], "revision_notes": []},
+        "data_leak_preventer.md": {"leak_detected": False, "action": "pass", "severity": "none"},
+        "bias_detector.md": {"bias_detected": False, "recommendation": "pass", "overall_score": 0.1},
+        "content_checker.md": {"compliance_status": "compliant", "violations": []},
+        "command_guard.md": {"verdict": "allow", "risk_flags": []},
+        "safety_assessor.md": {"safety_band": "green", "execution_recommendation": "proceed"},
     }
 
     async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:

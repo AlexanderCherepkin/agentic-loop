@@ -301,6 +301,12 @@ class PipelineRunner:
         "safety-control/input_sanitizer.md",
         "safety-control/threat_detector.md",
         "safety-control/permission_checker.md",
+        "safety-control/command_guard.md",
+        "safety-control/data_leak_preventer.md",
+        "safety-control/output_reviewer.md",
+        "safety-control/bias_detector.md",
+        "safety-control/content_checker.md",
+        "safety-control/safety_assessor.md",
         "control/scope_manager.md",
         "control/policy_enforcer.md",
     ]
@@ -820,16 +826,26 @@ class PipelineRunner:
         for agent_path in self.SAFETY_AGENTS:
             result = await self._invoke_agent(agent_path, context, trace, "safety_pre_check", metrics)
             if result and result.parsed:
-                blocked = result.parsed.get("blocked", result.parsed.get("status") == "blocked")
+                parsed = result.parsed
+                blocked = (
+                    parsed.get("blocked") is True
+                    or parsed.get("status") == "blocked"
+                    or parsed.get("verdict") == "block"
+                    or parsed.get("review_status") == "rejected"
+                    or parsed.get("compliance_status") in ("major_violation", "blocked")
+                    or parsed.get("execution_recommendation") == "block"
+                    or parsed.get("recommendation") == "escalate"
+                    or parsed.get("action") == "block"
+                )
                 if blocked:
                     metrics.safety_checks_failed += 1
                     self._audit_logger.log_safety_blocked(
                         agent_path, session_id, self._current_audit_anchor or session_id,
-                        str(result.parsed.get("reason", "safety pre-check blocked")),
+                        str(parsed.get("reason", parsed.get("block_reason", "safety pre-check blocked"))),
                     )
                     return False
                 metrics.safety_checks_passed += 1
-                context.update(result.parsed)
+                context.update(parsed)
         return True
 
     async def _run_design_intake(self, user_input: str, session_id: str,
