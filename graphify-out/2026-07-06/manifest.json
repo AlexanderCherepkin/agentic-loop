@@ -1535,8 +1535,8 @@
     "semantic_hash": ""
   },
   "figma-agent-core/page_composer.py": {
-    "mtime": 1782422320.7314115,
-    "ast_hash": "498bafb44a8172da42dace438df87c8a",
+    "mtime": 1783370009.5649734,
+    "ast_hash": "b5457fd673fcb09838e8e33c214f4dc3",
     "semantic_hash": ""
   },
   "figma-agent-core/refinement_loop.py": {
@@ -1770,7 +1770,7 @@
     "semantic_hash": ""
   },
   "figma_component_mappings.json": {
-    "mtime": 1783357922.657477,
+    "mtime": 1783370157.566233,
     "ast_hash": "b0a44c8ae4a36a4f3323711528c0bfb1",
     "semantic_hash": ""
   },
@@ -1810,7 +1810,7 @@
     "semantic_hash": ""
   },
   "content_model.json": {
-    "mtime": 1783357922.7323825,
+    "mtime": 1783370157.6327744,
     "ast_hash": "5c69349dbe325daf3dd1c40ceb5aeedd",
     "semantic_hash": ""
   },
@@ -1875,7 +1875,7 @@
     "semantic_hash": ""
   },
   "src/components/icons/LogoIcon.tsx": {
-    "mtime": 1783357922.4296122,
+    "mtime": 1783370157.28696,
     "ast_hash": "9dc30acfdeed40a8e0c4c23b8963d104",
     "semantic_hash": ""
   },
@@ -2272,6 +2272,11 @@
   "tests/runtime/test_pipeline_mcp_execution.py": {
     "mtime": 1783368862.2385523,
     "ast_hash": "885519dd0938bfae3c3afecbd80aa296",
+    "semantic_hash": ""
+  },
+  "tests/figma/test_page_composer_multi.py": {
+    "mtime": 1783370142.0276408,
+    "ast_hash": "f422149755652c07caa4a2586352b4b5",
     "semantic_hash": ""
   }
 }

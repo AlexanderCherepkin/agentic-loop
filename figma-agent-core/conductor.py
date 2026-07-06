@@ -547,6 +547,8 @@ def stage_compose(
     output: str = "src/app/page.tsx",
     layout_output: str = "src/app/layout.tsx",
     title: Optional[str] = None,
+    site_name: Optional[str] = None,
+    base_url: Optional[str] = None,
     components_mapper_file: str = "figma_component_map.json",
     dry_run: bool = False,
 ) -> bool:
@@ -569,6 +571,10 @@ def stage_compose(
     ]
     if title:
         command.extend(["--title", title])
+    if site_name:
+        command.extend(["--site-name", site_name])
+    if base_url:
+        command.extend(["--base-url", base_url])
     if Path(components_mapper_file).exists():
         command.extend(["--components-mapper", components_mapper_file])
 
@@ -889,6 +895,45 @@ def stage_assets(
     return result.returncode == 0
 
 
+def stage_package_deployment(
+    output_dir: str = "generated-site",
+    site_name: Optional[str] = None,
+    base_url: str = "/",
+    target: str = "vercel",
+    has_backend: bool = False,
+    output_mode: str = "export",
+    root_dir: Optional[str] = None,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 6: упаковка готовых артефактов для публикации (Vercel/Netlify)."""
+    logger.info("=== STAGE: package_deployment ===")
+    command = [
+        sys.executable,
+        "deployment_packager.py",
+        "--output-dir",
+        output_dir,
+        "--target",
+        target,
+        "--output-mode",
+        output_mode,
+    ]
+    if site_name:
+        command.extend(["--site-name", site_name])
+    if base_url:
+        command.extend(["--base-url", base_url])
+    if has_backend:
+        command.append("--has-backend")
+    if root_dir:
+        command.extend(["--root-dir", root_dir])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=120)
+    return result.returncode == 0
+
+
 def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     """Главный дирижёр: запускает этапы по очереди."""
     start_time = time.time()
@@ -904,7 +949,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets"]
+    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets", "package_deployment"]
     if config.get("content_model"):
         stages_to_run = ["content_model" if s == "compose" else s for s in stages_to_run]
     if only:
@@ -1125,6 +1170,8 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 output=config.get("compose_output", "src/app/page.tsx"),
                 layout_output=config.get("compose_layout_output", "src/app/layout.tsx"),
                 title=config.get("compose_title"),
+                site_name=config.get("site_name"),
+                base_url=config.get("base_url"),
                 components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
                 dry_run=dry_run,
             )
@@ -1259,6 +1306,27 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             )
             report["stages"]["assets"] = {"success": ok}
 
+        elif stage == "package_deployment":
+            if not config.get("package_deployment"):
+                logger.info("Deployment packaging disabled. Skipping.")
+                report["stages"]["package_deployment"] = {
+                    "success": True,
+                    "skipped": True,
+                    "reason": "disabled",
+                }
+            else:
+                ok = stage_package_deployment(
+                    output_dir=config.get("package_deployment_output_dir", "generated-site"),
+                    site_name=config.get("site_name"),
+                    base_url=config.get("base_url", "/"),
+                    target=config.get("package_deployment_target", "vercel"),
+                    has_backend=config.get("package_deployment_has_backend", False),
+                    output_mode=config.get("package_deployment_output_mode", "export"),
+                    root_dir=config.get("package_deployment_root_dir"),
+                    dry_run=dry_run,
+                )
+                report["stages"]["package_deployment"] = {"success": ok}
+
         else:
             logger.warning(f"Unknown stage: {stage}. Skipping.")
 
@@ -1275,18 +1343,18 @@ def save_report(report: Dict[str, Any], path: str = "conductor_report.json") -> 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, tokens, layout, extract, compose, components, assets.",
+        description="Главный дирижёр пайплайна Figma-to-Code. Запускает bootstrap, analyze, spec, tokens, layout, extract, compose, components, assets, package_deployment.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--all",
         action="store_true",
-        help="Запустить полный пайплайн: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets.",
+        help="Запустить полный пайплайн: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets, package_deployment.",
     )
     parser.add_argument(
         "--only",
         default=None,
-        help="Запустить только один этап: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets."
+        help="Запустить только один этап: bootstrap, download_figma_reference, component_registry, analyze, spec, tokens, layout, backend_bridge, responsive, generate_components, extract, interactive, compose, compliance, visual_qa, refinement, components, assets, package_deployment."
     )
     parser.add_argument(
         "--node-id",
@@ -1482,6 +1550,43 @@ def main():
         "--compose-title",
         default=None,
         help="Заголовок страницы для Section Composer."
+    )
+    parser.add_argument(
+        "--site-name",
+        default=None,
+        help="Название сайта для Open Graph / structured data / deployment package."
+    )
+    parser.add_argument(
+        "--base-url",
+        default="/",
+        help="Базовый URL сайта для canonical / OG URLs / deployment package."
+    )
+    parser.add_argument(
+        "--package-deployment",
+        action="store_true",
+        help="Включить этап упаковки артефактов для публикации (Vercel/Netlify)."
+    )
+    parser.add_argument(
+        "--package-deployment-output-dir",
+        default="generated-site",
+        help="Директория для deployment-пакета (по умолчанию generated-site)."
+    )
+    parser.add_argument(
+        "--package-deployment-target",
+        default="vercel",
+        choices=["vercel", "netlify", "both"],
+        help="Целевая платформа для README и deploy.sh (по умолчанию vercel)."
+    )
+    parser.add_argument(
+        "--package-deployment-has-backend",
+        action="store_true",
+        help="Включить backend/database зависимости и переменные в .env.example."
+    )
+    parser.add_argument(
+        "--package-deployment-output-mode",
+        default="export",
+        choices=["export", "standalone"],
+        help="Next.js output mode для next.config.ts (по умолчанию export)."
     )
     parser.add_argument(
         "--components-output-dir",
@@ -1705,6 +1810,13 @@ def main():
         "compose_output": args.compose_output,
         "compose_layout_output": args.compose_layout_output,
         "compose_title": args.compose_title,
+        "site_name": args.site_name,
+        "base_url": args.base_url,
+        "package_deployment": args.package_deployment,
+        "package_deployment_output_dir": args.package_deployment_output_dir,
+        "package_deployment_target": args.package_deployment_target,
+        "package_deployment_has_backend": args.package_deployment_has_backend,
+        "package_deployment_output_mode": args.package_deployment_output_mode,
         "components_output_dir": args.components_output_dir,
         "page_ast_output": args.page_ast_output,
         "component_map_output": args.component_map_output,

@@ -3368,7 +3368,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component_set",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_component_set()"
     },
     {
@@ -3378,7 +3378,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_any",
-      "community": 350,
+      "community": 53,
       "norm_label": "any"
     },
     {
@@ -3388,7 +3388,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_component()"
     },
     {
@@ -3398,7 +3398,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_instance",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_instance()"
     },
     {
@@ -3478,7 +3478,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_path",
-      "community": 53,
+      "community": 52,
       "norm_label": "path"
     },
     {
@@ -3498,7 +3498,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistryerror",
-      "community": 36,
+      "community": 352,
       "norm_label": "componentregistryerror"
     },
     {
@@ -3508,7 +3508,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 1596,
+      "community": 352,
       "norm_label": "exception"
     },
     {
@@ -3548,7 +3548,7 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_build_and_write",
-      "community": 52,
+      "community": 346,
       "norm_label": ".build_and_write()"
     },
     {
@@ -3558,7 +3558,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_load_per_component_mappers",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load_per_component_mappers()"
     },
     {
@@ -3638,7 +3638,7 @@
       "source_location": "L415",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_init",
-      "community": 350,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -3678,7 +3678,7 @@
       "source_location": "L499",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_collect",
-      "community": 350,
+      "community": 53,
       "norm_label": "._collect()"
     },
     {
@@ -3798,7 +3798,7 @@
       "source_location": "L765",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load()"
     },
     {
@@ -3808,7 +3808,7 @@
       "source_location": "L776",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load_with_per_component_mappers",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load_with_per_component_mappers()"
     },
     {
@@ -3988,7 +3988,7 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_277",
-      "community": 53,
+      "community": 52,
       "norm_label": "read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`."
     },
     {
@@ -4028,7 +4028,7 @@
       "source_location": "L783",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_783",
-      "community": 53,
+      "community": 52,
       "norm_label": "load registry and overlay per-component `*.mapper.json` and manual overrides on"
     },
     {
@@ -4275,7 +4275,7 @@
       "label": "stage_content_model()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L583",
+      "source_location": "L589",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_content_model",
       "community": 6,
@@ -4285,7 +4285,7 @@
       "label": "stage_visual_qa()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L630",
+      "source_location": "L636",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_visual_qa",
       "community": 6,
@@ -4295,7 +4295,7 @@
       "label": "stage_compliance()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L669",
+      "source_location": "L675",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_compliance",
       "community": 6,
@@ -4305,7 +4305,7 @@
       "label": "stage_refinement()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L706",
+      "source_location": "L712",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_refinement",
       "community": 6,
@@ -4315,7 +4315,7 @@
       "label": "_to_pascal_case()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L760",
+      "source_location": "L766",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_to_pascal_case",
       "community": 6,
@@ -4325,7 +4325,7 @@
       "label": "_collect_top_level_sections()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L774",
+      "source_location": "L780",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_collect_top_level_sections",
       "community": 6,
@@ -4335,7 +4335,7 @@
       "label": "stage_components()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L782",
+      "source_location": "L788",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_components",
       "community": 6,
@@ -4345,7 +4345,7 @@
       "label": "stage_components_all()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L807",
+      "source_location": "L813",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_components_all",
       "community": 6,
@@ -4355,17 +4355,27 @@
       "label": "stage_assets()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L841",
+      "source_location": "L847",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_stage_assets",
       "community": 6,
       "norm_label": "stage_assets()"
     },
     {
+      "label": "stage_package_deployment()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L898",
+      "_origin": "ast",
+      "id": "figma_agent_core_conductor_stage_package_deployment",
+      "community": 6,
+      "norm_label": "stage_package_deployment()"
+    },
+    {
       "label": "run_pipeline()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L892",
+      "source_location": "L937",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_run_pipeline",
       "community": 6,
@@ -4375,7 +4385,7 @@
       "label": "save_report()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L1270",
+      "source_location": "L1338",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_save_report",
       "community": 6,
@@ -4385,7 +4395,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L1276",
+      "source_location": "L1344",
       "_origin": "ast",
       "id": "figma_agent_core_conductor_main",
       "community": 6,
@@ -4555,9 +4565,9 @@
       "label": "\u042d\u0442\u0430\u043f 3c: \u0441\u0431\u043e\u0440\u043a\u0430 Tailwind AST \u0432 Next.js page.tsx + layout.tsx.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L553",
+      "source_location": "L555",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_553",
+      "id": "figma_agent_core_conductor_rationale_555",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 3c: \u0441\u0431\u043e\u0440\u043a\u0430 tailwind ast \u0432 next.js page.tsx + layout.tsx."
     },
@@ -4565,9 +4575,9 @@
       "label": "\u042d\u0442\u0430\u043f 3c-alt: \u0440\u0430\u0437\u0434\u0435\u043b\u0435\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b \u043d\u0430 Page + Section-\u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u044b + Data.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L596",
+      "source_location": "L602",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_596",
+      "id": "figma_agent_core_conductor_rationale_602",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 3c-alt: \u0440\u0430\u0437\u0434\u0435\u043b\u0435\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b \u043d\u0430 page + section-\u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u044b + data."
     },
@@ -4575,9 +4585,9 @@
       "label": "\u042d\u0442\u0430\u043f 3d: \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u0430\u044f QA \u0447\u0435\u0440\u0435\u0437 Playwright screenshot + DOM assertions.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L640",
+      "source_location": "L646",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_640",
+      "id": "figma_agent_core_conductor_rationale_646",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 3d: \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u0430\u044f qa \u0447\u0435\u0440\u0435\u0437 playwright screenshot + dom assertions."
     },
@@ -4585,9 +4595,9 @@
       "label": "\u042d\u0442\u0430\u043f 3e: \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0433\u0435\u043d\u0435\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u043e\u0433\u043e \u043a\u043e\u0434\u0430 \u043d\u0430 \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 project_rules.md \u0438 \u043e\u0442\u0441\u0443\u0442",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L677",
+      "source_location": "L683",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_677",
+      "id": "figma_agent_core_conductor_rationale_683",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 3e: \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0433\u0435\u043d\u0435\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u043e\u0433\u043e \u043a\u043e\u0434\u0430 \u043d\u0430 \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 project_rules.md \u0438 \u043e\u0442\u0441\u0443\u0442"
     },
@@ -4595,9 +4605,9 @@
       "label": "\u042d\u0442\u0430\u043f 3f: refinement loop \u2014 \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a compose+visual QA \u0434\u043e \u0443\u0441\u043f\u0435\u0445\u0430 \u0438\u043b\u0438 \u044d\u0441\u043a\u0430\u043b\u0430\u0446\u0438\u0438",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L721",
+      "source_location": "L727",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_721",
+      "id": "figma_agent_core_conductor_rationale_727",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 3f: refinement loop \u2014 \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a compose+visual qa \u0434\u043e \u0443\u0441\u043f\u0435\u0445\u0430 \u0438\u043b\u0438 \u044d\u0441\u043a\u0430\u043b\u0430\u0446\u0438\u0438"
     },
@@ -4605,9 +4615,9 @@
       "label": "\u041f\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u043b\u044c\u043d\u043e\u0435 \u0438\u043c\u044f \u0432 PascalCase.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L761",
+      "source_location": "L767",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_761",
+      "id": "figma_agent_core_conductor_rationale_767",
       "community": 6,
       "norm_label": "\u043f\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u043b\u044c\u043d\u043e\u0435 \u0438\u043c\u044f \u0432 pascalcase."
     },
@@ -4615,9 +4625,9 @@
       "label": "\u0421\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0442\u043e\u043f-\u0443\u0440\u043e\u0432\u043d\u0435\u0432\u044b\u0435 \u0441\u0435\u043a\u0446\u0438\u0438 \u0438\u0437 figma_node.json.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L775",
+      "source_location": "L781",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_775",
+      "id": "figma_agent_core_conductor_rationale_781",
       "community": 6,
       "norm_label": "\u0441\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0442\u043e\u043f-\u0443\u0440\u043e\u0432\u043d\u0435\u0432\u044b\u0435 \u0441\u0435\u043a\u0446\u0438\u0438 \u0438\u0437 figma_node.json."
     },
@@ -4625,9 +4635,9 @@
       "label": "\u042d\u0442\u0430\u043f 4: \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f React-\u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0430 \u0434\u043b\u044f \u043e\u0434\u043d\u043e\u0439 \u043d\u043e\u0434\u044b.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L789",
+      "source_location": "L795",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_789",
+      "id": "figma_agent_core_conductor_rationale_795",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 4: \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f react-\u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0430 \u0434\u043b\u044f \u043e\u0434\u043d\u043e\u0438 \u043d\u043e\u0434\u044b."
     },
@@ -4635,9 +4645,9 @@
       "label": "\u042d\u0442\u0430\u043f 4 (batch): \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u043e\u0432 \u0434\u043b\u044f \u0432\u0441\u0435\u0445 \u0442\u043e\u043f-\u0443\u0440\u043e\u0432\u043d\u0435\u0432\u044b\u0445 \u0441\u0435\u043a\u0446\u0438\u0439.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L812",
+      "source_location": "L818",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_812",
+      "id": "figma_agent_core_conductor_rationale_818",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 4 (batch): \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u043e\u0432 \u0434\u043b\u044f \u0432\u0441\u0435\u0445 \u0442\u043e\u043f-\u0443\u0440\u043e\u0432\u043d\u0435\u0432\u044b\u0445 \u0441\u0435\u043a\u0446\u0438\u0438."
     },
@@ -4645,19 +4655,29 @@
       "label": "\u042d\u0442\u0430\u043f 5: \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435, \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0430\u0446\u0438\u044f \u0438 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f \u0430\u0441\u0441\u0435\u0442\u043e\u0432.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L855",
+      "source_location": "L861",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_855",
+      "id": "figma_agent_core_conductor_rationale_861",
       "community": 6,
       "norm_label": "\u044d\u0442\u0430\u043f 5: \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435, \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0430\u0446\u0438\u044f \u0438 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f \u0430\u0441\u0441\u0435\u0442\u043e\u0432."
+    },
+    {
+      "label": "\u042d\u0442\u0430\u043f 6: \u0443\u043f\u0430\u043a\u043e\u0432\u043a\u0430 \u0433\u043e\u0442\u043e\u0432\u044b\u0445 \u0430\u0440\u0442\u0435\u0444\u0430\u043a\u0442\u043e\u0432 \u0434\u043b\u044f \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438 (Vercel/Netlify).",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L908",
+      "_origin": "ast",
+      "id": "figma_agent_core_conductor_rationale_908",
+      "community": 6,
+      "norm_label": "\u044d\u0442\u0430\u043f 6: \u0443\u043f\u0430\u043a\u043e\u0432\u043a\u0430 \u0433\u043e\u0442\u043e\u0432\u044b\u0445 \u0430\u0440\u0442\u0435\u0444\u0430\u043a\u0442\u043e\u0432 \u0434\u043b\u044f \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438 (vercel/netlify)."
     },
     {
       "label": "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u0434\u0438\u0440\u0438\u0436\u0451\u0440: \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u044d\u0442\u0430\u043f\u044b \u043f\u043e \u043e\u0447\u0435\u0440\u0435\u0434\u0438.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L893",
+      "source_location": "L938",
       "_origin": "ast",
-      "id": "figma_agent_core_conductor_rationale_893",
+      "id": "figma_agent_core_conductor_rationale_938",
       "community": 6,
       "norm_label": "\u0433\u043b\u0430\u0432\u043d\u044b\u0438 \u0434\u0438\u0440\u0438\u0436\u0435\u0440: \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u044d\u0442\u0430\u043f\u044b \u043f\u043e \u043e\u0447\u0435\u0440\u0435\u0434\u0438."
     },
@@ -5430,6 +5450,316 @@
       "id": "figma_agent_core_data_model_extractor_rationale_149",
       "community": 208,
       "norm_label": "structural fingerprint based on type, normalized name, and child primitives."
+    },
+    {
+      "label": "deployment_packager.py",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager",
+      "community": 7,
+      "norm_label": "deployment_packager.py"
+    },
+    {
+      "label": "_safe_json()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_safe_json",
+      "community": 7,
+      "norm_label": "_safe_json()"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_py_any",
+      "community": 7,
+      "norm_label": "any"
+    },
+    {
+      "label": "_site_name()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_site_name",
+      "community": 7,
+      "norm_label": "_site_name()"
+    },
+    {
+      "label": "_site_slug()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_site_slug",
+      "community": 7,
+      "norm_label": "_site_slug()"
+    },
+    {
+      "label": "generate_package_json()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_package_json",
+      "community": 7,
+      "norm_label": "generate_package_json()"
+    },
+    {
+      "label": "generate_next_config()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_next_config",
+      "community": 7,
+      "norm_label": "generate_next_config()"
+    },
+    {
+      "label": "generate_tsconfig()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L124",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_tsconfig",
+      "community": 7,
+      "norm_label": "generate_tsconfig()"
+    },
+    {
+      "label": "generate_tailwind_config()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L149",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_tailwind_config",
+      "community": 7,
+      "norm_label": "generate_tailwind_config()"
+    },
+    {
+      "label": "generate_postcss_config()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L171",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_postcss_config",
+      "community": 7,
+      "norm_label": "generate_postcss_config()"
+    },
+    {
+      "label": "generate_globals_css()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L185",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_globals_css",
+      "community": 7,
+      "norm_label": "generate_globals_css()"
+    },
+    {
+      "label": "generate_vercel_json()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L203",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_vercel_json",
+      "community": 7,
+      "norm_label": "generate_vercel_json()"
+    },
+    {
+      "label": "generate_netlify_toml()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L220",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_netlify_toml",
+      "community": 7,
+      "norm_label": "generate_netlify_toml()"
+    },
+    {
+      "label": "generate_env_example()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L239",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_env_example",
+      "community": 7,
+      "norm_label": "generate_env_example()"
+    },
+    {
+      "label": "generate_readme()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L258",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_readme",
+      "community": 7,
+      "norm_label": "generate_readme()"
+    },
+    {
+      "label": "generate_deploy_script()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L313",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_generate_deploy_script",
+      "community": 7,
+      "norm_label": "generate_deploy_script()"
+    },
+    {
+      "label": "package_site()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L335",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_package_site",
+      "community": 7,
+      "norm_label": "package_site()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L407",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_main",
+      "community": 7,
+      "norm_label": "main()"
+    },
+    {
+      "label": "Deployment packager for Figma-generated Next.js sites.  Generates ready-to-publi",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_1",
+      "community": 7,
+      "norm_label": "deployment packager for figma-generated next.js sites.  generates ready-to-publi"
+    },
+    {
+      "label": "Generate a package.json for a Next.js site produced by the Figma pipeline.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_46",
+      "community": 7,
+      "norm_label": "generate a package.json for a next.js site produced by the figma pipeline."
+    },
+    {
+      "label": "Generate next.config.ts suitable for static or standalone hosting.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_102",
+      "community": 7,
+      "norm_label": "generate next.config.ts suitable for static or standalone hosting."
+    },
+    {
+      "label": "Generate a tsconfig.json tuned for Next.js App Router.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L125",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_125",
+      "community": 7,
+      "norm_label": "generate a tsconfig.json tuned for next.js app router."
+    },
+    {
+      "label": "Generate a minimal but complete tailwind.config.ts for generated pages.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L150",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_150",
+      "community": 7,
+      "norm_label": "generate a minimal but complete tailwind.config.ts for generated pages."
+    },
+    {
+      "label": "Generate postcss.config.mjs for Tailwind CSS.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L172",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_172",
+      "community": 7,
+      "norm_label": "generate postcss.config.mjs for tailwind css."
+    },
+    {
+      "label": "Generate a minimal src/app/globals.css using Tailwind directives.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L186",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_186",
+      "community": 7,
+      "norm_label": "generate a minimal src/app/globals.css using tailwind directives."
+    },
+    {
+      "label": "Generate vercel.json with framework and build settings.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L209",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_209",
+      "community": 7,
+      "norm_label": "generate vercel.json with framework and build settings."
+    },
+    {
+      "label": "Generate netlify.toml for Next.js static deploy.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L225",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_225",
+      "community": 7,
+      "norm_label": "generate netlify.toml for next.js static deploy."
+    },
+    {
+      "label": "Generate .env.example for the generated site.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L240",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_240",
+      "community": 7,
+      "norm_label": "generate .env.example for the generated site."
+    },
+    {
+      "label": "Generate README.md with one-click deploy buttons and local dev instructions.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L264",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_264",
+      "community": 7,
+      "norm_label": "generate readme.md with one-click deploy buttons and local dev instructions."
+    },
+    {
+      "label": "Generate a POSIX one-click deploy script.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L317",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_317",
+      "community": 7,
+      "norm_label": "generate a posix one-click deploy script."
+    },
+    {
+      "label": "Write all deployment artifacts into output_dir.      Returns a list of written f",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L347",
+      "_origin": "ast",
+      "id": "figma_agent_core_deployment_packager_rationale_347",
+      "community": 7,
+      "norm_label": "write all deployment artifacts into output_dir.      returns a list of written f"
     },
     {
       "label": "figma_http_client.py",
@@ -9074,7 +9404,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticindex_match_token",
-      "community": 70,
+      "community": 352,
       "norm_label": ".match_token()"
     },
     {
@@ -9094,7 +9424,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher",
-      "community": 70,
+      "community": 352,
       "norm_label": "semanticmatcher"
     },
     {
@@ -9104,7 +9434,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_init",
-      "community": 70,
+      "community": 352,
       "norm_label": ".__init__()"
     },
     {
@@ -9124,7 +9454,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_find_token",
-      "community": 70,
+      "community": 352,
       "norm_label": ".find_token()"
     },
     {
@@ -9164,7 +9494,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_rationale_212",
-      "community": 70,
+      "community": 352,
       "norm_label": "high-level matcher used by registry/token builders."
     },
     {
@@ -10194,7 +10524,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_build_server",
-      "community": 1881,
+      "community": 91,
       "norm_label": "_build_server()"
     },
     {
@@ -10204,7 +10534,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_path",
-      "community": 1881,
+      "community": 2583,
       "norm_label": "path"
     },
     {
@@ -10214,7 +10544,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_mcpserver",
-      "community": 1881,
+      "community": 91,
       "norm_label": "mcpserver"
     },
     {
@@ -10224,7 +10554,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_any",
-      "community": 1881,
+      "community": 91,
       "norm_label": "any"
     },
     {
@@ -10234,7 +10564,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_create_registry",
-      "community": 1881,
+      "community": 2583,
       "norm_label": "create_registry()"
     },
     {
@@ -10244,7 +10574,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_mcpregistry",
-      "community": 1881,
+      "community": 2583,
       "norm_label": "mcpregistry"
     },
     {
@@ -10254,7 +10584,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_test_all_servers",
-      "community": 1881,
+      "community": 576,
       "norm_label": "test_all_servers()"
     },
     {
@@ -10264,7 +10594,7 @@
       "source_location": "L296",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_main",
-      "community": 1881,
+      "community": 576,
       "norm_label": "main()"
     },
     {
@@ -10284,7 +10614,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_39",
-      "community": 1881,
+      "community": 91,
       "norm_label": "construct a single mcp server and return it with its tool list."
     },
     {
@@ -10294,7 +10624,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_146",
-      "community": 1881,
+      "community": 2583,
       "norm_label": "create and populate the mcp registry with all 16 servers.      args:         wor"
     },
     {
@@ -10304,7 +10634,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_183",
-      "community": 1881,
+      "community": 576,
       "norm_label": "run a quick self-test on every registered server."
     },
     {
@@ -10644,7 +10974,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver",
-      "community": 89,
+      "community": 45,
       "norm_label": "databasemcpserver"
     },
     {
@@ -10654,7 +10984,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_init",
-      "community": 89,
+      "community": 45,
       "norm_label": ".__init__()"
     },
     {
@@ -10664,7 +10994,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_open_connection",
-      "community": 89,
+      "community": 45,
       "norm_label": ".open_connection()"
     },
     {
@@ -10674,7 +11004,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "mcp_servers_database_server_py_any",
-      "community": 89,
+      "community": 45,
       "norm_label": "any"
     },
     {
@@ -10684,7 +11014,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_analyze_schema",
-      "community": 89,
+      "community": 45,
       "norm_label": ".analyze_schema()"
     },
     {
@@ -10694,7 +11024,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_build_query",
-      "community": 89,
+      "community": 45,
       "norm_label": ".build_query()"
     },
     {
@@ -10704,7 +11034,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_execute_query",
-      "community": 89,
+      "community": 45,
       "norm_label": ".execute_query()"
     },
     {
@@ -10714,7 +11044,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_begin_transaction",
-      "community": 89,
+      "community": 45,
       "norm_label": ".begin_transaction()"
     },
     {
@@ -10724,7 +11054,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_commit_transaction",
-      "community": 89,
+      "community": 45,
       "norm_label": ".commit_transaction()"
     },
     {
@@ -10734,7 +11064,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_rollback_transaction",
-      "community": 89,
+      "community": 45,
       "norm_label": ".rollback_transaction()"
     },
     {
@@ -10744,7 +11074,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_map_result",
-      "community": 89,
+      "community": 45,
       "norm_label": ".map_result()"
     },
     {
@@ -10754,7 +11084,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_cache_query",
-      "community": 89,
+      "community": 45,
       "norm_label": ".cache_query()"
     },
     {
@@ -10764,7 +11094,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_analyze_error",
-      "community": 89,
+      "community": 45,
       "norm_label": ".analyze_error()"
     },
     {
@@ -10774,7 +11104,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_suggest_migration",
-      "community": 89,
+      "community": 45,
       "norm_label": ".suggest_migration()"
     },
     {
@@ -10784,7 +11114,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_close_connection",
-      "community": 89,
+      "community": 45,
       "norm_label": ".close_connection()"
     },
     {
@@ -10794,7 +11124,7 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_s",
-      "community": 89,
+      "community": 45,
       "norm_label": "._s()"
     },
     {
@@ -10804,7 +11134,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "mcp_servers_database_server_rationale_14",
-      "community": 89,
+      "community": 45,
       "norm_label": "mcp server for tools_database \u2014 database query pipeline (query-lifecycle)."
     },
     {
@@ -11044,7 +11374,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_servers_gateway",
-      "community": 7,
+      "community": 2583,
       "norm_label": "gateway.py"
     },
     {
@@ -11054,7 +11384,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway",
-      "community": 7,
+      "community": 2583,
       "norm_label": "mcpgateway"
     },
     {
@@ -11064,7 +11394,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_init",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".__init__()"
     },
     {
@@ -11074,7 +11404,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "mcp_servers_gateway_py_mcpregistry",
-      "community": 7,
+      "community": 2583,
       "norm_label": "mcpregistry"
     },
     {
@@ -11084,7 +11414,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_is_available",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".is_available()"
     },
     {
@@ -11094,7 +11424,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_categories",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".categories()"
     },
     {
@@ -11104,7 +11434,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_category_metadata",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".category_metadata()"
     },
     {
@@ -11114,7 +11444,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "mcp_servers_gateway_py_any",
-      "community": 7,
+      "community": 2583,
       "norm_label": "any"
     },
     {
@@ -11124,7 +11454,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_tools_for_category",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".tools_for_category()"
     },
     {
@@ -11134,7 +11464,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_execute",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".execute()"
     },
     {
@@ -11144,7 +11474,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_ping",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".ping()"
     },
     {
@@ -11154,7 +11484,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_9",
-      "community": 7,
+      "community": 2583,
       "norm_label": "lazy gateway in front of mcpregistry.      the gateway exposes category-level me"
     },
     {
@@ -11164,7 +11494,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_25",
-      "community": 7,
+      "community": 2583,
       "norm_label": "return registered category names without loading any server."
     },
     {
@@ -11174,7 +11504,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_31",
-      "community": 7,
+      "community": 2583,
       "norm_label": "return lightweight metadata for a category without materializing it."
     },
     {
@@ -11184,7 +11514,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_37",
-      "community": 7,
+      "community": 2583,
       "norm_label": "return full tool descriptors for a category; loads the server if needed."
     },
     {
@@ -11194,7 +11524,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_46",
-      "community": 7,
+      "community": 2583,
       "norm_label": "execute a single mcp tool, loading its server on demand."
     },
     {
@@ -11204,7 +11534,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_52",
-      "community": 7,
+      "community": 2583,
       "norm_label": "health-check one or all categories; loads servers as needed."
     },
     {
@@ -11374,7 +11704,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver",
-      "community": 1949,
+      "community": 49,
       "norm_label": "manangrmcpserver"
     },
     {
@@ -11384,7 +11714,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_init",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".__init__()"
     },
     {
@@ -11394,7 +11724,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_analyze_structure",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".analyze_structure()"
     },
     {
@@ -11404,7 +11734,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_py_any",
-      "community": 1949,
+      "community": 49,
       "norm_label": "any"
     },
     {
@@ -11414,7 +11744,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_map_dependencies",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".map_dependencies()"
     },
     {
@@ -11424,7 +11754,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_analyze_impact",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".analyze_impact()"
     },
     {
@@ -11434,7 +11764,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_plan_tasks",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".plan_tasks()"
     },
     {
@@ -11444,7 +11774,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_suggest_refactor",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".suggest_refactor()"
     },
     {
@@ -11454,7 +11784,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_manage_config",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".manage_config()"
     },
     {
@@ -11464,7 +11794,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_generate_docs",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".generate_docs()"
     },
     {
@@ -11474,7 +11804,7 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_organize_files",
-      "community": 1949,
+      "community": 49,
       "norm_label": ".organize_files()"
     },
     {
@@ -11484,7 +11814,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_manangrmcpserver_s",
-      "community": 1949,
+      "community": 49,
       "norm_label": "._s()"
     },
     {
@@ -11494,7 +11824,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "mcp_servers_manangr_server_rationale_14",
-      "community": 1949,
+      "community": 49,
       "norm_label": "mcp server for tools_manangr \u2014 project management pipeline (analysis-planning)."
     },
     {
@@ -12184,7 +12514,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "mcp_servers_registry_serverinfo",
-      "community": 80,
+      "community": 91,
       "norm_label": "serverinfo"
     },
     {
@@ -12214,7 +12544,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry",
-      "community": 7,
+      "community": 2583,
       "norm_label": "mcpregistry"
     },
     {
@@ -12224,7 +12554,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_init",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".__init__()"
     },
     {
@@ -12234,7 +12564,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_register",
-      "community": 80,
+      "community": 91,
       "norm_label": ".register()"
     },
     {
@@ -12354,7 +12684,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_server_count",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".server_count()"
     },
     {
@@ -12364,7 +12694,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_tool_count",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".tool_count()"
     },
     {
@@ -12374,7 +12704,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_categories",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".categories()"
     },
     {
@@ -12384,7 +12714,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_28",
-      "community": 7,
+      "community": 2583,
       "norm_label": "registry and discovery for all mcp servers across tools_* categories.      suppo"
     },
     {
@@ -12394,7 +12724,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_58",
-      "community": 80,
+      "community": 91,
       "norm_label": "eager registration: server is already constructed."
     },
     {
@@ -12444,7 +12774,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver",
-      "community": 90,
+      "community": 63,
       "norm_label": "replacemcpserver"
     },
     {
@@ -12454,7 +12784,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_init",
-      "community": 90,
+      "community": 63,
       "norm_label": ".__init__()"
     },
     {
@@ -12464,7 +12794,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_resolve",
-      "community": 90,
+      "community": 63,
       "norm_label": "._resolve()"
     },
     {
@@ -12474,7 +12804,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_py_path",
-      "community": 90,
+      "community": 63,
       "norm_label": "path"
     },
     {
@@ -12484,7 +12814,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_create_backup",
-      "community": 90,
+      "community": 63,
       "norm_label": ".create_backup()"
     },
     {
@@ -12494,7 +12824,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_py_any",
-      "community": 90,
+      "community": 63,
       "norm_label": "any"
     },
     {
@@ -12504,7 +12834,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_match_pattern",
-      "community": 90,
+      "community": 63,
       "norm_label": ".match_pattern()"
     },
     {
@@ -12514,7 +12844,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_apply_edit",
-      "community": 90,
+      "community": 63,
       "norm_label": ".apply_edit()"
     },
     {
@@ -12524,7 +12854,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_generate_diff",
-      "community": 90,
+      "community": 63,
       "norm_label": ".generate_diff()"
     },
     {
@@ -12534,7 +12864,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_rank_edit_candidates",
-      "community": 90,
+      "community": 63,
       "norm_label": ".rank_edit_candidates()"
     },
     {
@@ -12544,7 +12874,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_validate_edit",
-      "community": 90,
+      "community": 63,
       "norm_label": ".validate_edit()"
     },
     {
@@ -12554,7 +12884,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_write_file",
-      "community": 90,
+      "community": 63,
       "norm_label": ".write_file()"
     },
     {
@@ -12564,7 +12894,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_verify_write",
-      "community": 90,
+      "community": 63,
       "norm_label": ".verify_write()"
     },
     {
@@ -12574,7 +12904,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_rollback",
-      "community": 90,
+      "community": 63,
       "norm_label": ".rollback()"
     },
     {
@@ -12584,7 +12914,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_safe_delete",
-      "community": 90,
+      "community": 63,
       "norm_label": ".safe_delete()"
     },
     {
@@ -12594,7 +12924,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_s",
-      "community": 90,
+      "community": 63,
       "norm_label": "._s()"
     },
     {
@@ -12604,7 +12934,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_rationale_16",
-      "community": 90,
+      "community": 63,
       "norm_label": "mcp server for tools_replace \u2014 file editing pipeline (safety-gated)."
     },
     {
@@ -12624,7 +12954,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver",
-      "community": 17,
+      "community": 51,
       "norm_label": "runcommcpserver"
     },
     {
@@ -12634,7 +12964,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_init",
-      "community": 17,
+      "community": 51,
       "norm_label": ".__init__()"
     },
     {
@@ -12644,7 +12974,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_build_command",
-      "community": 17,
+      "community": 51,
       "norm_label": ".build_command()"
     },
     {
@@ -12654,7 +12984,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_py_any",
-      "community": 17,
+      "community": 51,
       "norm_label": "any"
     },
     {
@@ -12664,7 +12994,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_optimize_command",
-      "community": 17,
+      "community": 51,
       "norm_label": ".optimize_command()"
     },
     {
@@ -12674,7 +13004,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_setup_environment",
-      "community": 17,
+      "community": 51,
       "norm_label": ".setup_environment()"
     },
     {
@@ -12684,7 +13014,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_execute_command",
-      "community": 17,
+      "community": 51,
       "norm_label": ".execute_command()"
     },
     {
@@ -12694,7 +13024,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_sandbox_check",
-      "community": 17,
+      "community": 51,
       "norm_label": ".sandbox_check()"
     },
     {
@@ -12704,7 +13034,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_capture_output",
-      "community": 17,
+      "community": 51,
       "norm_label": ".capture_output()"
     },
     {
@@ -12714,7 +13044,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_handle_timeout",
-      "community": 17,
+      "community": 51,
       "norm_label": ".handle_timeout()"
     },
     {
@@ -12724,7 +13054,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_analyze_error",
-      "community": 17,
+      "community": 51,
       "norm_label": ".analyze_error()"
     },
     {
@@ -12734,7 +13064,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_get_history",
-      "community": 17,
+      "community": 51,
       "norm_label": ".get_history()"
     },
     {
@@ -12744,7 +13074,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_runcommcpserver_s",
-      "community": 17,
+      "community": 51,
       "norm_label": "._s()"
     },
     {
@@ -12754,7 +13084,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_runcom_server_rationale_16",
-      "community": 17,
+      "community": 51,
       "norm_label": "mcp server for tools_runcom \u2014 command execution pipeline (sandboxed)."
     },
     {
@@ -12774,7 +13104,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver",
-      "community": 74,
+      "community": 47,
       "norm_label": "runtestmcpserver"
     },
     {
@@ -12784,7 +13114,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_init",
-      "community": 74,
+      "community": 47,
       "norm_label": ".__init__()"
     },
     {
@@ -12794,7 +13124,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_discover_tests",
-      "community": 74,
+      "community": 47,
       "norm_label": ".discover_tests()"
     },
     {
@@ -12804,7 +13134,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_py_any",
-      "community": 74,
+      "community": 47,
       "norm_label": "any"
     },
     {
@@ -12814,7 +13144,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_plan_execution",
-      "community": 74,
+      "community": 47,
       "norm_label": ".plan_execution()"
     },
     {
@@ -12824,7 +13154,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_optimize_suite",
-      "community": 74,
+      "community": 47,
       "norm_label": ".optimize_suite()"
     },
     {
@@ -12834,7 +13164,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_execute_test",
-      "community": 74,
+      "community": 47,
       "norm_label": ".execute_test()"
     },
     {
@@ -12844,7 +13174,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_collect_coverage",
-      "community": 74,
+      "community": 47,
       "norm_label": ".collect_coverage()"
     },
     {
@@ -12854,7 +13184,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_analyze_failure",
-      "community": 74,
+      "community": 47,
       "norm_label": ".analyze_failure()"
     },
     {
@@ -12864,7 +13194,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_detect_flaky",
-      "community": 74,
+      "community": 47,
       "norm_label": ".detect_flaky()"
     },
     {
@@ -12874,7 +13204,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_generate_report",
-      "community": 74,
+      "community": 47,
       "norm_label": ".generate_report()"
     },
     {
@@ -12884,7 +13214,7 @@
       "source_location": "L194",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_runtestmcpserver_s",
-      "community": 74,
+      "community": 47,
       "norm_label": "._s()"
     },
     {
@@ -12894,7 +13224,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "mcp_servers_runtest_server_rationale_14",
-      "community": 74,
+      "community": 47,
       "norm_label": "mcp server for tools_runtest \u2014 test execution pipeline (framework-dispatch)."
     },
     {
@@ -12914,7 +13244,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver",
-      "community": 1461,
+      "community": 54,
       "norm_label": "searchmcpserver"
     },
     {
@@ -12924,7 +13254,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_init",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".__init__()"
     },
     {
@@ -12934,7 +13264,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_resolve",
-      "community": 1461,
+      "community": 54,
       "norm_label": "._resolve()"
     },
     {
@@ -12944,7 +13274,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_search_server_py_path",
-      "community": 1461,
+      "community": 54,
       "norm_label": "path"
     },
     {
@@ -12954,7 +13284,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_regex_search",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".regex_search()"
     },
     {
@@ -12964,7 +13294,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "mcp_servers_search_server_py_any",
-      "community": 1461,
+      "community": 54,
       "norm_label": "any"
     },
     {
@@ -12974,7 +13304,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_semantic_search",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".semantic_search()"
     },
     {
@@ -12984,7 +13314,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_define_scope",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".define_scope()"
     },
     {
@@ -12994,7 +13324,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_rank_relevance",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".rank_relevance()"
     },
     {
@@ -13004,7 +13334,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_deduplicate",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".deduplicate()"
     },
     {
@@ -13014,7 +13344,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_generate_snippet",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".generate_snippet()"
     },
     {
@@ -13024,7 +13354,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_find_symbol",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".find_symbol()"
     },
     {
@@ -13034,7 +13364,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_diff_search",
-      "community": 1461,
+      "community": 54,
       "norm_label": ".diff_search()"
     },
     {
@@ -13044,7 +13374,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "mcp_servers_search_server_searchmcpserver_s",
-      "community": 1461,
+      "community": 54,
       "norm_label": "._s()"
     },
     {
@@ -13054,7 +13384,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_search_server_rationale_13",
-      "community": 1461,
+      "community": 54,
       "norm_label": "mcp server for tools_search \u2014 code search pipeline (diamond)."
     },
     {
@@ -14974,7 +15304,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_cli",
-      "community": 5,
+      "community": 27,
       "norm_label": "cli.py"
     },
     {
@@ -14984,7 +15314,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "runtime_cli_state_path",
-      "community": 5,
+      "community": 27,
       "norm_label": "_state_path()"
     },
     {
@@ -14994,7 +15324,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "runtime_cli_fmt_duration",
-      "community": 5,
+      "community": 27,
       "norm_label": "fmt_duration()"
     },
     {
@@ -15004,7 +15334,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "runtime_cli_cmd_run",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_run()"
     },
     {
@@ -15014,7 +15344,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "runtime_cli_py_namespace",
-      "community": 5,
+      "community": 27,
       "norm_label": "namespace"
     },
     {
@@ -15024,7 +15354,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "runtime_cli_cmd_status",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_status()"
     },
     {
@@ -15034,7 +15364,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "runtime_cli_cmd_approve",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_approve()"
     },
     {
@@ -15044,7 +15374,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "runtime_cli_cmd_mcp_connect",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_mcp_connect()"
     },
     {
@@ -15054,7 +15384,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "runtime_cli_cmd_validate",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_validate()"
     },
     {
@@ -15064,7 +15394,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "runtime_cli_cmd_demo",
-      "community": 5,
+      "community": 27,
       "norm_label": "cmd_demo()"
     },
     {
@@ -15074,7 +15404,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "runtime_cli_build_parser",
-      "community": 5,
+      "community": 27,
       "norm_label": "build_parser()"
     },
     {
@@ -15084,7 +15414,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "runtime_cli_py_argumentparser",
-      "community": 5,
+      "community": 27,
       "norm_label": "argumentparser"
     },
     {
@@ -15094,7 +15424,7 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "runtime_cli_main",
-      "community": 5,
+      "community": 27,
       "norm_label": "main()"
     },
     {
@@ -15104,7 +15434,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "runtime_cli_rationale_44",
-      "community": 5,
+      "community": 27,
       "norm_label": "execute a task through the agent pipeline."
     },
     {
@@ -15114,7 +15444,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "runtime_cli_rationale_75",
-      "community": 5,
+      "community": 27,
       "norm_label": "show active sessions."
     },
     {
@@ -15124,7 +15454,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "runtime_cli_rationale_117",
-      "community": 5,
+      "community": 27,
       "norm_label": "approve a pending human-approval gate."
     },
     {
@@ -15134,7 +15464,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "runtime_cli_rationale_135",
-      "community": 5,
+      "community": 27,
       "norm_label": "connect to configured mcp servers and list available tools."
     },
     {
@@ -15144,7 +15474,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "runtime_cli_rationale_165",
-      "community": 5,
+      "community": 27,
       "norm_label": "run runtime component validators."
     },
     {
@@ -15154,7 +15484,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contracts_init",
-      "community": 40,
+      "community": 1596,
       "norm_label": "__init__.py"
     },
     {
@@ -15164,7 +15494,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contracts_agent_spec",
-      "community": 40,
+      "community": 1596,
       "norm_label": "agent_spec.py"
     },
     {
@@ -15174,7 +15504,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "contracts_agent_spec_memorytype",
-      "community": 40,
+      "community": 1596,
       "norm_label": "memorytype"
     },
     {
@@ -15184,7 +15514,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "str",
-      "community": 40,
+      "community": 1596,
       "norm_label": "str"
     },
     {
@@ -15194,7 +15524,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "enum",
-      "community": 40,
+      "community": 1596,
       "norm_label": "enum"
     },
     {
@@ -15204,7 +15534,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "contracts_agent_spec_statescope",
-      "community": 40,
+      "community": 1596,
       "norm_label": "statescope"
     },
     {
@@ -15214,7 +15544,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "contracts_agent_spec_executionmode",
-      "community": 40,
+      "community": 1596,
       "norm_label": "executionmode"
     },
     {
@@ -15224,7 +15554,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "contracts_agent_spec_parameter",
-      "community": 40,
+      "community": 1596,
       "norm_label": "parameter"
     },
     {
@@ -15234,7 +15564,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "contracts_agent_spec_contractspec",
-      "community": 40,
+      "community": 1596,
       "norm_label": "contractspec"
     },
     {
@@ -15244,7 +15574,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "contracts_agent_spec_decisionstep",
-      "community": 40,
+      "community": 1596,
       "norm_label": "decisionstep"
     },
     {
@@ -15254,7 +15584,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "contracts_agent_spec_failuremode",
-      "community": 40,
+      "community": 1596,
       "norm_label": "failuremode"
     },
     {
@@ -15264,7 +15594,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec",
-      "community": 40,
+      "community": 1596,
       "norm_label": "agentspec"
     },
     {
@@ -15274,7 +15604,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec_to_system_prompt",
-      "community": 40,
+      "community": 1596,
       "norm_label": ".to_system_prompt()"
     },
     {
@@ -15284,7 +15614,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec_to_input_message",
-      "community": 40,
+      "community": 1596,
       "norm_label": ".to_input_message()"
     },
     {
@@ -15294,7 +15624,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "runtime_contracts_agent_spec_py_any",
-      "community": 40,
+      "community": 1596,
       "norm_label": "any"
     },
     {
@@ -15304,7 +15634,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contracts_message",
-      "community": 5,
+      "community": 1596,
       "norm_label": "message.py"
     },
     {
@@ -15314,7 +15644,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "contracts_message_messagetype",
-      "community": 5,
+      "community": 1596,
       "norm_label": "messagetype"
     },
     {
@@ -15324,7 +15654,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "contracts_message_deliveryguarantee",
-      "community": 5,
+      "community": 1596,
       "norm_label": "deliveryguarantee"
     },
     {
@@ -15334,7 +15664,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "contracts_message_messagestatus",
-      "community": 5,
+      "community": 1596,
       "norm_label": "messagestatus"
     },
     {
@@ -15344,7 +15674,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "contracts_message_topic",
-      "community": 40,
+      "community": 1596,
       "norm_label": "topic"
     },
     {
@@ -15374,7 +15704,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "contracts_message_deliveryreceipt",
-      "community": 5,
+      "community": 1596,
       "norm_label": "deliveryreceipt"
     },
     {
@@ -15384,7 +15714,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_init",
-      "community": 40,
+      "community": 1596,
       "norm_label": "__init__.py"
     },
     {
@@ -15394,7 +15724,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_agent_loader",
-      "community": 40,
+      "community": 1596,
       "norm_label": "agent_loader.py"
     },
     {
@@ -15614,7 +15944,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreakerconfig",
-      "community": 93,
+      "community": 80,
       "norm_label": "circuitbreakerconfig"
     },
     {
@@ -15624,7 +15954,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker",
-      "community": 93,
+      "community": 80,
       "norm_label": "circuitbreaker"
     },
     {
@@ -15644,7 +15974,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_can_execute",
-      "community": 93,
+      "community": 80,
       "norm_label": ".can_execute()"
     },
     {
@@ -15654,7 +15984,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_success",
-      "community": 93,
+      "community": 80,
       "norm_label": ".record_success()"
     },
     {
@@ -15664,7 +15994,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_failure",
-      "community": 93,
+      "community": 80,
       "norm_label": ".record_failure()"
     },
     {
@@ -15674,7 +16004,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_call",
-      "community": 93,
+      "community": 80,
       "norm_label": ".call()"
     },
     {
@@ -15684,7 +16014,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_engine_circuit_breaker_py_any",
-      "community": 93,
+      "community": 80,
       "norm_label": "any"
     },
     {
@@ -15984,7 +16314,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_llm_engine",
-      "community": 40,
+      "community": 1596,
       "norm_label": "llm_engine.py"
     },
     {
@@ -16004,7 +16334,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "engine_llm_engine_llmresponse",
-      "community": 7,
+      "community": 2583,
       "norm_label": "llmresponse"
     },
     {
@@ -16024,7 +16354,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine",
-      "community": 40,
+      "community": 434,
       "norm_label": "mockllmengine"
     },
     {
@@ -16064,7 +16394,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine_raw_chat_completion",
-      "community": 40,
+      "community": 434,
       "norm_label": ".raw_chat_completion()"
     },
     {
@@ -16124,7 +16454,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_execute",
-      "community": 2583,
+      "community": 434,
       "norm_label": ".execute()"
     },
     {
@@ -16194,7 +16524,7 @@
       "source_location": "L355",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluatorresponse",
-      "community": 434,
+      "community": 80,
       "norm_label": "evaluatorresponse"
     },
     {
@@ -16204,7 +16534,7 @@
       "source_location": "L365",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluationengine",
-      "community": 7,
+      "community": 2583,
       "norm_label": "evaluationengine"
     },
     {
@@ -16234,7 +16564,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_53",
-      "community": 40,
+      "community": 434,
       "norm_label": "deterministic mock llm engine for integration testing without api keys.      ret"
     },
     {
@@ -16284,7 +16614,7 @@
       "source_location": "L356",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_356",
-      "community": 434,
+      "community": 80,
       "norm_label": "strict pass/fail verdict produced by the fast /goal evaluator."
     },
     {
@@ -16294,7 +16624,7 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_366",
-      "community": 7,
+      "community": 2583,
       "norm_label": "lightweight evaluator using a smaller/cheaper model for strict json verdicts."
     },
     {
@@ -16914,7 +17244,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_message_bus",
-      "community": 5,
+      "community": 1596,
       "norm_label": "message_bus.py"
     },
     {
@@ -16924,7 +17254,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "engine_message_bus_subscriber",
-      "community": 20,
+      "community": 5,
       "norm_label": "subscriber"
     },
     {
@@ -16934,7 +17264,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "engine_message_bus_deadletterentry",
-      "community": 20,
+      "community": 5,
       "norm_label": "deadletterentry"
     },
     {
@@ -16944,7 +17274,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus",
-      "community": 20,
+      "community": 5,
       "norm_label": "messagebus"
     },
     {
@@ -16954,7 +17284,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_init",
-      "community": 20,
+      "community": 5,
       "norm_label": ".__init__()"
     },
     {
@@ -16964,7 +17294,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_start",
-      "community": 20,
+      "community": 5,
       "norm_label": ".start()"
     },
     {
@@ -16974,7 +17304,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_stop",
-      "community": 20,
+      "community": 5,
       "norm_label": ".stop()"
     },
     {
@@ -16984,7 +17314,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_subscribe",
-      "community": 20,
+      "community": 5,
       "norm_label": ".subscribe()"
     },
     {
@@ -16994,7 +17324,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "runtime_engine_message_bus_py_message",
-      "community": 20,
+      "community": 5,
       "norm_label": "message"
     },
     {
@@ -17004,7 +17334,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_unsubscribe",
-      "community": 20,
+      "community": 5,
       "norm_label": ".unsubscribe()"
     },
     {
@@ -17014,7 +17344,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_publish",
-      "community": 20,
+      "community": 5,
       "norm_label": ".publish()"
     },
     {
@@ -17024,7 +17354,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "deliveryreceipt",
-      "community": 20,
+      "community": 5,
       "norm_label": "deliveryreceipt"
     },
     {
@@ -17034,7 +17364,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_deliver_to",
-      "community": 20,
+      "community": 5,
       "norm_label": "._deliver_to()"
     },
     {
@@ -17044,7 +17374,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_handle_delivery_failure",
-      "community": 20,
+      "community": 5,
       "norm_label": "._handle_delivery_failure()"
     },
     {
@@ -17054,7 +17384,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "engine_message_bus_messagebus_merge_receipts",
-      "community": 20,
+      "community": 5,
       "norm_label": "._merge_receipts()"
     },
     {
@@ -17064,7 +17394,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_pipeline_runner",
-      "community": 40,
+      "community": 1596,
       "norm_label": "pipeline_runner.py"
     },
     {
@@ -17074,7 +17404,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_pipeline_runner_load_figma_config_module",
-      "community": 40,
+      "community": 1596,
       "norm_label": "_load_figma_config_module()"
     },
     {
@@ -17084,7 +17414,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "engine_pipeline_runner_terminationstatus",
-      "community": 2583,
+      "community": 0,
       "norm_label": "terminationstatus"
     },
     {
@@ -17094,7 +17424,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinestatus",
-      "community": 40,
+      "community": 2583,
       "norm_label": "pipelinestatus"
     },
     {
@@ -17214,7 +17544,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelineresult",
-      "community": 7,
+      "community": 2583,
       "norm_label": "pipelineresult"
     },
     {
@@ -17234,7 +17564,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_init",
-      "community": 7,
+      "community": 2583,
       "norm_label": ".__init__()"
     },
     {
@@ -17244,7 +17574,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "agentloader",
-      "community": 7,
+      "community": 2583,
       "norm_label": "agentloader"
     },
     {
@@ -17254,7 +17584,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "llmengine",
-      "community": 7,
+      "community": 2583,
       "norm_label": "llmengine"
     },
     {
@@ -17264,7 +17594,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "messagebus",
-      "community": 7,
+      "community": 2583,
       "norm_label": "messagebus"
     },
     {
@@ -17274,7 +17604,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "statemanager",
-      "community": 7,
+      "community": 2583,
       "norm_label": "statemanager"
     },
     {
@@ -17474,7 +17804,7 @@
       "source_location": "L962",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_agentspec",
-      "community": 7,
+      "community": 2583,
       "norm_label": "agentspec"
     },
     {
@@ -17594,7 +17924,7 @@
       "source_location": "L1159",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_llmresponse",
-      "community": 7,
+      "community": 2583,
       "norm_label": "llmresponse"
     },
     {
@@ -17614,7 +17944,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "engine_pipeline_runner_rationale_36",
-      "community": 40,
+      "community": 1596,
       "norm_label": "load figma-agent-core/config.py without requiring a valid python package name."
     },
     {
@@ -17944,7 +18274,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_state_manager",
-      "community": 40,
+      "community": 1596,
       "norm_label": "state_manager.py"
     },
     {
@@ -17954,7 +18284,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "engine_state_manager_operationstatus",
-      "community": 5,
+      "community": 2583,
       "norm_label": "operationstatus"
     },
     {
@@ -17964,7 +18294,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "engine_state_manager_consistencylevel",
-      "community": 40,
+      "community": 1596,
       "norm_label": "consistencylevel"
     },
     {
@@ -17974,7 +18304,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "engine_state_manager_staterecord",
-      "community": 40,
+      "community": 1596,
       "norm_label": "staterecord"
     },
     {
@@ -17984,7 +18314,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "engine_state_manager_stateresult",
-      "community": 5,
+      "community": 48,
       "norm_label": "stateresult"
     },
     {
@@ -17994,7 +18324,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager",
-      "community": 5,
+      "community": 48,
       "norm_label": "statemanager"
     },
     {
@@ -18004,7 +18334,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_init",
-      "community": 5,
+      "community": 48,
       "norm_label": ".__init__()"
     },
     {
@@ -18014,7 +18344,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_init_db",
-      "community": 5,
+      "community": 48,
       "norm_label": "._init_db()"
     },
     {
@@ -18024,7 +18354,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_create",
-      "community": 5,
+      "community": 48,
       "norm_label": ".create()"
     },
     {
@@ -18034,7 +18364,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "runtime_engine_state_manager_py_any",
-      "community": 5,
+      "community": 48,
       "norm_label": "any"
     },
     {
@@ -18044,7 +18374,7 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_read",
-      "community": 5,
+      "community": 48,
       "norm_label": ".read()"
     },
     {
@@ -18054,7 +18384,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_update",
-      "community": 5,
+      "community": 48,
       "norm_label": ".update()"
     },
     {
@@ -18064,7 +18394,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_delete",
-      "community": 5,
+      "community": 48,
       "norm_label": ".delete()"
     },
     {
@@ -18074,7 +18404,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_checkpoint",
-      "community": 5,
+      "community": 48,
       "norm_label": ".checkpoint()"
     },
     {
@@ -18084,7 +18414,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_restore",
-      "community": 5,
+      "community": 48,
       "norm_label": ".restore()"
     },
     {
@@ -18094,7 +18424,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_list_keys",
-      "community": 5,
+      "community": 48,
       "norm_label": ".list_keys()"
     },
     {
@@ -18104,7 +18434,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "engine_state_manager_statemanager_close",
-      "community": 5,
+      "community": 48,
       "norm_label": ".close()"
     },
     {
@@ -19264,7 +19594,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "observability_init",
-      "community": 43,
+      "community": 82,
       "norm_label": "__init__.py"
     },
     {
@@ -19344,7 +19674,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "observability_lifecycle",
-      "community": 43,
+      "community": 82,
       "norm_label": "lifecycle.py"
     },
     {
@@ -19724,7 +20054,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "observability_metrics_counter",
-      "community": 333,
+      "community": 92,
       "norm_label": "counter"
     },
     {
@@ -19734,7 +20064,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "observability_metrics_counter_init",
-      "community": 333,
+      "community": 92,
       "norm_label": ".__init__()"
     },
     {
@@ -19744,7 +20074,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "observability_metrics_counter_inc",
-      "community": 333,
+      "community": 92,
       "norm_label": ".inc()"
     },
     {
@@ -19754,7 +20084,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "observability_metrics_counter_value",
-      "community": 333,
+      "community": 92,
       "norm_label": ".value()"
     },
     {
@@ -19824,7 +20154,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "observability_metrics_histogram",
-      "community": 325,
+      "community": 92,
       "norm_label": "histogram"
     },
     {
@@ -19834,7 +20164,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "observability_metrics_histogram_init",
-      "community": 325,
+      "community": 92,
       "norm_label": ".__init__()"
     },
     {
@@ -19844,7 +20174,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "observability_metrics_histogram_observe",
-      "community": 325,
+      "community": 92,
       "norm_label": ".observe()"
     },
     {
@@ -19854,7 +20184,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "observability_metrics_histogram_sum",
-      "community": 325,
+      "community": 92,
       "norm_label": ".sum()"
     },
     {
@@ -19864,7 +20194,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "observability_metrics_histogram_count",
-      "community": 325,
+      "community": 92,
       "norm_label": ".count()"
     },
     {
@@ -19904,7 +20234,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "observability_metrics_metricscollector_counter",
-      "community": 333,
+      "community": 92,
       "norm_label": ".counter()"
     },
     {
@@ -19924,7 +20254,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "observability_metrics_metricscollector_histogram",
-      "community": 325,
+      "community": 92,
       "norm_label": ".histogram()"
     },
     {
@@ -20204,7 +20534,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "observability_test_observability_testcounter",
-      "community": 333,
+      "community": 92,
       "norm_label": "testcounter"
     },
     {
@@ -20214,7 +20544,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "observability_test_observability_testcounter_test_inc",
-      "community": 333,
+      "community": 92,
       "norm_label": ".test_inc()"
     },
     {
@@ -20244,7 +20574,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "observability_test_observability_testhistogram",
-      "community": 325,
+      "community": 92,
       "norm_label": "testhistogram"
     },
     {
@@ -20254,7 +20584,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "observability_test_observability_testhistogram_test_observe_buckets",
-      "community": 325,
+      "community": 92,
       "norm_label": ".test_observe_buckets()"
     },
     {
@@ -20964,7 +21294,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_network_guard",
-      "community": 40,
+      "community": 1596,
       "norm_label": "network_guard.py"
     },
     {
@@ -20974,7 +21304,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "safety_network_guard_networkverdict",
-      "community": 40,
+      "community": 1596,
       "norm_label": "networkverdict"
     },
     {
@@ -21134,7 +21464,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "safety_safety_chain_safetylevel",
-      "community": 40,
+      "community": 1596,
       "norm_label": "safetylevel"
     },
     {
@@ -21144,7 +21474,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "safety_safety_chain_safetyverdict",
-      "community": 40,
+      "community": 1596,
       "norm_label": "safetyverdict"
     },
     {
@@ -21584,7 +21914,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker",
-      "community": 93,
+      "community": 80,
       "norm_label": "testcircuitbreaker"
     },
     {
@@ -21594,7 +21924,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_starts_closed",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_starts_closed()"
     },
     {
@@ -21604,7 +21934,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_opens_after_failures",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_opens_after_failures()"
     },
     {
@@ -21614,7 +21944,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_half_open_after_timeout",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_half_open_after_timeout()"
     },
     {
@@ -21624,7 +21954,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_success_resets",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_success_resets()"
     },
     {
@@ -21634,7 +21964,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_call_wrapper",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_call_wrapper()"
     },
     {
@@ -21644,7 +21974,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_async_wrapper",
-      "community": 93,
+      "community": 80,
       "norm_label": ".test_async_wrapper()"
     },
     {
@@ -21734,7 +22064,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "runtime_test_resilience_testmcphealthcheck_test_registry_is_healthy",
-      "community": 80,
+      "community": 91,
       "norm_label": ".test_registry_is_healthy()"
     },
     {
@@ -22794,7 +23124,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult",
-      "community": 44,
+      "community": 33,
       "norm_label": "workerresult"
     },
     {
@@ -22804,7 +23134,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult_is_success",
-      "community": 44,
+      "community": 33,
       "norm_label": ".is_success()"
     },
     {
@@ -22814,7 +23144,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult_to_dict",
-      "community": 44,
+      "community": 33,
       "norm_label": ".to_dict()"
     },
     {
@@ -22824,7 +23154,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "runtime_workers_worker_pool_py_any",
-      "community": 44,
+      "community": 33,
       "norm_label": "any"
     },
     {
@@ -22834,7 +23164,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool",
-      "community": 44,
+      "community": 33,
       "norm_label": "workerpool"
     },
     {
@@ -22874,7 +23204,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_start",
-      "community": 44,
+      "community": 33,
       "norm_label": ".start()"
     },
     {
@@ -22884,7 +23214,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stop",
-      "community": 44,
+      "community": 33,
       "norm_label": ".stop()"
     },
     {
@@ -22894,7 +23224,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatch",
-      "community": 44,
+      "community": 33,
       "norm_label": ".dispatch()"
     },
     {
@@ -22904,7 +23234,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatcher_loop",
-      "community": 44,
+      "community": 33,
       "norm_label": "._dispatcher_loop()"
     },
     {
@@ -22914,7 +23244,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_execute_in_worker",
-      "community": 44,
+      "community": 33,
       "norm_label": "._execute_in_worker()"
     },
     {
@@ -22924,7 +23254,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_spawn_worker",
-      "community": 44,
+      "community": 33,
       "norm_label": "._spawn_worker()"
     },
     {
@@ -22934,7 +23264,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_find_free_worker",
-      "community": 44,
+      "community": 33,
       "norm_label": "._find_free_worker()"
     },
     {
@@ -22944,7 +23274,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_store_result",
-      "community": 44,
+      "community": 33,
       "norm_label": "._store_result()"
     },
     {
@@ -22954,7 +23284,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_estimate_saved_tokens",
-      "community": 44,
+      "community": 33,
       "norm_label": "._estimate_saved_tokens()"
     },
     {
@@ -22964,7 +23294,7 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_busy_workers",
-      "community": 44,
+      "community": 33,
       "norm_label": ".busy_workers()"
     },
     {
@@ -22974,7 +23304,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_idle_workers",
-      "community": 44,
+      "community": 33,
       "norm_label": ".idle_workers()"
     },
     {
@@ -22984,7 +23314,7 @@
       "source_location": "L325",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stats",
-      "community": 44,
+      "community": 33,
       "norm_label": ".stats()"
     },
     {
@@ -23004,7 +23334,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_43",
-      "community": 44,
+      "community": 33,
       "norm_label": "summary returned by worker \u2014 parent sees only this, not raw data."
     },
     {
@@ -23014,7 +23344,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_72",
-      "community": 44,
+      "community": 33,
       "norm_label": "pool of isolated worker processes for agent execution.      each worker runs in"
     },
     {
@@ -23024,7 +23354,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_133",
-      "community": 44,
+      "community": 33,
       "norm_label": "dispatch a job to a worker. returns summary when done.          backpressure: if"
     },
     {
@@ -23034,7 +23364,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_164",
-      "community": 44,
+      "community": 33,
       "norm_label": "main loop: pick jobs from queue, assign to free workers or spawn new ones."
     },
     {
@@ -23044,7 +23374,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_186",
-      "community": 44,
+      "community": 33,
       "norm_label": "run a job in a specific worker process."
     },
     {
@@ -23054,7 +23384,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_289",
-      "community": 44,
+      "community": 33,
       "norm_label": "spawn a new worker slot."
     },
     {
@@ -23064,7 +23394,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_310",
-      "community": 44,
+      "community": 33,
       "norm_label": "estimate how many tokens were kept out of the parent context."
     },
     {
@@ -25636,6 +25966,266 @@
       "id": "figma_test_data_model_extractor_rationale_1",
       "community": 318,
       "norm_label": "unit tests for figma-agent-core/data_model_extractor.py.  loads the module via i"
+    },
+    {
+      "label": "test_deployment_packager.py",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager",
+      "community": 17,
+      "norm_label": "test_deployment_packager.py"
+    },
+    {
+      "label": "_load_packager()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_load_packager",
+      "community": 17,
+      "norm_label": "_load_packager()"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "tests_figma_test_deployment_packager_py_any",
+      "community": 17,
+      "norm_label": "any"
+    },
+    {
+      "label": "test_generate_package_json_has_next_and_react()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_package_json_has_next_and_react",
+      "community": 17,
+      "norm_label": "test_generate_package_json_has_next_and_react()"
+    },
+    {
+      "label": "test_generate_package_json_backend_adds_prisma_and_zod()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_package_json_backend_adds_prisma_and_zod",
+      "community": 17,
+      "norm_label": "test_generate_package_json_backend_adds_prisma_and_zod()"
+    },
+    {
+      "label": "test_generate_next_config_export_mode()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_next_config_export_mode",
+      "community": 17,
+      "norm_label": "test_generate_next_config_export_mode()"
+    },
+    {
+      "label": "test_generate_tsconfig_has_paths()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_tsconfig_has_paths",
+      "community": 17,
+      "norm_label": "test_generate_tsconfig_has_paths()"
+    },
+    {
+      "label": "test_generate_tailwind_config_targets_app_dirs()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_tailwind_config_targets_app_dirs",
+      "community": 17,
+      "norm_label": "test_generate_tailwind_config_targets_app_dirs()"
+    },
+    {
+      "label": "test_generate_postcss_config_loads_tailwind()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_postcss_config_loads_tailwind",
+      "community": 17,
+      "norm_label": "test_generate_postcss_config_loads_tailwind()"
+    },
+    {
+      "label": "test_generate_globals_css_has_directives()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_globals_css_has_directives",
+      "community": 17,
+      "norm_label": "test_generate_globals_css_has_directives()"
+    },
+    {
+      "label": "test_generate_vercel_json_framework_nextjs()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_vercel_json_framework_nextjs",
+      "community": 17,
+      "norm_label": "test_generate_vercel_json_framework_nextjs()"
+    },
+    {
+      "label": "test_generate_netlify_toml_has_build_section()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_netlify_toml_has_build_section",
+      "community": 17,
+      "norm_label": "test_generate_netlify_toml_has_build_section()"
+    },
+    {
+      "label": "test_generate_env_example_has_no_secrets()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_env_example_has_no_secrets",
+      "community": 17,
+      "norm_label": "test_generate_env_example_has_no_secrets()"
+    },
+    {
+      "label": "test_generate_env_example_backend_includes_database()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L101",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_env_example_backend_includes_database",
+      "community": 17,
+      "norm_label": "test_generate_env_example_backend_includes_database()"
+    },
+    {
+      "label": "test_generate_readme_has_vercel_button()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L106",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_readme_has_vercel_button",
+      "community": 17,
+      "norm_label": "test_generate_readme_has_vercel_button()"
+    },
+    {
+      "label": "test_generate_readme_netlify_target()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L112",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_readme_netlify_target",
+      "community": 17,
+      "norm_label": "test_generate_readme_netlify_target()"
+    },
+    {
+      "label": "test_generate_readme_both_targets()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_readme_both_targets",
+      "community": 17,
+      "norm_label": "test_generate_readme_both_targets()"
+    },
+    {
+      "label": "test_generate_deploy_script_vercel()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L124",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_deploy_script_vercel",
+      "community": 17,
+      "norm_label": "test_generate_deploy_script_vercel()"
+    },
+    {
+      "label": "test_generate_deploy_script_netlify()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L130",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_generate_deploy_script_netlify",
+      "community": 17,
+      "norm_label": "test_generate_deploy_script_netlify()"
+    },
+    {
+      "label": "test_package_site_writes_all_files()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_package_site_writes_all_files",
+      "community": 17,
+      "norm_label": "test_package_site_writes_all_files()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "tests_figma_test_deployment_packager_py_path",
+      "community": 17,
+      "norm_label": "path"
+    },
+    {
+      "label": "test_package_site_skips_existing_when_skip_existing_true()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L154",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_package_site_skips_existing_when_skip_existing_true",
+      "community": 17,
+      "norm_label": "test_package_site_skips_existing_when_skip_existing_true()"
+    },
+    {
+      "label": "test_package_site_overwrites_when_skip_existing_false()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L164",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_package_site_overwrites_when_skip_existing_false",
+      "community": 17,
+      "norm_label": "test_package_site_overwrites_when_skip_existing_false()"
+    },
+    {
+      "label": "test_package_site_root_dir_containment()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L174",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_package_site_root_dir_containment",
+      "community": 17,
+      "norm_label": "test_package_site_root_dir_containment()"
+    },
+    {
+      "label": "test_site_slug_normalization()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L180",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_test_site_slug_normalization",
+      "community": 17,
+      "norm_label": "test_site_slug_normalization()"
+    },
+    {
+      "label": "Unit tests for figma-agent-core/deployment_packager.py.",
+      "file_type": "rationale",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_test_deployment_packager_rationale_1",
+      "community": 17,
+      "norm_label": "unit tests for figma-agent-core/deployment_packager.py."
     },
     {
       "label": "test_figma_reference_downloader.py",
@@ -29014,7 +29604,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_integration_test_e2e_py_path",
-      "community": 2583,
+      "community": 48,
       "norm_label": "path"
     },
     {
@@ -30874,7 +31464,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_test_registry",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_registry.py"
     },
     {
@@ -30884,7 +31474,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "mcp_test_registry_test_empty_registry_has_no_servers",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_empty_registry_has_no_servers()"
     },
     {
@@ -30894,7 +31484,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "mcp_test_registry_test_register_does_not_build_server",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_register_does_not_build_server()"
     },
     {
@@ -30904,7 +31494,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_test_registry_test_lazy_factory_is_not_invoked_until_get_server",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_lazy_factory_is_not_invoked_until_get_server()"
     },
     {
@@ -30914,7 +31504,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "mcp_test_registry_test_lazy_factory_is_not_invoked_by_metadata_queries",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_lazy_factory_is_not_invoked_by_metadata_queries()"
     },
     {
@@ -30924,7 +31514,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "mcp_test_registry_test_create_registry_lazy_does_not_build_servers",
-      "community": 1881,
+      "community": 91,
       "norm_label": "test_create_registry_lazy_does_not_build_servers()"
     },
     {
@@ -30934,7 +31524,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "mcp_test_registry_test_create_registry_eager_builds_all_servers",
-      "community": 7,
+      "community": 91,
       "norm_label": "test_create_registry_eager_builds_all_servers()"
     },
     {
@@ -30944,7 +31534,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_test_registry_rationale_1",
-      "community": 7,
+      "community": 91,
       "norm_label": "pytest tests for the mcp registry and lazy bootstrap behavior.  these tests cove"
     },
     {
@@ -30954,7 +31544,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "mcp_test_registry_rationale_87",
-      "community": 1881,
+      "community": 91,
       "norm_label": "create_registry(lazy=true) must not call _build_server() for any category     un"
     },
     {
@@ -32824,7 +33414,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_pipeline_audit_logger.py"
     },
     {
@@ -32834,7 +33424,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_today_str",
-      "community": 27,
+      "community": 1299,
       "norm_label": "_today_str()"
     },
     {
@@ -32844,7 +33434,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_audit_file",
-      "community": 27,
+      "community": 1299,
       "norm_label": "_audit_file()"
     },
     {
@@ -32854,7 +33444,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_audit_logger_py_path",
-      "community": 27,
+      "community": 1299,
       "norm_label": "path"
     },
     {
@@ -32864,7 +33454,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_make_runner",
-      "community": 27,
+      "community": 1299,
       "norm_label": "_make_runner()"
     },
     {
@@ -32874,7 +33464,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_audit_logger_py_pipelinerunner",
-      "community": 2583,
+      "community": 1299,
       "norm_label": "pipelinerunner"
     },
     {
@@ -32884,7 +33474,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_read_entries",
-      "community": 27,
+      "community": 1299,
       "norm_label": "_read_entries()"
     },
     {
@@ -32894,7 +33484,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_test_runner_creates_audit_logger",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_runner_creates_audit_logger()"
     },
     {
@@ -32904,7 +33494,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_test_mcp_tool_blocked_writes_safety_blocked_entry",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_tool_blocked_writes_safety_blocked_entry()"
     },
     {
@@ -32914,7 +33504,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_test_mcp_tool_allowed_writes_tool_entries",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_tool_allowed_writes_tool_entries()"
     },
     {
@@ -32924,7 +33514,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_test_finalize_and_return_writes_pipeline_end",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_finalize_and_return_writes_pipeline_end()"
     },
     {
@@ -32934,7 +33524,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_test_audit_chain_verifies_after_finalize",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_audit_chain_verifies_after_finalize()"
     },
     {
@@ -32944,7 +33534,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_audit_logger_rationale_1",
-      "community": 27,
+      "community": 1299,
       "norm_label": "integration tests for auditlogger wired into pipelinerunner."
     },
     {
@@ -32954,7 +33544,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_pipeline_figma.py"
     },
     {
@@ -32964,7 +33554,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_make_runner",
-      "community": 1299,
+      "community": 40,
       "norm_label": "_make_runner()"
     },
     {
@@ -32974,7 +33564,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_path",
-      "community": 1299,
+      "community": 40,
       "norm_label": "path"
     },
     {
@@ -32984,7 +33574,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_pipelinerunner",
-      "community": 2583,
+      "community": 40,
       "norm_label": "pipelinerunner"
     },
     {
@@ -32994,7 +33584,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_available_when_configured",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_figma_available_when_configured()"
     },
     {
@@ -33004,7 +33594,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_exposed_when_available",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_figma_category_exposed_when_available()"
     },
     {
@@ -33014,7 +33604,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_hidden_when_mcp_disabled",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_figma_category_hidden_when_mcp_disabled()"
     },
     {
@@ -33024,7 +33614,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_execute_mcp_figma_tool_dry_run",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_execute_mcp_figma_tool_dry_run()"
     },
     {
@@ -33034,7 +33624,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_short_circuits_for_full_code",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_design_intake_short_circuits_for_full_code()"
     },
     {
@@ -33044,7 +33634,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_continues_planning_for_spec",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_design_intake_continues_planning_for_spec()"
     },
     {
@@ -33054,7 +33644,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_extract_figma_file_key_and_node_id",
-      "community": 1299,
+      "community": 40,
       "norm_label": "test_extract_figma_file_key_and_node_id()"
     },
     {
@@ -33064,7 +33654,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_rationale_1",
-      "community": 1299,
+      "community": 40,
       "norm_label": "integration tests for figma wiring inside pipelinerunner.  these tests verify th"
     },
     {
@@ -33094,7 +33684,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_fs_guard_py_path",
-      "community": 2583,
+      "community": 20,
       "norm_label": "path"
     },
     {
@@ -33104,7 +33694,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_fs_guard_py_pipelinerunner",
-      "community": 2583,
+      "community": 20,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33204,7 +33794,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "community": 2583,
+      "community": 61,
       "norm_label": "path"
     },
     {
@@ -33214,7 +33804,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "community": 2583,
+      "community": 61,
       "norm_label": "pipelinerunner"
     },
     {
@@ -62048,6 +62638,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L898",
+      "weight": 1.0,
+      "source": "figma_agent_core_conductor",
+      "target": "figma_agent_core_conductor_stage_package_deployment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/conductor.py",
       "source_location": "L156",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -62321,6 +62921,17 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_conductor_stage_layout",
       "target": "figma_agent_core_conductor_run_command"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L933",
+      "weight": 1.0,
+      "source": "figma_agent_core_conductor_stage_package_deployment",
+      "target": "figma_agent_core_conductor_run_command",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62751,11 +63362,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L553",
+      "source_location": "L555",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_553",
-      "target": "figma_agent_core_conductor_stage_compose"
+      "source": "figma_agent_core_conductor_rationale_555",
+      "target": "figma_agent_core_conductor_stage_compose",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62772,11 +63383,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L596",
+      "source_location": "L602",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_596",
-      "target": "figma_agent_core_conductor_stage_content_model"
+      "source": "figma_agent_core_conductor_rationale_602",
+      "target": "figma_agent_core_conductor_stage_content_model",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62793,11 +63404,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L640",
+      "source_location": "L646",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_640",
-      "target": "figma_agent_core_conductor_stage_visual_qa"
+      "source": "figma_agent_core_conductor_rationale_646",
+      "target": "figma_agent_core_conductor_stage_visual_qa",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62814,11 +63425,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L677",
+      "source_location": "L683",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_677",
-      "target": "figma_agent_core_conductor_stage_compliance"
+      "source": "figma_agent_core_conductor_rationale_683",
+      "target": "figma_agent_core_conductor_stage_compliance",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62835,11 +63446,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L721",
+      "source_location": "L727",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_721",
-      "target": "figma_agent_core_conductor_stage_refinement"
+      "source": "figma_agent_core_conductor_rationale_727",
+      "target": "figma_agent_core_conductor_stage_refinement",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62856,11 +63467,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L761",
+      "source_location": "L767",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_761",
-      "target": "figma_agent_core_conductor_to_pascal_case"
+      "source": "figma_agent_core_conductor_rationale_767",
+      "target": "figma_agent_core_conductor_to_pascal_case",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62888,11 +63499,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L775",
+      "source_location": "L781",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_775",
-      "target": "figma_agent_core_conductor_collect_top_level_sections"
+      "source": "figma_agent_core_conductor_rationale_781",
+      "target": "figma_agent_core_conductor_collect_top_level_sections",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62909,11 +63520,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L789",
+      "source_location": "L795",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_789",
-      "target": "figma_agent_core_conductor_stage_components"
+      "source": "figma_agent_core_conductor_rationale_795",
+      "target": "figma_agent_core_conductor_stage_components",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62941,11 +63552,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L812",
+      "source_location": "L818",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_812",
-      "target": "figma_agent_core_conductor_stage_components_all"
+      "source": "figma_agent_core_conductor_rationale_818",
+      "target": "figma_agent_core_conductor_stage_components_all",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62962,11 +63573,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L855",
+      "source_location": "L861",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_855",
-      "target": "figma_agent_core_conductor_stage_assets"
+      "source": "figma_agent_core_conductor_rationale_861",
+      "target": "figma_agent_core_conductor_stage_assets",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62978,6 +63589,27 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_conductor_run_pipeline",
       "target": "figma_agent_core_conductor_stage_assets"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L908",
+      "weight": 1.0,
+      "source": "figma_agent_core_conductor_rationale_908",
+      "target": "figma_agent_core_conductor_stage_package_deployment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/conductor.py",
+      "source_location": "L1318",
+      "weight": 1.0,
+      "source": "figma_agent_core_conductor_run_pipeline",
+      "target": "figma_agent_core_conductor_stage_package_deployment",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -62994,11 +63626,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/conductor.py",
-      "source_location": "L893",
+      "source_location": "L938",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_conductor_rationale_893",
-      "target": "figma_agent_core_conductor_run_pipeline"
+      "source": "figma_agent_core_conductor_rationale_938",
+      "target": "figma_agent_core_conductor_run_pipeline",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -64897,6 +65529,516 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_data_model_extractor_main",
       "target": "figma_agent_core_data_model_extractor_extract_data_models"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L313",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_deploy_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L239",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_env_example",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_globals_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_netlify_toml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_next_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_package_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L171",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_postcss_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L258",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_readme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_tailwind_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_tsconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L203",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_generate_vercel_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L407",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L335",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_package_site",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_safe_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_site_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager",
+      "target": "figma_agent_core_deployment_packager_site_slug",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_1",
+      "target": "figma_agent_core_deployment_packager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_package_json",
+      "target": "figma_agent_core_deployment_packager_safe_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_tsconfig",
+      "target": "figma_agent_core_deployment_packager_safe_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_vercel_json",
+      "target": "figma_agent_core_deployment_packager_safe_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_safe_json",
+      "target": "figma_agent_core_deployment_packager_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L265",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_readme",
+      "target": "figma_agent_core_deployment_packager_site_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_site_slug",
+      "target": "figma_agent_core_deployment_packager_site_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_package_json",
+      "target": "figma_agent_core_deployment_packager_site_slug",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_generate_readme",
+      "target": "figma_agent_core_deployment_packager_site_slug",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L364",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_package_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_46",
+      "target": "figma_agent_core_deployment_packager_generate_package_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L370",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_next_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_102",
+      "target": "figma_agent_core_deployment_packager_generate_next_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_tsconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_125",
+      "target": "figma_agent_core_deployment_packager_generate_tsconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_tailwind_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_150",
+      "target": "figma_agent_core_deployment_packager_generate_tailwind_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L373",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_postcss_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L172",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_172",
+      "target": "figma_agent_core_deployment_packager_generate_postcss_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_globals_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_186",
+      "target": "figma_agent_core_deployment_packager_generate_globals_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L375",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_vercel_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L209",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_209",
+      "target": "figma_agent_core_deployment_packager_generate_vercel_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L376",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_netlify_toml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L225",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_225",
+      "target": "figma_agent_core_deployment_packager_generate_netlify_toml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L377",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_env_example",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L240",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_240",
+      "target": "figma_agent_core_deployment_packager_generate_env_example",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L378",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_readme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L264",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_264",
+      "target": "figma_agent_core_deployment_packager_generate_readme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L384",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_package_site",
+      "target": "figma_agent_core_deployment_packager_generate_deploy_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L317",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_317",
+      "target": "figma_agent_core_deployment_packager_generate_deploy_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L450",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_main",
+      "target": "figma_agent_core_deployment_packager_package_site",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/deployment_packager.py",
+      "source_location": "L347",
+      "weight": 1.0,
+      "source": "figma_agent_core_deployment_packager_rationale_347",
+      "target": "figma_agent_core_deployment_packager_package_site",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -70426,9 +71568,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L701",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_build_json_ld_script",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_json_ld_script"
     },
     {
       "relation": "contains",
@@ -70436,9 +71578,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L660",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_build_metadata_block",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_metadata_block"
     },
     {
       "relation": "contains",
@@ -70526,9 +71668,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L904",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_compose_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_compose_pages"
     },
     {
       "relation": "contains",
@@ -70606,9 +71748,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L899",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_extract_page_ast",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_extract_page_ast"
     },
     {
       "relation": "contains",
@@ -70666,9 +71808,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L632",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_infer_page_metadata",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_infer_page_metadata"
     },
     {
       "relation": "contains",
@@ -70686,9 +71828,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L886",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_is_page_node",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_is_page_node"
     },
     {
       "relation": "contains",
@@ -70706,9 +71848,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L696",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_metadata_keywords_array",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_metadata_keywords_array"
     },
     {
       "relation": "contains",
@@ -70786,9 +71928,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L624",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_slugify",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_slugify"
     },
     {
       "relation": "contains",
@@ -70876,9 +72018,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L970",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
-      "target": "figma_agent_core_page_composer_write_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_write_pages"
     },
     {
       "relation": "calls",
@@ -70975,9 +72117,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L701",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_build_json_ld_script",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -70986,9 +72128,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L660",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_build_metadata_block",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71052,9 +72194,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L904",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71129,9 +72271,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L899",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_extract_page_ast",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71173,9 +72315,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L632",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_infer_page_metadata",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71195,9 +72337,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L886",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_is_page_node",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71261,9 +72403,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L725",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_wrap_page",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "references",
@@ -71272,9 +72414,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L970",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_write_pages",
-      "target": "figma_agent_core_page_composer_py_any",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_any"
     },
     {
       "relation": "calls",
@@ -71447,9 +72589,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L977",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_write_pages",
-      "target": "figma_agent_core_page_composer_py_path",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_py_path"
     },
     {
       "relation": "calls",
@@ -71458,9 +72600,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L640",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_infer_page_metadata",
-      "target": "figma_agent_core_page_composer_node_text",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_node_text"
     },
     {
       "relation": "calls",
@@ -71653,9 +72795,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L635",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_infer_page_metadata",
-      "target": "figma_agent_core_page_composer_collect_all_nodes",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_collect_all_nodes"
     },
     {
       "relation": "calls",
@@ -71893,9 +73035,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L927",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_slugify",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_slugify"
     },
     {
       "relation": "rationale_for",
@@ -71903,9 +73045,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L625",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_625",
-      "target": "figma_agent_core_page_composer_slugify",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_slugify"
     },
     {
       "relation": "calls",
@@ -71914,9 +73056,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L870",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_page",
-      "target": "figma_agent_core_page_composer_infer_page_metadata",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_infer_page_metadata"
     },
     {
       "relation": "rationale_for",
@@ -71924,9 +73066,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L633",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_633",
-      "target": "figma_agent_core_page_composer_infer_page_metadata",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_infer_page_metadata"
     },
     {
       "relation": "calls",
@@ -71935,9 +73077,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L754",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_wrap_page",
-      "target": "figma_agent_core_page_composer_infer_page_metadata",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_infer_page_metadata"
     },
     {
       "relation": "calls",
@@ -71946,9 +73088,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L677",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_build_metadata_block",
-      "target": "figma_agent_core_page_composer_metadata_keywords_array",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_metadata_keywords_array"
     },
     {
       "relation": "rationale_for",
@@ -71956,9 +73098,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L661",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_661",
-      "target": "figma_agent_core_page_composer_build_metadata_block",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_metadata_block"
     },
     {
       "relation": "calls",
@@ -71967,9 +73109,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L755",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_wrap_page",
-      "target": "figma_agent_core_page_composer_build_metadata_block",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_metadata_block"
     },
     {
       "relation": "rationale_for",
@@ -71977,9 +73119,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L702",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_702",
-      "target": "figma_agent_core_page_composer_build_json_ld_script",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_json_ld_script"
     },
     {
       "relation": "calls",
@@ -71988,9 +73130,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L757",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_wrap_page",
-      "target": "figma_agent_core_page_composer_build_json_ld_script",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_build_json_ld_script"
     },
     {
       "relation": "calls",
@@ -72020,9 +73162,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L787",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_787",
-      "target": "figma_agent_core_page_composer_collect_fonts",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_collect_fonts"
     },
     {
       "relation": "calls",
@@ -72042,9 +73184,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L926",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_infer_page_title",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_infer_page_title"
     },
     {
       "relation": "calls",
@@ -72075,9 +73217,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L941",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_compose_page",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_compose_page"
     },
     {
       "relation": "calls",
@@ -72096,9 +73238,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L825",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_825",
-      "target": "figma_agent_core_page_composer_compose_page",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_compose_page"
     },
     {
       "relation": "calls",
@@ -72107,9 +73249,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L923",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_is_page_node",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_is_page_node"
     },
     {
       "relation": "rationale_for",
@@ -72117,9 +73259,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L887",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_887",
-      "target": "figma_agent_core_page_composer_is_page_node",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_is_page_node"
     },
     {
       "relation": "calls",
@@ -72128,9 +73270,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L925",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_pages",
-      "target": "figma_agent_core_page_composer_extract_page_ast",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_extract_page_ast"
     },
     {
       "relation": "rationale_for",
@@ -72138,9 +73280,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L900",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_900",
-      "target": "figma_agent_core_page_composer_extract_page_ast",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_extract_page_ast"
     },
     {
       "relation": "calls",
@@ -72149,9 +73291,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L1167",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_main",
-      "target": "figma_agent_core_page_composer_compose_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_compose_pages"
     },
     {
       "relation": "rationale_for",
@@ -72159,9 +73301,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L911",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_911",
-      "target": "figma_agent_core_page_composer_compose_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_compose_pages"
     },
     {
       "relation": "calls",
@@ -72170,9 +73312,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L1174",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_main",
-      "target": "figma_agent_core_page_composer_write_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_write_pages"
     },
     {
       "relation": "rationale_for",
@@ -72180,9 +73322,9 @@
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L975",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_rationale_975",
-      "target": "figma_agent_core_page_composer_write_pages",
-      "confidence_score": 1.0
+      "target": "figma_agent_core_page_composer_write_pages"
     },
     {
       "relation": "calls",
@@ -119697,6 +120839,291 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_load_packager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_deploy_script_netlify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_deploy_script_vercel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_env_example_backend_includes_database",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_env_example_has_no_secrets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_globals_css_has_directives",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_netlify_toml_has_build_section",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_next_config_export_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_package_json_backend_adds_prisma_and_zod",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_package_json_has_next_and_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_postcss_config_loads_tailwind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_readme_both_targets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_readme_has_vercel_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_readme_netlify_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_tailwind_config_targets_app_dirs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_tsconfig_has_paths",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_generate_vercel_json_framework_nextjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_package_site_overwrites_when_skip_existing_false",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_package_site_root_dir_containment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_package_site_skips_existing_when_skip_existing_true",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_package_site_writes_all_files",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L180",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager",
+      "target": "figma_test_deployment_packager_test_site_slug_normalization",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_rationale_1",
+      "target": "figma_test_deployment_packager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_load_packager",
+      "target": "tests_figma_test_deployment_packager_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_test_package_site_writes_all_files",
+      "target": "tests_figma_test_deployment_packager_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_test_package_site_overwrites_when_skip_existing_false",
+      "target": "tests_figma_test_deployment_packager_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_test_package_site_root_dir_containment",
+      "target": "tests_figma_test_deployment_packager_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_deployment_packager.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "figma_test_deployment_packager_test_package_site_skips_existing_when_skip_existing_true",
+      "target": "tests_figma_test_deployment_packager_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/figma/test_figma_reference_downloader.py",
       "source_location": "L18",
       "weight": 1.0,
@@ -122712,9 +124139,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_load_page_composer",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_load_page_composer"
     },
     {
       "relation": "contains",
@@ -122722,9 +124149,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_minimal_page",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_minimal_page"
     },
     {
       "relation": "contains",
@@ -122732,9 +124159,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L119",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_compose_layout_has_seo_metadata",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_compose_layout_has_seo_metadata"
     },
     {
       "relation": "contains",
@@ -122742,9 +124169,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_compose_page_client_drops_metadata",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_compose_page_client_drops_metadata"
     },
     {
       "relation": "contains",
@@ -122752,9 +124179,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_compose_page_emits_full_metadata",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_compose_page_emits_full_metadata"
     },
     {
       "relation": "contains",
@@ -122762,9 +124189,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages"
     },
     {
       "relation": "contains",
@@ -122772,9 +124199,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_compose_pages_fallback_single_page",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_compose_pages_fallback_single_page"
     },
     {
       "relation": "contains",
@@ -122782,9 +124209,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi",
-      "target": "figma_test_page_composer_multi_test_write_pages_creates_app_directories",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_test_write_pages_creates_app_directories"
     },
     {
       "relation": "rationale_for",
@@ -122792,9 +124219,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi_rationale_1",
-      "target": "figma_test_page_composer_multi",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi"
     },
     {
       "relation": "references",
@@ -122803,9 +124230,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi_load_page_composer",
-      "target": "tests_figma_test_page_composer_multi_py_any",
-      "confidence_score": 1.0
+      "target": "tests_figma_test_page_composer_multi_py_any"
     },
     {
       "relation": "calls",
@@ -122814,9 +124241,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages",
-      "target": "figma_test_page_composer_multi_minimal_page",
-      "confidence_score": 1.0
+      "target": "figma_test_page_composer_multi_minimal_page"
     },
     {
       "relation": "references",
@@ -122825,9 +124252,9 @@
       "source_file": "tests/figma/test_page_composer_multi.py",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "figma_test_page_composer_multi_test_write_pages_creates_app_directories",
-      "target": "tests_figma_test_page_composer_multi_py_path",
-      "confidence_score": 1.0
+      "target": "tests_figma_test_page_composer_multi_py_path"
     },
     {
       "relation": "contains",
@@ -148864,5 +150291,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "82678be69b8bf5acd19ef4f1e7d4e95911b41543"
+  "built_at_commit": "5876846cbdd57ff40aedcaf1a637c80a9910fbea"
 }

@@ -27,5 +27,6 @@ page_ast.json
 component_map.json
 figma_component_map.json
 .tmp/
+.audit/
 src/app/page.tsx
 src/app/components/

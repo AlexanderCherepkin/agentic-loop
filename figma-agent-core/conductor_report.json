@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-07-06T20:36:26.100709+00:00",
+  "started_at": "2026-07-06T20:49:05.734311+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -85,6 +85,11 @@
     },
     "assets": {
       "success": true
+    },
+    "package_deployment": {
+      "success": true,
+      "skipped": true,
+      "reason": "disabled"
     }
   },
   "config": {
@@ -129,6 +134,13 @@
     "compose_output": "src/app/page.tsx",
     "compose_layout_output": "src/app/layout.tsx",
     "compose_title": null,
+    "site_name": null,
+    "base_url": "/",
+    "package_deployment": false,
+    "package_deployment_output_dir": "generated-site",
+    "package_deployment_target": "vercel",
+    "package_deployment_has_backend": false,
+    "package_deployment_output_mode": "export",
     "components_output_dir": "src/app/components",
     "page_ast_output": "page_ast.json",
     "component_map_output": "component_map.json",
@@ -161,6 +173,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-07-06T20:36:26.105224+00:00",
+  "finished_at": "2026-07-06T20:49:05.737625+00:00",
   "duration_seconds": 0.0
 }
