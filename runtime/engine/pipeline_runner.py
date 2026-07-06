@@ -17,6 +17,7 @@ from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
 from .state_manager import StateManager
 from ..observability.resource_monitor import ResourceLevel, ResourceMonitor
+from ..safety.audit_logger import AuditLogger, AuditEventType
 from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
 from ..safety.network_guard import NetworkGuard, NetworkVerdict
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
@@ -328,6 +329,8 @@ class PipelineRunner:
         self._fs_guard = FileSystemGuard(workspace_root=self.workspace)
         self._network_guard = NetworkGuard()
         self._resource_monitor = ResourceMonitor(workspace_root=self.workspace)
+        self._audit_logger = AuditLogger(log_dir=Path(self.workspace) / ".audit", buffer_size=1)
+        self._current_audit_anchor: str | None = None
 
         self._mcp_gateway = None
         if HAS_MCP:
@@ -491,14 +494,35 @@ class PipelineRunner:
 
         fs_check = self._check_fs_for_tool(tool_name, arguments)
         if fs_check:
+            self._audit_logger.log_safety_blocked(
+                f"mcp:{tool_name}", "", self._current_audit_anchor or "",
+                fs_check.get("error", "filesystem guard blocked"),
+            )
             return fs_check
 
         network_check = self._check_network_for_tool(tool_name, arguments)
         if network_check:
+            self._audit_logger.log_safety_blocked(
+                f"mcp:{tool_name}", "", self._current_audit_anchor or "",
+                network_check.get("error", "network guard blocked"),
+            )
             return network_check
 
-        result = await self._mcp_gateway.execute(tool_name, arguments)
-        return {"tool": tool_name, "result": result, "mcp_executed": True}
+        mcp_agent = f"mcp:{tool_name}"
+        self._audit_logger.log_tool_invoked(mcp_agent, "", self._current_audit_anchor or "", arguments)
+        t0 = time.perf_counter()
+        try:
+            result = await self._mcp_gateway.execute(tool_name, arguments)
+            latency = (time.perf_counter() - t0) * 1000
+            output_summary = {"tool": tool_name, "mcp_executed": True}
+            if isinstance(result, dict):
+                output_summary["is_error"] = result.get("is_error", False)
+                output_summary["keys"] = list(result.keys())[:10]
+            self._audit_logger.log_tool_completed(mcp_agent, "", self._current_audit_anchor or "", output_summary, latency)
+            return {"tool": tool_name, "result": result, "mcp_executed": True}
+        except Exception as e:
+            self._audit_logger.log_tool_failed(mcp_agent, "", self._current_audit_anchor or "", str(e))
+            return {"tool": tool_name, "error": str(e), "is_error": True, "mcp_executed": False}
 
     def _check_fs_for_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any] | None:
         """Return a guarded error dict if the tool touches a disallowed path; otherwise None."""
@@ -575,10 +599,12 @@ class PipelineRunner:
         metrics = SessionMetrics(session_id=session_id)
         trace: list[IterationTrace] = []
         audit_anchor = uuid.uuid4().hex
+        self._current_audit_anchor = audit_anchor
 
         await self.bus.start()
 
         try:
+            self._audit_logger.log_pipeline_start(session_id, audit_anchor, user_input)
             self.state.create(f"session:{session_id}", {
                 "user_input": user_input,
                 "status": PipelineStatus.RUNNING.value,
@@ -603,12 +629,11 @@ class PipelineRunner:
             # Phase 1: Safety pre-check (LLM-agent based)
             safety_passed = await self._run_safety_pre_check(user_input, session_id, trace, metrics)
             if not safety_passed:
-                return PipelineResult(
-                    final_response="Request blocked by safety pre-check.",
-                    termination_status=TerminationStatus.ESCALATED_HUMAN,
-                    session_metrics=metrics,
-                    audit_anchor=audit_anchor,
-                    trace=trace,
+                return await self._finalize_and_return(
+                    user_input,
+                    "Request blocked by safety pre-check.",
+                    TerminationStatus.ESCALATED_HUMAN,
+                    metrics, audit_anchor, trace, session_id,
                 )
 
             await self._publish_progress("phase.end", {"phase": "safety_pre_check", "session_id": session_id})
@@ -752,6 +777,7 @@ class PipelineRunner:
                 metrics, audit_anchor, trace, session_id,
             )
         finally:
+            self._current_audit_anchor = None
             await self.bus.stop()
 
     async def _finalize_and_return(self, user_input: str, final_response: str,
@@ -759,7 +785,22 @@ class PipelineRunner:
                                    metrics: SessionMetrics, audit_anchor: str,
                                    trace: list[IterationTrace], session_id: str) -> PipelineResult:
         if metrics.time_elapsed_ms <= 0:
-            metrics.time_elapsed_ms = (time.perf_counter() - self._t_start) * 1000
+            t_start = getattr(self, "_t_start", None)
+            if t_start is not None:
+                metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+            else:
+                metrics.time_elapsed_ms = 0.0
+        self._audit_logger.log_pipeline_end(
+            session_id, audit_anchor, termination_status.value,
+            {
+                "iterations": metrics.iterations,
+                "tools_used": metrics.tools_used,
+                "safety_checks_passed": metrics.safety_checks_passed,
+                "safety_checks_failed": metrics.safety_checks_failed,
+                "time_elapsed_ms": round(metrics.time_elapsed_ms, 2),
+            },
+        )
+        self._audit_logger.close()
         return PipelineResult(
             final_response=final_response,
             termination_status=termination_status,
@@ -782,6 +823,10 @@ class PipelineRunner:
                 blocked = result.parsed.get("blocked", result.parsed.get("status") == "blocked")
                 if blocked:
                     metrics.safety_checks_failed += 1
+                    self._audit_logger.log_safety_blocked(
+                        agent_path, session_id, self._current_audit_anchor or session_id,
+                        str(result.parsed.get("reason", "safety pre-check blocked")),
+                    )
                     return False
                 metrics.safety_checks_passed += 1
                 context.update(result.parsed)
@@ -1041,8 +1086,11 @@ class PipelineRunner:
                             trace: list[IterationTrace], phase: str,
                             metrics: SessionMetrics | None = None) -> LLMResponse | None:
         t0 = time.perf_counter()
+        session_id = inputs.get("session_id", "")
+        audit_anchor = self._current_audit_anchor or session_id
 
         extra_context = self._system_context_for_phase(phase)
+        self._audit_logger.log_agent_invoked(agent_path, session_id, audit_anchor, inputs)
         try:
             spec = self._get_agent(agent_path)
             result = await self.llm.execute(spec, inputs, extra_context=extra_context)
@@ -1056,7 +1104,7 @@ class PipelineRunner:
                 latency_ms=latency,
                 success=True,
             ))
-            session_id = inputs.get("session_id", "")
+            self._audit_logger.log_agent_completed(agent_path, session_id, audit_anchor, result.parsed, latency)
             iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
             await self._publish_progress("agent.invoke", {
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,
@@ -1075,7 +1123,7 @@ class PipelineRunner:
                 success=False,
                 error=str(e),
             ))
-            session_id = inputs.get("session_id", "")
+            self._audit_logger.log_agent_failed(agent_path, session_id, audit_anchor, str(e))
             iteration = inputs.get("iteration", metrics.iterations if metrics else 0)
             await self._publish_progress("agent.invoke", {
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,

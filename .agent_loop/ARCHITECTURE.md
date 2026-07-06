@@ -205,6 +205,7 @@ User Request
 16. Runtime filesystem guard: `runtime/safety/file_system_guard.py` enforces deterministic filesystem boundaries inside `runtime/engine/pipeline_runner.py`; write/delete operations are blocked outside allowed directories and protected components such as `.ssh`, `.env`, and system paths are rejected before MCP tools execute
 17. Runtime network guard: `runtime/safety/network_guard.py` enforces deterministic egress policy inside `runtime/engine/pipeline_runner.py`; only explicitly allowed domains/hosts may be reached, private/internal networks and metadata endpoints are blocked, and unknown egress is denied by default before web/browser MCP tools execute
 18. Runtime resource monitor: `runtime/observability/resource_monitor.py` samples CPU, memory, and workspace disk usage at pipeline start and before each ReAct execution iteration; CRITICAL levels abort the run to prevent host exhaustion, while optional `psutil` falls back to `shutil.disk_usage` so disk watchdog remains operational on minimal installs
+19. Audit logger: `runtime/safety/audit_logger.py` is mandatory, append-only, and tamper-evident. Every pipeline run receives an `audit_anchor` that is written into each audit entry; entries are persisted as a SHA-256 hash chain so deletion or modification of any line invalidates `verify_chain()`. PipelineRunner logs pipeline start/end, agent invocation/completion/failure, MCP tool execution, and safety-blocked events into `{workspace}/.audit/audit_YYYY-MM-DD.jsonl`
 
 ## Implementation Status
 
