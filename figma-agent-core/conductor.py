@@ -586,6 +586,57 @@ def stage_compose(
     return result.returncode == 0
 
 
+def stage_preview_workflow(
+    site_dir: str = "generated-site",
+    output_dir: str = ".tmp/browser/preview",
+    page_url: Optional[str] = None,
+    start_server: bool = True,
+    dev_command: str = "pnpm dev",
+    server_timeout: float = 60.0,
+    feedback_file: Optional[str] = None,
+    report_output: str = "preview_report.json",
+    viewport: str = "1280x720",
+    title: Optional[str] = None,
+    allowed_domains: Optional[str] = None,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 5a: client preview & approval workflow — dev server, screenshot, QR, feedback."""
+    logger.info("=== STAGE: preview_workflow ===")
+    command = [
+        sys.executable,
+        "preview_workflow.py",
+        "--site-dir",
+        site_dir,
+        "--output-dir",
+        output_dir,
+        "--report-output",
+        report_output,
+        "--dev-command",
+        dev_command,
+        "--server-timeout",
+        str(server_timeout),
+        "--viewport",
+        viewport,
+    ]
+    if page_url:
+        command.extend(["--page-url", page_url])
+    if not start_server:
+        command.append("--no-start-server")
+    if feedback_file:
+        command.extend(["--feedback-file", feedback_file])
+    if title:
+        command.extend(["--title", title])
+    if allowed_domains:
+        command.extend(["--allowed-domains", allowed_domains])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=300)
+    return result.returncode == 0
+
+
 def stage_content_model(
     ast_file: str = "interactive_ast.json",
     fallback_ast_file: str = "page_ast.json",
@@ -949,7 +1000,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets", "package_deployment"]
+    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets", "package_deployment", "preview_workflow"]
     if config.get("content_model"):
         stages_to_run = ["content_model" if s == "compose" else s for s in stages_to_run]
     if only:
@@ -1327,6 +1378,31 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 )
                 report["stages"]["package_deployment"] = {"success": ok}
 
+        elif stage == "preview_workflow":
+            if not config.get("preview_workflow"):
+                logger.info("Preview workflow disabled. Skipping.")
+                report["stages"]["preview_workflow"] = {
+                    "success": True,
+                    "skipped": True,
+                    "reason": "disabled",
+                }
+            else:
+                ok = stage_preview_workflow(
+                    site_dir=config.get("preview_workflow_site_dir", "generated-site"),
+                    output_dir=config.get("preview_workflow_output_dir", ".tmp/browser/preview"),
+                    page_url=config.get("preview_workflow_page_url"),
+                    start_server=config.get("preview_workflow_start_server", True),
+                    dev_command=config.get("preview_workflow_dev_command", "pnpm dev"),
+                    server_timeout=config.get("preview_workflow_server_timeout", 60.0),
+                    feedback_file=config.get("preview_workflow_feedback_file"),
+                    report_output=config.get("preview_workflow_report_output", "preview_report.json"),
+                    viewport=config.get("preview_workflow_viewport", "1280x720"),
+                    title=config.get("preview_workflow_title") or config.get("site_name"),
+                    allowed_domains=config.get("preview_workflow_allowed_domains"),
+                    dry_run=dry_run,
+                )
+                report["stages"]["preview_workflow"] = {"success": ok}
+
         else:
             logger.warning(f"Unknown stage: {stage}. Skipping.")
 
@@ -1589,6 +1665,34 @@ def main():
         help="Next.js output mode для next.config.ts (по умолчанию export)."
     )
     parser.add_argument(
+        "--preview-workflow",
+        action="store_true",
+        help="Включить этап client preview & approval workflow (dev server, screenshot, QR, feedback).")
+    parser.add_argument(
+        "--preview-workflow-site-dir",
+        default="generated-site",
+        help="Директория сгенерированного сайта для preview workflow.")
+    parser.add_argument(
+        "--preview-workflow-page-url",
+        default=None,
+        help="URL уже запущенного сайта (иначе поднимается pnpm dev).")
+    parser.add_argument(
+        "--preview-workflow-output-dir",
+        default=".tmp/browser/preview",
+        help="Директория для артефактов preview workflow.")
+    parser.add_argument(
+        "--preview-workflow-feedback-file",
+        default=None,
+        help="JSON-файл с feedback клиента (approved, notes, reject_reason).")
+    parser.add_argument(
+        "--preview-workflow-viewport",
+        default="1280x720",
+        help="Viewport для скриншота preview.")
+    parser.add_argument(
+        "--preview-workflow-allowed-domains",
+        default=None,
+        help="Разрешённые внешние домены для preview screenshot через запятую.")
+    parser.add_argument(
         "--components-output-dir",
         default="src/app/components",
         help="Директория для извлечённых React-компонентов."
@@ -1817,6 +1921,13 @@ def main():
         "package_deployment_target": args.package_deployment_target,
         "package_deployment_has_backend": args.package_deployment_has_backend,
         "package_deployment_output_mode": args.package_deployment_output_mode,
+        "preview_workflow": args.preview_workflow,
+        "preview_workflow_site_dir": args.preview_workflow_site_dir,
+        "preview_workflow_page_url": args.preview_workflow_page_url,
+        "preview_workflow_output_dir": args.preview_workflow_output_dir,
+        "preview_workflow_feedback_file": args.preview_workflow_feedback_file,
+        "preview_workflow_viewport": args.preview_workflow_viewport,
+        "preview_workflow_allowed_domains": args.preview_workflow_allowed_domains,
         "components_output_dir": args.components_output_dir,
         "page_ast_output": args.page_ast_output,
         "component_map_output": args.component_map_output,

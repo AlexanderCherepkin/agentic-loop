@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-07-06T20:49:05.734311+00:00",
+  "started_at": "2026-07-06T20:59:58.846065+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -90,6 +90,11 @@
       "success": true,
       "skipped": true,
       "reason": "disabled"
+    },
+    "preview_workflow": {
+      "success": true,
+      "skipped": true,
+      "reason": "disabled"
     }
   },
   "config": {
@@ -141,6 +146,13 @@
     "package_deployment_target": "vercel",
     "package_deployment_has_backend": false,
     "package_deployment_output_mode": "export",
+    "preview_workflow": false,
+    "preview_workflow_site_dir": "generated-site",
+    "preview_workflow_page_url": null,
+    "preview_workflow_output_dir": ".tmp/browser/preview",
+    "preview_workflow_feedback_file": null,
+    "preview_workflow_viewport": "1280x720",
+    "preview_workflow_allowed_domains": null,
     "components_output_dir": "src/app/components",
     "page_ast_output": "page_ast.json",
     "component_map_output": "component_map.json",
@@ -173,6 +185,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-07-06T20:49:05.737625+00:00",
+  "finished_at": "2026-07-06T20:59:58.849740+00:00",
   "duration_seconds": 0.0
 }
