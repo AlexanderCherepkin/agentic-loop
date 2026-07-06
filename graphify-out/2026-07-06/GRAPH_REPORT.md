@@ -1,16 +1,16 @@
 # Graph Report - Agentic_Loop_Graph  (2026-07-06)
 
 ## Corpus Check
-- 451 files · ~265,894 words
+- 432 files · ~261,923 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5291 nodes · 9065 edges · 405 communities (381 shown, 24 thin omitted)
+- 5006 nodes · 8768 edges · 389 communities (366 shown, 23 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 800 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `be2dea1c`
+- Built from commit: `088dcb9f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -64,20 +64,13 @@
 - [[_COMMUNITY_Memory Embedding Batch|Memory Embedding Batch]]
 - [[_COMMUNITY_Worker Context Isolator|Worker Context Isolator]]
 - [[_COMMUNITY_Memory Eviction Policy|Memory Eviction Policy]]
-- [[_COMMUNITY_Memory Index Manager|Memory Index Manager]]
-- [[_COMMUNITY_Memory Summarizer|Memory Summarizer]]
-- [[_COMMUNITY_MCP Runcom Server|MCP Runcom Server]]
 - [[_COMMUNITY_MCP Terminal Server|MCP Terminal Server]]
 - [[_COMMUNITY_Memory Enrichment|Memory Enrichment]]
-- [[_COMMUNITY_Graphify Transcribe Reference|Graphify Transcribe Reference]]
-- [[_COMMUNITY_Worker Pool|Worker Pool]]
 - [[_COMMUNITY_MCP Replace Create Backup|MCP Replace Create Backup]]
 - [[_COMMUNITY_MCP Manangr Server|MCP Manangr Server]]
 - [[_COMMUNITY_MCP Runtest Server|MCP Runtest Server]]
 - [[_COMMUNITY_Memory Vector Store|Memory Vector Store]]
 - [[_COMMUNITY_Worker Context Compressor|Worker Context Compressor]]
-- [[_COMMUNITY_Agent Loop Result Action Report|Agent Loop Result Action Report]]
-- [[_COMMUNITY_Agent Loop Result Solution|Agent Loop Result Solution]]
 - [[_COMMUNITY_Graphify Add URL|Graphify Add URL]]
 - [[_COMMUNITY_Graphify Extraction Spec|Graphify Extraction Spec]]
 - [[_COMMUNITY_Agentic Loop CLI|Agentic Loop CLI]]
@@ -95,7 +88,6 @@
 - [[_COMMUNITY_Pre Push Git Hook|Pre Push Git Hook]]
 - [[_COMMUNITY_Claude Project Instructions|Claude Project Instructions]]
 - [[_COMMUNITY_Config Models|Config Models]]
-- [[_COMMUNITY_MCP Database Server S|MCP Database Server S]]
 - [[_COMMUNITY_MCP Database S|MCP Database S]]
 - [[_COMMUNITY_Graphify Update Reference|Graphify Update Reference]]
 - [[_COMMUNITY_MCP Web Auth Headers|MCP Web Auth Headers]]
@@ -104,13 +96,9 @@
 - [[_COMMUNITY_MCP Filesystem Package|MCP Filesystem Package]]
 - [[_COMMUNITY_MCP Commander Package|MCP Commander Package]]
 - [[_COMMUNITY_MCP Commander Package Duplicate|MCP Commander Package Duplicate]]
-- [[_COMMUNITY_MCP Database Sqlite Types|MCP Database Sqlite Types]]
-- [[_COMMUNITY_MCP Filesystem Package Duplicate|MCP Filesystem Package Duplicate]]
 - [[_COMMUNITY_Community 91|Community 91]]
 - [[_COMMUNITY_MCP Replace Package Duplicate|MCP Replace Package Duplicate]]
-- [[_COMMUNITY_Agent Loop Result Action Report Duplicate|Agent Loop Result Action Report Duplicate]]
 - [[_COMMUNITY_Install Git Hooks Script|Install Git Hooks Script]]
-- [[_COMMUNITY_MCP Commander Execute Command|MCP Commander Execute Command]]
 - [[_COMMUNITY_MCP Commander Execute Tool|MCP Commander Execute Tool]]
 - [[_COMMUNITY_MCP Filesystem List Directory|MCP Filesystem List Directory]]
 - [[_COMMUNITY_MCP Database List Tables|MCP Database List Tables]]
@@ -120,7 +108,6 @@
 - [[_COMMUNITY_MCP Database Sqlite Statement|MCP Database Sqlite Statement]]
 - [[_COMMUNITY_MCP Database Sqlite Statement Duplicate|MCP Database Sqlite Statement Duplicate]]
 - [[_COMMUNITY_Tests Init|Tests Init]]
-- [[_COMMUNITY_Tests Integration Init|Tests Integration Init]]
 - [[_COMMUNITY_Community 106|Community 106]]
 - [[_COMMUNITY_Community 107|Community 107]]
 - [[_COMMUNITY_Community 108|Community 108]]
@@ -158,8 +145,6 @@
 - [[_COMMUNITY_Community 140|Community 140]]
 - [[_COMMUNITY_Community 141|Community 141]]
 - [[_COMMUNITY_Community 142|Community 142]]
-- [[_COMMUNITY_Community 143|Community 143]]
-- [[_COMMUNITY_Community 144|Community 144]]
 - [[_COMMUNITY_Community 145|Community 145]]
 - [[_COMMUNITY_Community 146|Community 146]]
 - [[_COMMUNITY_Community 147|Community 147]]
@@ -347,7 +332,6 @@
 - [[_COMMUNITY_Community 329|Community 329]]
 - [[_COMMUNITY_Community 330|Community 330]]
 - [[_COMMUNITY_Community 331|Community 331]]
-- [[_COMMUNITY_Community 332|Community 332]]
 - [[_COMMUNITY_Community 333|Community 333]]
 - [[_COMMUNITY_Community 334|Community 334]]
 - [[_COMMUNITY_Community 335|Community 335]]
@@ -440,11 +424,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (405 total, 24 thin omitted)
+## Communities (389 total, 23 thin omitted)
 
 ### Community 0 - "MCP Web/Search/DB Servers"
 Cohesion: 0.11
-Nodes (28): Runtime watchdog for CPU, memory, and workspace disk usage.      The monitor is, Sample current resource usage and return a verdict., ResourceCheckResult, ResourceLevel, ResourceMonitor, ResourceSnapshot, Any, Path (+20 more)
+Nodes (30): LLMConfig, TerminationStatus, Runtime watchdog for CPU, memory, and workspace disk usage.      The monitor is, Sample current resource usage and return a verdict., ResourceCheckResult, ResourceLevel, ResourceMonitor, ResourceSnapshot (+22 more)
 
 ### Community 1 - "Memory Store Pipeline"
 Cohesion: 0.10
@@ -456,7 +440,7 @@ Nodes (20): ActionGenerator, BackendBridge, BackendSpec, Endpoint, main(), Model
 
 ### Community 3 - "Runtime Engine Core"
 Cohesion: 0.08
-Nodes (11): Any, guard(), TestNetworkGuardDefaults, TestNetworkGuardHelpers, TestNetworkGuardPolicies, NetworkGuard, NetworkGuardResult, Evaluate whether a URL may be accessed by the runtime. (+3 more)
+Nodes (12): Any, guard(), TestNetworkGuardDefaults, TestNetworkGuardHelpers, TestNetworkGuardPolicies, NetworkGuard, NetworkGuardResult, NetworkVerdict (+4 more)
 
 ### Community 4 - "Replace File Pipeline"
 Cohesion: 0.14
@@ -471,8 +455,8 @@ Cohesion: 0.06
 Nodes (59): _collect_top_level_sections(), main(), Any, CompletedProcess, Этап 1a: скачивание референсного скриншота Figma-фрейма через Images API., Этап 1b: построение реестра Figma-компонентов (Component Sets, Variants, Instanc, Этап 1d: обнаружение повторяющихся Figma-структур и предложение JSON/Prisma моде, Этап 1d-enrich: подбор изображений для data_model-карточек без картинок. (+51 more)
 
 ### Community 7 - "Safety Audit Logger"
-Cohesion: 0.07
-Nodes (27): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Create and populate the MCP registry with all 16 servers.      Args:         wor (+19 more)
+Cohesion: 0.18
+Nodes (5): Any, MCPServer, Health check one or all servers. Returns {name: bool}., Quick check if the server owning a tool is healthy., Lazy registration: server is constructed only on first access.
 
 ### Community 8 - "Engine Circuit Breaker"
 Cohesion: 0.10
@@ -519,8 +503,8 @@ Cohesion: 0.15
 Nodes (15): BackendMCPServer, BackendMCPServer, Any, MCP server that wraps the Backend Spec Bridge.      Provides tools to parse back, backend_server(), degraded_server(), project_root(), pytest tests for the Backend MCP server.  These tests mock subprocess invocation (+7 more)
 
 ### Community 20 - "Agent Loop Tools Manangr"
-Cohesion: 0.09
-Nodes (18): CircuitBreakerOpenError, CircuitState, ServerInfo, TestCircuitBreaker, TestMCPHealthCheck, TestWorkerJobPriority, TestWorkerPoolBackpressure, Dispatch a job to a worker. Returns summary when done.          Backpressure: if (+10 more)
+Cohesion: 0.10
+Nodes (11): TestWorkerPoolBackpressure, Any, Dispatch a job to a worker. Returns summary when done.          Backpressure: if, Main loop: pick jobs from queue, assign to free workers or spawn new ones., Run a job in a specific worker process., Spawn a new worker slot., Estimate how many tokens were kept OUT of the parent context., Summary returned by worker — parent sees ONLY this, not raw data. (+3 more)
 
 ### Community 21 - "Agent Loop Tools Web"
 Cohesion: 0.16
@@ -547,8 +531,8 @@ Cohesion: 0.08
 Nodes (25): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+17 more)
 
 ### Community 27 - "Agent Loop ReAct Planning"
-Cohesion: 0.14
-Nodes (13): StateManager, StateResult, Any, _make_runner(), Integration tests for FileSystemGuard wired into PipelineRunner MCP execution., test_mcp_apply_edit_blocked_for_dot_ssh(), test_mcp_non_filesystem_tool_skips_guard(), test_mcp_read_file_blocked_for_etc_passwd() (+5 more)
+Cohesion: 0.10
+Nodes (24): StateManager, StateResult, Any, _audit_file(), _make_runner(), Integration tests for AuditLogger wired into PipelineRunner., _read_entries(), test_audit_chain_verifies_after_finalize() (+16 more)
 
 ### Community 28 - "Agent Loop ReAct Execution"
 Cohesion: 0.21
@@ -567,12 +551,12 @@ Cohesion: 0.13
 Nodes (23): _build_mock_page(), _build_mock_playwright(), _load_visual_qa(), Unit tests for figma-agent-core/visual_qa.py.  Loads the module via importlib be, test_disallowed_file_outside_workspace(), test_visual_qa_bbox_comparison_fails_outside_tolerance(), test_visual_qa_bbox_comparison_passes_within_tolerance(), test_visual_qa_blocked_for_disallowed_url() (+15 more)
 
 ### Community 32 - "Agent Loop Main Loop"
-Cohesion: 0.08
-Nodes (29): build_parser(), cmd_approve(), cmd_demo(), cmd_mcp_connect(), cmd_run(), cmd_status(), cmd_validate(), fmt_duration() (+21 more)
+Cohesion: 0.13
+Nodes (12): Any, CompressionSummary, ContextCompressor, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+4 more)
 
 ### Community 33 - "MCP Servers Bootstrap"
 Cohesion: 0.08
-Nodes (13): ContextIsolator, Any, Path, ContextBudget, ContextIsolator, IsolatedContext, ModelTier, Rough token estimation: ~4 chars per token for English text. (+5 more)
+Nodes (14): ContextIsolator, Path, ContextBudget, ContextIsolator, IsolatedContext, ModelTier, Rough token estimation: ~4 chars per token for English text., Token budget for an isolated worker context window. (+6 more)
 
 ### Community 34 - "MCP Base Server"
 Cohesion: 0.16
@@ -599,8 +583,8 @@ Cohesion: 0.19
 Nodes (4): MemoryMCPServer, Any, Path, MCP server for tools_memory — memory store pipeline (store-lifecycle).
 
 ### Community 40 - "Memory Store Consistency"
-Cohesion: 0.15
-Nodes (19): AgentSpec, ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope (+11 more)
+Cohesion: 0.18
+Nodes (16): AgentSpec, ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope (+8 more)
 
 ### Community 41 - "MCP Replace Server"
 Cohesion: 0.27
@@ -615,36 +599,24 @@ Cohesion: 0.13
 Nodes (8): GracefulShutdown, Register an async or sync cleanup callable., Install signal handlers. Call once in main thread., Block until shutdown signal received, then run cleanups. Returns exit code., Execute all registered cleanup functions with timeout., Programmatically trigger shutdown (for testing)., TestGracefulShutdown, Any
 
 ### Community 44 - "Codex PreToolUse Hook"
-Cohesion: 0.11
-Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
+Cohesion: 0.17
+Nodes (12): CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, EvaluatorResponse, Strict pass/fail verdict produced by the fast /goal evaluator., Eager registration: server is already constructed., ServerInfo (+4 more)
 
 ### Community 45 - "Memory Recall Optimizer"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.17
+Nodes (17): build_parser(), cmd_approve(), cmd_demo(), cmd_mcp_connect(), cmd_run(), cmd_status(), cmd_validate(), fmt_duration() (+9 more)
 
 ### Community 46 - "Memory Embedding Batch"
-Cohesion: 0.11
-Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
+Cohesion: 0.17
+Nodes (8): Compress a list of chat messages before sending them to an LLM., Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed., Return a SharedContext instance for compressed inter-agent handoffs.          La, Get the shared compression store singleton., Return a result that leaves content untouched., Compress a single text fragment (e.g. tool output, log, file snippet)., Any
 
 ### Community 47 - "Worker Context Isolator"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.29
+Nodes (10): _make_runner(), Integration tests for FileSystemGuard wired into PipelineRunner MCP execution., test_mcp_apply_edit_blocked_for_dot_ssh(), test_mcp_non_filesystem_tool_skips_guard(), test_mcp_read_file_blocked_for_etc_passwd(), test_mcp_search_allowed_in_workspace(), test_mcp_write_file_allowed_in_workspace(), test_mcp_write_file_blocked_for_dot_env() (+2 more)
 
 ### Community 48 - "Memory Eviction Policy"
-Cohesion: 0.11
-Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
-
-### Community 49 - "Memory Index Manager"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
-
-### Community 50 - "Memory Summarizer"
-Cohesion: 0.11
-Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
-
-### Community 51 - "MCP Runcom Server"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
+Cohesion: 0.29
+Nodes (9): _make_runner(), Integration tests for expanded MUTUAL_CHECK_AGENTS list in PipelineRunner., Ensure the mock LLM engine has deterministic responses for every MUTUAL_CHECK ag, test_mock_engine_returns_responses_for_all_mutual_check_agents(), test_mutual_check_agents_list_includes_all_required_agents(), test_run_mutual_check_invokes_all_agents(), test_run_mutual_check_passes_metrics_context(), Path (+1 more)
 
 ### Community 52 - "MCP Terminal Server"
 Cohesion: 0.13
@@ -653,14 +625,6 @@ Nodes (12): ComponentMapper, _normalize_prop_name(), _normalize_prop_value(), Pa
 ### Community 53 - "Memory Enrichment"
 Cohesion: 0.21
 Nodes (6): ComponentRegistry, _is_component(), _is_component_set(), _is_instance(), Any, Return the merged mapper entry for a component, preferring per-component mapper
-
-### Community 54 - "Graphify Transcribe Reference"
-Cohesion: 0.11
-Nodes (17): author, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, keywords (+9 more)
-
-### Community 55 - "Worker Pool"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+9 more)
 
 ### Community 56 - "MCP Replace Create Backup"
 Cohesion: 0.14
@@ -681,14 +645,6 @@ Nodes (15): 1. Per-node bbox extraction (`layout_engine.py`), 2. `data-figma-id`
 ### Community 60 - "Worker Context Compressor"
 Cohesion: 0.19
 Nodes (15): _load_compliance(), Unit tests for figma-agent-core/compliance_checker.py.  Loads the module via imp, test_blocks_file_outside_workspace(), test_blocks_path_traversal_import(), test_custom_placeholder_pattern(), test_detects_dangerous_eval(), test_detects_hardcoded_secret(), test_detects_lorem_ipsum() (+7 more)
-
-### Community 61 - "Agent Loop Result Action Report"
-Cohesion: 0.18
-Nodes (15): End-to-end integration tests for Agentic Loop runtime.  Runs the full ReAct pipe, Safe input should pass deterministic safety and continue to LLM-based checks., Full ReAct pipeline with mock provider should finish in <1s., Safety pre-check agents should all pass with mock responses., Every trace entry must have required fields., StateManager should persist session data., SafetyChain must block destructive command patterns before any LLM agent runs., _resolve_root() (+7 more)
-
-### Community 62 - "Agent Loop Result Solution"
-Cohesion: 0.18
-Nodes (15): server, TOOLS, connections, DB_DIR, ensureDbDir(), EXECUTE_TOOL, getConnection(), handleExecute() (+7 more)
 
 ### Community 63 - "Graphify Add URL"
 Cohesion: 0.29
@@ -735,8 +691,8 @@ Cohesion: 0.17
 Nodes (4): FTSIndex, Insert or replace a document in the FTS index., BM25-ranked keyword search., Any
 
 ### Community 74 - "MCP Filesystem TSConfig"
-Cohesion: 0.27
-Nodes (3): Any, MCP server for tools_runtest — test execution pipeline (framework-dispatch)., RuntestMCPServer
+Cohesion: 0.12
+Nodes (16): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Create and populate the MCP registry with all 16 servers.      Args:         wor (+8 more)
 
 ### Community 75 - "MCP Commander TSConfig"
 Cohesion: 0.25
@@ -757,10 +713,6 @@ Nodes (5): _load_semantic_matcher(), Unit tests for semantic matching layer used
 ### Community 79 - "Config Models"
 Cohesion: 0.13
 Nodes (14): 🧭 graph-pilot, 📋 АЛГОРИТМ РАБОТЫ, Гард 1 — Стоит ли вообще строить граф, Гард 2 — `--mode deep` только осознанно, Гард 3 — Always-on хук НЕ ставить вслепую, 🧠 ГЛАВНАЯ ТАБЛИЦА: НАМЕРЕНИЕ → КОМАНДА, Когда срабатывать, 🛡 ТРИ ГАРДА (выполнять ВСЕГДА, до запуска команды) (+6 more)
-
-### Community 80 - "MCP Database Server S"
-Cohesion: 0.20
-Nodes (13): handleReadFile(), READ_FILE_TOOL, resolvePath(), server, TOOLS, createBackup(), EDIT_FILE_TOOL, ensureBackupDir() (+5 more)
 
 ### Community 81 - "MCP Database S"
 Cohesion: 0.21
@@ -794,14 +746,6 @@ Nodes (18): _load_fixture(), _load_registry_module(), Unit tests for figma-agent
 Cohesion: 0.27
 Nodes (12): _load_mapper(), _minimal_ast(), _minimal_figma_node(), Unit tests for figma-agent-core/interactive_layer_mapper.py.  Loads the module v, test_hover_event(), test_interactive_metadata_attached_to_ast(), test_navigation_interaction(), test_overlay_interaction() (+4 more)
 
-### Community 89 - "MCP Database Sqlite Types"
-Cohesion: 0.14
-Nodes (13): dependencies, @modelcontextprotocol/sdk, description, devDependencies, @types/node, typescript, main, name (+5 more)
-
-### Community 90 - "MCP Filesystem Package Duplicate"
-Cohesion: 0.14
-Nodes (13): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution, outDir, rootDir (+5 more)
-
 ### Community 91 - "Community 91"
 Cohesion: 0.29
 Nodes (11): _make_runner(), Integration tests for Figma wiring inside PipelineRunner.  These tests verify th, test_design_intake_continues_planning_for_spec(), test_design_intake_short_circuits_for_full_code(), test_execute_mcp_figma_tool_dry_run(), test_extract_figma_file_key_and_node_id(), test_figma_available_when_configured(), test_figma_category_exposed_when_available() (+3 more)
@@ -810,17 +754,9 @@ Nodes (11): _make_runner(), Integration tests for Figma wiring inside PipelineRu
 Cohesion: 0.24
 Nodes (4): MetricsCollector, MetricsSnapshot, Thread-safe (in asyncio single-thread sense) metrics registry., TestMetricsCollector
 
-### Community 93 - "Agent Loop Result Action Report Duplicate"
-Cohesion: 0.35
-Nodes (11): _audit_file(), _make_runner(), Integration tests for AuditLogger wired into PipelineRunner., _read_entries(), test_audit_chain_verifies_after_finalize(), test_finalize_and_return_writes_pipeline_end(), test_mcp_tool_allowed_writes_tool_entries(), test_mcp_tool_blocked_writes_safety_blocked_entry() (+3 more)
-
 ### Community 94 - "Install Git Hooks Script"
 Cohesion: 0.07
 Nodes (28): 1. Новый MCP-сервер, 2. Новый runtime-клиент, 3. Новые markdown-агенты, 4. Обновление существующих агентов, 5. Обновление документации и правил, 6. Зависимости, a) `tooll_subagents/planning/headroom_injector.md`, `.agent_loop/ARCHITECTURE.md` (+20 more)
-
-### Community 95 - "MCP Commander Execute Command"
-Cohesion: 0.26
-Nodes (11): server, TOOLS, authHeaders(), githubFetch(), handleIssueList(), handlePrComments(), handlePrCreateComment(), handlePrDiff() (+3 more)
 
 ### Community 96 - "MCP Commander Execute Tool"
 Cohesion: 0.15
@@ -857,10 +793,6 @@ Nodes (10): Active Skills, Approval Gates (autonomous-bot configuration), CLAUDE
 ### Community 104 - "Tests Init"
 Cohesion: 0.38
 Nodes (10): _find_ast_node(), _load_fixture(), _load_layout_module(), _load_registry_module(), Tests for component/variant tagging in layout_engine.py., test_layout_skips_children_for_mapped_instance(), test_layout_tags_icon_instance(), test_layout_tags_instance_with_component_ref() (+2 more)
-
-### Community 105 - "Tests Integration Init"
-Cohesion: 0.24
-Nodes (9): server, TOOLS, checkRateLimit(), handleHttpRequest(), HTTP_REQUEST_TOOL, HttpResult, performFetch(), requestLog (+1 more)
 
 ### Community 106 - "Community 106"
 Cohesion: 0.31
@@ -1005,14 +937,6 @@ Nodes (8): Browser Session Manager, Contract, Decision Flow, Failure Modes, Rece
 ### Community 142 - "Community 142"
 Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side effects, Visual QA Agent
-
-### Community 143 - "Community 143"
-Cohesion: 0.28
-Nodes (7): resolvePath(), server, TOOLS, DANGEROUS_PATTERNS, EXECUTE_COMMAND_TOOL, handleExecuteCommand(), validateCommand()
-
-### Community 144 - "Community 144"
-Cohesion: 0.28
-Nodes (7): handleReadFile(), READ_FILE_TOOL, resolvePath(), server, TOOLS, handleListDirectory(), LIST_DIRECTORY_TOOL
 
 ### Community 145 - "Community 145"
 Cohesion: 0.22
@@ -1823,11 +1747,11 @@ Cohesion: 0.09
 Nodes (21): IterationTrace, PhaseTransition, PipelineRunner, Publish progress event for TUI and external observers., Resolve a value from the state dict.          Tries the dotted path first, then, Load lightweight project rules and CLAUDE.md from workspace root., Parse project_rules.md into sections., Compress markdown to headings, lists, tables, and short directives. (+13 more)
 
 ### Community 434 - "Community 434"
-Cohesion: 0.10
-Nodes (24): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Compress a list of chat messages before sending them to an LLM., Runtime configuration for Headroom context compression.      Values are read fro, Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed., Return a SharedContext instance for compressed inter-agent handoffs.          La (+16 more)
+Cohesion: 0.14
+Nodes (20): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Runtime configuration for Headroom context compression.      Values are read fro, Sentinel returned when headroom-ai is not installed., Lightweight wrapper around the optional headroom-ai Python SDK.      Provides ex, Import headroom only if it is installed; otherwise return sentinel., MockLLMEngine (+12 more)
 
 ### Community 576 - "Community 576"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (6): MCPServer, MCPTool, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe
 
 ### Community 614 - "Community 614"
@@ -1851,8 +1775,8 @@ Cohesion: 0.16
 Nodes (6): PonytailMetrics, PonytailOptimizer, Prepend Ponytail protocol to a base system prompt when applicable.          If t, Compute line-count delta between an original and a generated snippet., Cross-cutting Ponytail policy injector and metrics helper.      Loads mode from, Any
 
 ### Community 1299 - "Community 1299"
-Cohesion: 0.13
-Nodes (16): ContractSpec, DecisionStep, AgentLoader, FailureMode, Parameter, AgentSpec, Path, _make_runner() (+8 more)
+Cohesion: 0.10
+Nodes (23): ContractSpec, DecisionStep, AgentLoader, FailureMode, End-to-end integration tests for Agentic Loop runtime.  Runs the full ReAct pipe, Safe input should pass deterministic safety and continue to LLM-based checks., Full ReAct pipeline with mock provider should finish in <1s., Safety pre-check agents should all pass with mock responses. (+15 more)
 
 ### Community 1367 - "Community 1367"
 Cohesion: 0.25
@@ -1932,22 +1856,22 @@ Nodes (7): Path, Защита от Path Traversal: целевая директо
 
 ### Community 2583 - "Community 2583"
 Cohesion: 0.07
-Nodes (49): AgentLoader, CircuitBreaker, CircuitBreakerConfig, EvaluationEngine, EvaluatorResponse, LLMConfig, LLMEngine, LLMProvider (+41 more)
+Nodes (37): AgentLoader, EvaluationEngine, LLMEngine, LLMProvider, LLMResponse, LLM execution engine with circuit breaker and provider fallback.      Fallback c, Build ordered list of fallback providers based on available API keys., Direct API call without AgentSpec wrapping. Returns raw text. (+29 more)
 
 ## Knowledge Gaps
-- **1599 isolated node(s):** `CompletedProcess`, `run_test_tiers.sh script`, `fs`, `path`, `ROOT` (+1594 more)
+- **1396 isolated node(s):** `CompletedProcess`, `run_test_tiers.sh script`, `fs`, `path`, `ROOT` (+1391 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **23 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `FileSystemGuardError` connect `Community 1596` to `Memory Store Consistency`, `Community 352`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
-- **Why does `MetricsCollector` connect `MCP Replace Package Duplicate` to `Agent Loop Main Loop`, `Community 421`, `Community 325`, `Agent Loop Architecture`, `Memory Store Consistency`, `Memory FTS Index`, `Community 333`, `Community 207`, `MCP Database S`, `Graphify Update Reference`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `MCPServer` connect `Community 576` to `Community 900`, `Observability Metrics`, `Community 614`, `Graphify Query Reference`, `Safety Audit Logger`, `MCP Filesystem TSConfig`, `Agent Loop Tools Replace`, `Community 17`, `Agent Spec Contracts`, `Agent Loop Tools Manangr`, `Community 1141`, `Agent Loop Tools Web`, `Community 1367`, `Community 1461`, `Community 1881`, `Community 1686`, `Community 1949`, `Graphify Add URL`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `MCPServer` connect `Community 576` to `Community 900`, `Safety Audit Logger`, `Agent Loop Tools Replace`, `Community 17`, `Agent Spec Contracts`, `Agent Loop Tools Manangr`, `Agent Loop Tools Web`, `Community 1686`, `Community 2583`, `Community 1949`, `Graphify Query Reference`, `Codex PreToolUse Hook`, `Community 1461`, `Graphify Add URL`, `Observability Metrics`, `MCP Filesystem TSConfig`, `Community 1367`, `Community 1881`, `Community 614`, `Community 1141`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `FileSystemGuardError` connect `Community 1596` to `Community 352`, `Community 2583`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `MemoryManager` connect `MCP Manangr Server` to `Graph Pilot Token Guards`, `Runtime Python Requirements`, `Community 236`, `Community 109`, `MCP Web Auth Headers`, `Community 2583`, `MCP Replace Create Backup`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Are the 29 inferred relationships involving `PipelineRunner` (e.g. with `AgentLoader` and `EvaluationEngine`) actually correct?**
   _`PipelineRunner` has 29 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 44 inferred relationships involving `StateManager` (e.g. with `AgentLoader` and `IterationTrace`) actually correct?**
