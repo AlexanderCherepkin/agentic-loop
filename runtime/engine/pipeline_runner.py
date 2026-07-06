@@ -16,6 +16,7 @@ from .agent_loader import AgentLoader
 from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
 from .state_manager import StateManager
+from ..observability.resource_monitor import ResourceLevel, ResourceMonitor
 from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
 from ..safety.network_guard import NetworkGuard, NetworkVerdict
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
@@ -326,6 +327,7 @@ class PipelineRunner:
         self._safety_chain = SafetyChain()
         self._fs_guard = FileSystemGuard(workspace_root=self.workspace)
         self._network_guard = NetworkGuard()
+        self._resource_monitor = ResourceMonitor(workspace_root=self.workspace)
 
         self._mcp_gateway = None
         if HAS_MCP:
@@ -640,7 +642,17 @@ class PipelineRunner:
                                             design_descriptor=design_descriptor)
             await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
 
-            # Phase 3: ReAct loop with conditional edges
+            # Phase 3: Resource checkpoint before ReAct loop
+            resource_check = self._resource_monitor.check()
+            if resource_check.level == ResourceLevel.CRITICAL:
+                return await self._finalize_and_return(
+                    user_input,
+                    f"Pipeline aborted: resource critical — {resource_check.reason}",
+                    TerminationStatus.FAILURE,
+                    metrics, audit_anchor, trace, session_id,
+                )
+
+            # Phase 4: ReAct loop with conditional edges
             transition_manager = PhaseTransitionManager(max_iterations=max_iterations)
             state: dict[str, Any] = {
                 "plan": plan,
@@ -665,6 +677,16 @@ class PipelineRunner:
                 if current_phase == "execution":
                     state["iteration"] += 1
                     metrics.iterations = state["iteration"]
+
+                    # Per-iteration resource guard: abort before heavy work if resources are critical
+                    resource_check = self._resource_monitor.check()
+                    if resource_check.level == ResourceLevel.CRITICAL:
+                        return await self._finalize_and_return(
+                            user_input,
+                            f"Pipeline aborted at iteration {state['iteration']}: resource critical — {resource_check.reason}",
+                            TerminationStatus.FAILURE,
+                            metrics, audit_anchor, trace, session_id,
+                        )
 
                 if state["iteration"] > max_iterations:
                     return await self._finalize_and_return(

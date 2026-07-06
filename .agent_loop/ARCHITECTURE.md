@@ -204,6 +204,7 @@ User Request
 15. Mem0 protocol: optional long-term memory layer exposed as MCP category `mem0` (`mem0_add`, `mem0_search`, `mem0_get_all`, `mem0_delete`) and as `runtime/engine/mem0_client.py`; integrated into ReAct planning recall, observability remember, and session cleanup; degrades to in-memory fallback when `mem0ai` is not installed or the API is unreachable. Optional dependency: `runtime/requirements-mem0.txt`
 16. Runtime filesystem guard: `runtime/safety/file_system_guard.py` enforces deterministic filesystem boundaries inside `runtime/engine/pipeline_runner.py`; write/delete operations are blocked outside allowed directories and protected components such as `.ssh`, `.env`, and system paths are rejected before MCP tools execute
 17. Runtime network guard: `runtime/safety/network_guard.py` enforces deterministic egress policy inside `runtime/engine/pipeline_runner.py`; only explicitly allowed domains/hosts may be reached, private/internal networks and metadata endpoints are blocked, and unknown egress is denied by default before web/browser MCP tools execute
+18. Runtime resource monitor: `runtime/observability/resource_monitor.py` samples CPU, memory, and workspace disk usage at pipeline start and before each ReAct execution iteration; CRITICAL levels abort the run to prevent host exhaustion, while optional `psutil` falls back to `shutil.disk_usage` so disk watchdog remains operational on minimal installs
 
 ## Implementation Status
 
