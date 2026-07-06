@@ -16,6 +16,7 @@ from .agent_loader import AgentLoader
 from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
 from .state_manager import StateManager
+from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
 
 # Optional MCP integration
@@ -322,6 +323,7 @@ class PipelineRunner:
         self._evaluator = EvaluationEngine(llm.config) if llm.config.use_evaluator else None
 
         self._safety_chain = SafetyChain()
+        self._fs_guard = FileSystemGuard(workspace_root=self.workspace)
 
         self._mcp_gateway = None
         if HAS_MCP:
@@ -441,13 +443,67 @@ class PipelineRunner:
             return False
         return _figma_config_mod.is_figma_configured()
 
+    _FS_MCP_TOOL_PATTERNS = {
+        "read_file": (FSOperation.READ, ("path", "file_path")),
+        "detect_encoding": (FSOperation.READ, ("path", "file_path")),
+        "get_file_info": (FSOperation.READ, ("path", "file_path")),
+        "read_chunk": (FSOperation.READ, ("path", "file_path")),
+        "extract_content": (FSOperation.READ, ("path", "file_path")),
+        "validate_integrity": (FSOperation.READ, ("path", "file_path")),
+        "list_directory": (FSOperation.READ, ("path", "file_path")),
+        "write_file": (FSOperation.WRITE, ("path", "file_path")),
+        "create_backup": (FSOperation.READ, ("path", "file_path")),
+        "match_pattern": (FSOperation.READ, ("path", "file_path")),
+        "apply_edit": (FSOperation.WRITE, ("path", "file_path")),
+        "validate_edit": (FSOperation.READ, ("path", "file_path")),
+        "verify_write": (FSOperation.READ, ("path", "file_path")),
+        "rollback": (FSOperation.WRITE, ("path", "file_path")),
+        "safe_delete": (FSOperation.DELETE, ("path", "file_path")),
+        "regex_search": (FSOperation.READ, ("path", "file_path")),
+        "semantic_search": (FSOperation.READ, ("path", "file_path")),
+        "define_scope": (FSOperation.READ, ("path", "file_path")),
+        "generate_snippet": (FSOperation.READ, ("path", "file_path")),
+        "find_symbol": (FSOperation.READ, ("path", "file_path")),
+    }
+
     async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
-        """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations."""
+        """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations.
+
+        Filesystem guard: any file path argument is validated before the tool runs.
+        Write/delete/execute operations outside allowed directories are blocked deterministically.
+        """
         if not self._mcp_gateway:
             return {"error": "MCP not available", "is_error": True}
 
+        fs_check = self._check_fs_for_tool(tool_name, arguments)
+        if fs_check:
+            return fs_check
+
         result = await self._mcp_gateway.execute(tool_name, arguments)
         return {"tool": tool_name, "result": result, "mcp_executed": True}
+
+    def _check_fs_for_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any] | None:
+        """Return a guarded error dict if the tool touches a disallowed path; otherwise None."""
+        operation, keys = self._FS_MCP_TOOL_PATTERNS.get(tool_name, (None, ()))
+        if operation is None:
+            return None
+
+        for key in keys:
+            raw_path = arguments.get(key)
+            if not raw_path or not isinstance(raw_path, str):
+                continue
+            try:
+                result = self._fs_guard.check(raw_path, operation)
+            except Exception as e:
+                return {"error": f"Filesystem guard error for {tool_name}: {e}", "is_error": True, "guard_blocked": True}
+            if result.verdict.value == "blocked":
+                return {
+                    "error": f"Filesystem guard blocked {tool_name} on '{raw_path}': {result.reason}",
+                    "is_error": True,
+                    "guard_blocked": True,
+                    "guard_result": result.to_dict(),
+                }
+        return None
 
     def get_mcp_categories(self) -> list[str]:
         """Return MCP category metadata without loading servers.
