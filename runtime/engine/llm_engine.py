@@ -81,7 +81,7 @@ class MockLLMEngine:
         "user/context.md": {"context_summary": "mock context", "relevant": True},
         "planning/task_decomposition.md": {"tasks": [{"id": 1, "agent": "tools_read/read_file.md", "description": "Read file"}]},
         "planning/tool_plan_selection.md": {"plan": [{"step": 1, "agent": "tools_read/read_file.md", "inputs": {"path": "."}}]},
-        "execution/tool_invocation.md": {"tool_called": "read_file", "result": "mock file content", "success": True},
+        "execution/tool_invocation.md": {"tool_call": {"name": "read_file", "arguments": {"path": "README.md"}}, "result": "mock file content", "success": True},
         "execution/safety_guardrails.md": {"safe": True, "checks": []},
         "observability/environment_result.md": {"status": "ok", "outputs": {"result": "mock observation"}},
         "observability/runtime_output.md": {"output": "mock runtime output", "status": "ok"},

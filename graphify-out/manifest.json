@@ -225,8 +225,8 @@
     "semantic_hash": "83df5b60533928bd4a6ccd2226879868"
   },
   "runtime/engine/llm_engine.py": {
-    "mtime": 1783365656.5479357,
-    "ast_hash": "3391d6f5ca612fd5565ed3f33b76ce01",
+    "mtime": 1783368869.8313165,
+    "ast_hash": "34cc33adb8a330d315b4bcb957b43ea0",
     "semantic_hash": ""
   },
   "runtime/engine/message_bus.py": {
@@ -235,8 +235,8 @@
     "semantic_hash": "8ff346b27aecd99c3a9ed90229cec47b"
   },
   "runtime/engine/pipeline_runner.py": {
-    "mtime": 1783365540.4656913,
-    "ast_hash": "39c7b3b26d9f9982bb1437abec94d944",
+    "mtime": 1783368838.882309,
+    "ast_hash": "6e62b4cb0e85755fe0144a29fe4e0f09",
     "semantic_hash": ""
   },
   "runtime/engine/state_manager.py": {
@@ -2267,6 +2267,11 @@
   "tests/mcp/test_web_server.py": {
     "mtime": 1783367858.5223536,
     "ast_hash": "7b4bbaa7c8d9688607558f39a93be2f9",
+    "semantic_hash": ""
+  },
+  "tests/runtime/test_pipeline_mcp_execution.py": {
+    "mtime": 1783368862.2385523,
+    "ast_hash": "885519dd0938bfae3c3afecbd80aa296",
     "semantic_hash": ""
   }
 }

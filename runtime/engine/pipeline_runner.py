@@ -463,7 +463,11 @@ class PipelineRunner:
             return False
         return _figma_config_mod.is_figma_configured()
 
+    # Maps MCP tool names to filesystem guard parameters. Any tool that touches
+    # files must be listed here so execution is blocked deterministically before
+    # reaching the MCP server.
     _FS_MCP_TOOL_PATTERNS = {
+        # tools_read
         "read_file": (FSOperation.READ, ("path", "file_path")),
         "detect_encoding": (FSOperation.READ, ("path", "file_path")),
         "get_file_info": (FSOperation.READ, ("path", "file_path")),
@@ -471,6 +475,7 @@ class PipelineRunner:
         "extract_content": (FSOperation.READ, ("path", "file_path")),
         "validate_integrity": (FSOperation.READ, ("path", "file_path")),
         "list_directory": (FSOperation.READ, ("path", "file_path")),
+        # tools_replace
         "write_file": (FSOperation.WRITE, ("path", "file_path")),
         "create_backup": (FSOperation.READ, ("path", "file_path")),
         "match_pattern": (FSOperation.READ, ("path", "file_path")),
@@ -479,20 +484,49 @@ class PipelineRunner:
         "verify_write": (FSOperation.READ, ("path", "file_path")),
         "rollback": (FSOperation.WRITE, ("path", "file_path")),
         "safe_delete": (FSOperation.DELETE, ("path", "file_path")),
+        # tools_search
         "regex_search": (FSOperation.READ, ("path", "file_path")),
         "semantic_search": (FSOperation.READ, ("path", "file_path")),
         "define_scope": (FSOperation.READ, ("path", "file_path")),
         "generate_snippet": (FSOperation.READ, ("path", "file_path")),
         "find_symbol": (FSOperation.READ, ("path", "file_path")),
+        # tools_runcom (command itself is checked by the runcom server; paths inside it are guarded here)
+        "setup_environment": (FSOperation.READ, ("path", "cwd")),
+        "execute_command": (FSOperation.READ, ("path", "cwd")),
+        "get_history": (FSOperation.READ, ("path", "cwd")),
+        # tools_runtest
+        "discover_tests": (FSOperation.READ, ("path",)),
+        "optimize_suite": (FSOperation.READ, ("path",)),
+        "generate_report": (FSOperation.READ, ("path", "output_dir")),
+        # tools_terminal
+        "create_session": (FSOperation.READ, ("path", "cwd")),
+        "get_session_history": (FSOperation.READ, ("path", "cwd")),
+        # tools_manangr
+        "analyze_structure": (FSOperation.READ, ("path",)),
+        "map_dependencies": (FSOperation.READ, ("path", "root")),
+        "analyze_impact": (FSOperation.READ, ("path", "root")),
+        "generate_docs": (FSOperation.READ, ("path", "output_dir")),
+        "organize_files": (FSOperation.WRITE, ("path", "root", "output_dir")),
+        # tools_memory (memory store is abstract, but any disk path argument is guarded)
+        "write_memory": (FSOperation.WRITE, ("path", "file_path")),
+        "index_entry": (FSOperation.WRITE, ("path", "file_path")),
     }
 
+    # Maps MCP tool names to URL argument keys for network guard checks.
     _NETWORK_MCP_TOOL_PATTERNS = {
+        # tools_web
         "build_request": ("url",),
         "check_network": ("url",),
         "send_request": ("url",),
         "handle_retry": ("url",),
         "cache_response": ("url",),
+        # tools_browser
         "browser_navigate": ("url",),
+        "browser_open": ("url",),
+        # tools_runcom (commands may contain URLs; guard the explicit url/cwd keys)
+        "execute_command": ("url",),
+        # tools_runtest
+        "discover_tests": ("url",),
     }
 
     async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
@@ -992,11 +1026,12 @@ class PipelineRunner:
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
 
-        # If the planner selected a Figma MCP tool, execute it directly here.
+        # If the planner selected an MCP tool, execute it directly here.
         tool_call = result.get("tool_call") or result.get("tool")
-        if isinstance(tool_call, dict) and tool_call.get("name", "").startswith("figma_"):
+        tool_name = tool_call.get("name", "") if isinstance(tool_call, dict) else ""
+        if tool_name and self._is_registered_mcp_tool(tool_name):
             tool_output = await self.execute_mcp_tool(
-                tool_call["name"], tool_call.get("arguments", {})
+                tool_name, tool_call.get("arguments", {})
             )
             result["tool_output"] = tool_output
             result["tool_result"] = tool_output.get("result")
@@ -1007,6 +1042,15 @@ class PipelineRunner:
         state["execution"] = result
         if "result" in result:
             state["result"] = result["result"]
+
+    def _is_registered_mcp_tool(self, tool_name: str) -> bool:
+        """Return True if tool_name is registered with an available MCP server."""
+        if not self.mcp_enabled:
+            return False
+        registry = getattr(self._mcp_gateway, "_registry", None)
+        if registry is None:
+            return False
+        return registry.find_tool(tool_name) is not None
 
     async def _run_observation(self, state: dict[str, Any],
                                trace: list[IterationTrace],
