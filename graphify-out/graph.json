@@ -3368,7 +3368,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component_set",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_component_set()"
     },
     {
@@ -3378,7 +3378,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_any",
-      "community": 350,
+      "community": 53,
       "norm_label": "any"
     },
     {
@@ -3388,7 +3388,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_component()"
     },
     {
@@ -3398,7 +3398,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_instance",
-      "community": 350,
+      "community": 53,
       "norm_label": "_is_instance()"
     },
     {
@@ -3478,7 +3478,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_path",
-      "community": 53,
+      "community": 52,
       "norm_label": "path"
     },
     {
@@ -3498,7 +3498,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistryerror",
-      "community": 36,
+      "community": 352,
       "norm_label": "componentregistryerror"
     },
     {
@@ -3508,7 +3508,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 1596,
+      "community": 352,
       "norm_label": "exception"
     },
     {
@@ -3548,7 +3548,7 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_build_and_write",
-      "community": 52,
+      "community": 346,
       "norm_label": ".build_and_write()"
     },
     {
@@ -3558,7 +3558,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_load_per_component_mappers",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load_per_component_mappers()"
     },
     {
@@ -3638,7 +3638,7 @@
       "source_location": "L415",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_init",
-      "community": 350,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -3678,7 +3678,7 @@
       "source_location": "L499",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_collect",
-      "community": 350,
+      "community": 53,
       "norm_label": "._collect()"
     },
     {
@@ -3798,7 +3798,7 @@
       "source_location": "L765",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load()"
     },
     {
@@ -3808,7 +3808,7 @@
       "source_location": "L776",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load_with_per_component_mappers",
-      "community": 53,
+      "community": 52,
       "norm_label": ".load_with_per_component_mappers()"
     },
     {
@@ -3988,7 +3988,7 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_277",
-      "community": 53,
+      "community": 52,
       "norm_label": "read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`."
     },
     {
@@ -4028,7 +4028,7 @@
       "source_location": "L783",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_783",
-      "community": 53,
+      "community": 52,
       "norm_label": "load registry and overlay per-component `*.mapper.json` and manual overrides on"
     },
     {
@@ -8904,7 +8904,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticindex_match_token",
-      "community": 70,
+      "community": 352,
       "norm_label": ".match_token()"
     },
     {
@@ -8924,7 +8924,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher",
-      "community": 70,
+      "community": 352,
       "norm_label": "semanticmatcher"
     },
     {
@@ -8934,7 +8934,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_init",
-      "community": 70,
+      "community": 352,
       "norm_label": ".__init__()"
     },
     {
@@ -8954,7 +8954,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_find_token",
-      "community": 70,
+      "community": 352,
       "norm_label": ".find_token()"
     },
     {
@@ -8994,7 +8994,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_rationale_212",
-      "community": 70,
+      "community": 352,
       "norm_label": "high-level matcher used by registry/token builders."
     },
     {
@@ -9624,7 +9624,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_servers_init",
-      "community": 7,
+      "community": 576,
       "norm_label": "__init__.py"
     },
     {
@@ -9654,7 +9654,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "mcpserver",
-      "community": 1881,
+      "community": 69,
       "norm_label": "mcpserver"
     },
     {
@@ -9844,7 +9844,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_base_mcptool",
-      "community": 7,
+      "community": 576,
       "norm_label": "mcptool"
     },
     {
@@ -10044,7 +10044,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_mcpserver",
-      "community": 1949,
+      "community": 7,
       "norm_label": "mcpserver"
     },
     {
@@ -10054,7 +10054,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_any",
-      "community": 74,
+      "community": 7,
       "norm_label": "any"
     },
     {
@@ -10874,7 +10874,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_servers_gateway",
-      "community": 7,
+      "community": 40,
       "norm_label": "gateway.py"
     },
     {
@@ -10894,7 +10894,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_init",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".__init__()"
     },
     {
@@ -10904,7 +10904,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "mcp_servers_gateway_py_mcpregistry",
-      "community": 2583,
+      "community": 7,
       "norm_label": "mcpregistry"
     },
     {
@@ -14854,7 +14854,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_servers_registry",
-      "community": 7,
+      "community": 576,
       "norm_label": "registry.py"
     },
     {
@@ -14864,7 +14864,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "mcp_servers_registry_serverinfo",
-      "community": 7,
+      "community": 20,
       "norm_label": "serverinfo"
     },
     {
@@ -18274,7 +18274,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_circuit_breaker",
-      "community": 20,
+      "community": 2583,
       "norm_label": "circuit_breaker.py"
     },
     {
@@ -18294,7 +18294,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreakerconfig",
-      "community": 20,
+      "community": 2583,
       "norm_label": "circuitbreakerconfig"
     },
     {
@@ -18304,7 +18304,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker",
-      "community": 20,
+      "community": 2583,
       "norm_label": "circuitbreaker"
     },
     {
@@ -18324,7 +18324,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_can_execute",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".can_execute()"
     },
     {
@@ -18334,7 +18334,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_success",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".record_success()"
     },
     {
@@ -18344,7 +18344,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_failure",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".record_failure()"
     },
     {
@@ -18354,7 +18354,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_call",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".call()"
     },
     {
@@ -18364,7 +18364,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_engine_circuit_breaker_py_any",
-      "community": 20,
+      "community": 2583,
       "norm_label": "any"
     },
     {
@@ -18454,7 +18454,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "runtime_engine_headroom_client_py_any",
-      "community": 91,
+      "community": 434,
       "norm_label": "any"
     },
     {
@@ -18474,7 +18474,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_passthrough",
-      "community": 91,
+      "community": 434,
       "norm_label": "._passthrough()"
     },
     {
@@ -18484,7 +18484,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_compress_text",
-      "community": 91,
+      "community": 434,
       "norm_label": ".compress_text()"
     },
     {
@@ -18494,7 +18494,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_compress_messages",
-      "community": 91,
+      "community": 434,
       "norm_label": ".compress_messages()"
     },
     {
@@ -18504,7 +18504,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_retrieve",
-      "community": 91,
+      "community": 434,
       "norm_label": ".retrieve()"
     },
     {
@@ -18514,7 +18514,7 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_stats",
-      "community": 91,
+      "community": 434,
       "norm_label": ".stats()"
     },
     {
@@ -18524,7 +18524,7 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_shared_context",
-      "community": 91,
+      "community": 434,
       "norm_label": ".shared_context()"
     },
     {
@@ -18534,7 +18534,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_get_store",
-      "community": 91,
+      "community": 434,
       "norm_label": "._get_store()"
     },
     {
@@ -18544,7 +18544,7 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "engine_headroom_client_headroomclient_to_dict",
-      "community": 91,
+      "community": 434,
       "norm_label": ".to_dict()"
     },
     {
@@ -18594,7 +18594,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_79",
-      "community": 91,
+      "community": 434,
       "norm_label": "return a result that leaves content untouched."
     },
     {
@@ -18604,7 +18604,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_98",
-      "community": 91,
+      "community": 434,
       "norm_label": "compress a single text fragment (e.g. tool output, log, file snippet)."
     },
     {
@@ -18614,7 +18614,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_118",
-      "community": 91,
+      "community": 434,
       "norm_label": "compress a list of chat messages before sending them to an llm."
     },
     {
@@ -18624,7 +18624,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_165",
-      "community": 91,
+      "community": 434,
       "norm_label": "retrieve original uncompressed content by hash from local ccr store."
     },
     {
@@ -18634,7 +18634,7 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_203",
-      "community": 91,
+      "community": 434,
       "norm_label": "return headroom session statistics if the package is installed."
     },
     {
@@ -18644,7 +18644,7 @@
       "source_location": "L229",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_229",
-      "community": 91,
+      "community": 434,
       "norm_label": "return a sharedcontext instance for compressed inter-agent handoffs.          la"
     },
     {
@@ -18654,7 +18654,7 @@
       "source_location": "L244",
       "_origin": "ast",
       "id": "engine_headroom_client_rationale_244",
-      "community": 91,
+      "community": 434,
       "norm_label": "get the shared compression store singleton."
     },
     {
@@ -18674,7 +18674,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "engine_llm_engine_llmprovider",
-      "community": 27,
+      "community": 2583,
       "norm_label": "llmprovider"
     },
     {
@@ -18694,7 +18694,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_llm_engine_llmconfig",
-      "community": 27,
+      "community": 2583,
       "norm_label": "llmconfig"
     },
     {
@@ -18704,54 +18704,54 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine",
-      "community": 434,
+      "community": 2583,
       "norm_label": "mockllmengine"
     },
     {
       "label": ".execute()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L110",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine_execute",
-      "community": 434,
+      "community": 2583,
       "norm_label": ".execute()"
     },
     {
       "label": "AgentSpec",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L110",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "runtime_engine_llm_engine_py_agentspec",
-      "community": 434,
+      "community": 2583,
       "norm_label": "agentspec"
     },
     {
       "label": "Any",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L110",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "runtime_engine_llm_engine_py_any",
-      "community": 434,
+      "community": 2583,
       "norm_label": "any"
     },
     {
       "label": ".raw_chat_completion()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L153",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine_raw_chat_completion",
-      "community": 434,
+      "community": 2583,
       "norm_label": ".raw_chat_completion()"
     },
     {
       "label": "LLMEngine",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L160",
+      "source_location": "L169",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine",
       "community": 2583,
@@ -18761,7 +18761,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L167",
+      "source_location": "L176",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_init",
       "community": 2583,
@@ -18771,7 +18771,7 @@
       "label": "._resolve_api_key()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L176",
+      "source_location": "L185",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_resolve_api_key",
       "community": 2583,
@@ -18781,7 +18781,7 @@
       "label": "._build_fallback_chain()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L186",
+      "source_location": "L195",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_build_fallback_chain",
       "community": 2583,
@@ -18791,7 +18791,7 @@
       "label": ".maybe_compress_messages()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L200",
+      "source_location": "L209",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_maybe_compress_messages",
       "community": 434,
@@ -18801,17 +18801,17 @@
       "label": ".execute()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L218",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_execute",
-      "community": 434,
+      "community": 2583,
       "norm_label": ".execute()"
     },
     {
       "label": "._execute_with_retries()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L243",
+      "source_location": "L252",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_execute_with_retries",
       "community": 2583,
@@ -18821,7 +18821,7 @@
       "label": "._call_api()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L253",
+      "source_location": "L262",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_call_api",
       "community": 2583,
@@ -18831,7 +18831,7 @@
       "label": "._call_anthropic()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L269",
+      "source_location": "L278",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_call_anthropic",
       "community": 2583,
@@ -18841,7 +18841,7 @@
       "label": "._call_openai()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L288",
+      "source_location": "L297",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_call_openai",
       "community": 2583,
@@ -18851,7 +18851,7 @@
       "label": ".raw_chat_completion()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L309",
+      "source_location": "L318",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_raw_chat_completion",
       "community": 2583,
@@ -18861,7 +18861,7 @@
       "label": "._extract_json()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L324",
+      "source_location": "L333",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_extract_json",
       "community": 2583,
@@ -18871,17 +18871,17 @@
       "label": "EvaluatorResponse",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L346",
+      "source_location": "L355",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluatorresponse",
-      "community": 434,
+      "community": 2583,
       "norm_label": "evaluatorresponse"
     },
     {
       "label": "EvaluationEngine",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L356",
+      "source_location": "L365",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluationengine",
       "community": 2583,
@@ -18891,7 +18891,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L383",
+      "source_location": "L392",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluationengine_init",
       "community": 2583,
@@ -18901,7 +18901,7 @@
       "label": ".evaluate()",
       "file_type": "code",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L396",
+      "source_location": "L405",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluationengine_evaluate",
       "community": 2583,
@@ -18914,16 +18914,16 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_53",
-      "community": 434,
+      "community": 2583,
       "norm_label": "deterministic mock llm engine for integration testing without api keys.      ret"
     },
     {
       "label": "LLM execution engine with circuit breaker and provider fallback.      Fallback c",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L161",
+      "source_location": "L170",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_161",
+      "id": "engine_llm_engine_rationale_170",
       "community": 2583,
       "norm_label": "llm execution engine with circuit breaker and provider fallback.      fallback c"
     },
@@ -18931,9 +18931,9 @@
       "label": "Build ordered list of fallback providers based on available API keys.",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L187",
+      "source_location": "L196",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_187",
+      "id": "engine_llm_engine_rationale_196",
       "community": 2583,
       "norm_label": "build ordered list of fallback providers based on available api keys."
     },
@@ -18941,9 +18941,9 @@
       "label": "Explicit Headroom compression helper for callers that want to shrink         hea",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L205",
+      "source_location": "L214",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_205",
+      "id": "engine_llm_engine_rationale_214",
       "community": 434,
       "norm_label": "explicit headroom compression helper for callers that want to shrink         hea"
     },
@@ -18951,9 +18951,9 @@
       "label": "Direct API call without AgentSpec wrapping. Returns raw text.",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L312",
+      "source_location": "L321",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_312",
+      "id": "engine_llm_engine_rationale_321",
       "community": 2583,
       "norm_label": "direct api call without agentspec wrapping. returns raw text."
     },
@@ -18961,19 +18961,19 @@
       "label": "Strict pass/fail verdict produced by the fast /goal evaluator.",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L347",
+      "source_location": "L356",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_347",
-      "community": 434,
+      "id": "engine_llm_engine_rationale_356",
+      "community": 2583,
       "norm_label": "strict pass/fail verdict produced by the fast /goal evaluator."
     },
     {
       "label": "Lightweight evaluator using a smaller/cheaper model for strict JSON verdicts.",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L357",
+      "source_location": "L366",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_357",
+      "id": "engine_llm_engine_rationale_366",
       "community": 2583,
       "norm_label": "lightweight evaluator using a smaller/cheaper model for strict json verdicts."
     },
@@ -18981,9 +18981,9 @@
       "label": "Return a strict pass/fail verdict for the given goal and evidence.",
       "file_type": "rationale",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L397",
+      "source_location": "L406",
       "_origin": "ast",
-      "id": "engine_llm_engine_rationale_397",
+      "id": "engine_llm_engine_rationale_406",
       "community": 2583,
       "norm_label": "return a strict pass/fail verdict for the given goal and evidence."
     },
@@ -19764,7 +19764,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "engine_pipeline_runner_terminationstatus",
-      "community": 27,
+      "community": 2583,
       "norm_label": "terminationstatus"
     },
     {
@@ -19774,7 +19774,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinestatus",
-      "community": 40,
+      "community": 2583,
       "norm_label": "pipelinestatus"
     },
     {
@@ -19911,7 +19911,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L320",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_init",
       "community": 2583,
@@ -19921,7 +19921,7 @@
       "label": "AgentLoader",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L320",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "agentloader",
       "community": 2583,
@@ -19931,7 +19931,7 @@
       "label": "LLMEngine",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L320",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "llmengine",
       "community": 2583,
@@ -19941,7 +19941,7 @@
       "label": "MessageBus",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L320",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "messagebus",
       "community": 2583,
@@ -19951,7 +19951,7 @@
       "label": "StateManager",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L320",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "statemanager",
       "community": 2583,
@@ -19961,7 +19961,7 @@
       "label": "._load_project_rules()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L349",
+      "source_location": "L356",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_load_project_rules",
       "community": 421,
@@ -19971,7 +19971,7 @@
       "label": "._parse_project_rules()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L375",
+      "source_location": "L382",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_parse_project_rules",
       "community": 421,
@@ -19981,7 +19981,7 @@
       "label": "._summarize_markdown()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L390",
+      "source_location": "L397",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_summarize_markdown",
       "community": 421,
@@ -19991,7 +19991,7 @@
       "label": "._build_system_context()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L422",
+      "source_location": "L429",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_build_system_context",
       "community": 421,
@@ -20001,7 +20001,7 @@
       "label": "._system_context_for_phase()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L437",
+      "source_location": "L444",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_system_context_for_phase",
       "community": 421,
@@ -20011,7 +20011,7 @@
       "label": ".mcp_enabled()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L444",
+      "source_location": "L451",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_mcp_enabled",
       "community": 421,
@@ -20021,7 +20021,7 @@
       "label": ".figma_available()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L448",
+      "source_location": "L455",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_figma_available",
       "community": 421,
@@ -20031,7 +20031,7 @@
       "label": ".execute_mcp_tool()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L491",
+      "source_location": "L498",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_execute_mcp_tool",
       "community": 421,
@@ -20041,7 +20041,7 @@
       "label": "._check_fs_for_tool()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L533",
+      "source_location": "L540",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_check_fs_for_tool",
       "community": 421,
@@ -20051,7 +20051,7 @@
       "label": "._check_network_for_tool()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L556",
+      "source_location": "L563",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_check_network_for_tool",
       "community": 421,
@@ -20061,7 +20061,7 @@
       "label": ".get_mcp_categories()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L586",
+      "source_location": "L593",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_get_mcp_categories",
       "community": 421,
@@ -20071,7 +20071,7 @@
       "label": ".run()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L599",
+      "source_location": "L606",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run",
       "community": 421,
@@ -20081,7 +20081,7 @@
       "label": "._finalize_and_return()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L789",
+      "source_location": "L796",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_finalize_and_return",
       "community": 421,
@@ -20091,7 +20091,7 @@
       "label": "._run_safety_pre_check()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L818",
+      "source_location": "L825",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_safety_pre_check",
       "community": 421,
@@ -20101,7 +20101,7 @@
       "label": "._run_design_intake()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L851",
+      "source_location": "L858",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_design_intake",
       "community": 421,
@@ -20111,7 +20111,7 @@
       "label": "._run_design_pipeline()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L873",
+      "source_location": "L880",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_design_pipeline",
       "community": 421,
@@ -20121,7 +20121,7 @@
       "label": "._extract_figma_file_key()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L911",
+      "source_location": "L918",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_extract_figma_file_key",
       "community": 421,
@@ -20131,7 +20131,7 @@
       "label": "._extract_figma_node_id()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L916",
+      "source_location": "L923",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_extract_figma_node_id",
       "community": 421,
@@ -20141,7 +20141,7 @@
       "label": "._get_agent()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L921",
+      "source_location": "L928",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_get_agent",
       "community": 421,
@@ -20151,7 +20151,7 @@
       "label": "AgentSpec",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L921",
+      "source_location": "L928",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_agentspec",
       "community": 2583,
@@ -20161,7 +20161,7 @@
       "label": "._format_design_pipeline_result()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L926",
+      "source_location": "L933",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_format_design_pipeline_result",
       "community": 421,
@@ -20171,7 +20171,7 @@
       "label": "._run_planning()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L941",
+      "source_location": "L948",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_planning",
       "community": 421,
@@ -20181,7 +20181,7 @@
       "label": "._run_phase()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L958",
+      "source_location": "L965",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_phase",
       "community": 421,
@@ -20191,7 +20191,7 @@
       "label": "._run_execution()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L969",
+      "source_location": "L976",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_execution",
       "community": 421,
@@ -20201,7 +20201,7 @@
       "label": "._run_observation()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1004",
+      "source_location": "L1011",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_observation",
       "community": 421,
@@ -20211,7 +20211,7 @@
       "label": "._run_validation()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1021",
+      "source_location": "L1028",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_validation",
       "community": 421,
@@ -20221,7 +20221,7 @@
       "label": "._run_termination_decision()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1067",
+      "source_location": "L1074",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_termination_decision",
       "community": 421,
@@ -20231,7 +20231,7 @@
       "label": "._run_safety_post_check()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1086",
+      "source_location": "L1093",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_safety_post_check",
       "community": 421,
@@ -20241,7 +20241,7 @@
       "label": "._run_mutual_check()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1095",
+      "source_location": "L1102",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_run_mutual_check",
       "community": 421,
@@ -20251,7 +20251,7 @@
       "label": "._invoke_agent()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1101",
+      "source_location": "L1115",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_invoke_agent",
       "community": 421,
@@ -20261,7 +20261,7 @@
       "label": "LLMResponse",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1101",
+      "source_location": "L1115",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_llmresponse",
       "community": 2583,
@@ -20271,7 +20271,7 @@
       "label": "._publish_progress()",
       "file_type": "code",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1150",
+      "source_location": "L1164",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_publish_progress",
       "community": 421,
@@ -20321,9 +20321,9 @@
       "label": "Load lightweight project rules and CLAUDE.md from workspace root.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L350",
+      "source_location": "L357",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_350",
+      "id": "engine_pipeline_runner_rationale_357",
       "community": 421,
       "norm_label": "load lightweight project rules and claude.md from workspace root."
     },
@@ -20331,9 +20331,9 @@
       "label": "Parse project_rules.md into sections.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L376",
+      "source_location": "L383",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_376",
+      "id": "engine_pipeline_runner_rationale_383",
       "community": 421,
       "norm_label": "parse project_rules.md into sections."
     },
@@ -20341,9 +20341,9 @@
       "label": "Compress markdown to headings, lists, tables, and short directives.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L391",
+      "source_location": "L398",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_391",
+      "id": "engine_pipeline_runner_rationale_398",
       "community": 421,
       "norm_label": "compress markdown to headings, lists, tables, and short directives."
     },
@@ -20351,9 +20351,9 @@
       "label": "Assemble the summarized project rules and CLAUDE.md into one system block.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L423",
+      "source_location": "L430",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_423",
+      "id": "engine_pipeline_runner_rationale_430",
       "community": 421,
       "norm_label": "assemble the summarized project rules and claude.md into one system block."
     },
@@ -20361,9 +20361,9 @@
       "label": "Return the shared system context for phases that must obey project-wide rules.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L438",
+      "source_location": "L445",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_438",
+      "id": "engine_pipeline_runner_rationale_445",
       "community": 421,
       "norm_label": "return the shared system context for phases that must obey project-wide rules."
     },
@@ -20371,9 +20371,9 @@
       "label": "True when figma-agent-core is present and Figma credentials are configured.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L449",
+      "source_location": "L456",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_449",
+      "id": "engine_pipeline_runner_rationale_456",
       "community": 421,
       "norm_label": "true when figma-agent-core is present and figma credentials are configured."
     },
@@ -20381,9 +20381,9 @@
       "label": "Execute a tool via MCP servers directly \u2014 bypasses LLM for actual I/O operations",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L492",
+      "source_location": "L499",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_492",
+      "id": "engine_pipeline_runner_rationale_499",
       "community": 421,
       "norm_label": "execute a tool via mcp servers directly \u2014 bypasses llm for actual i/o operations"
     },
@@ -20391,9 +20391,9 @@
       "label": "Return a guarded error dict if the tool touches a disallowed path; otherwise Non",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L534",
+      "source_location": "L541",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_534",
+      "id": "engine_pipeline_runner_rationale_541",
       "community": 421,
       "norm_label": "return a guarded error dict if the tool touches a disallowed path; otherwise non"
     },
@@ -20401,9 +20401,9 @@
       "label": "Return a guarded error dict if the tool would egress to a disallowed URL; otherw",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L557",
+      "source_location": "L564",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_557",
+      "id": "engine_pipeline_runner_rationale_564",
       "community": 421,
       "norm_label": "return a guarded error dict if the tool would egress to a disallowed url; otherw"
     },
@@ -20411,9 +20411,9 @@
       "label": "Return MCP category metadata without loading servers.          Filters out the F",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L587",
+      "source_location": "L594",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_587",
+      "id": "engine_pipeline_runner_rationale_594",
       "community": 421,
       "norm_label": "return mcp category metadata without loading servers.          filters out the f"
     },
@@ -20421,9 +20421,9 @@
       "label": "Classify request via design_intake.md and return design_descriptor if design pro",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L853",
+      "source_location": "L860",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_853",
+      "id": "engine_pipeline_runner_rationale_860",
       "community": 421,
       "norm_label": "classify request via design_intake.md and return design_descriptor if design pro"
     },
@@ -20431,9 +20431,9 @@
       "label": "Trigger the full Figma-to-code pipeline via MCP figma_run_pipeline.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L875",
+      "source_location": "L882",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_875",
+      "id": "engine_pipeline_runner_rationale_882",
       "community": 421,
       "norm_label": "trigger the full figma-to-code pipeline via mcp figma_run_pipeline."
     },
@@ -20441,9 +20441,9 @@
       "label": "Execute one ReAct phase and store results in the shared state.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L960",
+      "source_location": "L967",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_960",
+      "id": "engine_pipeline_runner_rationale_967",
       "community": 421,
       "norm_label": "execute one react phase and store results in the shared state."
     },
@@ -20451,9 +20451,9 @@
       "label": "Publish progress event for TUI and external observers.",
       "file_type": "rationale",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1151",
+      "source_location": "L1165",
       "_origin": "ast",
-      "id": "engine_pipeline_runner_rationale_1151",
+      "id": "engine_pipeline_runner_rationale_1165",
       "community": 421,
       "norm_label": "publish progress event for tui and external observers."
     },
@@ -20784,7 +20784,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "runtime_main_resolve_root",
-      "community": 32,
+      "community": 5,
       "norm_label": "resolve_root()"
     },
     {
@@ -20804,7 +20804,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "runtime_main_parse_args",
-      "community": 32,
+      "community": 5,
       "norm_label": "parse_args()"
     },
     {
@@ -20814,7 +20814,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "runtime_main_main",
-      "community": 32,
+      "community": 5,
       "norm_label": "main()"
     },
     {
@@ -20824,7 +20824,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "memory_init",
-      "community": 56,
+      "community": 73,
       "norm_label": "__init__.py"
     },
     {
@@ -21084,7 +21084,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "memory_enrichment",
-      "community": 56,
+      "community": 73,
       "norm_label": "enrichment.py"
     },
     {
@@ -21204,7 +21204,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "memory_fts_index",
-      "community": 56,
+      "community": 73,
       "norm_label": "fts_index.py"
     },
     {
@@ -21324,7 +21324,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "memory_memory_manager",
-      "community": 56,
+      "community": 73,
       "norm_label": "memory_manager.py"
     },
     {
@@ -21594,7 +21594,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "memory_test_memory_testvectorstore",
-      "community": 344,
+      "community": 56,
       "norm_label": "testvectorstore"
     },
     {
@@ -21604,7 +21604,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "memory_test_memory_testvectorstore_setup",
-      "community": 344,
+      "community": 56,
       "norm_label": ".setup()"
     },
     {
@@ -21614,7 +21614,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "memory_test_memory_testvectorstore_teardown",
-      "community": 344,
+      "community": 56,
       "norm_label": ".teardown()"
     },
     {
@@ -21624,7 +21624,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "memory_test_memory_testvectorstore_test_insert_and_search",
-      "community": 344,
+      "community": 56,
       "norm_label": ".test_insert_and_search()"
     },
     {
@@ -21634,7 +21634,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "memory_test_memory_testvectorstore_test_count",
-      "community": 344,
+      "community": 56,
       "norm_label": ".test_count()"
     },
     {
@@ -21644,7 +21644,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "memory_test_memory_testftsindex",
-      "community": 73,
+      "community": 109,
       "norm_label": "testftsindex"
     },
     {
@@ -21654,7 +21654,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "memory_test_memory_testftsindex_setup",
-      "community": 73,
+      "community": 109,
       "norm_label": ".setup()"
     },
     {
@@ -21664,7 +21664,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "memory_test_memory_testftsindex_teardown",
-      "community": 73,
+      "community": 109,
       "norm_label": ".teardown()"
     },
     {
@@ -21674,7 +21674,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "memory_test_memory_testftsindex_test_index_and_search",
-      "community": 73,
+      "community": 109,
       "norm_label": ".test_index_and_search()"
     },
     {
@@ -21684,7 +21684,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "memory_test_memory_testftsindex_test_delete",
-      "community": 73,
+      "community": 109,
       "norm_label": ".test_delete()"
     },
     {
@@ -21784,7 +21784,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "memory_vector_store",
-      "community": 56,
+      "community": 73,
       "norm_label": "vector_store.py"
     },
     {
@@ -22654,7 +22654,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "observability_resource_monitor_resourcesnapshot",
-      "community": 27,
+      "community": 0,
       "norm_label": "resourcesnapshot"
     },
     {
@@ -22664,7 +22664,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "observability_resource_monitor_resourcecheckresult",
-      "community": 27,
+      "community": 0,
       "norm_label": "resourcecheckresult"
     },
     {
@@ -23434,7 +23434,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_file_system_guard",
-      "community": 40,
+      "community": 1596,
       "norm_label": "file_system_guard.py"
     },
     {
@@ -23444,7 +23444,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "safety_file_system_guard_fsoperation",
-      "community": 40,
+      "community": 1596,
       "norm_label": "fsoperation"
     },
     {
@@ -23454,7 +23454,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "safety_file_system_guard_fsverdict",
-      "community": 40,
+      "community": 1596,
       "norm_label": "fsverdict"
     },
     {
@@ -23794,7 +23794,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "safety_safety_chain_safetylevel",
-      "community": 25,
+      "community": 40,
       "norm_label": "safetylevel"
     },
     {
@@ -24264,7 +24264,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_opens_after_failures",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".test_opens_after_failures()"
     },
     {
@@ -24274,7 +24274,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_half_open_after_timeout",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".test_half_open_after_timeout()"
     },
     {
@@ -24284,7 +24284,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_success_resets",
-      "community": 20,
+      "community": 2583,
       "norm_label": ".test_success_resets()"
     },
     {
@@ -24364,7 +24364,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerjobpriority_test_priority_sorting",
-      "community": 348,
+      "community": 20,
       "norm_label": ".test_priority_sorting()"
     },
     {
@@ -24394,7 +24394,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "runtime_test_resilience_testmcphealthcheck_test_registry_is_healthy",
-      "community": 7,
+      "community": 20,
       "norm_label": ".test_registry_is_healthy()"
     },
     {
@@ -25434,7 +25434,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "workers_worker_pool_workerjob",
-      "community": 348,
+      "community": 20,
       "norm_label": "workerjob"
     },
     {
@@ -25444,7 +25444,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "workers_worker_pool_workerjob_lt",
-      "community": 348,
+      "community": 20,
       "norm_label": ".__lt__()"
     },
     {
@@ -25474,7 +25474,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult_to_dict",
-      "community": 61,
+      "community": 33,
       "norm_label": ".to_dict()"
     },
     {
@@ -25484,7 +25484,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "runtime_workers_worker_pool_py_any",
-      "community": 61,
+      "community": 33,
       "norm_label": "any"
     },
     {
@@ -25494,7 +25494,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool",
-      "community": 61,
+      "community": 20,
       "norm_label": "workerpool"
     },
     {
@@ -25534,7 +25534,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_start",
-      "community": 61,
+      "community": 20,
       "norm_label": ".start()"
     },
     {
@@ -25544,7 +25544,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stop",
-      "community": 61,
+      "community": 20,
       "norm_label": ".stop()"
     },
     {
@@ -25554,7 +25554,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatch",
-      "community": 348,
+      "community": 20,
       "norm_label": ".dispatch()"
     },
     {
@@ -25564,7 +25564,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatcher_loop",
-      "community": 61,
+      "community": 20,
       "norm_label": "._dispatcher_loop()"
     },
     {
@@ -25574,7 +25574,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_execute_in_worker",
-      "community": 61,
+      "community": 20,
       "norm_label": "._execute_in_worker()"
     },
     {
@@ -25584,7 +25584,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_spawn_worker",
-      "community": 61,
+      "community": 20,
       "norm_label": "._spawn_worker()"
     },
     {
@@ -25594,7 +25594,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_find_free_worker",
-      "community": 61,
+      "community": 20,
       "norm_label": "._find_free_worker()"
     },
     {
@@ -25604,7 +25604,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_store_result",
-      "community": 61,
+      "community": 20,
       "norm_label": "._store_result()"
     },
     {
@@ -25614,7 +25614,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_estimate_saved_tokens",
-      "community": 348,
+      "community": 20,
       "norm_label": "._estimate_saved_tokens()"
     },
     {
@@ -25624,7 +25624,7 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_busy_workers",
-      "community": 61,
+      "community": 20,
       "norm_label": ".busy_workers()"
     },
     {
@@ -25634,7 +25634,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_idle_workers",
-      "community": 61,
+      "community": 20,
       "norm_label": ".idle_workers()"
     },
     {
@@ -25644,7 +25644,7 @@
       "source_location": "L325",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stats",
-      "community": 61,
+      "community": 33,
       "norm_label": ".stats()"
     },
     {
@@ -25654,7 +25654,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_26",
-      "community": 348,
+      "community": 20,
       "norm_label": "a job dispatched to an isolated worker."
     },
     {
@@ -25674,7 +25674,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_72",
-      "community": 61,
+      "community": 20,
       "norm_label": "pool of isolated worker processes for agent execution.      each worker runs in"
     },
     {
@@ -25684,7 +25684,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_133",
-      "community": 348,
+      "community": 20,
       "norm_label": "dispatch a job to a worker. returns summary when done.          backpressure: if"
     },
     {
@@ -25694,7 +25694,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_164",
-      "community": 61,
+      "community": 20,
       "norm_label": "main loop: pick jobs from queue, assign to free workers or spawn new ones."
     },
     {
@@ -25704,7 +25704,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_186",
-      "community": 61,
+      "community": 20,
       "norm_label": "run a job in a specific worker process."
     },
     {
@@ -25714,7 +25714,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_289",
-      "community": 61,
+      "community": 20,
       "norm_label": "spawn a new worker slot."
     },
     {
@@ -25724,7 +25724,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_310",
-      "community": 348,
+      "community": 20,
       "norm_label": "estimate how many tokens were kept out of the parent context."
     },
     {
@@ -31534,7 +31534,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "integration_test_e2e",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_e2e.py"
     },
     {
@@ -31544,7 +31544,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "integration_test_e2e_resolve_root",
-      "community": 1299,
+      "community": 61,
       "norm_label": "_resolve_root()"
     },
     {
@@ -31554,7 +31554,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_integration_test_e2e_py_path",
-      "community": 27,
+      "community": 2583,
       "norm_label": "path"
     },
     {
@@ -31564,7 +31564,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "integration_test_e2e_run_pipeline",
-      "community": 1299,
+      "community": 61,
       "norm_label": "_run_pipeline()"
     },
     {
@@ -31574,7 +31574,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "integration_test_e2e_test_mock_pipeline_completes",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_mock_pipeline_completes()"
     },
     {
@@ -31584,7 +31584,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "integration_test_e2e_test_mock_pipeline_safety_pre_check",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_mock_pipeline_safety_pre_check()"
     },
     {
@@ -31594,7 +31594,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "integration_test_e2e_test_mock_pipeline_trace_structure",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_mock_pipeline_trace_structure()"
     },
     {
@@ -31604,7 +31604,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "integration_test_e2e_test_mock_pipeline_state_persisted",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_mock_pipeline_state_persisted()"
     },
     {
@@ -31614,7 +31614,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "integration_test_e2e_test_deterministic_safety_blocks_forbidden_input",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_deterministic_safety_blocks_forbidden_input()"
     },
     {
@@ -31624,7 +31624,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "integration_test_e2e_test_deterministic_safety_allows_safe_input",
-      "community": 1299,
+      "community": 61,
       "norm_label": "test_deterministic_safety_allows_safe_input()"
     },
     {
@@ -31634,7 +31634,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_1",
-      "community": 1299,
+      "community": 61,
       "norm_label": "end-to-end integration tests for agentic loop runtime.  runs the full react pipe"
     },
     {
@@ -31644,7 +31644,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_44",
-      "community": 1299,
+      "community": 61,
       "norm_label": "full react pipeline with mock provider should finish in <1s."
     },
     {
@@ -31654,7 +31654,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_55",
-      "community": 1299,
+      "community": 61,
       "norm_label": "safety pre-check agents should all pass with mock responses."
     },
     {
@@ -31664,7 +31664,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_67",
-      "community": 1299,
+      "community": 61,
       "norm_label": "every trace entry must have required fields."
     },
     {
@@ -31674,7 +31674,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_79",
-      "community": 1299,
+      "community": 61,
       "norm_label": "statemanager should persist session data."
     },
     {
@@ -31684,7 +31684,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_96",
-      "community": 1299,
+      "community": 61,
       "norm_label": "safetychain must block destructive command patterns before any llm agent runs."
     },
     {
@@ -31694,7 +31694,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "integration_test_e2e_rationale_108",
-      "community": 1299,
+      "community": 61,
       "norm_label": "safe input should pass deterministic safety and continue to llm-based checks."
     },
     {
@@ -33514,7 +33514,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_audit_logger_py_pipelinerunner",
-      "community": 27,
+      "community": 2583,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33594,7 +33594,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_pipeline_figma.py"
     },
     {
@@ -33604,7 +33604,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_make_runner",
-      "community": 1299,
+      "community": 91,
       "norm_label": "_make_runner()"
     },
     {
@@ -33614,7 +33614,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_path",
-      "community": 1299,
+      "community": 91,
       "norm_label": "path"
     },
     {
@@ -33624,7 +33624,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_pipelinerunner",
-      "community": 27,
+      "community": 91,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33634,7 +33634,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_available_when_configured",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_figma_available_when_configured()"
     },
     {
@@ -33644,7 +33644,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_exposed_when_available",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_figma_category_exposed_when_available()"
     },
     {
@@ -33654,7 +33654,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_hidden_when_mcp_disabled",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_figma_category_hidden_when_mcp_disabled()"
     },
     {
@@ -33664,7 +33664,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_execute_mcp_figma_tool_dry_run",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_execute_mcp_figma_tool_dry_run()"
     },
     {
@@ -33674,7 +33674,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_short_circuits_for_full_code",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_design_intake_short_circuits_for_full_code()"
     },
     {
@@ -33684,7 +33684,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_continues_planning_for_spec",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_design_intake_continues_planning_for_spec()"
     },
     {
@@ -33694,7 +33694,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_extract_figma_file_key_and_node_id",
-      "community": 1299,
+      "community": 91,
       "norm_label": "test_extract_figma_file_key_and_node_id()"
     },
     {
@@ -33704,7 +33704,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_rationale_1",
-      "community": 1299,
+      "community": 91,
       "norm_label": "integration tests for figma wiring inside pipelinerunner.  these tests verify th"
     },
     {
@@ -33714,7 +33714,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_pipeline_fs_guard.py"
     },
     {
@@ -33724,7 +33724,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_make_runner",
-      "community": 109,
+      "community": 27,
       "norm_label": "_make_runner()"
     },
     {
@@ -33754,7 +33754,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_write_file_blocked_for_dot_env",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_write_file_blocked_for_dot_env()"
     },
     {
@@ -33764,7 +33764,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_read_file_blocked_for_etc_passwd",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_read_file_blocked_for_etc_passwd()"
     },
     {
@@ -33774,7 +33774,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_write_file_allowed_in_workspace",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_write_file_allowed_in_workspace()"
     },
     {
@@ -33784,7 +33784,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_apply_edit_blocked_for_dot_ssh",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_apply_edit_blocked_for_dot_ssh()"
     },
     {
@@ -33794,7 +33794,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_search_allowed_in_workspace",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_search_allowed_in_workspace()"
     },
     {
@@ -33804,7 +33804,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_test_mcp_non_filesystem_tool_skips_guard",
-      "community": 109,
+      "community": 27,
       "norm_label": "test_mcp_non_filesystem_tool_skips_guard()"
     },
     {
@@ -33814,8 +33814,128 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_fs_guard_rationale_1",
-      "community": 109,
+      "community": 27,
       "norm_label": "integration tests for filesystemguard wired into pipelinerunner mcp execution."
+    },
+    {
+      "label": "test_pipeline_mutual_check.py",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check",
+      "community": 2583,
+      "norm_label": "test_pipeline_mutual_check.py"
+    },
+    {
+      "label": "_mock_response()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_mock_response",
+      "community": 2583,
+      "norm_label": "_mock_response()"
+    },
+    {
+      "label": "LLMResponse",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "community": 2583,
+      "norm_label": "llmresponse"
+    },
+    {
+      "label": "_make_runner()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_make_runner",
+      "community": 2583,
+      "norm_label": "_make_runner()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "community": 2583,
+      "norm_label": "path"
+    },
+    {
+      "label": "PipelineRunner",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "community": 2583,
+      "norm_label": "pipelinerunner"
+    },
+    {
+      "label": "test_mutual_check_agents_list_includes_all_required_agents()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_test_mutual_check_agents_list_includes_all_required_agents",
+      "community": 2583,
+      "norm_label": "test_mutual_check_agents_list_includes_all_required_agents()"
+    },
+    {
+      "label": "test_run_mutual_check_invokes_all_agents()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_test_run_mutual_check_invokes_all_agents",
+      "community": 2583,
+      "norm_label": "test_run_mutual_check_invokes_all_agents()"
+    },
+    {
+      "label": "test_run_mutual_check_passes_metrics_context()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_test_run_mutual_check_passes_metrics_context",
+      "community": 2583,
+      "norm_label": "test_run_mutual_check_passes_metrics_context()"
+    },
+    {
+      "label": "test_mock_engine_returns_responses_for_all_mutual_check_agents()",
+      "file_type": "code",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L110",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_test_mock_engine_returns_responses_for_all_mutual_check_agents",
+      "community": 2583,
+      "norm_label": "test_mock_engine_returns_responses_for_all_mutual_check_agents()"
+    },
+    {
+      "label": "Integration tests for expanded MUTUAL_CHECK_AGENTS list in PipelineRunner.",
+      "file_type": "rationale",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_rationale_1",
+      "community": 2583,
+      "norm_label": "integration tests for expanded mutual_check_agents list in pipelinerunner."
+    },
+    {
+      "label": "Ensure the mock LLM engine has deterministic responses for every MUTUAL_CHECK ag",
+      "file_type": "rationale",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L111",
+      "_origin": "ast",
+      "id": "runtime_test_pipeline_mutual_check_rationale_111",
+      "community": 2583,
+      "norm_label": "ensure the mock llm engine has deterministic responses for every mutual_check ag"
     },
     {
       "label": "test_pipeline_network_guard.py",
@@ -33824,7 +33944,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_pipeline_network_guard.py"
     },
     {
@@ -33834,7 +33954,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_make_runner",
-      "community": 27,
+      "community": 1299,
       "norm_label": "_make_runner()"
     },
     {
@@ -33844,7 +33964,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_network_guard_py_path",
-      "community": 27,
+      "community": 1299,
       "norm_label": "path"
     },
     {
@@ -33854,7 +33974,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_network_guard_py_pipelinerunner",
-      "community": 27,
+      "community": 1299,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33864,7 +33984,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_blocked_for_localhost",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_send_request_blocked_for_localhost()"
     },
     {
@@ -33874,7 +33994,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_browser_navigate_blocked_for_private_ip",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_browser_navigate_blocked_for_private_ip()"
     },
     {
@@ -33884,7 +34004,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_allowed_for_figma",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_send_request_allowed_for_figma()"
     },
     {
@@ -33894,7 +34014,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_blocked_for_unknown_domain",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_send_request_blocked_for_unknown_domain()"
     },
     {
@@ -33904,7 +34024,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_non_network_tool_skips_guard",
-      "community": 27,
+      "community": 1299,
       "norm_label": "test_mcp_non_network_tool_skips_guard()"
     },
     {
@@ -33914,7 +34034,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_rationale_1",
-      "community": 27,
+      "community": 1299,
       "norm_label": "integration tests for networkguard wired into pipelinerunner mcp execution."
     },
     {
@@ -33924,7 +34044,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_pipeline_resource_monitor.py"
     },
     {
@@ -33934,7 +34054,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor_make_runner",
-      "community": 27,
+      "community": 0,
       "norm_label": "_make_runner()"
     },
     {
@@ -33944,7 +34064,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_resource_monitor_py_path",
-      "community": 27,
+      "community": 0,
       "norm_label": "path"
     },
     {
@@ -33954,7 +34074,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_resource_monitor_py_pipelinerunner",
-      "community": 27,
+      "community": 0,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33964,7 +34084,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor_test_pipeline_aborts_when_resources_critical_before_react",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_pipeline_aborts_when_resources_critical_before_react()"
     },
     {
@@ -33974,7 +34094,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor_test_pipeline_aborts_at_iteration_when_resources_critical",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_pipeline_aborts_at_iteration_when_resources_critical()"
     },
     {
@@ -33984,7 +34104,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor_test_pipeline_succeeds_when_resources_green",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_pipeline_succeeds_when_resources_green()"
     },
     {
@@ -33994,7 +34114,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_resource_monitor_rationale_1",
-      "community": 27,
+      "community": 0,
       "norm_label": "integration tests for resourcemonitor wired into pipelinerunner."
     },
     {
@@ -34004,7 +34124,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_pipeline_safety_agents.py"
     },
     {
@@ -34014,7 +34134,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_mock_response",
-      "community": 27,
+      "community": 0,
       "norm_label": "_mock_response()"
     },
     {
@@ -34024,7 +34144,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "community": 27,
+      "community": 0,
       "norm_label": "llmresponse"
     },
     {
@@ -34034,7 +34154,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_make_runner",
-      "community": 27,
+      "community": 0,
       "norm_label": "_make_runner()"
     },
     {
@@ -34044,7 +34164,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "community": 27,
+      "community": 0,
       "norm_label": "path"
     },
     {
@@ -34054,7 +34174,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "community": 27,
+      "community": 0,
       "norm_label": "pipelinerunner"
     },
     {
@@ -34064,7 +34184,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_test_safety_agents_list_includes_all_required_agents",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_safety_agents_list_includes_all_required_agents()"
     },
     {
@@ -34074,7 +34194,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_test_safety_pre_check_invokes_all_agents_and_passes",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_safety_pre_check_invokes_all_agents_and_passes()"
     },
     {
@@ -34084,7 +34204,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_test_safety_pre_check_blocks_on_any_agent_blocked",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_safety_pre_check_blocks_on_any_agent_blocked()"
     },
     {
@@ -34094,7 +34214,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "community": 27,
+      "community": 0,
       "norm_label": "test_full_run_with_mock_safety_agents_terminates()"
     },
     {
@@ -34104,7 +34224,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_safety_agents_rationale_1",
-      "community": 27,
+      "community": 0,
       "norm_label": "integration tests for expanded safety_agents list in pipelinerunner."
     },
     {
@@ -34311,7 +34431,7 @@
       "label": "Implementation Status",
       "file_type": "document",
       "source_file": ".agent_loop/ARCHITECTURE.md",
-      "source_location": "L211",
+      "source_location": "L212",
       "_origin": "ast",
       "id": "agent_loop_architecture_implementation_status",
       "community": 96,
@@ -34321,7 +34441,7 @@
       "label": "Runtime / MCP",
       "file_type": "document",
       "source_file": ".agent_loop/ARCHITECTURE.md",
-      "source_location": "L228",
+      "source_location": "L229",
       "_origin": "ast",
       "id": "agent_loop_architecture_runtime_mcp",
       "community": 96,
@@ -34331,7 +34451,7 @@
       "label": "MCP Servers",
       "file_type": "document",
       "source_file": ".agent_loop/ARCHITECTURE.md",
-      "source_location": "L246",
+      "source_location": "L247",
       "_origin": "ast",
       "id": "agent_loop_architecture_mcp_servers",
       "community": 96,
@@ -34341,7 +34461,7 @@
       "label": "Validation",
       "file_type": "document",
       "source_file": ".agent_loop/ARCHITECTURE.md",
-      "source_location": "L271",
+      "source_location": "L272",
       "_origin": "ast",
       "id": "agent_loop_architecture_validation",
       "community": 96,
@@ -34351,7 +34471,7 @@
       "label": "Cross-Reference Integrity",
       "file_type": "document",
       "source_file": ".agent_loop/ARCHITECTURE.md",
-      "source_location": "L273",
+      "source_location": "L274",
       "_origin": "ast",
       "id": "agent_loop_architecture_cross_reference_integrity",
       "community": 96,
@@ -81569,9 +81689,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L28",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "mcp_servers_gateway_mcpgateway",
-      "confidence_score": 0.5
+      "target": "mcp_servers_gateway_mcpgateway"
     },
     {
       "relation": "uses",
@@ -87443,9 +87563,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L29",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "mcp_servers_registry_mcpregistry",
-      "confidence_score": 0.5
+      "target": "mcp_servers_registry_mcpregistry"
     },
     {
       "relation": "imports",
@@ -95091,9 +95211,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "imports",
@@ -95197,6 +95317,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_agent_loader_agentloader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_agent_loader_agentloader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L14",
       "weight": 1.0,
@@ -95244,9 +95386,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 1.0
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "calls",
@@ -95255,9 +95397,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 1.0
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "uses",
@@ -95342,6 +95484,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_agent_loader_agentloader",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_agent_loader_agentloader",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_agent_loader_agentloader",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L14",
       "weight": 0.8,
@@ -95385,9 +95557,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L14",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "uses",
@@ -95395,9 +95567,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L14",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "uses",
@@ -95405,9 +95577,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L14",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "references",
@@ -97593,6 +97765,17 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_llm_engine_llmprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 1.0,
@@ -97618,9 +97801,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -97705,6 +97888,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_llm_engine_llmprovider",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_llm_engine_llmprovider",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_llm_engine_llmprovider",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 0.8,
@@ -97748,9 +97961,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -97758,9 +97971,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -97768,9 +97981,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -97985,9 +98198,31 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
+      "target": "engine_llm_engine_llmresponse"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
       "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 0.5
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_mock_response",
+      "target": "engine_llm_engine_llmresponse",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -97996,9 +98231,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmresponse"
     },
     {
       "relation": "calls",
@@ -98007,9 +98242,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_mock_response",
-      "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmresponse"
     },
     {
       "relation": "uses",
@@ -98024,12 +98259,42 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_llm_engine_llmresponse",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_llm_engine_llmresponse",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_llm_engine_llmresponse",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmresponse"
     },
     {
       "relation": "uses",
@@ -98037,9 +98302,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmresponse"
     },
     {
       "relation": "uses",
@@ -98047,9 +98312,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_llm_engine_llmresponse",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmresponse"
     },
     {
       "relation": "uses",
@@ -98360,6 +98625,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_llm_engine_llmconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_llm_engine_llmconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 1.0,
@@ -98407,9 +98694,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "calls",
@@ -98418,9 +98705,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "uses",
@@ -98505,6 +98792,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_llm_engine_llmconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_llm_engine_llmconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_llm_engine_llmconfig",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 0.8,
@@ -98548,9 +98865,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "uses",
@@ -98558,9 +98875,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "uses",
@@ -98568,9 +98885,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "calls",
@@ -98826,9 +99143,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L161",
+      "source_location": "L170",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_161",
+      "source": "engine_llm_engine_rationale_170",
       "target": "engine_llm_engine_llmengine",
       "confidence_score": 1.0
     },
@@ -99002,9 +99319,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "imports",
@@ -99108,6 +99425,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_llm_engine_llmengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_llm_engine_llmengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 1.0,
@@ -99155,9 +99494,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "calls",
@@ -99166,9 +99505,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "uses",
@@ -99253,6 +99592,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_llm_engine_llmengine",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_llm_engine_llmengine",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L15",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_llm_engine_llmengine",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L15",
       "weight": 0.8,
@@ -99296,9 +99665,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "uses",
@@ -99306,9 +99675,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "uses",
@@ -99316,9 +99685,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L15",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "calls",
@@ -99346,9 +99715,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L187",
+      "source_location": "L196",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_187",
+      "source": "engine_llm_engine_rationale_196",
       "target": "engine_llm_engine_llmengine_build_fallback_chain",
       "confidence_score": 1.0
     },
@@ -99356,9 +99725,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L205",
+      "source_location": "L214",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_205",
+      "source": "engine_llm_engine_rationale_214",
       "target": "engine_llm_engine_llmengine_maybe_compress_messages",
       "confidence_score": 1.0
     },
@@ -99443,9 +99812,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L312",
+      "source_location": "L321",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_312",
+      "source": "engine_llm_engine_rationale_321",
       "target": "engine_llm_engine_llmengine_raw_chat_completion",
       "confidence_score": 1.0
     },
@@ -99475,9 +99844,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L347",
+      "source_location": "L356",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_347",
+      "source": "engine_llm_engine_rationale_356",
       "target": "engine_llm_engine_evaluatorresponse",
       "confidence_score": 1.0
     },
@@ -99515,9 +99884,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L357",
+      "source_location": "L366",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_357",
+      "source": "engine_llm_engine_rationale_366",
       "target": "engine_llm_engine_evaluationengine",
       "confidence_score": 1.0
     },
@@ -99669,9 +100038,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "engine_llm_engine_evaluationengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_evaluationengine"
     },
     {
       "relation": "uses",
@@ -99687,9 +100056,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/llm_engine.py",
-      "source_location": "L397",
+      "source_location": "L406",
       "weight": 1.0,
-      "source": "engine_llm_engine_rationale_397",
+      "source": "engine_llm_engine_rationale_406",
       "target": "engine_llm_engine_evaluationengine_evaluate",
       "confidence_score": 1.0
     },
@@ -101729,9 +102098,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "imports",
@@ -101835,6 +102204,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_message_bus_messagebus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_message_bus_messagebus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L16",
       "weight": 1.0,
@@ -101882,9 +102273,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 1.0
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "calls",
@@ -101893,9 +102284,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 1.0
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "imports",
@@ -102072,6 +102463,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L16",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_message_bus_messagebus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L16",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_message_bus_messagebus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L16",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_message_bus_messagebus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L16",
       "weight": 0.8,
@@ -102115,9 +102536,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "uses",
@@ -102125,9 +102546,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "uses",
@@ -102135,9 +102556,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L16",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "uses",
@@ -102789,6 +103210,17 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_pipeline_runner_terminationstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_resource_monitor.py",
       "source_location": "L16",
       "weight": 1.0,
@@ -102803,9 +103235,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_pipeline_runner_terminationstatus",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_terminationstatus"
     },
     {
       "relation": "uses",
@@ -102840,6 +103272,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_pipeline_runner_terminationstatus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_pipeline_runner_terminationstatus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_pipeline_runner_terminationstatus",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_resource_monitor.py",
       "source_location": "L16",
       "weight": 0.8,
@@ -102863,9 +103325,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_pipeline_runner_terminationstatus",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_terminationstatus"
     },
     {
       "relation": "uses",
@@ -102873,9 +103335,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_pipeline_runner_terminationstatus",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_terminationstatus"
     },
     {
       "relation": "uses",
@@ -102883,9 +103345,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_pipeline_runner_terminationstatus",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_terminationstatus"
     },
     {
       "relation": "uses",
@@ -104112,12 +104574,45 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_run_mutual_check_invokes_all_agents",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_run_mutual_check_passes_metrics_context",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "calls",
@@ -104126,9 +104621,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_safety_pre_check_blocks_on_any_agent_blocked",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "calls",
@@ -104137,9 +104632,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_safety_pre_check_invokes_all_agents_and_passes",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "uses",
@@ -104164,12 +104659,42 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_pipeline_runner_sessionmetrics",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "uses",
@@ -104177,9 +104702,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "uses",
@@ -104187,9 +104712,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_pipeline_runner_sessionmetrics",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_sessionmetrics"
     },
     {
       "relation": "uses",
@@ -104698,6 +105223,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_pipeline_runner_pipelinerunner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_pipeline_runner_pipelinerunner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L17",
       "weight": 1.0,
@@ -104745,9 +105292,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "calls",
@@ -104756,9 +105303,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "uses",
@@ -104833,6 +105380,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_pipeline_runner_pipelinerunner",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_pipeline_runner_pipelinerunner",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L17",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_pipeline_runner_pipelinerunner",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L17",
       "weight": 0.8,
@@ -104876,9 +105453,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "uses",
@@ -104886,9 +105463,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "uses",
@@ -104896,9 +105473,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L17",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "references",
@@ -105171,9 +105748,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L350",
+      "source_location": "L357",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_350",
+      "source": "engine_pipeline_runner_rationale_357",
       "target": "engine_pipeline_runner_pipelinerunner_load_project_rules",
       "confidence_score": 1.0
     },
@@ -105181,9 +105758,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L376",
+      "source_location": "L383",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_376",
+      "source": "engine_pipeline_runner_rationale_383",
       "target": "engine_pipeline_runner_pipelinerunner_parse_project_rules",
       "confidence_score": 1.0
     },
@@ -105191,9 +105768,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L391",
+      "source_location": "L398",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_391",
+      "source": "engine_pipeline_runner_rationale_398",
       "target": "engine_pipeline_runner_pipelinerunner_summarize_markdown",
       "confidence_score": 1.0
     },
@@ -105201,9 +105778,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L423",
+      "source_location": "L430",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_423",
+      "source": "engine_pipeline_runner_rationale_430",
       "target": "engine_pipeline_runner_pipelinerunner_build_system_context",
       "confidence_score": 1.0
     },
@@ -105222,9 +105799,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L438",
+      "source_location": "L445",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_438",
+      "source": "engine_pipeline_runner_rationale_445",
       "target": "engine_pipeline_runner_pipelinerunner_system_context_for_phase",
       "confidence_score": 1.0
     },
@@ -105232,9 +105809,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L449",
+      "source_location": "L456",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_449",
+      "source": "engine_pipeline_runner_rationale_456",
       "target": "engine_pipeline_runner_pipelinerunner_figma_available",
       "confidence_score": 1.0
     },
@@ -105286,9 +105863,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L492",
+      "source_location": "L499",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_492",
+      "source": "engine_pipeline_runner_rationale_499",
       "target": "engine_pipeline_runner_pipelinerunner_execute_mcp_tool",
       "confidence_score": 1.0
     },
@@ -105296,9 +105873,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L534",
+      "source_location": "L541",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_534",
+      "source": "engine_pipeline_runner_rationale_541",
       "target": "engine_pipeline_runner_pipelinerunner_check_fs_for_tool",
       "confidence_score": 1.0
     },
@@ -105306,9 +105883,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L557",
+      "source_location": "L564",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_557",
+      "source": "engine_pipeline_runner_rationale_564",
       "target": "engine_pipeline_runner_pipelinerunner_check_network_for_tool",
       "confidence_score": 1.0
     },
@@ -105338,9 +105915,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L587",
+      "source_location": "L594",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_587",
+      "source": "engine_pipeline_runner_rationale_594",
       "target": "engine_pipeline_runner_pipelinerunner_get_mcp_categories",
       "confidence_score": 1.0
     },
@@ -105513,9 +106090,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L853",
+      "source_location": "L860",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_853",
+      "source": "engine_pipeline_runner_rationale_860",
       "target": "engine_pipeline_runner_pipelinerunner_run_design_intake",
       "confidence_score": 1.0
     },
@@ -105545,9 +106122,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L875",
+      "source_location": "L882",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_875",
+      "source": "engine_pipeline_runner_rationale_882",
       "target": "engine_pipeline_runner_pipelinerunner_run_design_pipeline",
       "confidence_score": 1.0
     },
@@ -105652,9 +106229,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L960",
+      "source_location": "L967",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_960",
+      "source": "engine_pipeline_runner_rationale_967",
       "target": "engine_pipeline_runner_pipelinerunner_run_phase",
       "confidence_score": 1.0
     },
@@ -105742,9 +106319,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_pipelinerunner_invoke_agent",
-      "target": "runtime_engine_pipeline_runner_py_llmresponse",
-      "confidence_score": 1.0
+      "target": "runtime_engine_pipeline_runner_py_llmresponse"
     },
     {
       "relation": "uses",
@@ -105752,17 +106329,17 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L18",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "runtime_engine_pipeline_runner_py_llmresponse",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "runtime/engine/pipeline_runner.py",
-      "source_location": "L1151",
+      "source_location": "L1165",
       "weight": 1.0,
-      "source": "engine_pipeline_runner_rationale_1151",
+      "source": "engine_pipeline_runner_rationale_1165",
       "target": "engine_pipeline_runner_pipelinerunner_publish_progress",
       "confidence_score": 1.0
     },
@@ -106391,6 +106968,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "engine_state_manager_statemanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "engine_state_manager_statemanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L18",
       "weight": 1.0,
@@ -106438,9 +107037,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 1.0
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "calls",
@@ -106449,9 +107048,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 1.0
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "imports",
@@ -106618,6 +107217,36 @@
     {
       "relation": "uses",
       "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L18",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "target": "engine_state_manager_statemanager",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L18",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "target": "engine_state_manager_statemanager",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L18",
+      "weight": 0.8,
+      "source": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "target": "engine_state_manager_statemanager",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L18",
       "weight": 0.8,
@@ -106661,9 +107290,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L18",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "uses",
@@ -106671,9 +107300,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L18",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "uses",
@@ -106681,9 +107310,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L18",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "uses",
@@ -111401,9 +112030,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "observability_resource_monitor_resourcelevel",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcelevel"
     },
     {
       "relation": "imports",
@@ -111472,9 +112101,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "observability_resource_monitor_resourcelevel",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcelevel"
     },
     {
       "relation": "uses",
@@ -111482,9 +112111,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "observability_resource_monitor_resourcelevel",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcelevel"
     },
     {
       "relation": "uses",
@@ -111492,9 +112121,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "observability_resource_monitor_resourcelevel",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcelevel"
     },
     {
       "relation": "references",
@@ -111558,9 +112187,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "observability_resource_monitor_resourcesnapshot",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcesnapshot"
     },
     {
       "relation": "calls",
@@ -111569,9 +112198,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L128",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "target": "observability_resource_monitor_resourcesnapshot",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcesnapshot"
     },
     {
       "relation": "uses",
@@ -111599,9 +112228,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "observability_resource_monitor_resourcesnapshot",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcesnapshot"
     },
     {
       "relation": "uses",
@@ -111609,9 +112238,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "observability_resource_monitor_resourcesnapshot",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcesnapshot"
     },
     {
       "relation": "uses",
@@ -111619,9 +112248,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "observability_resource_monitor_resourcesnapshot",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcesnapshot"
     },
     {
       "relation": "references",
@@ -111685,9 +112314,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "observability_resource_monitor_resourcecheckresult",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcecheckresult"
     },
     {
       "relation": "calls",
@@ -111696,9 +112325,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "target": "observability_resource_monitor_resourcecheckresult",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcecheckresult"
     },
     {
       "relation": "uses",
@@ -111726,9 +112355,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "observability_resource_monitor_resourcecheckresult",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcecheckresult"
     },
     {
       "relation": "uses",
@@ -111736,9 +112365,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "observability_resource_monitor_resourcecheckresult",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcecheckresult"
     },
     {
       "relation": "uses",
@@ -111746,9 +112375,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "observability_resource_monitor_resourcecheckresult",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcecheckresult"
     },
     {
       "relation": "rationale_for",
@@ -111881,9 +112510,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "observability_resource_monitor_resourcemonitor",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcemonitor"
     },
     {
       "relation": "calls",
@@ -111892,9 +112521,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L122",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "target": "observability_resource_monitor_resourcemonitor",
-      "confidence_score": 1.0
+      "target": "observability_resource_monitor_resourcemonitor"
     },
     {
       "relation": "imports",
@@ -112051,9 +112680,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "target": "observability_resource_monitor_resourcemonitor",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcemonitor"
     },
     {
       "relation": "uses",
@@ -112061,9 +112690,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "target": "observability_resource_monitor_resourcemonitor",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcemonitor"
     },
     {
       "relation": "uses",
@@ -112071,9 +112700,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L121",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "target": "observability_resource_monitor_resourcemonitor",
-      "confidence_score": 0.5
+      "target": "observability_resource_monitor_resourcemonitor"
     },
     {
       "relation": "calls",
@@ -126471,9 +127100,9 @@
       "source_file": "tests/integration/test_e2e.py",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integration_test_e2e_rationale_67",
-      "target": "integration_test_e2e_test_mock_pipeline_trace_structure",
-      "confidence_score": 1.0
+      "target": "integration_test_e2e_test_mock_pipeline_trace_structure"
     },
     {
       "relation": "rationale_for",
@@ -126481,9 +127110,9 @@
       "source_file": "tests/integration/test_e2e.py",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integration_test_e2e_rationale_79",
-      "target": "integration_test_e2e_test_mock_pipeline_state_persisted",
-      "confidence_score": 1.0
+      "target": "integration_test_e2e_test_mock_pipeline_state_persisted"
     },
     {
       "relation": "rationale_for",
@@ -126491,9 +127120,9 @@
       "source_file": "tests/integration/test_e2e.py",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integration_test_e2e_rationale_96",
-      "target": "integration_test_e2e_test_deterministic_safety_blocks_forbidden_input",
-      "confidence_score": 1.0
+      "target": "integration_test_e2e_test_deterministic_safety_blocks_forbidden_input"
     },
     {
       "relation": "rationale_for",
@@ -126501,9 +127130,9 @@
       "source_file": "tests/integration/test_e2e.py",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integration_test_e2e_rationale_108",
-      "target": "integration_test_e2e_test_deterministic_safety_allows_safe_input",
-      "confidence_score": 1.0
+      "target": "integration_test_e2e_test_deterministic_safety_allows_safe_input"
     },
     {
       "relation": "contains",
@@ -129660,6 +130289,163 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_make_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_mock_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_test_mock_engine_returns_responses_for_all_mutual_check_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_test_mutual_check_agents_list_includes_all_required_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_test_run_mutual_check_invokes_all_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check",
+      "target": "runtime_test_pipeline_mutual_check_test_run_mutual_check_passes_metrics_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_rationale_1",
+      "target": "runtime_test_pipeline_mutual_check",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_mock_response",
+      "target": "tests_runtime_test_pipeline_mutual_check_py_llmresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "tests_runtime_test_pipeline_mutual_check_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_make_runner",
+      "target": "tests_runtime_test_pipeline_mutual_check_py_pipelinerunner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_mock_engine_returns_responses_for_all_mutual_check_agents",
+      "target": "runtime_test_pipeline_mutual_check_make_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_mutual_check_agents_list_includes_all_required_agents",
+      "target": "runtime_test_pipeline_mutual_check_make_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_run_mutual_check_invokes_all_agents",
+      "target": "runtime_test_pipeline_mutual_check_make_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_test_run_mutual_check_passes_metrics_context",
+      "target": "runtime_test_pipeline_mutual_check_make_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/runtime/test_pipeline_mutual_check.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "runtime_test_pipeline_mutual_check_rationale_111",
+      "target": "runtime_test_pipeline_mutual_check_test_mock_engine_returns_responses_for_all_mutual_check_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/runtime/test_pipeline_network_guard.py",
       "source_location": "L21",
       "weight": 1.0,
@@ -129915,9 +130701,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_make_runner"
     },
     {
       "relation": "contains",
@@ -129925,9 +130711,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_mock_response",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_mock_response"
     },
     {
       "relation": "contains",
@@ -129935,9 +130721,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates"
     },
     {
       "relation": "contains",
@@ -129945,9 +130731,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_test_safety_agents_list_includes_all_required_agents",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_test_safety_agents_list_includes_all_required_agents"
     },
     {
       "relation": "contains",
@@ -129955,9 +130741,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_test_safety_pre_check_blocks_on_any_agent_blocked",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_test_safety_pre_check_blocks_on_any_agent_blocked"
     },
     {
       "relation": "contains",
@@ -129965,9 +130751,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents",
-      "target": "runtime_test_pipeline_safety_agents_test_safety_pre_check_invokes_all_agents_and_passes",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_test_safety_pre_check_invokes_all_agents_and_passes"
     },
     {
       "relation": "rationale_for",
@@ -129975,9 +130761,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_rationale_1",
-      "target": "runtime_test_pipeline_safety_agents",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents"
     },
     {
       "relation": "references",
@@ -129986,9 +130772,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_mock_response",
-      "target": "tests_runtime_test_pipeline_safety_agents_py_llmresponse",
-      "confidence_score": 1.0
+      "target": "tests_runtime_test_pipeline_safety_agents_py_llmresponse"
     },
     {
       "relation": "references",
@@ -129997,9 +130783,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "tests_runtime_test_pipeline_safety_agents_py_path",
-      "confidence_score": 1.0
+      "target": "tests_runtime_test_pipeline_safety_agents_py_path"
     },
     {
       "relation": "references",
@@ -130008,9 +130794,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_make_runner",
-      "target": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "tests_runtime_test_pipeline_safety_agents_py_pipelinerunner"
     },
     {
       "relation": "calls",
@@ -130019,9 +130805,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_full_run_with_mock_safety_agents_terminates",
-      "target": "runtime_test_pipeline_safety_agents_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_make_runner"
     },
     {
       "relation": "calls",
@@ -130030,9 +130816,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_safety_agents_list_includes_all_required_agents",
-      "target": "runtime_test_pipeline_safety_agents_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_make_runner"
     },
     {
       "relation": "calls",
@@ -130041,9 +130827,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_safety_pre_check_blocks_on_any_agent_blocked",
-      "target": "runtime_test_pipeline_safety_agents_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_make_runner"
     },
     {
       "relation": "calls",
@@ -130052,9 +130838,9 @@
       "source_file": "tests/runtime/test_pipeline_safety_agents.py",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_safety_agents_test_safety_pre_check_invokes_all_agents_and_passes",
-      "target": "runtime_test_pipeline_safety_agents_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_safety_agents_make_runner"
     },
     {
       "relation": "contains",
@@ -146368,5 +147154,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b62746ffb1ebc39aafc97977aa547f3a0123761b"
+  "built_at_commit": "be2dea1ce5363468a0de8a8b5742faf58f035062"
 }

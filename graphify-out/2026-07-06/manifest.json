@@ -320,8 +320,8 @@
     "semantic_hash": "83df5b60533928bd4a6ccd2226879868"
   },
   "runtime/engine/llm_engine.py": {
-    "mtime": 1782929296.829402,
-    "ast_hash": "69c3277de3ba4c44882f1bd210aba985",
+    "mtime": 1783364934.9970107,
+    "ast_hash": "1e2a33b9ee8436b1219a380f06119096",
     "semantic_hash": ""
   },
   "runtime/engine/message_bus.py": {
@@ -330,8 +330,8 @@
     "semantic_hash": "8ff346b27aecd99c3a9ed90229cec47b"
   },
   "runtime/engine/pipeline_runner.py": {
-    "mtime": 1783363351.588321,
-    "ast_hash": "f475f9abe2e21d061bf7a2159e4a3366",
+    "mtime": 1783364948.1526134,
+    "ast_hash": "cddd800f7285deb117050a88999cdec6",
     "semantic_hash": ""
   },
   "runtime/engine/state_manager.py": {
@@ -485,13 +485,13 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "tests/integration/test_e2e.py": {
-    "mtime": 1783359531.0252564,
-    "ast_hash": "3a7208a5b2ba27eeaf6705ed8af7c455",
+    "mtime": 1783365130.2246044,
+    "ast_hash": "780a67a3aea7a6144aab23a0f34e8344",
     "semantic_hash": ""
   },
   ".agent_loop/ARCHITECTURE.md": {
-    "mtime": 1783363963.351192,
-    "ast_hash": "84b6c1e7248ec2402701e17e8dca3084",
+    "mtime": 1783365209.3598,
+    "ast_hash": "8dd089ebd39c885ba4d6766ea1d27a27",
     "semantic_hash": ""
   },
   ".agent_loop/TECHNICAL_ASSIGNMENT.md": {
@@ -2302,6 +2302,11 @@
   "tests/runtime/test_pipeline_audit_logger.py": {
     "mtime": 1783363118.486813,
     "ast_hash": "692219a07dd512dcba6cc5e2b8aa69aa",
+    "semantic_hash": ""
+  },
+  "tests/runtime/test_pipeline_safety_agents.py": {
+    "mtime": 1783365090.0950997,
+    "ast_hash": "1641a5f7d3504d49681d880d806be8e8",
     "semantic_hash": ""
   }
 }
