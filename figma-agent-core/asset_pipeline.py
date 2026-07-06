@@ -6,6 +6,7 @@ import shutil
 import argparse
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -28,8 +29,9 @@ DEFAULT_ASSETS_DIR = "assets/figma"
 DEFAULT_REGISTRY_FILE = "asset_registry.json"
 DEFAULT_IMAGES_FORMAT = "png"
 DEFAULT_BATCH_SIZE = 25
-DEFAULT_REQUEST_DELAY = 1.0
+DEFAULT_REQUEST_DELAY = 0.0
 DEFAULT_MAX_RETRIES = 5
+DEFAULT_MAX_WORKERS = 4
 
 
 # Популярные Google Fonts, которые next/font/google умеет импортировать.
@@ -218,6 +220,7 @@ class AssetDownloader:
         batch_size: int = DEFAULT_BATCH_SIZE,
         request_delay: float = DEFAULT_REQUEST_DELAY,
         max_retries: int = DEFAULT_MAX_RETRIES,
+        max_workers: int = DEFAULT_MAX_WORKERS,
         skip_existing: bool = True,
     ) -> None:
         self.token = token or os.environ.get("FIGMA_TOKEN")
@@ -225,6 +228,7 @@ class AssetDownloader:
         self.file_key = self._parse_file_key(self.url) if self.url else None
         self.batch_size = max(1, batch_size)
         self.request_delay = request_delay
+        self.max_workers = max(1, max_workers)
         self.skip_existing = skip_existing
         self._client: Optional[FigmaHTTPClient] = None
         if self.token:
@@ -255,6 +259,28 @@ class AssetDownloader:
             return candidate
         return None
 
+    def _fetch_chunk_urls(
+        self,
+        chunk_index: int,
+        chunk: List[str],
+        fmt: str,
+        scale: float,
+        base_url: str,
+    ) -> Dict[str, str]:
+        if not self._client:
+            return {}
+        ids_param = ",".join(chunk)
+        endpoint = f"{base_url}/images/{self.file_key}?ids={ids_param}&format={fmt}&scale={scale}"
+        try:
+            response = self._client.get(endpoint)
+            if response.status_code != 200:
+                print(f"[WARNING] Figma images API returned {response.status_code}: {response.text}")
+                return {}
+            return response.json().get("images", {})
+        except Exception as e:
+            print(f"[ERROR] Failed to fetch image URLs for chunk {chunk_index + 1}: {e}")
+            return {}
+
     def get_image_urls(
         self,
         node_ids: List[str],
@@ -281,21 +307,20 @@ class AssetDownloader:
 
         results: Dict[str, str] = {}
         base_url = "https://api.figma.com/v1"
-        for i in range(0, len(remaining), self.batch_size):
-            chunk = remaining[i : i + self.batch_size]
-            ids_param = ",".join(chunk)
-            endpoint = f"{base_url}/images/{self.file_key}?ids={ids_param}&format={fmt}&scale={scale}"
-            try:
-                response = self._client.get(endpoint)
-                if response.status_code != 200:
-                    print(f"[WARNING] Figma images API returned {response.status_code}: {response.text}")
-                    # Продолжаем следующий chunk, а не падаем целиком.
-                    continue
-                results.update(response.json().get("images", {}))
-            except Exception as e:
-                print(f"[ERROR] Failed to fetch image URLs for chunk {i//self.batch_size + 1}: {e}")
-                # Продолжаем; частичный результат лучше полного провала.
-                continue
+        chunks = [
+            remaining[i : i + self.batch_size]
+            for i in range(0, len(remaining), self.batch_size)
+        ]
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {
+                executor.submit(
+                    self._fetch_chunk_urls, idx, chunk, fmt, scale, base_url
+                ): idx
+                for idx, chunk in enumerate(chunks)
+            }
+            for future in as_completed(futures):
+                chunk_results = future.result()
+                results.update(chunk_results)
         return {**cached_urls, **results}
 
     def download(self, url: str, dest: Path) -> bool:
@@ -531,78 +556,36 @@ class AssetPipeline:
                 assets_dir=self.assets_dir,
             ))
 
-        for asset in assets:
-            ref = asset["ref"]
-            dest = _asset_dest_path(asset["id"], asset["name"], asset["format"], self.assets_dir)
-            url = urls.get(asset["id"])
+        # Загружаем/обрабатываем ассеты параллельно; каждый файл пишется по уникальному пути.
+        results: List[Tuple[str, Optional[Dict[str, Any]], Optional[Dict[str, Any]]]] = []
+        with ThreadPoolExecutor(max_workers=self.downloader.max_workers) as executor:
+            futures = []
+            for asset in assets:
+                url = urls.get(asset["id"])
+                if not url:
+                    print(f"[WARNING] No download URL for asset {asset['id']} ({asset['name']})")
+                    results.append((asset["ref"], None, None))
+                    continue
+                futures.append((asset, executor.submit(self._download_and_process_asset, asset, url)))
+            for asset, future in futures:
+                try:
+                    ref, entry, icon_info = future.result()
+                    results.append((ref, entry, icon_info))
+                except Exception as e:
+                    print(f"[ERROR] Failed to process asset {asset['id']} ({asset['name']}): {e}")
+                    results.append((asset["ref"], None, None))
 
-            if not url:
-                print(f"[WARNING] No download URL for asset {asset['id']} ({asset['name']})")
+        for ref, entry, icon_info in results:
+            if entry is None:
                 registry["stats"]["skipped"] += 1
                 continue
-
-            # Если файл уже существует и skip_existing — не перезаписываем.
-            if self.downloader.skip_existing and dest.exists():
-                optimized = False
-                if self.optimizer.enabled:
-                    optimized = self.optimizer.optimize(dest, asset["format"])
-                public_path = _public_path(dest, self.public_dir)
-                entry = self._build_registry_entry(asset, public_path, optimized, skipped=False)
-                registry["assets"][ref] = entry
-                registry["stats"]["downloaded"] += 1
-                if optimized:
-                    registry["stats"]["optimized"] += 1
-                continue
-
-            if self.downloader.download(url, dest):
-                optimized = self.optimizer.optimize(dest, asset["format"])
-                public_path = _public_path(dest, self.public_dir)
-                entry: Dict[str, Any] = {
-                    "publicPath": public_path,
-                    "type": asset["type"],
-                    "format": asset["format"],
-                    "width": asset["width"],
-                    "height": asset["height"],
-                    "originalName": asset["name"],
-                    "optimized": optimized,
-                    "skipped": False,
-                    "strategy": "img",
-                }
-                if asset["format"] == "svg":
-                    content = self._inline_extractor.extract(dest)
-                    strategy = self._svg_classifier.classify(
-                        {
-                            "name": asset["name"],
-                            "width": asset["width"],
-                            "height": asset["height"],
-                        },
-                        content,
-                        byte_size=dest.stat().st_size if dest.exists() else 0,
-                    )
-                    entry["strategy"] = strategy
-                    if strategy == "inline" and content:
-                        entry["inlineSvg"] = content
-                    elif strategy == "icon":
-                        if content:
-                            entry["inlineSvg"] = content
-                        icon_file = self._write_icon_component(asset["name"], content or dest.read_text(encoding="utf-8"))
-                        entry["componentPath"] = icon_file
-                        entry["componentName"] = _to_pascal_case_icon_name(asset["name"])
-                        registry["icons"].append({
-                            "name": entry["componentName"],
-                            "path": str(icon_file),
-                            "ref": ref,
-                        })
-                        registry["stats"]["icons"] += 1
-                    elif strategy == "image":
-                        entry["inlineSvg"] = None
-                registry["assets"][ref] = entry
-                registry["stats"]["downloaded"] += 1
-                if optimized:
-                    registry["stats"]["optimized"] += 1
-            else:
-                print(f"[WARNING] Failed to download asset {asset['id']} from {url}")
-                registry["stats"]["skipped"] += 1
+            registry["assets"][ref] = entry
+            registry["stats"]["downloaded"] += 1
+            if entry.get("optimized"):
+                registry["stats"]["optimized"] += 1
+            if icon_info:
+                registry["icons"].append(icon_info)
+                registry["stats"]["icons"] += 1
 
         return registry
 
@@ -648,6 +631,48 @@ class AssetPipeline:
                 entry["componentName"] = _to_pascal_case_icon_name(asset["name"])
         return entry
 
+    def _download_and_process_asset(
+        self,
+        asset: Dict[str, Any],
+        url: str,
+    ) -> Tuple[str, Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
+        """Скачивает и классифицирует один ассет. Возвращает (ref, entry, icon_info)."""
+        ref = asset["ref"]
+        dest = _asset_dest_path(asset["id"], asset["name"], asset["format"], self.assets_dir)
+
+        # Если файл уже существует и skip_existing — не перезаписываем.
+        if self.downloader.skip_existing and dest.exists():
+            optimized = False
+            if self.optimizer.enabled:
+                optimized = self.optimizer.optimize(dest, asset["format"])
+            public_path = _public_path(dest, self.public_dir)
+            entry = self._build_registry_entry(asset, public_path, optimized, skipped=False)
+            icon_info = self._extract_icon_info(asset, entry, ref)
+            return ref, entry, icon_info
+
+        if not self.downloader.download(url, dest):
+            return ref, None, None
+
+        optimized = self.optimizer.optimize(dest, asset["format"])
+        public_path = _public_path(dest, self.public_dir)
+        entry = self._build_registry_entry(asset, public_path, optimized, skipped=False)
+        icon_info = self._extract_icon_info(asset, entry, ref)
+        return ref, entry, icon_info
+
+    def _extract_icon_info(
+        self,
+        asset: Dict[str, Any],
+        entry: Dict[str, Any],
+        ref: str,
+    ) -> Optional[Dict[str, Any]]:
+        if entry.get("strategy") != "icon":
+            return None
+        return {
+            "name": entry["componentName"],
+            "path": str(entry["componentPath"]),
+            "ref": ref,
+        }
+
     def _write_icon_component(self, name: str, svg_content: str) -> Path:
         self.components_dir.mkdir(parents=True, exist_ok=True)
         component_name = _to_pascal_case_icon_name(name)
@@ -691,8 +716,9 @@ def main() -> None:
     parser.add_argument("--no-optimize", action="store_true", help="Disable svgo/sharp optimization.")
     parser.add_argument("--format", default=DEFAULT_IMAGES_FORMAT, help="Default raster format (png).")
     parser.add_argument("--asset-batch-size", type=int, default=DEFAULT_BATCH_SIZE, help="Max IDs per Figma Images API batch request.")
-    parser.add_argument("--asset-request-delay", type=float, default=DEFAULT_REQUEST_DELAY, help="Delay seconds between batched requests.")
+    parser.add_argument("--asset-request-delay", type=float, default=DEFAULT_REQUEST_DELAY, help="Delay seconds between requests (default 0; 429 handled via Retry-After).")
     parser.add_argument("--asset-max-retries", type=int, default=DEFAULT_MAX_RETRIES, help="Max retries on 429/transient errors.")
+    parser.add_argument("--asset-max-workers", type=int, default=DEFAULT_MAX_WORKERS, help="Max parallel workers for batch URL fetching and downloads.")
     parser.add_argument("--skip-existing-assets", action=argparse.BooleanOptionalAction, default=True, help="Skip download if local asset already exists.")
     args = parser.parse_args()
 
@@ -710,6 +736,7 @@ def main() -> None:
         batch_size=args.asset_batch_size,
         request_delay=args.asset_request_delay,
         max_retries=args.asset_max_retries,
+        max_workers=args.asset_max_workers,
         skip_existing=args.skip_existing_assets,
     )
     optimizer = AssetOptimizer(enabled=not args.no_optimize)

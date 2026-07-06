@@ -26,7 +26,7 @@ Runtime rule engine that interprets and applies active governance policies acros
 
 ## Decision Flow
 
-1. **Load policies** — fetch `active_policies`; if empty or missing, use `project_rules` as lightweight fallback policy source; if both are missing, substitute with default conservative rule.
+1. **Load policies** — fetch `active_policies`; if empty or missing, use `project_rules` as lightweight fallback policy source; if `project_rules.ponytail` exists, merge it as an `operational` policy context. If both are missing, substitute with default conservative rule.
 2. **Parse action** — decompose `action_descriptor` into subject, verb, object, and environment tags.
 3. **Match rules** — evaluate each rule in loaded policies against parsed action; collect all matching rules.
 4. **Detect conflicts** — if matching rules demand opposite outcomes, apply `conflict_resolution_mode`.
@@ -45,3 +45,5 @@ Runtime rule engine that interprets and applies active governance policies acros
 | Rule syntax error (unparsable condition) | Skip malformed rule; continue with valid rules; flag for policy curator |
 | `project_rules` conflicts with explicit `active_policies` | Apply `most_restrictive`; log conflict; include both rule sets in `conflicts_resolved` |
 | Policy gap for critical action type | `enforcement_decision=policy_gap`, block action, queue urgent policy review |
+| `project_rules.ponytail` mode conflicts with `active_policies` | Apply `most_restrictive`; log conflict; prefer explicit active policy over project-rules default |
+

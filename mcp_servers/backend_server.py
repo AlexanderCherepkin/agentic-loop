@@ -39,7 +39,7 @@ class BackendMCPServer(MCPServer):
         self.register(
             "backend_analyze_spec",
             "Parse OpenAPI/Prisma/text spec into normalized JSON model/endpoints",
-            s({"openapi?": "string", "prisma?": "string", "text_spec?": "string"}),
+            s({"openapi?": "string", "prisma?": "string", "text_spec?": "string", "dry_run?": "bool"}),
             self.backend_analyze_spec,
         )
         self.register(
@@ -173,7 +173,23 @@ class BackendMCPServer(MCPServer):
         openapi: str = "",
         prisma: str = "",
         text_spec: str = "",
+        dry_run: bool = False,
     ) -> dict[str, Any]:
+        degraded = self._check_degraded()
+        if degraded:
+            return degraded
+        if dry_run:
+            return {
+                "status": "success",
+                "dry_run": True,
+                "message": "Backend Spec Bridge is wired and figma-agent-core is present.",
+            }
+        if not openapi and not prisma and not text_spec:
+            return {
+                "status": "degraded",
+                "error": "No backend spec provided (openapi/prisma/text_spec).",
+                "fallback": "Provide an OpenAPI/Prisma/text spec to run backend analysis, or pass dry_run=True for a connectivity check.",
+            }
         return self._run_core_script(
             "backend_bridge.py",
             self._bridge_args(openapi=openapi, prisma=prisma, text_spec=text_spec),

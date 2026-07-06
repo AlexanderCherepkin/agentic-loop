@@ -198,6 +198,12 @@ def stage_image_enrichment(
 ) -> bool:
     """Этап 1d-enrich: подбор изображений для data_model-карточек без картинок."""
     logger.info("=== STAGE: image_enrichment ===")
+    # Если выбран Unsplash, но ключа нет, автоматически переключаемся на
+    # бесплатный генеративный провайдер Pollinations, чтобы не падать.
+    effective_provider = provider
+    if effective_provider == "unsplash" and not (provider_api_key or os.environ.get("UNSPLASH_ACCESS_KEY")):
+        logger.info("[IMAGE-ENRICH] No Unsplash API key found; falling back to Pollinations AI provider")
+        effective_provider = "pollinations"
     asset_registry_path = Path(public_dir) / assets_registry_file
     command = [
         sys.executable,
@@ -206,13 +212,13 @@ def stage_image_enrichment(
         "--figma-file", figma_file,
         "--spec-file", spec_file,
         "--output", data_model_file,
-        "--provider", provider,
+        "--provider", effective_provider,
         "--output-dir", output_dir,
         "--max-images", str(max_images),
     ]
     if asset_registry_path.exists():
         command.extend(["--asset-registry", str(asset_registry_path)])
-    if provider_api_key:
+    if provider_api_key and effective_provider == "unsplash":
         command.extend(["--provider-api-key", provider_api_key])
     if not skip_existing:
         command.append("--no-skip-existing")
@@ -840,8 +846,9 @@ def stage_assets(
     skip_download: bool = False,
     optimize: bool = True,
     asset_batch_size: int = 25,
-    asset_request_delay: float = 1.0,
+    asset_request_delay: float = 0.0,
     asset_max_retries: int = 5,
+    asset_max_workers: int = 4,
     skip_existing_assets: bool = True,
     dry_run: bool = False,
 ) -> bool:
@@ -864,6 +871,8 @@ def stage_assets(
         str(asset_request_delay),
         "--asset-max-retries",
         str(asset_max_retries),
+        "--asset-max-workers",
+        str(asset_max_workers),
     ]
     if skip_download:
         command.append("--skip-download")
@@ -1155,7 +1164,12 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             url = config.get("visual_qa_url")
             if not url:
                 logger.warning("visual_qa stage requires --visual-qa-url. Skipping.")
-                report["stages"]["visual_qa"] = {"success": False, "reason": "missing --visual-qa-url"}
+                # In dry-run mode, a skipped optional stage is not a failure.
+                report["stages"]["visual_qa"] = {
+                    "success": dry_run,
+                    "skipped": True,
+                    "reason": "missing --visual-qa-url",
+                }
             else:
                 reference_path = config.get("visual_qa_reference")
                 if not reference_path:
@@ -1178,7 +1192,12 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
             url = config.get("visual_qa_url")
             if not url:
                 logger.warning("refinement stage requires --visual-qa-url. Skipping.")
-                report["stages"]["refinement"] = {"success": False, "reason": "missing --visual-qa-url"}
+                # In dry-run mode, a skipped optional stage is not a failure.
+                report["stages"]["refinement"] = {
+                    "success": dry_run,
+                    "skipped": True,
+                    "reason": "missing --visual-qa-url",
+                }
             else:
                 ok = stage_refinement(
                     url=url,
@@ -1232,8 +1251,9 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 skip_download=config.get("skip_assets_download", False),
                 optimize=config.get("optimize_assets", True),
                 asset_batch_size=config.get("asset_batch_size", 25),
-                asset_request_delay=config.get("asset_request_delay", 1.0),
+                asset_request_delay=config.get("asset_request_delay", 0.0),
                 asset_max_retries=config.get("asset_max_retries", 5),
+                asset_max_workers=config.get("asset_max_workers", 4),
                 skip_existing_assets=config.get("skip_existing_assets", True),
                 dry_run=dry_run,
             )
@@ -1366,14 +1386,20 @@ def main():
     parser.add_argument(
         "--asset-request-delay",
         type=float,
-        default=1.0,
-        help="Задержка в секундах между batch-запросами к Figma Images API (по умолчанию 1.0)."
+        default=0.0,
+        help="Искусственная задержка в секундах между запросами к Figma Images API (по умолчанию 0.0; rate-limit обрабатывается через 429/Retry-After)."
     )
     parser.add_argument(
         "--asset-max-retries",
         type=int,
         default=5,
         help="Максимальное число retry при 429/транзиентных ошибках Figma API (по умолчанию 5)."
+    )
+    parser.add_argument(
+        "--asset-max-workers",
+        type=int,
+        default=4,
+        help="Число параллельных worker для batch-запросов URL и скачивания ассетов (по умолчанию 4)."
     )
     parser.add_argument(
         "--skip-existing-assets",
@@ -1662,6 +1688,7 @@ def main():
         "asset_batch_size": args.asset_batch_size,
         "asset_request_delay": args.asset_request_delay,
         "asset_max_retries": args.asset_max_retries,
+        "asset_max_workers": args.asset_max_workers,
         "skip_existing_assets": args.skip_existing_assets,
         "spec_output": args.spec_output,
         "tokens_output_dir": args.tokens_output_dir,
@@ -1717,7 +1744,17 @@ def main():
     report = run_pipeline(config)
     save_report(report)
 
-    success = all(stage.get("success", False) for stage in report["stages"].values())
+    if args.dry_run:
+        # In dry-run mode, skipped optional stages (e.g., visual_qa/refinement without URL)
+        # must not be treated as hard failures. Only actual stage failures count.
+        real_failures = [
+            name
+            for name, stage in report["stages"].items()
+            if not stage.get("success", False) and not stage.get("skipped", False)
+        ]
+        success = len(real_failures) == 0
+    else:
+        success = all(stage.get("success", False) for stage in report["stages"].values())
     logger.info(f"Pipeline finished in {report['duration_seconds']}s. Overall success: {success}")
     sys.exit(0 if success else 1)
 

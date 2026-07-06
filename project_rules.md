@@ -3,7 +3,7 @@
 ## Scope
 
 This repository implements a multi-agent AI system with hierarchical safety-first architecture.
-It contains 166 agents across 6 layers, plus runtime code and MCP servers that expose those agents over JSON-RPC.
+It contains 202 agents across 6 layers, plus runtime code and MCP servers that expose those agents over JSON-RPC.
 Any change must preserve the three-circuit safety model (`safety-control → mutual_check → control`) and the ReAct cycle decomposition.
 
 ## Conventions

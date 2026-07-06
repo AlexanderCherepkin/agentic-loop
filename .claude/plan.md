@@ -1,205 +1,257 @@
-# План интеграции Ponytail Protocol в Agentic Loop
+# План интеграции Headroom (Context Compression Layer) в Agentic Loop
 
 ## Контекст
 
-Пользователь приложил файл `1.docx` и репозиторий [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Необходимо внедрить философию «ленивого старшего разработчика» (Ponytail) в наш автономный агент-бот для повышения стабильности, порядка и контролируемости использования контекста/ресурсов.
+Пользователь приложил файл `2.docx` и репозиторий [chopratejas/headroom](https://github.com/chopratejas/headroom). Headroom — локальный слой оптимизации контекста для LLM-приложений: сжимает tool outputs, логи, RAG-куски, историю диалога и файлы на 60–95 %, сохраняя точность ответов. Использует обратимое сжатие (CCR — Compress-Cache-Retrieve): оригинал хранится локально, LLM может вызвать `headroom_retrieve` для восстановления деталей.
 
 ## Решения пользователя
 
-1. Режим по умолчанию: **full**.
-2. Обновлять `project_rules.md`, `CLAUDE.md`, `ARCHITECTURE.md` — **да** (требует отдельного human approval).
-3. Команды: **режимы + review + audit** (`/ponytail`, `/ponytail-review`, `/ponytail-audit`); `debt/gain/help` — в следующем приоритете, не обязательны сейчас.
+1. Вариант интеграции: **MCP tools + inline Python SDK** (`compress()` + `SharedContext`).
+2. Зависимость: **опциональная**, как Playwright (`runtime/requirements-headroom.txt`).
 
 ## Цель интеграции
 
-Ponytail должен стать **cross-cutting policy/optimizer слоем**, аналогичным Lighthouse hard-gate или `project_rules.md`:
-- инжекция правил в system prompt перед генерацией кода;
-- дополнительная валидация результатов на over-engineering;
-- целевой аудит репозитория по запросу;
-- режимы `lite|full|ultra|off` через env-переменную и runtime-команды.
+Headroom должен стать **дополнительным MCP-слоем сжатия контекста** внутри Agentic Loop:
+- явное сжатие больших tool outputs / логов / файлов перед отправкой в LLM;
+- восстановление оригинала по hash, когда LLM запрашивает детали;
+- прозрачная статистика экономии токенов (`headroom_stats`);
+- общий сжатый контекст для суб-агентов через `SharedContext`;
+- graceful degradation, если `headroom-ai` не установлен.
 
 ## Архитектурный подход
 
-Ponytail не выносится в отдельную `tools_*` категорию (чтобы не нарушать 12 существующих pipeline и не плодить лишнюю инфраструктуру). Вместо этого:
-- runtime-модуль `runtime/engine/ponytail_optimizer.py` реализует `PonytailOptimizer` (инжекция правил, метрики, конфиг);
-- новые markdown-агенты размещаются в `tooll_subagents/planning/` и `tooll_subagents/self_correction/`;
-- существующие агенты обновляются ссылками на новых.
+Headroom не выносится в отдельную `tools_*` категорию (чтобы не нарушать 12 существующих pipeline). Вместо этого:
+- новая MCP-категория `headroom` в `mcp_servers/headroom_server.py` (3 tools: `headroom_compress`, `headroom_retrieve`, `headroom_stats`);
+- runtime-модуль `runtime/engine/headroom_client.py` оборачивает Python SDK (`compress`, `SharedContext`) с graceful degradation;
+- новые markdown-агенты в `tooll_subagents/planning/` и `tooll_subagents/observability/` планируют и выполняют сжатие;
+- существующие агенты обновляются ссылками на Headroom и используют его в ReAct-цикле.
 
 ## Изменения
 
-### 1. Новый runtime-модуль
+### 1. Новый MCP-сервер
 
-**Файл:** `runtime/engine/ponytail_optimizer.py`
+**Файл:** `mcp_servers/headroom_server.py`
+
+Повторяет паттерн `figma_server.py` / `backend_server.py`:
+- lazy-loaded, reports `degraded` if `headroom-ai` is not installed;
+- tools:
+  - `headroom_compress(content: string, model?: string, target_ratio?: float)` → `{ compressed, hash, original_tokens, compressed_tokens, tokens_saved, savings_percent, transforms }`;
+  - `headroom_retrieve(hash: string)` → `{ original_content, source }`;
+  - `headroom_stats()` → `{ compressions, retrievals, total_input_tokens, total_output_tokens, total_tokens_saved, savings_percent, estimated_cost_saved_usd }`.
+- `_check_degraded()` проверяет наличие пакета `headroom` через `importlib.util.find_spec("headroom")`.
+- Handlers используют `headroom.compress.compress()` и `headroom.cache.compression_store.get_compression_store()`.
+
+### 2. Новый runtime-клиент
+
+**Файл:** `runtime/engine/headroom_client.py`
 
 Содержит:
-- `PONYTAIL_CORE_PROMPT` — системное ядро с 7-ступенчатой лестницей лени и critical guardrail;
-- `PONYTAIL_MODES` — `lite`, `full`, `ultra`, `off`;
-- `PonytailOptimizer`:
-  - `__init__(default_mode=None)` — читает `PONYTAIL_DEFAULT_MODE` (default `full`);
-  - `set_mode(mode)`;
-  - `inject_rules(base_system_prompt)` — вставляет core prompt + mode instruction;
-  - `extract_metrics(original_code, generated_code)` — LoC-экономия;
-  - `is_coding_task(request_type)` — heuristic для применения Ponytail;
-  - `mode_enabled` property.
+- `HeadroomConfig` (model default, target_ratio, min_tokens_to_compress, session_ttl);
+- `HeadroomClient`:
+  - `is_available()` — проверка импорта `headroom`;
+  - `compress_text(text: str, model: str | None = None)` → `(compressed_text, hash, before_tokens, after_tokens)`;
+  - `compress_messages(messages: list[dict], model: str | None = None)` → `CompressResult`-like dict;
+  - `retrieve(hash: str)` → original content or None;
+  - `stats()` → session stats dict;
+  - `shared_context()` → ленивый `SharedContext` singleton.
+- Graceful degradation: если `headroom-ai` не установлен, все методы возвращают `available=False` и passthrough-результаты.
 
-### 2. Новые markdown-агенты
+### 3. Новые markdown-агенты
 
 Все следуют Algorithmic template (Role, Contract, Decision Flow, Failure Modes).
 
-#### a) `tooll_subagents/planning/ponytail_injector.md`
+#### a) `tooll_subagents/planning/headroom_injector.md`
 
-**Role:** инжектор Ponytail rules в system prompt перед генерацией кода.
+**Role:** планирует применение Headroom к тяжёлым участкам контекста внутри ReAct-плана.
 
 **Contract:**
-- Receives: `base_system_prompt`, `task_type` (design_project / code_change / refactor / fix / review), `ponytail_mode` (env или user override).
-- Returns: `optimized_system_prompt`, `mode_applied`, `guardrails`.
+- Receives: `task_graph`, `execution_policy`, `token_budget`, `available_mcp_categories`, `headroom_enabled` (env/override).
+- Returns: `compression_plan`: list of `{phase, tool_output_keys, threshold_tokens, fallback}`; `headroom_selected` boolean.
 - Side effects: logs to `audit_logger.md`.
 
 **Decision Flow:**
-1. Determine effective mode (`off` для non-coding, иначе env/user override).
-2. If `off` or non-coding → return base prompt unchanged.
-3. Build Ponytail prompt: core + mode instruction.
-4. Prepend to base system prompt.
-5. Return optimized prompt and metadata.
+1. If `headroom` not in `available_mcp_categories` or `headroom_enabled=false` → return empty plan.
+2. Identify context-heavy phases in `task_graph` (runcom outputs, search results, file reads > threshold, RAG chunks, multi-agent handoffs).
+3. For each heavy phase, decide compression strategy:
+   - tool outputs > 500 tokens → `headroom_compress` before passing to next agent;
+   - multi-agent shared context → `headroom_shared_context.put/get`;
+   - repeated file reads → cache marker + `headroom_retrieve` on demand.
+4. Insert `headroom_compressor.md` and `headroom_retriever.md` into tool plan where needed.
+5. Set `headroom_selected=true` if any compression planned.
 
 **Failure Modes:**
 | Condition | Response |
 |---|---|
-| Unknown mode | Fall back to `full`; log warning |
-| Base prompt missing | Return Ponytail prompt alone |
-| Non-coding task with coding mode | Force `off`; log |
+| Headroom MCP unavailable | Empty compression plan; log degraded state |
+| `token_budget` too small to afford compression overhead | Skip compression; log reason |
+| Compression target smaller than threshold | Skip; not worth overhead |
 
-#### b) `tooll_subagents/self_correction/ponytail_review.md`
+#### b) `tooll_subagents/observability/headroom_compressor.md`
 
-**Role:** суб-агент валидации over-engineering в цикле self-correction.
+**Role:** выполняет сжатие наблюдаемых результатов (tool outputs, runtime logs, RAG chunks) перед передачей в следующий шаг ReAct.
 
 **Contract:**
-- Receives: `proposed_changes` (diff/code), `context`, `ponytail_mode`, `task_type`.
-- Returns: `approved` boolean, `findings` list, `net_lines_removable` int, `refinement_actions`.
+- Receives: `raw_content` (string or list of messages), `content_type` (`tool_output`, `log`, `file`, `rag`, `messages`), `model` (optional), `target_ratio` (optional), `force` (bool).
+- Returns: `compressed_content`, `hash`, `original_tokens`, `compressed_tokens`, `tokens_saved`, `savings_percent`, `retrieval_hint`.
+- Side effects: stores original in local CCR store; logs to `audit_logger.md`.
 
 **Decision Flow:**
-1. If mode is `off` or task is non-coding → `approved=true` with empty findings.
-2. Scan for: redundant abstractions, avoidable dependencies, stdlib alternatives, native platform alternatives, duplicated existing code, speculative features.
-3. Emit one-line findings: `L<line>: <tag> <what to cut>. <replacement>.`
-4. Tags: `delete`, `stdlib`, `native`, `yagni`, `shrink`, `reuse`.
-5. Aggregate `net_lines_removable`.
-6. If any critical over-engineering found → `approved=false` and `refinement_actions`.
-7. If nothing to cut → `'Lean already. Ship.'`
+1. Check `headroom` availability via `runtime/engine/headroom_client.py`.
+2. If unavailable or `force=false` and content length < `min_tokens_to_compress` → return passthrough.
+3. Route by `content_type`:
+   - `messages` → `headroom.compress.compress(messages, model=...)`;
+   - single text → wrap as `[{"role":"tool","content":text}]` and compress.
+4. Store original in CCR store; capture hash.
+5. Return compressed result + retrieval hint.
 
 **Failure Modes:**
 | Condition | Response |
 |---|---|
-| Empty proposed changes | `approved=true`; note 'no changes' |
-| Review contradicts explicit user approval | Honor user approval; log override |
-| Cannot parse diff | `approved=inconclusive`; escalate to human |
+| headroom-ai not installed | Passthrough with `available=false`; no hash |
+| Compression raises exception | Return original content + error marker; log to `anomaly_detector.md` |
+| Result longer than original | Return original; log negative compression |
 
-#### c) `tooll_subagents/planning/ponytail_audit.md`
+#### c) `tooll_subagents/observability/headroom_retriever.md`
 
-**Role:** целевой аудит всего репозитория на over-engineering по команде `/ponytail-audit`.
+**Role:** восстанавливает оригинальные несжатые данные по hash, когда другой агент или LLM запрашивает детали.
 
 **Contract:**
-- Receives: `workspace_root`, `scope` (all / src / generated), `ponytail_mode`.
-- Returns: `findings` list, `net_lines_removable`, `dependencies_removable`, `summary`.
+- Receives: `hash` (string), `source_hint` (`local`, `proxy`, `auto`).
+- Returns: `original_content` or `not_found` + `source`.
+- Side effects: logs retrieval to `audit_logger.md`; updates stats.
 
 **Decision Flow:**
-1. If mode is `off` → return 'Ponytail disabled'.
-2. Scan repository tree (excluding node_modules, .git, build, dist).
-3. Identify dead code, stdlib reinventions, native-platform substitutions, YAGNI abstractions, shrink opportunities.
-4. Rank by biggest cut first.
-5. Return report; do not mutate files.
+1. Validate hash format (non-empty string).
+2. Try local CCR store via `headroom_client.py` / `headroom.cache.compression_store`.
+3. If not found and proxy configured, try `HEADROOM_PROXY_URL`.
+4. Return original content or structured not-found response with recovery hints.
 
 **Failure Modes:**
 | Condition | Response |
 |---|---|
-| Workspace root unreadable | Return error finding |
-| Scan exceeds timeout | Return partial findings with truncation notice |
-| No findings | Return 'Lean already. Ship.' |
+| Hash empty/invalid | Return error; do not call store |
+| Content expired | Return not_found + "re-run original command/read" hint |
+| Proxy unreachable | Return local result or not_found; log network issue |
 
-### 3. Обновление существующих агентов
+### 4. Обновление существующих агентов
 
 #### `main_loop.md`
 
-- Добавить в `Receives`: `ponytail_mode` (optional override).
-- На шаге инициализации (Decision Flow step 1) загружать `PONYTAIL_DEFAULT_MODE` из env и передавать в `context.md`.
-- Перед Plan phase для coding-task вызывать `ponytail_injector.md` для модификации system prompt генератора.
-- Добавить ссылку на `ponytail_injector.md` в Failure Modes.
+- Добавить в `Receives`: `headroom_enabled` (bool, optional override), `headroom_config` (dict, optional).
+- Decision Flow step 1: загрузить `HEADROOM_ENABLED` env (default `true`), передать в `tooll_subagents/user/context.md`.
+- Decision Flow step 6g (context compaction): если `headroom_enabled=true`, вместо или вместе с `context_compressor.md` вызывать `headroom_compressor.md` для сжатия ReAct-истории.
+- Failure Modes: добавить обработку ошибки Headroom compression — skip compression, continue loop.
 
 #### `tooll_subagents/planning/tool_plan_selection.md`
 
-- В Decision Flow добавить шаг: если `task_type` ∈ {code_change, refactor, fix, design_project full_code}, включить `ponytail_injector.md` в план перед tool-агентами генерации кода.
-- Добавить ссылку на `ponytail_injector.md` и `ponytail_audit.md` (для /ponytail-audit command).
+- В Decision Flow step 2 (map to tool categories) добавить: для тяжёлых контекстных задач включать MCP-категорию `headroom` (`headroom_compress`, `headroom_retrieve`, `headroom_stats`).
+- Добавить explicit step: перед code-generation, если контекст большой, вызвать `headroom_injector.md`.
+- Failure Modes: добавить строку про недоступность `headroom` — выбрать fallback `context_compressor.md`.
 
 #### `tooll_subagents/execution/tool_invocation.md`
 
-- Добавить обработку специальных команд:
-  - `/ponytail [lite|full|ultra|off]` — переключить режим сессии;
-  - `/ponytail-review` — вызвать `ponytail_review.md` для последних изменений;
-  - `/ponytail-audit` — вызвать `ponytail_audit.md`.
-- Decision Flow step 4 добавить подшаг для распознавания slash-команд.
-- Failure Modes: unknown command → log and abort.
+- Decision Flow step 4c: если инструмент из MCP-категории `headroom`, маршалить аргументы и отправлять через `mcp_servers/gateway.py`.
+- Добавить обработку slash-команд (опционально):
+  - `/headroom-stats` → `headroom_stats`;
+  - `/headroom-compress <content>` → `headroom_compress`.
+- Failure Modes: добавить обработку `headroom` MCP degradation.
 
-#### `tooll_subagents/self_correction/result_validation.md`
+#### `tooll_subagents/observability/memory_enrichment.md`
 
-- Добавить в `Receives`: `ponytail_review_report` (optional).
-- Добавить Decision Flow step 10a (после Visual QA): Ponytail review verdict.
-  - Если `approved=false` и есть `refinement_actions` → `validation_status=needs_refinement`, `retry_recommended=true`.
-  - Если `approved=true` → contribution to `complete`.
-- Failure Modes: добавить ссылку на `ponytail_review.md`.
+- Decision Flow step 4 (summarize): если `headroom_enabled=true`, для больших `observation_artifacts` вызывать `headroom_compressor.md` перед записью в memory;
+- хранить `headroom_hash` в memory entry для последующего `headroom_retriever.md`.
 
-#### `control/policy_enforcer.md`
+#### `mcp_servers/bootstrap.py`
 
-- В Decision Flow step 1: если `project_rules.ponytail` присутствует, использовать его как fallback policy source.
-- Добавить `operational` policy context для Ponytail.
-- Failure Modes: добавить обработку конфликта Ponytail mode с active policy.
+- Импортировать `HeadroomMCPServer`;
+- Добавить `"headroom": HeadroomMCPServer` в `constructors`;
+- Добавить описание в `descriptions`;
+- Добавить self-test для `headroom` в `test_all_servers` (degraded acceptable).
 
-### 4. Обновление документации (human approval gate)
+#### `mcp_servers/registry.py`
+
+- Добавить `"headroom": "Headroom context compression pipeline"` в `CATEGORY_MAP`.
+
+#### `runtime/engine/llm_engine.py`
+
+- НЕ оборачивать реальный LLM-вызов автоматически (рискует нарушить safety/control/audit flow). Вместо этого добавить опциональный helper:
+  - `LLMConfig.headroom_enabled: bool`;
+  - в `LLMEngine` добавить метод `compress_messages(messages)` для явного сжатия перед вызовом, если вызывающий код решит использовать.
+
+### 5. Обновление документации и правил
 
 #### `project_rules.md`
 
 Добавить раздел:
 ```markdown
-## Ponytail Protocol
+## Headroom Context Compression
 
-- Default mode: `full` (env `PONYTAIL_DEFAULT_MODE` overrides).
-- Apply the 7-step Ladder of Laziness before writing code: YAGNI → reuse → stdlib → native platform → installed dependency → one-liner → minimum code.
-- Never trade away: security, data validation, error handling, accessibility, tests, database integrity.
-- Slash commands: `/ponytail [lite|full|ultra|off]`, `/ponytail-review`, `/ponytail-audit`.
-- Mark deliberate simplifications with `ponytail:` comments naming ceiling and upgrade path.
+- Enabled by default when `headroom-ai` is installed (`HEADROOM_ENABLED=true` overrides; `false` disables).
+- Use `headroom_compress` on tool outputs, logs, search results, and RAG chunks > 500 tokens before passing them to the next agent.
+- Store original content via Headroom CCR; retrieve full details on demand with `headroom_retrieve` and the returned hash.
+- `headroom_stats` tracks session token savings and estimated cost reduction.
+- For multi-agent handoffs use `SharedContext` (wrapped in `runtime/engine/headroom_client.py`) to share compressed context without inflating tokens.
+- If Headroom is unavailable, fall back to the built-in `context_compressor.md` and continue without blocking.
 ```
 
 #### `CLAUDE.md`
 
-- В Quick Reference добавить строку про Ponytail.
-- В Cross-Session Memory / Active Skills упомянуть `/ponytail`.
-- В Conventions добавить `ponytail:` comment convention.
+- Quick Reference: добавить строку `headroom` в таблицу tool categories? Нет, headroom — MCP категория, не `tools_*`. Добавить в Core Architecture bullet:
+  - "Headroom context compression: `mcp_servers/headroom_server.py` exposes `headroom_compress`, `headroom_retrieve`, `headroom_stats` for 60–95 % token reduction on tool outputs and logs; optional `headroom-ai` dependency."
+- Current Progress: обновить counts (187 → 190 agents, tooll_subagents 33 → 36).
 
-#### `ARCHITECTURE.md`
+#### `.agent_loop/ARCHITECTURE.md`
 
-- В Directory Tree добавить новых агентов в `tooll_subagents/planning/` и `tooll_subagents/self_correction/`.
-- Обновить Agent Counts: `tooll_subagents` 30 → 32 (или пересчитать точно).
-- В Key Decisions добавить пункт про cross-cutting Ponytail optimizer.
+- Directory Tree:
+  - `planning/` — добавить `headroom_injector.md`;
+  - `observability/` — добавить `headroom_compressor.md`, `headroom_retriever.md`.
+- Agent Counts:
+  - `tooll_subagents` 33 → 36;
+  - `Total` 187 → 190.
+- Key Decisions: добавить пункт #13 про Headroom MCP category.
+- Runtime / MCP: добавить `mcp_servers/headroom_server.py` bullet.
 
-### 5. Валидация и тесты
+### 6. Зависимости
 
-- Запустить `node scripts/validate_cross_references.js` — ожидается 0 broken links, 0 isolated agents.
-- Запустить `node scripts/validate_consistency.js` — ожидается 0 errors.
-- Запустить `python -m pytest` или соответствующие runtime-тесты.
-- Проверить, что новые агенты имеют все 4 обязательных раздела Algorithmic template.
+**Файл:** `runtime/requirements-headroom.txt`
+
+```text
+# Optional Headroom context-compression dependencies for Agentic Loop.
+# Install only when Headroom tools are needed:
+#     pip install -r runtime/requirements.txt -r runtime/requirements-headroom.txt
+
+headroom-ai[proxy,mcp]>=0.28.0
+```
+
+Не добавлять в core `requirements.txt` — сохранить лёгкость базовой установки.
 
 ## Порядок выполнения
 
-1. Создать `runtime/engine/ponytail_optimizer.py`.
-2. Создать markdown-агентов:
-   - `tooll_subagents/planning/ponytail_injector.md`
-   - `tooll_subagents/self_correction/ponytail_review.md`
-   - `tooll_subagents/planning/ponytail_audit.md`
-3. Обновить существующих агентов (main_loop, tool_plan_selection, tool_invocation, result_validation, policy_enforcer).
-4. Запросить human approval для обновления `project_rules.md`, `CLAUDE.md`, `ARCHITECTURE.md`.
-5. После approval обновить документацию.
-6. Запустить валидаторы и тесты; исправить ошибки.
+1. Создать `runtime/engine/headroom_client.py`.
+2. Создать `mcp_servers/headroom_server.py`.
+3. Создать markdown-агентов:
+   - `tooll_subagents/planning/headroom_injector.md`
+   - `tooll_subagents/observability/headroom_compressor.md`
+   - `tooll_subagents/observability/headroom_retriever.md`
+4. Обновить `mcp_servers/bootstrap.py` и `mcp_servers/registry.py`.
+5. Обновить `main_loop.md`, `tool_plan_selection.md`, `tool_invocation.md`, `memory_enrichment.md`, `llm_engine.py`.
+6. Создать `runtime/requirements-headroom.txt`.
+7. Запросить human approval для обновления `project_rules.md`, `CLAUDE.md`, `ARCHITECTURE.md`.
+8. После approval обновить документацию.
+9. Запустить валидаторы и тесты; исправить ошибки.
+10. Сделать коммит.
+
+## Валидация и тесты
+
+- `node .agent_loop/scripts/validate_cross_references.js` → 0 broken links, 0 isolated agents.
+- `node .agent_loop/scripts/validate_consistency.js` → 0 errors (warnings допустимы).
+- `python -m pytest` → все runtime-тесты проходят.
+- Smoke-test `HeadroomClient` в режиме degraded (без `headroom-ai`) и при наличии пакета (если установлен).
+- `python -m mcp_servers.bootstrap --test` → `headroom` сервер возвращает degraded или operational.
 
 ## Риски и ограничения
 
-- Добавление новых агентов увеличивает счётчик агентов; ARCHITECTURE.md должен быть точно пересчитан.
-- `project_rules.md` и `CLAUDE.md` требуют explicit human approval — работа не может считаться завершённой без него.
-- Ponytail review может конфликтовать с safety/quality assessor; resolution mode `most_restrictive` должен применяться.
+- `headroom-ai` тянет Rust-расширение и тяжёлые ML-зависимости, поэтому остаётся **опциональным**. Все пути имеют graceful degradation.
+- Автоматическое сжатие LLM-сообщений не внедряется без явного вызова агента — чтобы не нарушать safety/control/audit flow.
+- Добавление 3 новых агентов меняет counts в `ARCHITECTURE.md` и `CLAUDE.md` (187 → 190); требуется точный пересчёт.
+- `project_rules.md`, `CLAUDE.md`, `ARCHITECTURE.md` требуют explicit human approval — работа не считается завершённой без него.

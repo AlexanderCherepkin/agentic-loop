@@ -1,9 +1,9 @@
 # CLAUDE.md — Agentic Loop
 
 This is a **multi-agent AI system** with hierarchical safety-first architecture.
-196 agents across 6 layers. The 110 tool-category agents (`tools_*`) are fully implemented
+202 agents across 6 layers. The 123 tool-category agents (`tools_*`) are fully implemented
 following the Algorithmic template (Role + Contract + Decision Flow + Failure Modes).
-All 196 agents across all 6 layers are fully implemented with the Algorithmic template.
+All 202 agents across all 6 layers are fully implemented with the Algorithmic template.
 No remaining stubs.
 
 ## First Action (always)
@@ -72,9 +72,9 @@ Never auto-approve (still require confirmation):
 | tools_database | 10 | Database query pipeline (connection→schema→query→transaction→executor→mapper→cache→error→migration→optimizer) | FILLED |
 | tools_web | 10 | Web request pipeline (auth→request→network→rate→retry→response→content→cache→error→web_optimizer) | FILLED |
 | tools_memory | 10 | Memory store pipeline (read→write→index→embedding→compress→evict→summarize→recall→consistency→optimizer) | FILLED |
-| tools_browser | 10 | Headless browser pipeline (session→navigation→screenshot→dom→selector→interaction→network→cookies→captcha→error→optimizer) | FILLED |
+| tools_browser | 12 | Headless browser pipeline (session→navigation→screenshot→dom→selector→interaction→network→cookies→captcha→error→visual_qa→optimizer) | FILLED |
 | tools_lighthouse | 11 | Lighthouse hard-gate pipeline (session→navigation→audit→parse→performance→a11y→best-practices→seo→correction-prompt→loop-terminator→optimizer) | FILLED |
-| **Total** | **196** | | **196 filled, 0 stubs** |
+| **Total** | **202** | | **202 filled, 0 stubs** |
 
 ## Core Architecture
 
@@ -104,7 +104,7 @@ Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Lad
 - **Naming**: snake_case filenames
 - **Directory quirks preserved**: `tooll_subagents` (double "l"), `tools_manangr` (typo in "manager")
 - **Algorithmic template** for all agents: `# Agent Name`, `## Role`, `## Contract` (Receives/Returns/Side effects), `## Decision Flow` (numbered steps), `## Failure Modes` (Condition→Response table)
-- **Pipeline architecture** varies by category: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory), headless-automation (browser), quality-lifecycle (lighthouse)
+- **Pipeline architecture** varies by category: linear (read), diamond (search), safety-gated (replace), sandboxed (runcom), framework-dispatch (runtest), session-stateful (terminal), analysis-planning (manangr), query-lifecycle (database), request-lifecycle (web), store-lifecycle (memory), headless-automation (browser), quality-lifecycle (lighthouse). tools_* totals 123 agents across 12 categories.
 - **No comments** in code unless the WHY is non-obvious; deliberate Ponytail simplifications are marked with `ponytail:` comments naming the ceiling and upgrade path
 - **No new files** unless the architecture requires it — prefer editing existing agents
 - **Safety first** — any change to execution, control, or safety layers must respect the three-circuit flow
@@ -126,14 +126,14 @@ Read memory when resuming work. Update memory when architecture changes or key d
 
 ## Current Progress & Next Steps
 
-1. **FILLED (196 agents)** — All layers fully implemented:
+1. **FILLED (202 agents)** — All layers fully implemented:
    - `main_loop.md` (1) — ReAct head agent with Lighthouse hard-gate and Headroom context-compaction integration
    - `orchestrator/` (6) — Router, dispatcher, pipeline coordinator, state manager, API gateway, message bus
    - `safety-control/` (9) — Input sanitization, permissions, threats, leaks, output review, bias, safety assessment, content checking
    - `mutual_check/` (10) — Audit, verification, consistency, validation, performance, quotas, anomalies, quality, feedback, compliance
    - `control/` (7) — File system, network, resources, human oversight, policy, scope, input aggregation
-   - `tooll_subagents/` (42) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `figma_precise_mode_auditor.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, Visual QA V2 refinements in `result_validation.md`, Lighthouse convergence guard in `recursion_or_termination.md`, Ponytail protocol agents (`ponytail_injector.md`, `ponytail_review.md`, `ponytail_audit.md`), Headroom agents (`headroom_injector.md`, `headroom_compressor.md`, `headroom_retriever.md`), Memanto agents (`memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`), and Mem0 agents (`mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`)
-   - `tools_*` (121) — 12 categories × 10+ tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
+   - `tooll_subagents/` (42) — Full ReAct cycle: user→planning→execution→observability→self_correction→result, including `figma_precise_mode_auditor.md`, `asset_agent.md`, `image_enrichment_agent.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, Visual QA V2 refinements in `result_validation.md`, Lighthouse convergence guard in `recursion_or_termination.md`, Ponytail protocol agents (`ponytail_injector.md`, `ponytail_review.md`, `ponytail_audit.md`), Headroom agents (`headroom_injector.md`, `headroom_compressor.md`, `headroom_retriever.md`), Memanto agents (`memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`), Mem0 agents (`mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`), and `/goal` fast-critic `goal_evaluator.md`
+   - `tools_*` (123) — 12 categories × 10+ tool agents each with cross-cutting optimizers, including `tools_browser/headless_automation` (12 agents with `visual_qa_agent.md`) for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 2. **STUBS (0 agents)** — No remaining placeholders. All agents follow the Algorithmic template.
 3. **System status**: COMPLETE — All 6 layers operational with three-circuit safety, full ReAct decomposition, lazy MCP gateway, `project_rules.md` context, headless browser tools, Lighthouse hard-gate pipeline, safe-component generation, Backend Spec Bridge, Responsive Composer, Component Registry, automatic Figma reference download, stable Chromium Visual QA, structural layout checks, conditional ReAct phase transitions, Ponytail cross-cutting optimization protocol, optional Headroom context-compression layer with reversible CCR, MCP tools, and runtime client, optional Memanto semantic-memory pipeline with MCP tools, runtime client, and ReAct integration, and optional Mem0 long-term memory pipeline with MCP tools, runtime client, local embedded vector-store support, cloud API support, and ReAct integration.
 

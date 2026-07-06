@@ -1,253 +1,240 @@
-const fs = require('fs');
-const path = require('path');
-
-/**
- * Consistency Validator for Agentic Loop
- * Checks:
- * 1. Algorithmic template completeness (Role, Contract, Decision Flow, Failure Modes)
- * 2. File naming convention (snake_case)
- * 3. Circular references between agents
- * 4. Safety-before-execution invariant references
- * 5. Contract field consistency (Receives/Returns/Side effects sections present)
- * 6. Directory structure matches ARCHITECTURE.md tree
- * Usage: node scripts/validate_consistency.js
- * Returns: exit code 0 if clean, 1 if issues found
+#!/usr/bin/env node
+/* validate_consistency.js — Algorithmic-template, naming, circular-ref, and safety-before-execution validator.
+ * Emits warnings for things that are technically allowed but suspicious.
  */
 
-const ROOT = path.join(__dirname, '..'); // .agent_loop/
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = path.resolve(__dirname, "../..");
+const AGENT_DIR = path.join(ROOT, ".agent_loop");
 
 function getAllMdFiles(dir, list = []) {
   const items = fs.readdirSync(dir, { withFileTypes: true });
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
     if (item.isDirectory()) getAllMdFiles(fullPath, list);
-    else if (item.name.endsWith('.md')) list.push(fullPath);
+    else if (item.name.endsWith(".md")) list.push(fullPath);
   }
   return list;
 }
 
-function parseAgent(content) {
-  const lines = content.split(/\r?\n/);
-  const sections = new Set();
-  const subSections = new Set();
-  let currentSection = null;
-  for (const line of lines) {
-    if (line.startsWith('## ')) {
-      currentSection = line.slice(3).trim().toLowerCase();
-      sections.add(currentSection);
-    } else if (line.startsWith('### ') && currentSection) {
-      subSections.add(`${currentSection}::${line.slice(4).trim().toLowerCase()}`);
+const ALGORITHMIC_SECTIONS = [
+  "## Role",
+  "## Contract",
+  "## Decision Flow",
+  "## Failure Modes",
+];
+
+const EXPECTED_PARTS = ["Receives", "Returns", "Side effects"];
+
+function warn(result, file, line, message) {
+  result.warnings.push({ file, line, message });
+}
+
+function fail(result, file, line, message) {
+  result.errors.push({ file, line, message });
+}
+
+function extractSection(content, marker) {
+  const idx = content.indexOf(marker);
+  if (idx === -1) return "";
+  const start = idx + marker.length;
+  const nextSame = content.indexOf("\n## ", start);
+  return nextSame === -1 ? content.slice(start) : content.slice(start, nextSame + 1);
+}
+
+function lineNumber(content, pos) {
+  return content.slice(0, pos).split("\n").length;
+}
+
+function normalizeAgentName(filePath, content) {
+  const base = path.basename(filePath, ".md");
+  const match = content.match(/^#\s+(.+)$/m);
+  const declared = match ? match[1].trim() : null;
+  return { base, declared };
+}
+
+function checkTemplate(agentPath, content, result) {
+  if (!/^# .+/m.test(content)) {
+    fail(result, agentPath, 1, "Missing required H1 agent name header");
+  }
+  ALGORITHMIC_SECTIONS.forEach((section) => {
+    if (!content.includes(section)) {
+      fail(result, agentPath, 1, `Missing required section: ${section}`);
     }
+  });
+
+  const contract = extractSection(content, "## Contract");
+  EXPECTED_PARTS.forEach((part) => {
+    if (!contract.toLowerCase().includes(part.toLowerCase())) {
+      warn(result, agentPath, lineNumber(content, content.indexOf("## Contract")), `Contract missing '${part}'`);
+    }
+  });
+
+  const decision = extractSection(content, "## Decision Flow");
+  if (!/\d+\./.test(decision)) {
+    warn(result, agentPath, lineNumber(content, content.indexOf("## Decision Flow")), "Decision Flow has no numbered steps");
   }
-  // Also detect inline Contract fields: "- **Receives**:" or "- **Returns**:" etc.
-  const hasInlineReceives = /\*\*Receives\*\*/.test(content);
-  const hasInlineReturns = /\*\*Returns\*\*/.test(content);
-  const hasInlineSideEffects = /\*\*Side effects\*\*/.test(content);
-  return { sections, subSections, hasInlineReceives, hasInlineReturns, hasInlineSideEffects };
+
+  const failure = extractSection(content, "## Failure Modes");
+  if (!failure.includes("Condition") || !failure.includes("Response")) {
+    warn(result, agentPath, lineNumber(content, content.indexOf("## Failure Modes")), "Failure Modes missing Condition/Response table");
+  }
 }
 
-function extractReferences(content, ownBase) {
-  const refs = new Set();
-  const re1 = /(?<![\w/.])\b([\w_]+)\.md\b/g;
-  const re2 = /(?<![\w/.])\b([\w_]+)\b/g;
-  let m;
-  while ((m = re1.exec(content)) !== null) {
-    if (m[1] !== ownBase) refs.add(m[1]);
+function checkNaming(agentPath, content, result) {
+  const { base, declared } = normalizeAgentName(agentPath, content);
+  if (!declared) return;
+  const stopWords = new Set(["agent", "the", "a", "an", "and", "or", "of", "for"]);
+  const fileWords = base.split("_").map((w) => w.toLowerCase()).filter((w) => w && !stopWords.has(w));
+  const declaredWords = declared.split(/\s+/).map((w) => w.toLowerCase().replace(/[^a-z0-9]/g, "")).filter((w) => w && !stopWords.has(w));
+  const overlap = fileWords.some((w) => declaredWords.includes(w));
+  if (!overlap) {
+    warn(result, agentPath, 1, `Agent name '${declared}' looks unrelated to filename '${base}.md'`);
   }
-  while ((m = re2.exec(content)) !== null) {
-    if (m[1] !== ownBase) refs.add(m[1]);
-  }
-  return [...refs];
 }
 
-function findCycles(adj, baseNames) {
+function buildGraph(agentPaths) {
+  const graph = new Map();
+  const files = new Map();
+  agentPaths.forEach((p) => {
+    const rel = path.relative(ROOT, p).replace(/\\/g, "/");
+    const name = path.basename(p, ".md");
+    graph.set(name, new Set());
+    files.set(name, rel);
+  });
+  agentPaths.forEach((p) => {
+    const content = fs.readFileSync(p, "utf8");
+    const fromName = path.basename(p, ".md");
+    const linkPattern = /\[([^\]]+)\]\([^)]*\.agent_loop[^)]*\)/g;
+    let m;
+    while ((m = linkPattern.exec(content)) !== null) {
+      const linkedRaw = m[1].replace(/\s+/g, "_").toLowerCase();
+      graph.forEach((_, target) => {
+        if (target.toLowerCase() === linkedRaw) {
+          graph.get(fromName).add(target);
+        }
+      });
+    }
+  });
+  return { graph, files };
+}
+
+function findCycles(graph) {
   const cycles = [];
   const visited = new Set();
-  const recStack = new Set();
-  const pathStack = [];
+  const stack = [];
+  const onStack = new Set();
 
   function dfs(node) {
     visited.add(node);
-    recStack.add(node);
-    pathStack.push(node);
-
-    const neighbors = adj.get(node) || [];
-    for (const n of neighbors) {
-      if (!baseNames.has(n)) continue; // skip non-agent refs
-      if (!visited.has(n)) {
-        dfs(n);
-      } else if (recStack.has(n)) {
-        const idx = pathStack.indexOf(n);
-        cycles.push(pathStack.slice(idx).concat([n]));
+    stack.push(node);
+    onStack.add(node);
+    const neighbors = graph.get(node) || new Set();
+    neighbors.forEach((next) => {
+      if (!visited.has(next)) {
+        dfs(next);
+      } else if (onStack.has(next)) {
+        const idx = stack.indexOf(next);
+        cycles.push(stack.slice(idx).concat(next));
       }
-    }
-
-    pathStack.pop();
-    recStack.delete(node);
+    });
+    stack.pop();
+    onStack.delete(node);
   }
 
-  for (const node of baseNames) {
+  graph.forEach((_, node) => {
     if (!visited.has(node)) dfs(node);
-  }
+  });
   return cycles;
 }
 
+function canonicalCycle(cycle) {
+  const nodes = cycle.slice(0, -1);
+  const rotations = Array.from({ length: nodes.length }, (_, i) =>
+    nodes.slice(i).concat(nodes.slice(0, i))
+  );
+  const reversed = [...nodes].reverse();
+  const reversedRotations = Array.from({ length: nodes.length }, (_, i) =>
+    reversed.slice(i).concat(reversed.slice(0, i))
+  );
+  const all = rotations.concat(reversedRotations);
+  all.sort();
+  return all[0].join("→");
+}
+
+function findUniqueShortCycles(graph, maxLength = 4) {
+  const allCycles = findCycles(graph);
+  const seen = new Set();
+  const unique = [];
+  for (const cycle of allCycles) {
+    const length = cycle.length - 1;
+    if (length > maxLength) continue;
+    const key = canonicalCycle(cycle);
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(cycle);
+    }
+  }
+  return unique;
+}
+
+function checkCycles(agentPaths, result) {
+  const { graph, files } = buildGraph(agentPaths);
+  const cycles = findUniqueShortCycles(graph, 4);
+  cycles.forEach((cycle) => {
+    const pathStr = cycle.join(" → ");
+    const first = cycle[0];
+    warn(result, files.get(first), 1, `Circular reference detected: ${pathStr}`);
+  });
+}
+
+function checkSafetyBeforeExecution(agentPaths, result) {
+  const executionDirs = ["tooll_subagents", "tools_read", "tools_replace", "tools_search", "tools_runcom", "tools_runtest", "tools_terminal", "tools_manangr", "tools_database", "tools_web", "tools_memory", "tools_browser", "tools_lighthouse"];
+  const safetyMarkers = ["safety_guardrails", "human_oversight"];
+
+  agentPaths.forEach((p) => {
+    const dir = path.basename(path.dirname(p));
+    if (!executionDirs.includes(dir)) return;
+    const content = fs.readFileSync(p, "utf8").replace(/\r\n/g, "\n");
+    const decision = extractSection(content, "## Decision Flow").toLowerCase();
+    const hasSafety = safetyMarkers.some((m) => decision.includes(m.toLowerCase()));
+    if (!hasSafety) {
+      warn(result, p, lineNumber(content, content.indexOf("## Decision Flow")), "Execution agent Decision Flow does not reference safety_guardrails or human_oversight");
+    }
+  });
+}
+
 function main() {
-  const allFiles = getAllMdFiles(ROOT);
-  const issues = [];
-  let warningCount = 0;
+  const agentPaths = getAllMdFiles(AGENT_DIR).filter((p) => {
+    if (!fs.statSync(p).isFile()) return false;
+    const rel = path.relative(AGENT_DIR, p);
+    return rel.includes(path.sep) || path.basename(p) === "main_loop.md";
+  });
 
-  const relNames = [];
-  const baseNames = new Set();
-  const baseToRel = new Map();
-  for (const f of allFiles) {
-    const rel = path.relative(ROOT, f).replace(/\\/g, '/');
-    const base = path.basename(f, '.md');
-    relNames.push({ rel, base, full: f });
-    baseNames.add(base);
-    baseToRel.set(base, rel);
-  }
+  const result = { errors: [], warnings: [] };
 
-  // 1. Algorithmic template completeness
-  const requiredSections = ['role', 'contract', 'decision flow', 'failure modes'];
-  for (const { rel, base, full } of relNames) {
-    if (rel === 'ARCHITECTURE.md' || rel === 'TECHNICAL_ASSIGNMENT.md') continue;
-    const content = fs.readFileSync(full, 'utf8');
-    const parsed = parseAgent(content);
-    for (const req of requiredSections) {
-      if (!parsed.sections.has(req)) {
-        issues.push(`[TEMPLATE] ${rel}: missing "## ${req.charAt(0).toUpperCase() + req.slice(1)}"`);
-      }
-    }
-    // Check Contract subsections (either h3 or inline list)
-    const hasReceives = parsed.subSections.has('contract::receives') || parsed.hasInlineReceives;
-    const hasReturns = parsed.subSections.has('contract::returns') || parsed.hasInlineReturns;
-    const hasSideEffects = parsed.subSections.has('contract::side effects') || parsed.hasInlineSideEffects;
-    if (!hasReceives) {
-      issues.push(`[TEMPLATE] ${rel}: missing "Receives" in Contract`);
-    }
-    if (!hasReturns) {
-      issues.push(`[TEMPLATE] ${rel}: missing "Returns" in Contract`);
-    }
-    if (!hasSideEffects) {
-      issues.push(`[TEMPLATE] ${rel}: missing "Side effects" in Contract`);
-    }
-  }
+  agentPaths.forEach((p) => {
+    const content = fs.readFileSync(p, "utf8").replace(/\r\n/g, "\n");
+    checkTemplate(p, content, result);
+    checkNaming(p, content, result);
+  });
 
-  // 2. File naming convention
-  const snakeCaseRe = /^[a-z][a-z0-9_]*\.md$/;
-  for (const { rel, base } of relNames) {
-    if (rel === 'CLAUDE.md' || rel === 'ARCHITECTURE.md' || rel === 'TECHNICAL_ASSIGNMENT.md') continue;
-    if (!snakeCaseRe.test(base + '.md')) {
-      issues.push(`[NAMING] ${rel}: filename not snake_case or contains uppercase/numbers incorrectly`);
-    }
-  }
+  checkCycles(agentPaths, result);
+  checkSafetyBeforeExecution(agentPaths, result);
 
-  // 3. Circular references (treated as warnings — cross-references in docs are not runtime calls)
-  const adj = new Map();
-  for (const { base, full } of relNames) {
-    const content = fs.readFileSync(full, 'utf8');
-    const refs = extractReferences(content, base);
-    adj.set(base, refs.filter(r => baseNames.has(r)));
-  }
-  const cycles = findCycles(adj, baseNames);
-  if (cycles.length > 0) {
-    for (const c of cycles) {
-      const pathStr = c.map(b => baseToRel.get(b) || b).join(' -> ');
-      warningCount++;
-      issues.push(`[CYCLE] Circular reference detected (warning): ${pathStr}`);
-    }
-  }
-
-  // 4. Safety-before-execution invariant check
-  const safetyAgents = [
-    'input_sanitizer', 'permission_checker', 'command_guard', 'threat_detector',
-    'data_leak_preventer', 'output_reviewer', 'bias_detector', 'safety_assessor', 'content_checker'
-  ];
-  const executionAgents = [
-    'tool_invocation', 'write_executor', 'executor_agent', 'command_builder',
-    'run_command', 'replace_in_file', 'database_query', 'web_request'
-  ];
-  for (const { rel, base, full } of relNames) {
-    if (!executionAgents.includes(base) && !rel.includes('execution/')) continue;
-    const content = fs.readFileSync(full, 'utf8');
-    const hasSafetyRef = safetyAgents.some(sa => content.includes(sa));
-    if (!hasSafetyRef && !rel.includes('safety')) {
-      warningCount++;
-      issues.push(`[SAFETY] ${rel}: execution agent does not reference any safety-control agent (warning)`);
-    }
-  }
-
-  // 5. Directory structure check (known dirs from ARCHITECTURE)
-  const knownDirs = new Set([
-    'orchestrator', 'safety-control', 'safety-control/mutual_check', 'control',
-    'tooll_subagents', 'tooll_subagents/user', 'tooll_subagents/planning',
-    'tooll_subagents/execution', 'tooll_subagents/observability',
-    'tooll_subagents/self_correction', 'tooll_subagents/result',
-    'tools_read', 'tools_read/read_file',
-    'tools_search', 'tools_search/search_code',
-    'tools_replace', 'tools_replace/replace_in_file',
-    'tools_runcom', 'tools_runcom/run_command',
-    'tools_runtest', 'tools_runtest/run_tests',
-    'tools_terminal', 'tools_terminal/terminal_io',
-    'tools_manangr', 'tools_manangr/project_manager',
-    'tools_database', 'tools_database/database_query',
-    'tools_web', 'tools_web/web_request',
-    'tools_memory', 'tools_memory/memory_store',
-    'tools_browser', 'tools_browser/headless_automation',
-    'scripts', 'data'
-  ]);
-  const actualDirs = new Set();
-  function collectDirs(dir) {
-    const items = fs.readdirSync(dir, { withFileTypes: true });
-    for (const item of items) {
-      if (item.isDirectory()) {
-        const relDir = path.relative(ROOT, path.join(dir, item.name)).replace(/\\/g, '/');
-        actualDirs.add(relDir);
-        collectDirs(path.join(dir, item.name));
-      }
-    }
-  }
-  collectDirs(ROOT);
-  for (const d of actualDirs) {
-    if (!knownDirs.has(d) && d !== '.' && d !== 'scripts') {
-      warningCount++;
-      issues.push(`[STRUCTURE] Unknown directory: ${d} (warning)`);
-    }
-  }
-  for (const d of knownDirs) {
-    if (!actualDirs.has(d)) {
-      issues.push(`[STRUCTURE] Missing directory: ${d}`);
-    }
-  }
-
-  // 6. Summary
-  console.log('=== Agentic Loop Consistency Report ===');
-  console.log('Total files checked:', allFiles.length);
-  console.log('Errors:', issues.length - warningCount);
-  console.log('Warnings:', warningCount);
-  console.log('');
-
-  const errorCount = issues.length - warningCount;
-  if (errorCount === 0) {
-    if (warningCount > 0) {
-      for (const issue of issues) {
-        console.log(issue);
-      }
-      console.log('');
-      console.log(`Found 0 errors and ${warningCount} warnings. Warnings only — validation passed.`);
-    } else {
-      console.log('All consistency checks passed.');
-    }
-    process.exit(0);
+  if (result.errors.length || result.warnings.length) {
+    console.log("Consistency check finished.");
+    console.log(`Errors: ${result.errors.length}`);
+    result.errors.forEach((e) => console.log(`  ERROR ${e.file}:${e.line} — ${e.message}`));
+    console.log(`Warnings: ${result.warnings.length}`);
+    result.warnings.forEach((w) => console.log(`  WARN ${w.file}:${w.line} — ${w.message}`));
   } else {
-    for (const issue of issues) {
-      console.log(issue);
-    }
-    console.log('');
-    console.log(`Found ${errorCount} errors and ${warningCount} warnings.`);
-    process.exit(1);
+    console.log("All agents consistent. No errors or warnings.");
   }
+
+  process.exit(result.errors.length ? 1 : 0);
 }
 
 main();

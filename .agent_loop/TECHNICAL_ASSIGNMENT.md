@@ -3,9 +3,9 @@
 ## 1. Общие сведения
 
 **Название системы:** Agentic Loop — многоагентная AI-система с иерархической архитектурой «безопасность прежде всего».  
-**Цель:** Создать расширяемую систему оркестрации из 170 специализированных агентов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
+**Цель:** Создать расширяемую систему оркестрации из 202 специализированных агентов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
 **Язык реализации:** Markdown-спецификации (алгоритмические шаблоны агентов).  
-**Масштаб:** 170 агентов, 6 слоёв, 11 категорий инструментов + Figma-to-code MCP сервер + Backend Spec Bridge MCP сервер.
+**Масштаб:** 202 агента, 6 слоёв, 12 категорий инструментов + Figma-to-code MCP сервер + Backend Spec Bridge MCP сервер.
 
 ---
 
@@ -57,28 +57,29 @@
 - **scope_manager** — предотвращение scope creep; отслеживание авторизованных ресурсов/тем/инструментов.
 - **input_aggregation** — консолидация сигналов безопасности, политических решений и состояний ресурсов в единый control directive.
 
-### 2.6 Подагенты цикла ReAct (tooll_subagents) — 29 агентов
+### 2.6 Подагенты цикла ReAct (tooll_subagents) — 42 агента
 Цикл разбит на 6 фаз:
 1. **user** (4): request — парсинг и классификация; context — сбор контекста; limitations — каталог ограничений; design_intake — распознавание дизайн-проектов (Figma URL, node ID, локальный JSON, дизайн-бриф) и формирование `design_descriptor`.
-2. **planning** (9): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя; responsive_composer — генерация breakpoint-вариантов и constraint-классов Tailwind; component_registry — построение реестра Figma-компонентов (Component Sets, Variants, Instances) и генерация `src/components/ui/*.tsx`.
+2. **planning** (16): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; figma_precise_mode_auditor — Builder.io-style readiness audit перед генерацией кода; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя; responsive_composer — генерация breakpoint-вариантов и constraint-классов Tailwind; component_registry — построение реестра Figma-компонентов (Component Sets, Variants, Instances) и генерация `src/components/ui/*.tsx`; component_mapper — сопоставление Component Sets с React-компонентами и запись mapper-файлов; asset_agent — обнаружение, классификация и планирование загрузки Figma-ассетов; image_enrichment_agent — поиск/загрузка fallback-изображений для card/hero placeholders.
 3. **execution** (4): tool_invocation — диспетчеризация; safety_guardrails — live runtime safety; human_approval — тактическое одобрение; action_logging — неизменяемый журнал выполнения.
-4. **observability** (4): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти.
-5. **self_correction** (4): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку.
+4. **observability** (12): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти; headroom_compressor/headroom_retriever — сжатие/восстановление больших артефактов; memanto_remember/recall/answer — семантическая память; mem0_remember/recall/list — гибридная долгосрочная память.
+5. **self_correction** (6): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку; goal_evaluator — fast-critic оценки прогресса по цели (/goal); ponytail_review — проверка over-engineering для сгенерированного/отрефакторенного кода.
 6. **result** (4): solution — финальное решение; modified_files — инвентарь изменений; action_report — отчёт о действиях; summary_recommendations — рекомендации.
 
-### 2.7 Инструментальные агенты (tools_*) — 110 агентов
-11 категорий по 10 агентов + cross-cutting optimizer на категорию. Кроме того, `mcp_servers/figma_server.py` предоставляет MCP-обёртку вокруг `figma-agent-core/` для приёма дизайн-проектов:
+### 2.7 Инструментальные агенты (tools_*) — 123 агента
+12 категорий по 10+ агентов + cross-cutting optimizer на категорию. Кроме того, `mcp_servers/figma_server.py` предоставляет MCP-обёртку вокруг `figma-agent-core/` для приёма дизайн-проектов:
 - **tools_read** — read_file pipeline (linear): path_resolver, permission_agent, encoding_agent, chunking_agent, parser_agent, content_extractor, integrity_checker, cache_agent, result_formatter, read_optimizer.
 - **tools_search** — search_code pipeline (diamond): scope_detector, permission_agent, indexer_agent, regex_searcher, semantic_searcher, relevance_scorer, deduplicator, snippet_builder, diff_generator, search_optimizer.
 - **tools_replace** — replace_in_file pipeline (safety-gated): pattern_matcher, change_validator, conflict_resolver, backup_agent, diff_generator, verify_agent, write_executor, rollback_agent, result_ranker, edit_optimizer.
-- **tools_runcom** — run_command pipeline (sandboxed): command_builder, sandbox_agent, env_manager, timeout_watcher, executor_agent, output_collector, error_analyzer, write_executor, write_planner, command_optimizer. (11 агентов)
+- **tools_runcom** — run_command pipeline (sandboxed): command_builder, sandbox_agent, env_manager, timeout_watcher, executor_agent, output_collector, error_analyzer, write_executor, write_planner, command_optimizer. (10 агентов)
 - **tools_runtest** — run_tests pipeline (framework-dispatch): test_discovery, test_planner, test_executor, log_parser, failure_analyzer, fix_suggestor, coverage_analyzer, flaky_detector, report_generator, test_optimizer.
 - **tools_terminal** — terminal_io pipeline (session-stateful): session_manager, terminal_state, command_history, io_handler, stream_reader, stream_writer, ansi_parser, output_filter, error_detector, terminal_optimizer.
 - **tools_manangr** — project_manager pipeline (analysis-planning): structure_analyzer, dependency_mapper, task_planner, file_organizer, config_manager, doc_generator, refactor_planner, impact_analyzer, build_manager, project_optimizer.
 - **tools_database** — database_query pipeline (query-lifecycle): query_builder, schema_analyzer, connection_manager, query_executor, result_mapper, transaction_manager, cache_manager, error_analyzer, migration_helper, db_optimizer.
 - **tools_web** — web_request pipeline (request-lifecycle): request_builder, auth_manager, network_checker, rate_limiter, response_parser, content_extractor, caching_agent, retry_manager, error_handler, web_optimizer.
 - **tools_memory** — memory_store pipeline (store-lifecycle): memory_writer, memory_reader, context_compressor, index_manager, eviction_policy, summarizer, embedding_agent, recall_optimizer, consistency_checker, memory_optimizer.
-- **tools_browser** — headless_automation pipeline (browser-lifecycle): session_manager, navigation_engine, screenshot_agent, dom_extractor, selector_resolver, interaction_agent, network_interceptor, cookie_storage_agent, captcha_challenge_agent, error_handler, browser_optimizer.
+- **tools_browser** — headless_automation pipeline (browser-lifecycle): session_manager, navigation_engine, screenshot_agent, dom_extractor, selector_resolver, interaction_agent, network_interceptor, cookie_storage_agent, captcha_challenge_agent, error_handler, visual_qa_agent, browser_optimizer. (12 агентов)
+- **tools_lighthouse** — audit pipeline (quality-lifecycle): session_manager, navigation_engine, audit_runner, report_parser, metric_guard_performance, metric_guard_a11y, metric_guard_best_practices, metric_guard_seo, correction_prompt_builder, loop_terminator, lighthouse_optimizer. Hard gate 100% по четырём столпам Lighthouse (Performance, Accessibility, Best Practices, SEO) через Playwright; парсинг 500 KB отчёта в компактный correction prompt; convergence guard 8 итераций; эскалация человеку при неудаче. Реализован в `tools_lighthouse/audit/` и интегрирован в `self_correction/result_validation.md`.
 - **figma (MCP)** — Figma-to-code pipeline: figma_bootstrap, figma_analyze, figma_generate_spec, figma_extract_tokens, figma_responsive_compose, figma_build_component_registry, figma_extract_components, figma_generate_component, figma_map_interactions, figma_download_assets, figma_run_pipeline. Visual QA V2: автоматическая загрузка референсного скриншота Figma, стабильный Chromium (viewport, fonts, disabled animations), структурные проверки layout (overflow, clipped text, overlaps, bbox mismatch) и интеграция с refinement loop. Реализован в `mcp_servers/figma_server.py`, лениво загружается и работает с `figma-agent-core/`.
 
 ### 2.8 MCP gateway (lazy loading)
@@ -273,14 +274,15 @@ User Request
 
 ## 10. Критерии приёмки
 
-- [ ] Все 170 агентов реализованы по Algorithmic template.
+- [ ] Все 202 агента реализованы по Algorithmic template.
 - [ ] 0 заглушек (stub'ов).
-- [ ] Все 170 агентов связаны в единый граф ссылок (0 изолированных).
+- [ ] Все 202 агента связаны в единый граф ссылок (0 изолированных).
 - [ ] 0 битых ссылок (после фильтрации документационных целей).
 - [ ] Трёхконтурная безопасность соблюдена: safety-control → mutual_check → control.
-- [ ] ReAct цикл декомпозирован на 27 подагентов в 6 фазах с условными переходами (Conditional Edges).
-- [ ] 11 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
+- [ ] ReAct цикл декомпозирован на 42 подагента в 6 фазах с условными переходами (Conditional Edges).
+- [ ] 12 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
 - [ ] Backend Spec Bridge интегрирован в Figma pipeline и MCP gateway.
+- [ ] Lighthouse hard-gate audit category (`tools_lighthouse/audit`) интегрирован в ReAct cycle и требует 100% по четырём столпам с convergence guard 8 итераций.
 - [ ] Скрипт валидации проходит без ошибок.
 - [ ] ARCHITECTURE.md и CLAUDE.md отражают текущее состояние системы.
 - [ ] Скрипт консистентности (`validate_consistency.js`) показывает 0 errors (warnings допустимы).
@@ -289,14 +291,14 @@ User Request
 
 ## 11. Статус реализации
 
-**Статус: ВЫПОЛНЕНО** (2026-06-18)
+**Статус: ВЫПОЛНЕНО** (2026-06-29)
 
-- 166/166 агентов реализованы.
+- 202/202 агента реализованы.
 - 0 stubs.
 - 0 изолированных агентов.
 - 0 битых ссылок (валидатор `validate_cross_references.js` пройден).
-- 0 ошибок консистентности (валидатор `validate_consistency.js` пройден: 0 errors, warnings допустимы).
+- 0 ошибок консистентности (валидатор `validate_consistency.js` пройден: 0 errors, 0 warnings).
 - Все агенты следуют Algorithmic template (Role, Contract, Decision Flow, Failure Modes).
-- Добавлены `tools_browser/headless_automation` (Playwright) и Conditional Edges (PhaseTransitionManager).
+- Добавлены `tools_browser/headless_automation` (Playwright), Conditional Edges (PhaseTransitionManager), `tools_lighthouse/audit` (Lighthouse 100% hard-gate pipeline), Ponytail/Headroom/Memanto/Mem0 protocols, `/goal` fast-critic, Asset Agent и Image Enrichment Agent.
 - Архитектурная документация актуальна.
 - Валидационные скрипты созданы и проверены.

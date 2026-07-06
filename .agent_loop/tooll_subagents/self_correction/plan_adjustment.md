@@ -10,8 +10,10 @@ Adaptive replanning agent that modifies the current task graph when execution re
 - `current_task_graph`: from `planning/task_decomposition.md`
 - `tool_plan`: from `planning/tool_plan_selection.md`
 - `gap_analysis`: from `self_correction/result_validation.md`
-- `refinement_actions`: optional list from `self_correction/result_validation.md` when visual QA discrepancies drive layout/component corrections
+- `refinement_actions`: optional list from `self_correction/result_validation.md` when visual QA or Lighthouse discrepancies drive layout/component/correctness corrections
 - `visual_qa_report`: optional structured report from `tools_browser/headless_automation/visual_qa_agent.md`
+- `lighthouse_correction_prompt`: optional markdown prompt from `tools_lighthouse/audit/correction_prompt_builder.md`
+- `lighthouse_target_files`: optional list of file paths to rewrite
 - `max_replanning_attempts`: integer (default 3)
 
 ### Returns
@@ -40,6 +42,7 @@ Adaptive replanning agent that modifies the current task graph when execution re
    - Environmental change: insert environment refresh or dependency installation step.
    - Overlooked constraint: add constraint-checking gate before affected steps.
    - Visual QA discrepancy: convert `refinement_actions` into deterministic `layout_patches` (spacing, sizing, alignment, font, color) and insert `compose` + `visual_qa` sub-tasks for the next iteration.
+   - Lighthouse discrepancy: if `lighthouse_correction_prompt` is present, insert sub-tasks for each `lighthouse_target_files` to apply the prompt's required changes, followed by a rebuild and a `tools_lighthouse/audit/` re-run sub-task. Prioritize safe-component fixes first (`SafeLink`, `ResponsivePicture`, `TouchSafeElement`), then meta/structured-data, then performance micro-optimizations.
 5. **Validate adjusted graph** — ensure no cycles, all dependencies satisfiable, no frozen tasks modified.
 6. **Compute risk delta** — compare new plan risk to original using `cost_risk_assessment` heuristics; flag if significantly higher.
 7. **Check attempt budget** — decrement `remaining_attempts`; if zero, `approval_needed=true` and recommend `assistance_request.md` or termination.
@@ -56,3 +59,5 @@ Adaptive replanning agent that modifies the current task graph when execution re
 | Frozen task must be modified to fix gap | Mark frozen task as partially unfrozen with audit trail; attempt minimal change; if impossible, `approval_needed=true` |
 | Root cause identified as fundamental goal impossibility | `adjusted_plan=null`, route to `recursion_or_termination.md` with termination recommendation |
 | Visual QA discrepancies persist after max iterations | Set `human_escalation_reason`; `adjusted_plan` contains only final report + human approval sub-task |
+| Lighthouse correction prompt present but no target files | Derive target files from `refinement_actions`; if still empty, escalate to `assistance_request.md` |
+| Lighthouse fix conflicts with visual QA exact sizing | Flag trade-off in `change_summary`; prefer Lighthouse a11y/SEO minimums unless human override present |

@@ -16,13 +16,14 @@ class FigmaHTTPClient:
     Особенности:
       - централизованный retry c exponential backoff;
       - обработка HTTP 429 с учетом заголовка Retry-After;
-      - искусственная задержка между запросами для снижения burst-нагрузки;
+      - опциональная искусственная задержка между запросами (по умолчанию 0,
+        rate-limit управляется автоматически через 429/Retry-After);
       - один shared Session/adapter для connection reuse.
     """
 
     DEFAULT_MAX_RETRIES = 5
     DEFAULT_BACKOFF_FACTOR = 2.0
-    DEFAULT_REQUEST_DELAY = 1.0
+    DEFAULT_REQUEST_DELAY = 0.0
     DEFAULT_STATUS_FORCELIST = (429, 500, 502, 503, 504)
 
     def __init__(

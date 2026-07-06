@@ -62,6 +62,86 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
     return server, server.get_tools_list()
 
 
+# Static tool-name catalog used for truly lazy registration. This avoids
+# constructing every MCP server at registry creation time.
+CATEGORY_TOOLS: dict[str, list[str]] = {
+    "tools_read": [
+        "read_file", "detect_encoding", "get_file_info", "read_chunk",
+        "extract_content", "validate_integrity", "format_output",
+        "list_directory", "clear_cache",
+    ],
+    "tools_search": [
+        "regex_search", "semantic_search", "define_scope", "rank_relevance",
+        "deduplicate", "generate_snippet", "find_symbol", "diff_search",
+    ],
+    "tools_replace": [
+        "create_backup", "match_pattern", "apply_edit", "generate_diff",
+        "rank_edit_candidates", "validate_edit", "write_file", "verify_write",
+        "rollback", "safe_delete",
+    ],
+    "tools_runcom": [
+        "build_command", "optimize_command", "setup_environment",
+        "execute_command", "sandbox_check", "capture_output", "handle_timeout",
+        "analyze_error", "get_history",
+    ],
+    "tools_runtest": [
+        "discover_tests", "plan_execution", "optimize_suite", "execute_test",
+        "collect_coverage", "analyze_failure", "detect_flaky", "generate_report",
+    ],
+    "tools_terminal": [
+        "create_session", "get_state", "add_to_history", "parse_ansi",
+        "filter_output", "detect_error", "get_session_history", "list_sessions",
+        "close_session",
+    ],
+    "tools_manangr": [
+        "analyze_structure", "map_dependencies", "analyze_impact", "plan_tasks",
+        "suggest_refactor", "manage_config", "generate_docs", "organize_files",
+    ],
+    "tools_database": [
+        "open_connection", "analyze_schema", "build_query", "execute_query",
+        "begin_transaction", "commit_transaction", "rollback_transaction",
+        "map_result", "cache_query", "analyze_error", "suggest_migration",
+        "close_connection",
+    ],
+    "tools_web": [
+        "build_request", "add_auth", "check_network", "check_rate_limit",
+        "send_request", "parse_response", "extract_content", "cache_response",
+        "handle_retry", "analyze_error",
+    ],
+    "tools_memory": [
+        "read_memory", "write_memory", "list_entries", "index_entry",
+        "search_index", "generate_embedding", "compress_content",
+        "summarize_entry", "evict_entry", "check_consistency", "optimize_store",
+    ],
+    "tools_browser": [
+        "browser_open", "browser_navigate", "browser_screenshot",
+        "browser_extract", "browser_click", "browser_type", "browser_scroll",
+        "browser_evaluate", "browser_cookies", "browser_close",
+    ],
+    "figma": [
+        "figma_bootstrap", "figma_analyze", "figma_precise_mode_audit",
+        "figma_generate_spec", "figma_extract_tokens", "figma_generate_component",
+        "figma_build_component_registry", "figma_extract_components",
+        "figma_map_interactions", "figma_responsive_compose", "figma_download_assets",
+        "figma_run_pipeline",
+    ],
+    "backend": [
+        "backend_analyze_spec", "backend_map_ui", "backend_generate_routes",
+        "backend_generate_actions", "backend_sync_schema", "backend_run_bridge",
+        "backend_generate_schemas",
+    ],
+    "headroom": [
+        "headroom_compress", "headroom_retrieve", "headroom_stats",
+    ],
+    "memanto": [
+        "memanto_create_agent", "memanto_remember", "memanto_recall", "memanto_answer",
+    ],
+    "mem0": [
+        "mem0_add", "mem0_search", "mem0_get_all", "mem0_delete",
+    ],
+}
+
+
 def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
     """Create and populate the MCP registry with all 16 servers.
 
@@ -72,49 +152,26 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
     registry = MCPRegistry()
     root = Path(workspace_root).resolve()
 
-    descriptions = {
-        "tools_read": "Read file pipeline — 9 tools",
-        "tools_search": "Search code pipeline — 8 tools",
-        "tools_replace": "Replace in file pipeline — 10 tools",
-        "tools_runcom": "Run command pipeline — 9 tools",
-        "tools_runtest": "Run tests pipeline — 8 tools",
-        "tools_terminal": "Terminal I/O pipeline — 9 tools",
-        "tools_manangr": "Project management pipeline — 8 tools",
-        "tools_database": "Database query pipeline — 11 tools",
-        "tools_web": "Web request pipeline — 10 tools",
-        "tools_memory": "Memory store pipeline — 11 tools",
-        "tools_browser": "Headless browser pipeline — 10 tools",
-        "figma": "Figma-to-code pipeline — 9 tools",
-        "backend": "Backend Spec Bridge pipeline — 6 tools",
-        "headroom": "Headroom context compression pipeline — 3 tools",
-        "memanto": "Memanto semantic memory pipeline — 4 tools",
-        "mem0": "Mem0 long-term memory pipeline — 4 tools",
-    }
-
-    for category in descriptions:
+    for category, tool_names in CATEGORY_TOOLS.items():
+        description = f"{category} pipeline — {len(tool_names)} tools"
         if eager:
             server, tools = _build_server(category, root, eager=True)
             registry.register(ServerInfo(
-                name=descriptions[category],
+                name=description,
                 category=category,
                 agent_count=len(tools),
                 server=server,
                 tools=[t["name"] for t in tools],
             ))
         else:
-            # Lazy: register a factory and lightweight metadata. Tool names are
-            # discovered by constructing the server once, then immediately discarded.
-            # This still saves planner tokens because only category metadata is kept.
-            server, tools = _build_server(category, root, eager=True)
-            tool_names = [t["name"] for t in tools]
-            agent_count = len(tools)
-            # Discard the temporary server; the factory will build a fresh one on demand.
+            # Truly lazy: no server is constructed here. Metadata is built from
+            # the static catalog; the factory constructs the server only on first use.
             registry.register_factory(
                 category=category,
                 factory=lambda c=category, r=root: _build_server(c, r, eager=True)[0],
-                name=descriptions[category],
+                name=description,
                 metadata={
-                    "agent_count": agent_count,
+                    "agent_count": len(tool_names),
                     "tools": tool_names,
                 },
             )
@@ -195,17 +252,25 @@ async def test_all_servers(registry: MCPRegistry):
         r = await browser.call_tool("browser_open", {"session_id": "test"})
         results["browser"] = "error" not in str(r.content) or "degraded" in str(r.content)
 
-    # Test figma server (degraded is acceptable if figma-agent-core missing)
+    # Test figma server. Accept success or degraded; reject Python exceptions/tracebacks.
     figma = registry.get_server("figma")
     if figma:
         r = await figma.call_tool("figma_run_pipeline", {"dry_run": True})
-        results["figma"] = "error" not in str(r.content) or "degraded" in str(r.content)
+        text = str(r.content)
+        results["figma"] = (
+            ("status\": \"success\"" in text or "status\": \"degraded\"" in text)
+            and "traceback" not in text.lower()
+        )
 
-    # Test backend server (degraded is acceptable if figma-agent-core missing)
+    # Test backend server. Use dry_run=True for a no-op connectivity check.
     backend = registry.get_server("backend")
     if backend:
-        r = await backend.call_tool("backend_analyze_spec", {})
-        results["backend"] = "error" not in str(r.content) or "degraded" in str(r.content)
+        r = await backend.call_tool("backend_analyze_spec", {"dry_run": True})
+        text = str(r.content)
+        results["backend"] = (
+            ("status\": \"success\"" in text or "status\": \"degraded\"" in text)
+            and "traceback" not in text.lower()
+        )
 
     # Test headroom server (degraded is acceptable if headroom-ai not installed)
     headroom = registry.get_server("headroom")

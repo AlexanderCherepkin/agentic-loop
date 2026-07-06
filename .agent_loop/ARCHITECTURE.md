@@ -54,17 +54,20 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
 │   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
-│   ├── planning/                         #   Planning layer (13 agents)
+│   ├── planning/                         #   Planning layer (16 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
 │   │   ├── internal_monologue.md         #     Internal reasoning
 │   │   ├── figma_design_analyst.md       #     Run Figma pipeline and produce a design_blueprint
+│   │   ├── figma_precise_mode_auditor.md #     Builder.io-style readiness audit before Figma-to-code generation
 │   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
 │   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
 │   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
 │   │   ├── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
 │   │   ├── component_mapper.md           #     Map Figma Component Sets to React components and write mapper files
+│   │   ├── asset_agent.md                #     Discover, classify and schedule Figma asset downloads
+│   │   ├── image_enrichment_agent.md     #     Search/download fallback images for card/hero placeholders
 │   │   ├── ponytail_injector.md          #     Inject Ponytail protocol into code-generation system prompts
 │   │   ├── ponytail_audit.md             #     Repository-wide over-engineering audit (read-only)
 │   │   └── headroom_injector.md          #     Decide where Headroom context compression should be applied
@@ -86,30 +89,31 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── mem0_remember.md              #     Persist durable conversation turns/facts to Mem0
 │   │   ├── mem0_recall.md                #     Retrieve relevant prior context from Mem0
 │   │   └── mem0_list.md                  #     List all memories stored in Mem0
-│   ├── self_correction/                  #   Self-correction layer (5 agents)
+│   ├── self_correction/                  #   Self-correction layer (6 agents)
 │   │   ├── result_validation.md          #     Validate results
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
 │   │   ├── recursion_or_termination.md   #     Decide: loop or finish
-│   │   └── assistance_request.md         #     Request human help
-│   │   ├── ponytail_review.md            #     Over-engineering review for generated/refactored code
+│   │   ├── assistance_request.md         #     Request human help
+│   │   ├── goal_evaluator.md             #     Evaluate progress against a stated goal (/goal fast-critic)
+│   │   └── ponytail_review.md            #     Over-engineering review for generated/refactored code
 │   └── result/                           #   Output layer (4 agents)
 │       ├── solution.md                   #     Final solution
 │       ├── modified_files.md             #     List modified files
 │       ├── action_report.md              #     Report actions taken
 │       └── summary_recommendations.md    #     Summary and recommendations
 │
-└── tools_*/                              # Tool sub-agents (~110 agents)
+└── tools_*/                              # Tool sub-agents (123 agents across 12 categories)
     ├── tools_read/read_file/             #   File reading — linear pipeline (10 agents + read_optimizer)
     ├── tools_search/search_code/         #   Code search — diamond pipeline (10 agents + search_optimizer)
     ├── tools_replace/replace_in_file/    #   File editing — safety-gated pipeline (10 agents + edit_optimizer)
-    ├── tools_runcom/run_command/         #   Command execution — sandboxed pipeline (11 agents + command_optimizer)
+    ├── tools_runcom/run_command/         #   Command execution — sandboxed pipeline (10 agents + command_optimizer)
     ├── tools_runtest/run_tests/          #   Test running — framework-dispatch pipeline (10 agents + test_optimizer)
     ├── tools_terminal/terminal_io/       #   Terminal I/O — session-stateful pipeline (10 agents + terminal_optimizer)
     ├── tools_manangr/project_manager/    #   Project management — analysis-planning pipeline (10 agents + project_optimizer)
     ├── tools_database/database_query/    #   Database queries — query-lifecycle pipeline (10 agents + db_optimizer)
     ├── tools_web/web_request/            #   Web requests — request-lifecycle pipeline (10 agents + web_optimizer)
     ├── tools_memory/memory_store/        #   Memory storage — store-lifecycle pipeline (10 agents + memory_optimizer)
-    ├── tools_browser/headless_automation/  #   Headless browser — automation pipeline (10 agents + browser_optimizer)
+    ├── tools_browser/headless_automation/  #   Headless browser — automation pipeline (12 agents + browser_optimizer)
     │   ├── session_manager.md            #     Launch/dispose Playwright contexts
     │   ├── navigation_engine.md          #     Load URLs and wait for dynamic content
     │   ├── screenshot_agent.md           #     Capture viewport/full-page/element screenshots
@@ -120,8 +124,9 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
     │   ├── cookie_storage_agent.md       #     Manage cookies/local/session storage
     │   ├── captcha_challenge_agent.md    #     Detect CAPTCHA/login walls and escalate
     │   ├── error_handler.md              #     Classify browser failures and trigger cleanup
+    │   ├── visual_qa_agent.md            #     Playwright screenshot + DOM assertions + image diff
     │   └── browser_optimizer.md          #     Batch operations and reuse contexts
-    └── tools_lighthouse/audit/           #   Lighthouse hard-gate pipeline (10 agents + lighthouse_optimizer)
+    └── tools_lighthouse/audit/           #   Lighthouse hard-gate pipeline (11 agents + lighthouse_optimizer)
         ├── session_manager.md            #     Launch/dispose Playwright contexts for audits
         ├── navigation_engine.md          #     Stabilize page before audit
         ├── audit_runner.md               #     Run Lighthouse via Playwright
@@ -146,10 +151,10 @@ User Request
           → control/ (scope, policy, resource enforcement)
             → orchestrator/dispatcher.md
               → tooll_subagents/user/ (user context + project_rules.md + design_intake)
-              → tooll_subagents/planning/ (task decomposition + figma_design_analyst + design_to_code_planner + memanto_recall)
+              → tooll_subagents/planning/ (task decomposition + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent] + design_to_code_planner + memanto_recall)
               → tooll_subagents/execution/ (tool invocation)
                 → tools_*/ (specialized tool agents)
-                → tools_browser/headless_automation (Playwright dynamic pages)
+                → tools_browser/headless_automation (Playwright dynamic pages + visual_qa_agent)
                 → tools_lighthouse/audit (Lighthouse hard-gate audit + report parsing + correction prompts)
                 → mcp_servers/gateway.py (lazy MCP dispatch)
                 → mcp_servers/figma_server.py (Figma-to-code pipeline)
@@ -157,7 +162,7 @@ User Request
                 → mcp_servers/memanto_server.py (optional Memanto semantic-memory tools)
                 → mcp_servers/mem0_server.py (optional Mem0 long-term memory tools)
               → tooll_subagents/observability/ (result capture + memanto_remember + mem0_remember)
-              → tooll_subagents/self_correction/ (validate → adjust → loop or finish)
+              → tooll_subagents/self_correction/ (validate [result_validation + goal_evaluator + visual_qa_agent] → adjust → loop or finish)
                 → PhaseTransitionManager (runtime conditional phase routing)
               → tooll_subagents/result/ (final output + memanto_answer + mem0_recall)
   → User Response
@@ -173,8 +178,8 @@ User Request
 | safety-control/mutual_check | 10 |
 | control | 7 |
 | tooll_subagents | 42 |
-| tools_* | 121 |
-| **Total** | **196** |
+| tools_* | 123 |
+| **Total** | **202** |
 
 ## Naming Convention
 - snake_case filenames
@@ -200,20 +205,20 @@ User Request
 
 ## Implementation Status
 
-All 196 agents are fully implemented following the Algorithmic template:
+All 202 agents are fully implemented following the Algorithmic template:
 - `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, and Headroom context-compaction integration
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (42) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (13 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `ponytail_injector.md`, `ponytail_audit.md`, and `headroom_injector.md`), execution (4), observability (12 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, and `mem0_list.md`), self_correction (5 with `ponytail_review.md`), result (4)
-- `tools_*` (121) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
+- `tooll_subagents/` (42) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (16 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, and `headroom_injector.md`), execution (4), observability (12 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, and `mem0_list.md`), self_correction (6 with `goal_evaluator.md` and `ponytail_review.md`), result (4)
+- `tools_*` (123) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
 - `mcp_servers/mem0_server.py` — lazy MCP wrapper around `runtime/engine/mem0_client.py` exposing `mem0_add`, `mem0_search`, `mem0_get_all`, and `mem0_delete`; degrades to in-memory fallback when `mem0ai` is not installed or the API is unreachable
 
-Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Failure Modes.
+Zero remaining stubs. All 202 agents include Role, Contract, Decision Flow, and Failure Modes.
 
 ## Runtime / MCP
 
@@ -232,6 +237,31 @@ Zero remaining stubs. All agents include Role, Contract, Decision Flow, and Fail
 - `runtime/engine/mem0_client.py` — singleton wrapper around the `mem0ai` `Memory`/`MemoryClient` classes with in-memory fallback when the SDK/API is unavailable.
 - `runtime/engine/pipeline_runner.py` — also hosts `PhaseTransitionManager` for conditional ReAct phase routing.
 - `project_rules.md` — lightweight project-level context file in repo root (Scope, Conventions, Tooling Preferences, Safety Defaults, Human-in-the-Loop Triggers).
+
+### MCP Servers
+
+All 16 MCP servers are registered in `mcp_servers/bootstrap.py` and discovered through `mcp_servers/registry.py`. Default mode is **lazy**: `mcp_servers/gateway.py` exposes category metadata and materializes a server only when one of its tools is actually invoked. Use `python -m mcp_servers.bootstrap --test` to run self-tests on all 16 servers; the test accepts `degraded` status for optional servers when their external dependency is missing.
+
+| Category | Server file | Exposed tools | Required / Optional | Dependencies / Env | Degraded behavior |
+|---|---|---|---|---|---|
+| `tools_read` | `mcp_servers/read_server.py` | 9 | Required | Core `runtime/requirements.txt` (stdlib + `anthropic`, `openai`, `rich`, `numpy`, `pytest`) | None — loaded eagerly in all runtime modes |
+| `tools_search` | `mcp_servers/search_server.py` | 8 | Required | Core requirements | None |
+| `tools_replace` | `mcp_servers/replace_server.py` | 10 | Required | Core requirements | None |
+| `tools_runcom` | `mcp_servers/runcom_server.py` | 9 | Required | Core requirements | None |
+| `tools_runtest` | `mcp_servers/runtest_server.py` | 8 | Required | Core requirements | None |
+| `tools_terminal` | `mcp_servers/terminal_server.py` | 9 | Required | Core requirements | None |
+| `tools_manangr` | `mcp_servers/manangr_server.py` | 8 | Required | Core requirements | None |
+| `tools_database` | `mcp_servers/database_server.py` | 12 | Required | Core requirements (uses stdlib `sqlite3`) | None |
+| `tools_web` | `mcp_servers/web_server.py` | 10 | Required | Core requirements | None |
+| `tools_memory` | `mcp_servers/memory_server.py` | 11 | Required | Core requirements | None |
+| `tools_browser` | `mcp_servers/browser_server.py` | 10 | Optional | `playwright>=1.40.0` + `playwright install` (`runtime/requirements-browser.txt`) | Reports `status: degraded`; planner falls back to `tools_web` for static content |
+| `figma` | `mcp_servers/figma_server.py` | 12 | Optional | `figma-agent-core/` directory; env `FIGMA_TOKEN`, `FIGMA_URL`, optional `FIGMA_NODE_ID` | Reports `status: degraded`; requires install of `figma-agent-core` and setting token/url before live Figma calls |
+| `backend` | `mcp_servers/backend_server.py` | 7 | Optional | `figma-agent-core/` directory; one of `openapi`, `prisma`, or `text_spec` arguments | Reports `status: degraded` if `figma-agent-core/` is missing; otherwise runs only when a backend spec is provided |
+| `headroom` | `mcp_servers/headroom_server.py` | 3 | Optional | `headroom-ai>=0.1.0` (`runtime/requirements-headroom.txt`); env `HEADROOM_ENABLED`, `HEADROOM_MODEL`, `HEADROOM_SESSION_TTL` | Reports `status: degraded`; `runtime/engine/headroom_client.py` falls back to plaintext passthrough |
+| `memanto` | `mcp_servers/memanto_server.py` | 4 | Optional | `memanto>=0.1.0`, `moorcheh-sdk>=1.3.7` (`runtime/requirements-memanto.txt`); running Memanto server; env `MEMANTO_ENABLED`, `MEMANTO_BASE_URL`, `MEMANTO_API_KEY`, `MEMANTO_AGENT_ID` | Reports `status: degraded`; `runtime/engine/memanto_client.py` falls back to in-memory store |
+| `mem0` | `mcp_servers/mem0_server.py` | 4 | Optional | `mem0ai>=0.2.0`, `openai>=1.90.0`, `chromadb>=0.4.24` (or `qdrant-client`) (`runtime/requirements-mem0.txt`); env `MEM0_ENABLED`, `MEM0_API_KEY`, `MEM0_HOST`, `MEM0_VECTOR_STORE`, `MEM0_VECTOR_STORE_PATH`, optional `MEM0_USER_ID`/`MEM0_AGENT_ID`/`MEM0_APP_ID`/`MEM0_RUN_ID` | Reports `status: degraded`; `runtime/engine/mem0_client.py` falls back to in-memory store |
+
+Optional servers still register their tools in lazy mode, so the planner sees them as available categories. When invoked, they return a structured `degraded` response rather than throwing, letting the ReAct loop fall back or continue without external dependencies. `tools_lighthouse/audit` is intentionally **not** an MCP server; it is a headless-browser agent pipeline invoked by `tooll_subagents/self_correction/result_validation.md` and consumes the same Playwright dependency as `tools_browser`.
 
 ## Validation
 

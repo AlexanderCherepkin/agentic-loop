@@ -80,10 +80,11 @@ class TestWorkerPoolBackpressure(unittest.TestCase):
 
     def test_rejects_when_queue_full(self):
         async def _test():
+            # Use short timeout so the test finishes quickly even with zero workers.
             await self.pool.start()
-            j1 = WorkerJob(priority=5)
-            j2 = WorkerJob(priority=5)
-            j3 = WorkerJob(priority=5)
+            j1 = WorkerJob(priority=5, timeout_ms=200)
+            j2 = WorkerJob(priority=5, timeout_ms=200)
+            j3 = WorkerJob(priority=5, timeout_ms=200)
             r1 = await self.pool.dispatch(j1)
             r2 = await self.pool.dispatch(j2)
             r3 = await self.pool.dispatch(j3)

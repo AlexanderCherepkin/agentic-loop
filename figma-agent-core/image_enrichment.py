@@ -161,6 +161,83 @@ class UnsplashProvider(ImageProvider):
             return False
 
 
+class PollinationsProvider(ImageProvider):
+    """Provider that generates on-demand images via Pollinations AI.
+
+    No API key is required. The provider turns the search query into an image
+    generation prompt and returns a direct download URL. Width/height default to
+    common card sizes; they can be overridden via constructor.
+    """
+
+    API_ROOT = "https://image.pollinations.ai/prompt"
+
+    def __init__(
+        self,
+        width: int = 360,
+        height: int = 160,
+        request_delay: float = DEFAULT_DELAY,
+        nologo: bool = True,
+    ) -> None:
+        self.width = width
+        self.height = height
+        self.request_delay = request_delay
+        self.nologo = nologo
+        self._last_request_time: Optional[float] = None
+        self._session = requests.Session()
+        self._session.headers.update({
+            "User-Agent": "Mozilla/5.0 (compatible; AgenticLoopImageEnricher/1.0)",
+        })
+
+    def _throttle(self) -> None:
+        if self.request_delay <= 0 or self._last_request_time is None:
+            self._last_request_time = time.monotonic()
+            return
+        elapsed = time.monotonic() - self._last_request_time
+        if elapsed < self.request_delay:
+            time.sleep(self.request_delay - elapsed)
+        self._last_request_time = time.monotonic()
+
+    @staticmethod
+    def _escape_prompt(query: str) -> str:
+        return re.sub(r"[^\w\s,\-]", "", query).strip().replace(" ", "%20")
+
+    def search_images(self, query: str, count: int = 1) -> List[Dict[str, Any]]:
+        self._throttle()
+        if not query:
+            return []
+        prompt = self._escape_prompt(query)
+        results: List[Dict[str, Any]] = []
+        for i in range(count):
+            url = (
+                f"{self.API_ROOT}/{prompt}"
+                f"?width={self.width}&height={self.height}"
+                f"&seed={abs(hash(query + str(i))) % 100000}"
+            )
+            if self.nologo:
+                url += "&nologo=true"
+            results.append({
+                "url": url,
+                "thumb_url": url,
+                "source_name": "Pollinations AI",
+                "source_url": "https://pollinations.ai",
+                "author_name": "",
+                "author_url": "",
+            })
+        return results
+
+    def download_image(self, url: str, dest: Path) -> bool:
+        try:
+            self._throttle()
+            response = self._session.get(url, timeout=120)
+            response.raise_for_status()
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(response.content)
+            return True
+        except Exception as e:
+            print(f"[IMAGE-ENRICH] Pollinations download failed: {e}")
+            return False
+
+
 class MockImageProvider(ImageProvider):
     """Provider for tests: returns a tiny 1x1 PNG and copies it on download."""
 
@@ -457,6 +534,8 @@ def _build_provider(provider_name: str, api_key: Optional[str]) -> ImageProvider
         if not key:
             raise ValueError("Unsplash provider requires --image-provider-api-key or UNSPLASH_ACCESS_KEY")
         return UnsplashProvider(access_key=key)
+    if provider_name == "pollinations":
+        return PollinationsProvider()
     if provider_name == "mock":
         return MockImageProvider()
     raise ValueError(f"Unknown image provider: {provider_name}")
@@ -519,7 +598,7 @@ def main() -> None:
     parser.add_argument("--spec-file", default="spec.md", help="Path to technical assignment/spec for context")
     parser.add_argument("--output", default="data_model.json", help="Output path for enriched data_model.json")
     parser.add_argument("--registry-output", default=DEFAULT_REGISTRY_FILE, help="Output path for enrichment registry")
-    parser.add_argument("--provider", default=DEFAULT_PROVIDER, choices=["unsplash", "mock"], help="External image provider")
+    parser.add_argument("--provider", default=DEFAULT_PROVIDER, choices=["unsplash", "pollinations", "mock"], help="External image provider (pollinations does not require an API key)")
     parser.add_argument("--provider-api-key", default=os.environ.get("UNSPLASH_ACCESS_KEY"), help="API key for the provider")
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory to save downloaded images")
     parser.add_argument("--max-images", type=int, default=DEFAULT_MAX_IMAGES, help="Maximum external images to download")
