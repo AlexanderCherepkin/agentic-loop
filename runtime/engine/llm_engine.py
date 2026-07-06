@@ -99,6 +99,15 @@ class MockLLMEngine:
         "mutual_check/result_validator.md": {"valid": True, "score": 0.95},
         "mutual_check/consistency_checker.md": {"consistent": True, "notes": []},
         "mutual_check/quality_assessor.md": {"quality_score": 0.92},
+        "mutual_check/action_verifier.md": {"verification_status": "confirmed", "matched_rules": [], "unmatched_rules": []},
+        "mutual_check/performance_monitor.md": {"health_status": "healthy", "active_alerts": []},
+        "mutual_check/quota_manager.md": {"quota_decision": "granted", "allocated_resources": {}, "remaining_quota": {}},
+        "mutual_check/anomaly_detector.md": {"anomaly_detected": False, "anomaly_score": 0.0, "recommended_response": "log"},
+        "mutual_check/feedback_aggregator.md": {"aggregated_feedback": {}, "priority_actions": [], "trend_direction": "stable"},
+        "mutual_check/compliance_checker.md": {"compliance_status": "compliant", "findings": [], "escalation_required": False},
+        "mutual_check/audit_logger.md": {"status": "logged", "log_id": "mock-log", "hash": "0" * 64},
+
+
         "output_reviewer.md": {"review_status": "approved", "rejection_categories": [], "revision_notes": []},
         "data_leak_preventer.md": {"leak_detected": False, "action": "pass", "severity": "none"},
         "bias_detector.md": {"bias_detected": False, "recommendation": "pass", "overall_score": 0.1},

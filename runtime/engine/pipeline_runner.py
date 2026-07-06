@@ -315,6 +315,13 @@ class PipelineRunner:
         "safety-control/mutual_check/consistency_checker.md",
         "safety-control/mutual_check/result_validator.md",
         "safety-control/mutual_check/quality_assessor.md",
+        "safety-control/mutual_check/action_verifier.md",
+        "safety-control/mutual_check/performance_monitor.md",
+        "safety-control/mutual_check/quota_manager.md",
+        "safety-control/mutual_check/anomaly_detector.md",
+        "safety-control/mutual_check/feedback_aggregator.md",
+        "safety-control/mutual_check/compliance_checker.md",
+        "safety-control/mutual_check/audit_logger.md",
     ]
 
     def __init__(self, loader: AgentLoader, llm: LLMEngine, bus: MessageBus, state: StateManager,
@@ -1094,9 +1101,16 @@ class PipelineRunner:
 
     async def _run_mutual_check(self, result_text: str, session_id: str,
                                 trace: list[IterationTrace], metrics: SessionMetrics):
+        context: dict[str, Any] = {
+            "result": result_text,
+            "session_id": session_id,
+            "iteration": metrics.iterations,
+            "tools_used": metrics.tools_used,
+            "time_elapsed_ms": metrics.time_elapsed_ms,
+            "tokens_consumed": metrics.tokens_consumed,
+        }
         for agent_path in self.MUTUAL_CHECK_AGENTS:
-            await self._invoke_agent(agent_path, {"result": result_text, "session_id": session_id},
-                                     trace, "mutual_check", metrics)
+            await self._invoke_agent(agent_path, context, trace, "mutual_check", metrics)
 
     async def _invoke_agent(self, agent_path: str, inputs: dict[str, Any],
                             trace: list[IterationTrace], phase: str,
