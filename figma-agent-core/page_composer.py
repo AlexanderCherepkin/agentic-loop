@@ -621,6 +621,107 @@ def _node_to_tsx(node: Dict[str, Any], depth: int = 1, form_key: Optional[str] =
     )
 
 
+def _slugify(name: str) -> str:
+    """Convert an arbitrary page name to a URL-safe slug."""
+    text = re.sub(r"[^\w\s\-]", " ", str(name or "page"), flags=re.UNICODE)
+    text = re.sub(r"[\s_]+", "-", text.strip()).strip("-")
+    text = re.sub(r"-+", "-", text)
+    return text.lower() or "page"
+
+
+def _infer_page_metadata(ast: Dict[str, Any], title: str) -> Dict[str, Any]:
+    """Infer SEO metadata from AST content: description, keywords, canonical path."""
+    root = ast.get("root", ast)
+    nodes = _collect_all_nodes(root)
+
+    description = ""
+    headings: List[str] = []
+    for node in nodes:
+        text = _node_text(node)
+        if not text:
+            continue
+        if node.get("tag") in ("h1", "h2", "h3"):
+            headings.append(text.strip())
+        if not description and len(text.strip()) > 20:
+            description = text.strip()
+
+    if not description:
+        description = f"{title} — generated from Figma."
+    description = description[:160]
+
+    keywords = ", ".join([h for h in headings[:5] if h]) or title
+    return {
+        "title": title,
+        "description": description,
+        "keywords": keywords,
+    }
+
+
+def _build_metadata_block(metadata: Dict[str, Any], is_client: bool) -> str:
+    """Build Next.js Metadata export for server pages."""
+    if is_client:
+        return ""
+    title = metadata.get("title", "Landing")
+    description = metadata.get("description", "")
+    keywords = metadata.get("keywords", "")
+    canonical = metadata.get("canonical", "/")
+    site_name = metadata.get("site_name") or title
+    og_image = metadata.get("og_image")
+    twitter_card = metadata.get("twitter_card", "summary_large_image")
+
+    og_image_lines = f"\n    images: [{json.dumps(og_image)}]," if og_image else ""
+
+    return f'''export const metadata = {{
+  title: {json.dumps(title)},
+  description: {json.dumps(description)},
+  keywords: [{_metadata_keywords_array(keywords)}],
+  alternates: {{ canonical: {json.dumps(canonical)} }},
+  openGraph: {{
+    title: {json.dumps(title)},
+    description: {json.dumps(description)},
+    url: {json.dumps(canonical)},{og_image_lines}
+    siteName: {json.dumps(site_name)},
+    locale: "en_US",
+    type: "website",
+  }},
+  twitter: {{
+    card: {json.dumps(twitter_card)},
+    title: {json.dumps(title)},
+    description: {json.dumps(description)},{og_image_lines}
+  }},
+}};
+'''
+
+
+def _metadata_keywords_array(keywords: str) -> str:
+    parts = [p.strip() for p in str(keywords).split(",") if p.strip()]
+    return ", ".join(json.dumps(p) for p in parts)
+
+
+def _build_json_ld_script(metadata: Dict[str, Any]) -> str:
+    """Build an inline JSON-LD structured data script for WebSite/WebPage."""
+    title = metadata.get("title", "Landing")
+    description = metadata.get("description", "")
+    canonical = metadata.get("canonical", "/")
+    site_name = metadata.get("site_name") or title
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": title,
+        "description": description,
+        "url": canonical,
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": site_name,
+            "url": canonical,
+        },
+    }
+    return f"""  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{{{ __html: {json.dumps(json.dumps(ld, ensure_ascii=False))} }}}}
+  />"""
+
+
 def _wrap_page(
     title: str,
     imports: List[str],
@@ -629,6 +730,8 @@ def _wrap_page(
     form_hooks: Optional[List[str]] = None,
     needs_router: bool = False,
     is_client: bool = False,
+    metadata: Optional[Dict[str, Any]] = None,
+    structured_data: bool = True,
 ) -> str:
     import_block = "\n".join(imports)
     sections_block = "\n".join(sections)
@@ -644,6 +747,14 @@ def _wrap_page(
     hooks_block = ""
     if hooks_lines:
         hooks_block = "\n  " + "\n  ".join(hooks_lines) + "\n"
+
+    metadata_block = ""
+    json_ld = ""
+    if not is_client:
+        effective_metadata = metadata or _infer_page_metadata({}, title)
+        metadata_block = _build_metadata_block(effective_metadata, is_client=False)
+        if structured_data:
+            json_ld = _build_json_ld_script(effective_metadata)
 
     if is_client:
         return f'''"use client"
@@ -661,13 +772,10 @@ export default function Page() {{{hooks_block}
 
     return f'''{import_block}
 
-export const metadata = {{
-  title: {json.dumps(title)},
-}};
-
-export default function Page() {{{hooks_block}
+{metadata_block}export default function Page() {{{hooks_block}
   return (
     <div className="{DEFAULT_ROOT_CLASS}">
+{json_ld}
 {sections_block}
     </div>
   );
@@ -707,7 +815,13 @@ def _infer_page_title(ast: Dict[str, Any]) -> str:
     return "Landing"
 
 
-def compose_page(ast: Dict[str, Any], title: Optional[str] = None, component_mapper: Optional[Dict[str, Any]] = None) -> str:
+def compose_page(
+    ast: Dict[str, Any],
+    title: Optional[str] = None,
+    component_mapper: Optional[Dict[str, Any]] = None,
+    metadata: Optional[Dict[str, Any]] = None,
+    structured_data: bool = True,
+) -> str:
     """Превращает Tailwind AST в Next.js page.tsx."""
     page_title = title or _infer_page_title(ast)
     imports = _detect_image_imports(ast)
@@ -753,6 +867,9 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None, component_map
     state_hooks.extend(_build_data_model_consts(ast))
     form_hooks = _build_form_hooks(forms)
     is_client = bool(interactive_nodes) or bool(forms) or bool(state_hooks)
+    effective_metadata = metadata or _infer_page_metadata(ast, page_title)
+    if "title" not in effective_metadata:
+        effective_metadata["title"] = page_title
     return _wrap_page(
         page_title,
         imports,
@@ -761,7 +878,118 @@ def compose_page(ast: Dict[str, Any], title: Optional[str] = None, component_map
         form_hooks=form_hooks,
         needs_router=needs_router,
         is_client=is_client,
+        metadata=effective_metadata,
+        structured_data=structured_data,
     )
+
+
+def _is_page_node(node: Dict[str, Any]) -> bool:
+    """Heuristic: a top-level Figma node represents a page if it looks like a PAGE or large FRAME."""
+    node_type = str(node.get("type", "")).upper()
+    if node_type == "PAGE":
+        return True
+    if node_type == "FRAME" and node.get("page_metadata"):
+        return True
+    name = str(node.get("name", "")).lower()
+    if name.startswith("page ") or name.startswith("page-") or name == "home":
+        return True
+    return False
+
+
+def _extract_page_ast(node: Dict[str, Any]) -> Dict[str, Any]:
+    """Convert a single Figma page/frame node into a standalone AST root."""
+    return {"root": node}
+
+
+def compose_pages(
+    figma_document: Dict[str, Any],
+    component_mapper: Optional[Dict[str, Any]] = None,
+    site_name: Optional[str] = None,
+    base_url: str = "/",
+    structured_data: bool = True,
+) -> List[Dict[str, Any]]:
+    """Generate multiple Next.js pages from a Figma document containing several pages/frames.
+
+    Returns a list of dicts with keys: slug, title, code, metadata.
+    """
+    root = figma_document.get("root", figma_document)
+    candidates = root.get("children", [])
+    if not candidates:
+        candidates = [root]
+
+    pages: List[Dict[str, Any]] = []
+    seen_slugs: set = set()
+    for candidate in candidates:
+        if not _is_page_node(candidate):
+            continue
+        page_ast = _extract_page_ast(candidate)
+        title = _infer_page_title(page_ast)
+        slug = _slugify(candidate.get("name") or title)
+        if slug in seen_slugs:
+            suffix = 2
+            while f"{slug}-{suffix}" in seen_slugs:
+                suffix += 1
+            slug = f"{slug}-{suffix}"
+        seen_slugs.add(slug)
+
+        canonical = base_url.rstrip("/") + "/" + slug if slug != "home" else base_url.rstrip("/") or "/"
+        metadata: Dict[str, Any] = {
+            "title": title,
+            "site_name": site_name or title,
+            "canonical": canonical,
+        }
+        code = compose_page(
+            page_ast,
+            title=title,
+            component_mapper=component_mapper,
+            metadata=metadata,
+            structured_data=structured_data,
+        )
+        pages.append({"slug": slug, "title": title, "code": code, "metadata": metadata})
+
+    if not pages:
+        # Fall back to single-page mode if no explicit page nodes found.
+        title = _infer_page_title(figma_document)
+        metadata = {
+            "title": title,
+            "site_name": site_name or title,
+            "canonical": base_url.rstrip("/") or "/",
+        }
+        code = compose_page(
+            figma_document,
+            title=title,
+            component_mapper=component_mapper,
+            metadata=metadata,
+            structured_data=structured_data,
+        )
+        pages.append({"slug": "page", "title": title, "code": code, "metadata": metadata})
+
+    return pages
+
+
+def write_pages(
+    pages: List[Dict[str, Any]],
+    output_dir: str = "src/app",
+    root_dir: Optional[str] = None,
+) -> List[str]:
+    """Write generated pages to app/[slug]/page.tsx, with home slug mapped to app/page.tsx."""
+    written: List[str] = []
+    base = Path(output_dir).resolve()
+    root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
+    if not str(base).startswith(str(root)):
+        raise ValueError(f"Output directory outside workspace: {output_dir}")
+    base.mkdir(parents=True, exist_ok=True)
+
+    for page in pages:
+        slug = page["slug"]
+        if slug == "home":
+            target = base / "page.tsx"
+        else:
+            target = base / slug / "page.tsx"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(page["code"], encoding="utf-8")
+        written.append(str(target))
+    return written
 
 
 def compose_page_from_ast_file(ast_path: str, title: Optional[str] = None) -> str:
@@ -781,7 +1009,14 @@ def write_page(code: str, output_path: str, root_dir: Optional[str] = None) -> s
 
 
 
-def compose_layout(title: str, fonts: Optional[List[str]] = None) -> str:
+def compose_layout(
+    title: str,
+    fonts: Optional[List[str]] = None,
+    description: str = "",
+    site_name: Optional[str] = None,
+    base_url: str = "/",
+    og_image: Optional[str] = None,
+) -> str:
     fonts = fonts or []
     import_block = 'import type { Metadata } from "next";\nimport React from "react";\nimport "./globals.css";'
     font_declarations: List[str] = []
@@ -796,11 +1031,43 @@ def compose_layout(title: str, fonts: Optional[List[str]] = None) -> str:
         var_refs = " ".join(f"{_font_variable_name(f)}.variable" for f in sorted(fonts))
         class_attr = f"{{`${{{var_refs}}} antialiased`}}"
     declarations_block = "\n".join(font_declarations)
+
+    site = site_name or title
+    desc = description or f"{title} — generated from Figma."
+    og_image_lines = f"\n    images: [{json.dumps(og_image)}]," if og_image else ""
+
     return f"""{import_block}
 {declarations_block}
 
 export const metadata: Metadata = {{
   title: {json.dumps(title)},
+  description: {json.dumps(desc)},
+  metadataBase: new URL({json.dumps(base_url.rstrip('/') + "/")}),
+  alternates: {{ canonical: "/" }},
+  openGraph: {{
+    title: {json.dumps(title)},
+    description: {json.dumps(desc)},
+    url: "/",{og_image_lines}
+    siteName: {json.dumps(site)},
+    locale: "en_US",
+    type: "website",
+  }},
+  twitter: {{
+    card: "summary_large_image",
+    title: {json.dumps(title)},
+    description: {json.dumps(desc)},{og_image_lines}
+  }},
+  robots: {{
+    index: true,
+    follow: true,
+    googleBot: {{
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    }},
+  }},
 }};
 
 export default function RootLayout({{
@@ -817,10 +1084,26 @@ export default function RootLayout({{
 """
 
 
-def write_layout(title: str, output_path: str, root_dir: Optional[str] = None, fonts: Optional[List[str]] = None) -> str:
+def write_layout(
+    title: str,
+    output_path: str,
+    root_dir: Optional[str] = None,
+    fonts: Optional[List[str]] = None,
+    description: str = "",
+    site_name: Optional[str] = None,
+    base_url: str = "/",
+    og_image: Optional[str] = None,
+) -> str:
     target = _sanitize_path(output_path, root_dir=root_dir)
     target.parent.mkdir(parents=True, exist_ok=True)
-    code = compose_layout(title, fonts=fonts)
+    code = compose_layout(
+        title,
+        fonts=fonts,
+        description=description,
+        site_name=site_name,
+        base_url=base_url,
+        og_image=og_image,
+    )
     with open(target, "w", encoding="utf-8") as f:
         f.write(code)
     return str(target)
@@ -839,6 +1122,11 @@ def main():
         help=f"Путь для сохранения Next.js-страницы (по умолчанию {DEFAULT_OUTPUT}).",
     )
     parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Директория для многостраничной генерации app/[slug]/page.tsx (по умолчанию отключена).",
+    )
+    parser.add_argument(
         "--layout-output",
         default="src/app/layout.tsx",
         help="Путь для сохранения Next.js layout.tsx.",
@@ -849,9 +1137,24 @@ def main():
         help="Заголовок страницы (по умолчанию извлекается из первого заголовка AST).",
     )
     parser.add_argument(
+        "--site-name",
+        default=None,
+        help="Название сайта для Open Graph / structured data.",
+    )
+    parser.add_argument(
+        "--base-url",
+        default="/",
+        help="Базовый URL сайта для canonical / OG URLs.",
+    )
+    parser.add_argument(
         "--components-mapper",
         default="figma_component_map.json",
         help="Путь к figma_component_map.json для импортов компонентов.",
+    )
+    parser.add_argument(
+        "--multi-page",
+        action="store_true",
+        help="Сгенерировать несколько страниц из дочерних PAGE-нод Figma.",
     )
     args = parser.parse_args()
 
@@ -859,13 +1162,32 @@ def main():
     mapper: Optional[Dict[str, Any]] = None
     if args.components_mapper and Path(args.components_mapper).exists():
         mapper = json.loads(Path(args.components_mapper).read_text(encoding="utf-8"))
-    code = compose_page(ast, title=args.title, component_mapper=mapper)
-    written_path = write_page(code, args.output)
-    print(f"[COMPOSE] Page written to {written_path}")
+
+    if args.multi_page:
+        pages = compose_pages(
+            ast,
+            component_mapper=mapper,
+            site_name=args.site_name,
+            base_url=args.base_url,
+        )
+        output_dir = args.output_dir or "src/app"
+        written = write_pages(pages, output_dir=output_dir)
+        for slug, path in zip([p["slug"] for p in pages], written):
+            print(f"[COMPOSE] Page '{slug}' written to {path}")
+    else:
+        code = compose_page(ast, title=args.title, component_mapper=mapper)
+        written_path = write_page(code, args.output)
+        print(f"[COMPOSE] Page written to {written_path}")
 
     page_title = args.title or _infer_page_title(ast)
     fonts = _collect_fonts(ast)
-    layout_path = write_layout(page_title, args.layout_output, fonts=fonts)
+    layout_path = write_layout(
+        page_title,
+        args.layout_output,
+        fonts=fonts,
+        site_name=args.site_name,
+        base_url=args.base_url,
+    )
     print(f"[COMPOSE] Layout written to {layout_path}")
 
 

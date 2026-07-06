@@ -3368,7 +3368,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component_set",
-      "community": 53,
+      "community": 350,
       "norm_label": "_is_component_set()"
     },
     {
@@ -3378,7 +3378,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_any",
-      "community": 53,
+      "community": 350,
       "norm_label": "any"
     },
     {
@@ -3388,7 +3388,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_component",
-      "community": 53,
+      "community": 350,
       "norm_label": "_is_component()"
     },
     {
@@ -3398,7 +3398,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_is_instance",
-      "community": 53,
+      "community": 350,
       "norm_label": "_is_instance()"
     },
     {
@@ -3478,7 +3478,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_py_path",
-      "community": 52,
+      "community": 53,
       "norm_label": "path"
     },
     {
@@ -3498,7 +3498,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistryerror",
-      "community": 352,
+      "community": 36,
       "norm_label": "componentregistryerror"
     },
     {
@@ -3508,7 +3508,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 352,
+      "community": 1596,
       "norm_label": "exception"
     },
     {
@@ -3548,7 +3548,7 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_build_and_write",
-      "community": 346,
+      "community": 52,
       "norm_label": ".build_and_write()"
     },
     {
@@ -3558,7 +3558,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentmapper_load_per_component_mappers",
-      "community": 52,
+      "community": 53,
       "norm_label": ".load_per_component_mappers()"
     },
     {
@@ -3638,7 +3638,7 @@
       "source_location": "L415",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_init",
-      "community": 52,
+      "community": 350,
       "norm_label": ".__init__()"
     },
     {
@@ -3678,7 +3678,7 @@
       "source_location": "L499",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_registrybuilder_collect",
-      "community": 53,
+      "community": 350,
       "norm_label": "._collect()"
     },
     {
@@ -3798,7 +3798,7 @@
       "source_location": "L765",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load",
-      "community": 52,
+      "community": 53,
       "norm_label": ".load()"
     },
     {
@@ -3808,7 +3808,7 @@
       "source_location": "L776",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_componentregistry_load_with_per_component_mappers",
-      "community": 52,
+      "community": 53,
       "norm_label": ".load_with_per_component_mappers()"
     },
     {
@@ -3988,7 +3988,7 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_277",
-      "community": 52,
+      "community": 53,
       "norm_label": "read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`."
     },
     {
@@ -4028,7 +4028,7 @@
       "source_location": "L783",
       "_origin": "ast",
       "id": "figma_agent_core_component_registry_rationale_783",
-      "community": 52,
+      "community": 53,
       "norm_label": "load registry and overlay per-component `*.mapper.json` and manual overrides on"
     },
     {
@@ -7762,10 +7762,60 @@
       "norm_label": "_node_to_tsx()"
     },
     {
-      "label": "_wrap_page()",
+      "label": "_slugify()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L624",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_slugify",
+      "community": 8,
+      "norm_label": "_slugify()"
+    },
+    {
+      "label": "_infer_page_metadata()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L632",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_infer_page_metadata",
+      "community": 8,
+      "norm_label": "_infer_page_metadata()"
+    },
+    {
+      "label": "_build_metadata_block()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L660",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_build_metadata_block",
+      "community": 8,
+      "norm_label": "_build_metadata_block()"
+    },
+    {
+      "label": "_metadata_keywords_array()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L696",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_metadata_keywords_array",
+      "community": 8,
+      "norm_label": "_metadata_keywords_array()"
+    },
+    {
+      "label": "_build_json_ld_script()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L701",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_build_json_ld_script",
+      "community": 8,
+      "norm_label": "_build_json_ld_script()"
+    },
+    {
+      "label": "_wrap_page()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L725",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_wrap_page",
       "community": 8,
@@ -7775,7 +7825,7 @@
       "label": "_collect_fonts()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L678",
+      "source_location": "L786",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_collect_fonts",
       "community": 8,
@@ -7785,7 +7835,7 @@
       "label": "_infer_page_title()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L696",
+      "source_location": "L804",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_infer_page_title",
       "community": 8,
@@ -7795,17 +7845,57 @@
       "label": "compose_page()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L710",
+      "source_location": "L818",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_compose_page",
       "community": 8,
       "norm_label": "compose_page()"
     },
     {
+      "label": "_is_page_node()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L886",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_is_page_node",
+      "community": 8,
+      "norm_label": "_is_page_node()"
+    },
+    {
+      "label": "_extract_page_ast()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L899",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_extract_page_ast",
+      "community": 8,
+      "norm_label": "_extract_page_ast()"
+    },
+    {
+      "label": "compose_pages()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L904",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_compose_pages",
+      "community": 8,
+      "norm_label": "compose_pages()"
+    },
+    {
+      "label": "write_pages()",
+      "file_type": "code",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L970",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_write_pages",
+      "community": 8,
+      "norm_label": "write_pages()"
+    },
+    {
       "label": "compose_page_from_ast_file()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L767",
+      "source_location": "L995",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_compose_page_from_ast_file",
       "community": 8,
@@ -7815,7 +7905,7 @@
       "label": "write_page()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L774",
+      "source_location": "L1002",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_write_page",
       "community": 8,
@@ -7825,7 +7915,7 @@
       "label": "compose_layout()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L784",
+      "source_location": "L1012",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_compose_layout",
       "community": 8,
@@ -7835,7 +7925,7 @@
       "label": "write_layout()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L820",
+      "source_location": "L1087",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_write_layout",
       "community": 8,
@@ -7845,7 +7935,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L829",
+      "source_location": "L1112",
       "_origin": "ast",
       "id": "figma_agent_core_page_composer_main",
       "community": 8,
@@ -7912,12 +8002,52 @@
       "norm_label": "generate local data arrays for repeated figma structures detected by the data mo"
     },
     {
+      "label": "Convert an arbitrary page name to a URL-safe slug.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L625",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_625",
+      "community": 8,
+      "norm_label": "convert an arbitrary page name to a url-safe slug."
+    },
+    {
+      "label": "Infer SEO metadata from AST content: description, keywords, canonical path.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L633",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_633",
+      "community": 8,
+      "norm_label": "infer seo metadata from ast content: description, keywords, canonical path."
+    },
+    {
+      "label": "Build Next.js Metadata export for server pages.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L661",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_661",
+      "community": 8,
+      "norm_label": "build next.js metadata export for server pages."
+    },
+    {
+      "label": "Build an inline JSON-LD structured data script for WebSite/WebPage.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L702",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_702",
+      "community": 8,
+      "norm_label": "build an inline json-ld structured data script for website/webpage."
+    },
+    {
       "label": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0438\u0441\u043e\u043a Google Font family names, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c\u044b\u0445 \u0432 AST.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L679",
+      "source_location": "L787",
       "_origin": "ast",
-      "id": "figma_agent_core_page_composer_rationale_679",
+      "id": "figma_agent_core_page_composer_rationale_787",
       "community": 8,
       "norm_label": "\u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0438\u0441\u043e\u043a google font family names, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c\u044b\u0445 \u0432 ast."
     },
@@ -7925,11 +8055,51 @@
       "label": "\u041f\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u0435\u0442 Tailwind AST \u0432 Next.js page.tsx.",
       "file_type": "rationale",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L711",
+      "source_location": "L825",
       "_origin": "ast",
-      "id": "figma_agent_core_page_composer_rationale_711",
+      "id": "figma_agent_core_page_composer_rationale_825",
       "community": 8,
       "norm_label": "\u043f\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u0435\u0442 tailwind ast \u0432 next.js page.tsx."
+    },
+    {
+      "label": "Heuristic: a top-level Figma node represents a page if it looks like a PAGE or l",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L887",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_887",
+      "community": 8,
+      "norm_label": "heuristic: a top-level figma node represents a page if it looks like a page or l"
+    },
+    {
+      "label": "Convert a single Figma page/frame node into a standalone AST root.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L900",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_900",
+      "community": 8,
+      "norm_label": "convert a single figma page/frame node into a standalone ast root."
+    },
+    {
+      "label": "Generate multiple Next.js pages from a Figma document containing several pages/f",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L911",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_911",
+      "community": 8,
+      "norm_label": "generate multiple next.js pages from a figma document containing several pages/f"
+    },
+    {
+      "label": "Write generated pages to app/[slug]/page.tsx, with home slug mapped to app/page.",
+      "file_type": "rationale",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L975",
+      "_origin": "ast",
+      "id": "figma_agent_core_page_composer_rationale_975",
+      "community": 8,
+      "norm_label": "write generated pages to app/[slug]/page.tsx, with home slug mapped to app/page."
     },
     {
       "label": "precise_mode_auditor.py",
@@ -8904,7 +9074,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticindex_match_token",
-      "community": 352,
+      "community": 70,
       "norm_label": ".match_token()"
     },
     {
@@ -8924,7 +9094,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher",
-      "community": 352,
+      "community": 70,
       "norm_label": "semanticmatcher"
     },
     {
@@ -8934,7 +9104,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_init",
-      "community": 352,
+      "community": 70,
       "norm_label": ".__init__()"
     },
     {
@@ -8954,7 +9124,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_semanticmatcher_find_token",
-      "community": 352,
+      "community": 70,
       "norm_label": ".find_token()"
     },
     {
@@ -8994,7 +9164,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "figma_agent_core_semantic_matcher_rationale_212",
-      "community": 352,
+      "community": 70,
       "norm_label": "high-level matcher used by registry/token builders."
     },
     {
@@ -9654,7 +9824,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "mcpserver",
-      "community": 80,
+      "community": 69,
       "norm_label": "mcpserver"
     },
     {
@@ -10024,7 +10194,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_build_server",
-      "community": 74,
+      "community": 1881,
       "norm_label": "_build_server()"
     },
     {
@@ -10034,7 +10204,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_path",
-      "community": 74,
+      "community": 1881,
       "norm_label": "path"
     },
     {
@@ -10044,7 +10214,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_mcpserver",
-      "community": 74,
+      "community": 1881,
       "norm_label": "mcpserver"
     },
     {
@@ -10054,7 +10224,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_any",
-      "community": 74,
+      "community": 1881,
       "norm_label": "any"
     },
     {
@@ -10064,7 +10234,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_create_registry",
-      "community": 74,
+      "community": 1881,
       "norm_label": "create_registry()"
     },
     {
@@ -10074,7 +10244,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_py_mcpregistry",
-      "community": 74,
+      "community": 1881,
       "norm_label": "mcpregistry"
     },
     {
@@ -10084,7 +10254,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_test_all_servers",
-      "community": 74,
+      "community": 1881,
       "norm_label": "test_all_servers()"
     },
     {
@@ -10094,7 +10264,7 @@
       "source_location": "L296",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_main",
-      "community": 74,
+      "community": 1881,
       "norm_label": "main()"
     },
     {
@@ -10114,7 +10284,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_39",
-      "community": 74,
+      "community": 1881,
       "norm_label": "construct a single mcp server and return it with its tool list."
     },
     {
@@ -10124,7 +10294,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_146",
-      "community": 74,
+      "community": 1881,
       "norm_label": "create and populate the mcp registry with all 16 servers.      args:         wor"
     },
     {
@@ -10134,7 +10304,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "mcp_servers_bootstrap_rationale_183",
-      "community": 74,
+      "community": 1881,
       "norm_label": "run a quick self-test on every registered server."
     },
     {
@@ -10474,7 +10644,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver",
-      "community": 45,
+      "community": 89,
       "norm_label": "databasemcpserver"
     },
     {
@@ -10484,7 +10654,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_init",
-      "community": 45,
+      "community": 89,
       "norm_label": ".__init__()"
     },
     {
@@ -10494,7 +10664,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_open_connection",
-      "community": 45,
+      "community": 89,
       "norm_label": ".open_connection()"
     },
     {
@@ -10504,7 +10674,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "mcp_servers_database_server_py_any",
-      "community": 45,
+      "community": 89,
       "norm_label": "any"
     },
     {
@@ -10514,7 +10684,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_analyze_schema",
-      "community": 45,
+      "community": 89,
       "norm_label": ".analyze_schema()"
     },
     {
@@ -10524,7 +10694,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_build_query",
-      "community": 45,
+      "community": 89,
       "norm_label": ".build_query()"
     },
     {
@@ -10534,7 +10704,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_execute_query",
-      "community": 45,
+      "community": 89,
       "norm_label": ".execute_query()"
     },
     {
@@ -10544,7 +10714,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_begin_transaction",
-      "community": 45,
+      "community": 89,
       "norm_label": ".begin_transaction()"
     },
     {
@@ -10554,7 +10724,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_commit_transaction",
-      "community": 45,
+      "community": 89,
       "norm_label": ".commit_transaction()"
     },
     {
@@ -10564,7 +10734,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_rollback_transaction",
-      "community": 45,
+      "community": 89,
       "norm_label": ".rollback_transaction()"
     },
     {
@@ -10574,7 +10744,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_map_result",
-      "community": 45,
+      "community": 89,
       "norm_label": ".map_result()"
     },
     {
@@ -10584,7 +10754,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_cache_query",
-      "community": 45,
+      "community": 89,
       "norm_label": ".cache_query()"
     },
     {
@@ -10594,7 +10764,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_analyze_error",
-      "community": 45,
+      "community": 89,
       "norm_label": ".analyze_error()"
     },
     {
@@ -10604,7 +10774,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_suggest_migration",
-      "community": 45,
+      "community": 89,
       "norm_label": ".suggest_migration()"
     },
     {
@@ -10614,7 +10784,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_close_connection",
-      "community": 45,
+      "community": 89,
       "norm_label": ".close_connection()"
     },
     {
@@ -10624,7 +10794,7 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "mcp_servers_database_server_databasemcpserver_s",
-      "community": 45,
+      "community": 89,
       "norm_label": "._s()"
     },
     {
@@ -10634,7 +10804,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "mcp_servers_database_server_rationale_14",
-      "community": 45,
+      "community": 89,
       "norm_label": "mcp server for tools_database \u2014 database query pipeline (query-lifecycle)."
     },
     {
@@ -10884,7 +11054,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway",
-      "community": 2583,
+      "community": 7,
       "norm_label": "mcpgateway"
     },
     {
@@ -10914,7 +11084,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_is_available",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".is_available()"
     },
     {
@@ -10924,7 +11094,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_categories",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".categories()"
     },
     {
@@ -10934,7 +11104,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_category_metadata",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".category_metadata()"
     },
     {
@@ -10944,7 +11114,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "mcp_servers_gateway_py_any",
-      "community": 2583,
+      "community": 7,
       "norm_label": "any"
     },
     {
@@ -10954,7 +11124,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_tools_for_category",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".tools_for_category()"
     },
     {
@@ -10964,7 +11134,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_execute",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".execute()"
     },
     {
@@ -10974,7 +11144,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "mcp_servers_gateway_mcpgateway_ping",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".ping()"
     },
     {
@@ -10984,7 +11154,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_9",
-      "community": 2583,
+      "community": 7,
       "norm_label": "lazy gateway in front of mcpregistry.      the gateway exposes category-level me"
     },
     {
@@ -10994,7 +11164,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_25",
-      "community": 2583,
+      "community": 7,
       "norm_label": "return registered category names without loading any server."
     },
     {
@@ -11004,7 +11174,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_31",
-      "community": 2583,
+      "community": 7,
       "norm_label": "return lightweight metadata for a category without materializing it."
     },
     {
@@ -11014,7 +11184,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_37",
-      "community": 2583,
+      "community": 7,
       "norm_label": "return full tool descriptors for a category; loads the server if needed."
     },
     {
@@ -11024,7 +11194,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_46",
-      "community": 2583,
+      "community": 7,
       "norm_label": "execute a single mcp tool, loading its server on demand."
     },
     {
@@ -11034,7 +11204,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_gateway_rationale_52",
-      "community": 2583,
+      "community": 7,
       "norm_label": "health-check one or all categories; loads servers as needed."
     },
     {
@@ -11484,7 +11654,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver",
-      "community": 80,
+      "community": 614,
       "norm_label": "memantomcpserver"
     },
     {
@@ -11494,7 +11664,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_init",
-      "community": 80,
+      "community": 614,
       "norm_label": ".__init__()"
     },
     {
@@ -11514,7 +11684,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_register_tools",
-      "community": 80,
+      "community": 614,
       "norm_label": "._register_tools()"
     },
     {
@@ -11524,7 +11694,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_schema",
-      "community": 80,
+      "community": 614,
       "norm_label": "._schema()"
     },
     {
@@ -11534,7 +11704,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_py_any",
-      "community": 80,
+      "community": 614,
       "norm_label": "any"
     },
     {
@@ -11544,7 +11714,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_check_degraded",
-      "community": 80,
+      "community": 614,
       "norm_label": "._check_degraded()"
     },
     {
@@ -11554,7 +11724,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_memanto_create_agent",
-      "community": 80,
+      "community": 614,
       "norm_label": ".memanto_create_agent()"
     },
     {
@@ -11564,7 +11734,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_memanto_remember",
-      "community": 80,
+      "community": 614,
       "norm_label": ".memanto_remember()"
     },
     {
@@ -11574,7 +11744,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_memanto_recall",
-      "community": 80,
+      "community": 614,
       "norm_label": ".memanto_recall()"
     },
     {
@@ -11584,7 +11754,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_memanto_answer",
-      "community": 80,
+      "community": 614,
       "norm_label": ".memanto_answer()"
     },
     {
@@ -11594,7 +11764,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_memantomcpserver_ping",
-      "community": 80,
+      "community": 614,
       "norm_label": ".ping()"
     },
     {
@@ -11604,7 +11774,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "mcp_servers_memanto_server_rationale_12",
-      "community": 80,
+      "community": 614,
       "norm_label": "mcp server that wraps the memanto semantic memory layer.      exposes four tools"
     },
     {
@@ -12014,7 +12184,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "mcp_servers_registry_serverinfo",
-      "community": 576,
+      "community": 80,
       "norm_label": "serverinfo"
     },
     {
@@ -12024,7 +12194,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "mcp_servers_registry_serverinfo_ensure_loaded",
-      "community": 7,
+      "community": 91,
       "norm_label": ".ensure_loaded()"
     },
     {
@@ -12034,7 +12204,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "mcp_servers_registry_py_mcpserver",
-      "community": 7,
+      "community": 91,
       "norm_label": "mcpserver"
     },
     {
@@ -12064,7 +12234,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_register",
-      "community": 7,
+      "community": 80,
       "norm_label": ".register()"
     },
     {
@@ -12074,7 +12244,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_register_factory",
-      "community": 7,
+      "community": 91,
       "norm_label": ".register_factory()"
     },
     {
@@ -12084,7 +12254,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "mcp_servers_registry_py_any",
-      "community": 7,
+      "community": 91,
       "norm_label": "any"
     },
     {
@@ -12094,7 +12264,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_ensure_loaded",
-      "community": 7,
+      "community": 91,
       "norm_label": "._ensure_loaded()"
     },
     {
@@ -12104,7 +12274,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_get_server",
-      "community": 7,
+      "community": 91,
       "norm_label": ".get_server()"
     },
     {
@@ -12114,7 +12284,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_get_category_metadata",
-      "community": 7,
+      "community": 91,
       "norm_label": ".get_category_metadata()"
     },
     {
@@ -12124,7 +12294,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_get_all_servers",
-      "community": 7,
+      "community": 91,
       "norm_label": ".get_all_servers()"
     },
     {
@@ -12134,7 +12304,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_get_all_tools",
-      "community": 7,
+      "community": 91,
       "norm_label": ".get_all_tools()"
     },
     {
@@ -12144,7 +12314,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_find_tool",
-      "community": 7,
+      "community": 91,
       "norm_label": ".find_tool()"
     },
     {
@@ -12154,7 +12324,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_ping",
-      "community": 7,
+      "community": 91,
       "norm_label": ".ping()"
     },
     {
@@ -12164,7 +12334,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_is_healthy",
-      "community": 7,
+      "community": 91,
       "norm_label": ".is_healthy()"
     },
     {
@@ -12174,7 +12344,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "mcp_servers_registry_mcpregistry_call_tool",
-      "community": 7,
+      "community": 91,
       "norm_label": ".call_tool()"
     },
     {
@@ -12224,7 +12394,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_58",
-      "community": 7,
+      "community": 80,
       "norm_label": "eager registration: server is already constructed."
     },
     {
@@ -12234,7 +12404,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_70",
-      "community": 7,
+      "community": 91,
       "norm_label": "lazy registration: server is constructed only on first access."
     },
     {
@@ -12244,7 +12414,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_126",
-      "community": 7,
+      "community": 91,
       "norm_label": "health check one or all servers. returns {name: bool}."
     },
     {
@@ -12254,7 +12424,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "mcp_servers_registry_rationale_140",
-      "community": 7,
+      "community": 91,
       "norm_label": "quick check if the server owning a tool is healthy."
     },
     {
@@ -12274,7 +12444,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver",
-      "community": 63,
+      "community": 90,
       "norm_label": "replacemcpserver"
     },
     {
@@ -12284,7 +12454,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_init",
-      "community": 63,
+      "community": 90,
       "norm_label": ".__init__()"
     },
     {
@@ -12294,7 +12464,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_resolve",
-      "community": 63,
+      "community": 90,
       "norm_label": "._resolve()"
     },
     {
@@ -12304,7 +12474,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_py_path",
-      "community": 63,
+      "community": 90,
       "norm_label": "path"
     },
     {
@@ -12314,7 +12484,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_create_backup",
-      "community": 63,
+      "community": 90,
       "norm_label": ".create_backup()"
     },
     {
@@ -12324,7 +12494,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_py_any",
-      "community": 63,
+      "community": 90,
       "norm_label": "any"
     },
     {
@@ -12334,7 +12504,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_match_pattern",
-      "community": 63,
+      "community": 90,
       "norm_label": ".match_pattern()"
     },
     {
@@ -12344,7 +12514,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_apply_edit",
-      "community": 63,
+      "community": 90,
       "norm_label": ".apply_edit()"
     },
     {
@@ -12354,7 +12524,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_generate_diff",
-      "community": 63,
+      "community": 90,
       "norm_label": ".generate_diff()"
     },
     {
@@ -12364,7 +12534,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_rank_edit_candidates",
-      "community": 63,
+      "community": 90,
       "norm_label": ".rank_edit_candidates()"
     },
     {
@@ -12374,7 +12544,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_validate_edit",
-      "community": 63,
+      "community": 90,
       "norm_label": ".validate_edit()"
     },
     {
@@ -12384,7 +12554,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_write_file",
-      "community": 63,
+      "community": 90,
       "norm_label": ".write_file()"
     },
     {
@@ -12394,7 +12564,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_verify_write",
-      "community": 63,
+      "community": 90,
       "norm_label": ".verify_write()"
     },
     {
@@ -12404,7 +12574,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_rollback",
-      "community": 63,
+      "community": 90,
       "norm_label": ".rollback()"
     },
     {
@@ -12414,7 +12584,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_safe_delete",
-      "community": 63,
+      "community": 90,
       "norm_label": ".safe_delete()"
     },
     {
@@ -12424,7 +12594,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_replacemcpserver_s",
-      "community": 63,
+      "community": 90,
       "norm_label": "._s()"
     },
     {
@@ -12434,7 +12604,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "mcp_servers_replace_server_rationale_16",
-      "community": 63,
+      "community": 90,
       "norm_label": "mcp server for tools_replace \u2014 file editing pipeline (safety-gated)."
     },
     {
@@ -14804,7 +14974,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_cli",
-      "community": 40,
+      "community": 5,
       "norm_label": "cli.py"
     },
     {
@@ -14814,7 +14984,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "runtime_cli_state_path",
-      "community": 40,
+      "community": 5,
       "norm_label": "_state_path()"
     },
     {
@@ -14824,7 +14994,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "runtime_cli_fmt_duration",
-      "community": 40,
+      "community": 5,
       "norm_label": "fmt_duration()"
     },
     {
@@ -14834,7 +15004,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "runtime_cli_cmd_run",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_run()"
     },
     {
@@ -14844,7 +15014,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "runtime_cli_py_namespace",
-      "community": 40,
+      "community": 5,
       "norm_label": "namespace"
     },
     {
@@ -14854,7 +15024,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "runtime_cli_cmd_status",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_status()"
     },
     {
@@ -14864,7 +15034,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "runtime_cli_cmd_approve",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_approve()"
     },
     {
@@ -14874,7 +15044,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "runtime_cli_cmd_mcp_connect",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_mcp_connect()"
     },
     {
@@ -14884,7 +15054,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "runtime_cli_cmd_validate",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_validate()"
     },
     {
@@ -14894,7 +15064,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "runtime_cli_cmd_demo",
-      "community": 40,
+      "community": 5,
       "norm_label": "cmd_demo()"
     },
     {
@@ -14904,7 +15074,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "runtime_cli_build_parser",
-      "community": 40,
+      "community": 5,
       "norm_label": "build_parser()"
     },
     {
@@ -14924,7 +15094,7 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "runtime_cli_main",
-      "community": 40,
+      "community": 5,
       "norm_label": "main()"
     },
     {
@@ -14934,7 +15104,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "runtime_cli_rationale_44",
-      "community": 40,
+      "community": 5,
       "norm_label": "execute a task through the agent pipeline."
     },
     {
@@ -14944,7 +15114,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "runtime_cli_rationale_75",
-      "community": 40,
+      "community": 5,
       "norm_label": "show active sessions."
     },
     {
@@ -14954,7 +15124,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "runtime_cli_rationale_117",
-      "community": 40,
+      "community": 5,
       "norm_label": "approve a pending human-approval gate."
     },
     {
@@ -14964,7 +15134,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "runtime_cli_rationale_135",
-      "community": 40,
+      "community": 5,
       "norm_label": "connect to configured mcp servers and list available tools."
     },
     {
@@ -14974,7 +15144,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "runtime_cli_rationale_165",
-      "community": 40,
+      "community": 5,
       "norm_label": "run runtime component validators."
     },
     {
@@ -14984,7 +15154,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contracts_init",
-      "community": 5,
+      "community": 40,
       "norm_label": "__init__.py"
     },
     {
@@ -14994,7 +15164,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contracts_agent_spec",
-      "community": 5,
+      "community": 40,
       "norm_label": "agent_spec.py"
     },
     {
@@ -15004,7 +15174,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "contracts_agent_spec_memorytype",
-      "community": 5,
+      "community": 40,
       "norm_label": "memorytype"
     },
     {
@@ -15014,7 +15184,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "str",
-      "community": 5,
+      "community": 40,
       "norm_label": "str"
     },
     {
@@ -15024,7 +15194,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "enum",
-      "community": 5,
+      "community": 40,
       "norm_label": "enum"
     },
     {
@@ -15034,7 +15204,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "contracts_agent_spec_statescope",
-      "community": 5,
+      "community": 40,
       "norm_label": "statescope"
     },
     {
@@ -15044,7 +15214,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "contracts_agent_spec_executionmode",
-      "community": 5,
+      "community": 40,
       "norm_label": "executionmode"
     },
     {
@@ -15054,7 +15224,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "contracts_agent_spec_parameter",
-      "community": 5,
+      "community": 40,
       "norm_label": "parameter"
     },
     {
@@ -15064,7 +15234,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "contracts_agent_spec_contractspec",
-      "community": 5,
+      "community": 40,
       "norm_label": "contractspec"
     },
     {
@@ -15074,7 +15244,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "contracts_agent_spec_decisionstep",
-      "community": 5,
+      "community": 40,
       "norm_label": "decisionstep"
     },
     {
@@ -15084,7 +15254,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "contracts_agent_spec_failuremode",
-      "community": 5,
+      "community": 40,
       "norm_label": "failuremode"
     },
     {
@@ -15094,7 +15264,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec",
-      "community": 5,
+      "community": 40,
       "norm_label": "agentspec"
     },
     {
@@ -15104,7 +15274,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec_to_system_prompt",
-      "community": 5,
+      "community": 40,
       "norm_label": ".to_system_prompt()"
     },
     {
@@ -15114,7 +15284,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "contracts_agent_spec_agentspec_to_input_message",
-      "community": 5,
+      "community": 40,
       "norm_label": ".to_input_message()"
     },
     {
@@ -15124,7 +15294,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "runtime_contracts_agent_spec_py_any",
-      "community": 5,
+      "community": 40,
       "norm_label": "any"
     },
     {
@@ -15174,7 +15344,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "contracts_message_topic",
-      "community": 5,
+      "community": 40,
       "norm_label": "topic"
     },
     {
@@ -15214,7 +15384,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_init",
-      "community": 5,
+      "community": 40,
       "norm_label": "__init__.py"
     },
     {
@@ -15224,7 +15394,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_agent_loader",
-      "community": 5,
+      "community": 40,
       "norm_label": "agent_loader.py"
     },
     {
@@ -15424,7 +15594,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_circuit_breaker",
-      "community": 434,
+      "community": 80,
       "norm_label": "circuit_breaker.py"
     },
     {
@@ -15434,7 +15604,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitstate",
-      "community": 576,
+      "community": 80,
       "norm_label": "circuitstate"
     },
     {
@@ -15444,7 +15614,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreakerconfig",
-      "community": 434,
+      "community": 93,
       "norm_label": "circuitbreakerconfig"
     },
     {
@@ -15454,7 +15624,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker",
-      "community": 434,
+      "community": 93,
       "norm_label": "circuitbreaker"
     },
     {
@@ -15464,7 +15634,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_state",
-      "community": 434,
+      "community": 80,
       "norm_label": ".state()"
     },
     {
@@ -15474,7 +15644,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_can_execute",
-      "community": 434,
+      "community": 93,
       "norm_label": ".can_execute()"
     },
     {
@@ -15484,7 +15654,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_success",
-      "community": 434,
+      "community": 93,
       "norm_label": ".record_success()"
     },
     {
@@ -15494,7 +15664,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_record_failure",
-      "community": 434,
+      "community": 93,
       "norm_label": ".record_failure()"
     },
     {
@@ -15504,7 +15674,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreaker_call",
-      "community": 434,
+      "community": 93,
       "norm_label": ".call()"
     },
     {
@@ -15514,7 +15684,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_engine_circuit_breaker_py_any",
-      "community": 434,
+      "community": 93,
       "norm_label": "any"
     },
     {
@@ -15524,7 +15694,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "engine_circuit_breaker_circuitbreakeropenerror",
-      "community": 576,
+      "community": 80,
       "norm_label": "circuitbreakeropenerror"
     },
     {
@@ -15814,7 +15984,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_llm_engine",
-      "community": 2583,
+      "community": 40,
       "norm_label": "llm_engine.py"
     },
     {
@@ -15834,7 +16004,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "engine_llm_engine_llmresponse",
-      "community": 2583,
+      "community": 7,
       "norm_label": "llmresponse"
     },
     {
@@ -15854,7 +16024,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine",
-      "community": 434,
+      "community": 40,
       "norm_label": "mockllmengine"
     },
     {
@@ -15894,7 +16064,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "engine_llm_engine_mockllmengine_raw_chat_completion",
-      "community": 434,
+      "community": 40,
       "norm_label": ".raw_chat_completion()"
     },
     {
@@ -15914,7 +16084,7 @@
       "source_location": "L176",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_init",
-      "community": 434,
+      "community": 2583,
       "norm_label": ".__init__()"
     },
     {
@@ -15924,7 +16094,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "engine_llm_engine_llmengine_resolve_api_key",
-      "community": 434,
+      "community": 2583,
       "norm_label": "._resolve_api_key()"
     },
     {
@@ -16034,7 +16204,7 @@
       "source_location": "L365",
       "_origin": "ast",
       "id": "engine_llm_engine_evaluationengine",
-      "community": 2583,
+      "community": 7,
       "norm_label": "evaluationengine"
     },
     {
@@ -16064,7 +16234,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_53",
-      "community": 434,
+      "community": 40,
       "norm_label": "deterministic mock llm engine for integration testing without api keys.      ret"
     },
     {
@@ -16124,7 +16294,7 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "engine_llm_engine_rationale_366",
-      "community": 2583,
+      "community": 7,
       "norm_label": "lightweight evaluator using a smaller/cheaper model for strict json verdicts."
     },
     {
@@ -16894,7 +17064,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_pipeline_runner",
-      "community": 5,
+      "community": 40,
       "norm_label": "pipeline_runner.py"
     },
     {
@@ -16904,7 +17074,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "engine_pipeline_runner_load_figma_config_module",
-      "community": 5,
+      "community": 40,
       "norm_label": "_load_figma_config_module()"
     },
     {
@@ -16924,7 +17094,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinestatus",
-      "community": 5,
+      "community": 40,
       "norm_label": "pipelinestatus"
     },
     {
@@ -16934,7 +17104,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "engine_pipeline_runner_phasetransition",
-      "community": 2583,
+      "community": 421,
       "norm_label": "phasetransition"
     },
     {
@@ -17044,7 +17214,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelineresult",
-      "community": 2583,
+      "community": 7,
       "norm_label": "pipelineresult"
     },
     {
@@ -17064,7 +17234,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_init",
-      "community": 2583,
+      "community": 7,
       "norm_label": ".__init__()"
     },
     {
@@ -17074,7 +17244,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "agentloader",
-      "community": 2583,
+      "community": 7,
       "norm_label": "agentloader"
     },
     {
@@ -17084,7 +17254,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "llmengine",
-      "community": 2583,
+      "community": 7,
       "norm_label": "llmengine"
     },
     {
@@ -17094,7 +17264,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "messagebus",
-      "community": 2583,
+      "community": 7,
       "norm_label": "messagebus"
     },
     {
@@ -17104,7 +17274,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "statemanager",
-      "community": 2583,
+      "community": 7,
       "norm_label": "statemanager"
     },
     {
@@ -17114,7 +17284,7 @@
       "source_location": "L356",
       "_origin": "ast",
       "id": "engine_pipeline_runner_pipelinerunner_load_project_rules",
-      "community": 2583,
+      "community": 421,
       "norm_label": "._load_project_rules()"
     },
     {
@@ -17304,7 +17474,7 @@
       "source_location": "L962",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_agentspec",
-      "community": 2583,
+      "community": 7,
       "norm_label": "agentspec"
     },
     {
@@ -17424,7 +17594,7 @@
       "source_location": "L1159",
       "_origin": "ast",
       "id": "runtime_engine_pipeline_runner_py_llmresponse",
-      "community": 2583,
+      "community": 7,
       "norm_label": "llmresponse"
     },
     {
@@ -17444,7 +17614,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "engine_pipeline_runner_rationale_36",
-      "community": 5,
+      "community": 40,
       "norm_label": "load figma-agent-core/config.py without requiring a valid python package name."
     },
     {
@@ -17484,7 +17654,7 @@
       "source_location": "L357",
       "_origin": "ast",
       "id": "engine_pipeline_runner_rationale_357",
-      "community": 2583,
+      "community": 421,
       "norm_label": "load lightweight project rules and claude.md from workspace root."
     },
     {
@@ -17774,7 +17944,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "engine_state_manager",
-      "community": 5,
+      "community": 40,
       "norm_label": "state_manager.py"
     },
     {
@@ -17794,7 +17964,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "engine_state_manager_consistencylevel",
-      "community": 5,
+      "community": 40,
       "norm_label": "consistencylevel"
     },
     {
@@ -17804,7 +17974,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "engine_state_manager_staterecord",
-      "community": 5,
+      "community": 40,
       "norm_label": "staterecord"
     },
     {
@@ -17954,7 +18124,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "runtime_main_resolve_root",
-      "community": 40,
+      "community": 5,
       "norm_label": "resolve_root()"
     },
     {
@@ -17974,7 +18144,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "runtime_main_parse_args",
-      "community": 40,
+      "community": 5,
       "norm_label": "parse_args()"
     },
     {
@@ -17984,7 +18154,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "runtime_main_main",
-      "community": 40,
+      "community": 5,
       "norm_label": "main()"
     },
     {
@@ -20264,7 +20434,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_init",
-      "community": 5,
+      "community": 25,
       "norm_label": "__init__.py"
     },
     {
@@ -20274,7 +20444,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_audit_logger",
-      "community": 5,
+      "community": 25,
       "norm_label": "audit_logger.py"
     },
     {
@@ -20284,7 +20454,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "safety_audit_logger_auditeventtype",
-      "community": 5,
+      "community": 25,
       "norm_label": "auditeventtype"
     },
     {
@@ -20794,7 +20964,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_network_guard",
-      "community": 5,
+      "community": 40,
       "norm_label": "network_guard.py"
     },
     {
@@ -20804,7 +20974,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "safety_network_guard_networkverdict",
-      "community": 5,
+      "community": 40,
       "norm_label": "networkverdict"
     },
     {
@@ -20954,7 +21124,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "safety_safety_chain",
-      "community": 5,
+      "community": 25,
       "norm_label": "safety_chain.py"
     },
     {
@@ -20964,7 +21134,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "safety_safety_chain_safetylevel",
-      "community": 5,
+      "community": 40,
       "norm_label": "safetylevel"
     },
     {
@@ -20974,7 +21144,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "safety_safety_chain_safetyverdict",
-      "community": 5,
+      "community": 40,
       "norm_label": "safetyverdict"
     },
     {
@@ -20984,7 +21154,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "safety_safety_chain_guardrailrule",
-      "community": 89,
+      "community": 25,
       "norm_label": "guardrailrule"
     },
     {
@@ -20994,7 +21164,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "safety_safety_chain_triggeredrule",
-      "community": 89,
+      "community": 25,
       "norm_label": "triggeredrule"
     },
     {
@@ -21004,7 +21174,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "safety_safety_chain_safetyresult",
-      "community": 89,
+      "community": 25,
       "norm_label": "safetyresult"
     },
     {
@@ -21014,7 +21184,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain",
-      "community": 89,
+      "community": 25,
       "norm_label": "safetychain"
     },
     {
@@ -21024,7 +21194,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_init",
-      "community": 89,
+      "community": 25,
       "norm_label": ".__init__()"
     },
     {
@@ -21034,7 +21204,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_build_rules",
-      "community": 89,
+      "community": 25,
       "norm_label": "._build_rules()"
     },
     {
@@ -21044,7 +21214,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_pre_check",
-      "community": 89,
+      "community": 25,
       "norm_label": ".pre_check()"
     },
     {
@@ -21054,7 +21224,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_post_check",
-      "community": 89,
+      "community": 25,
       "norm_label": ".post_check()"
     },
     {
@@ -21064,7 +21234,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_check_content",
-      "community": 89,
+      "community": 25,
       "norm_label": ".check_content()"
     },
     {
@@ -21074,7 +21244,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "safety_safety_chain_safetychain_compute_result",
-      "community": 89,
+      "community": 25,
       "norm_label": "._compute_result()"
     },
     {
@@ -21404,7 +21574,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_resilience",
-      "community": 576,
+      "community": 80,
       "norm_label": "test_resilience.py"
     },
     {
@@ -21414,7 +21584,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker",
-      "community": 434,
+      "community": 93,
       "norm_label": "testcircuitbreaker"
     },
     {
@@ -21424,7 +21594,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_starts_closed",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_starts_closed()"
     },
     {
@@ -21434,7 +21604,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_opens_after_failures",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_opens_after_failures()"
     },
     {
@@ -21444,7 +21614,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_half_open_after_timeout",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_half_open_after_timeout()"
     },
     {
@@ -21454,7 +21624,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_success_resets",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_success_resets()"
     },
     {
@@ -21464,7 +21634,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_call_wrapper",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_call_wrapper()"
     },
     {
@@ -21474,7 +21644,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "runtime_test_resilience_testcircuitbreaker_test_async_wrapper",
-      "community": 434,
+      "community": 93,
       "norm_label": ".test_async_wrapper()"
     },
     {
@@ -21484,7 +21654,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerpoolbackpressure",
-      "community": 576,
+      "community": 80,
       "norm_label": "testworkerpoolbackpressure"
     },
     {
@@ -21494,7 +21664,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerpoolbackpressure_setup",
-      "community": 33,
+      "community": 80,
       "norm_label": ".setup()"
     },
     {
@@ -21504,7 +21674,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerpoolbackpressure_teardown",
-      "community": 576,
+      "community": 80,
       "norm_label": ".teardown()"
     },
     {
@@ -21514,7 +21684,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerpoolbackpressure_test_rejects_when_queue_full",
-      "community": 576,
+      "community": 80,
       "norm_label": ".test_rejects_when_queue_full()"
     },
     {
@@ -21524,7 +21694,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerjobpriority",
-      "community": 576,
+      "community": 80,
       "norm_label": "testworkerjobpriority"
     },
     {
@@ -21534,7 +21704,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "runtime_test_resilience_testworkerjobpriority_test_priority_sorting",
-      "community": 33,
+      "community": 80,
       "norm_label": ".test_priority_sorting()"
     },
     {
@@ -21544,7 +21714,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "runtime_test_resilience_testmcphealthcheck",
-      "community": 576,
+      "community": 80,
       "norm_label": "testmcphealthcheck"
     },
     {
@@ -21554,7 +21724,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "runtime_test_resilience_testmcphealthcheck_test_server_ping",
-      "community": 576,
+      "community": 80,
       "norm_label": ".test_server_ping()"
     },
     {
@@ -21564,7 +21734,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "runtime_test_resilience_testmcphealthcheck_test_registry_is_healthy",
-      "community": 576,
+      "community": 80,
       "norm_label": ".test_registry_is_healthy()"
     },
     {
@@ -22604,7 +22774,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "workers_worker_pool_workerjob",
-      "community": 33,
+      "community": 80,
       "norm_label": "workerjob"
     },
     {
@@ -22614,7 +22784,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "workers_worker_pool_workerjob_lt",
-      "community": 33,
+      "community": 80,
       "norm_label": ".__lt__()"
     },
     {
@@ -22624,7 +22794,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult",
-      "community": 33,
+      "community": 44,
       "norm_label": "workerresult"
     },
     {
@@ -22634,7 +22804,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult_is_success",
-      "community": 33,
+      "community": 44,
       "norm_label": ".is_success()"
     },
     {
@@ -22644,7 +22814,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "workers_worker_pool_workerresult_to_dict",
-      "community": 33,
+      "community": 44,
       "norm_label": ".to_dict()"
     },
     {
@@ -22654,7 +22824,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "runtime_workers_worker_pool_py_any",
-      "community": 33,
+      "community": 44,
       "norm_label": "any"
     },
     {
@@ -22664,7 +22834,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool",
-      "community": 33,
+      "community": 44,
       "norm_label": "workerpool"
     },
     {
@@ -22704,7 +22874,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_start",
-      "community": 33,
+      "community": 44,
       "norm_label": ".start()"
     },
     {
@@ -22714,7 +22884,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stop",
-      "community": 33,
+      "community": 44,
       "norm_label": ".stop()"
     },
     {
@@ -22724,7 +22894,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatch",
-      "community": 33,
+      "community": 44,
       "norm_label": ".dispatch()"
     },
     {
@@ -22734,7 +22904,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_dispatcher_loop",
-      "community": 33,
+      "community": 44,
       "norm_label": "._dispatcher_loop()"
     },
     {
@@ -22744,7 +22914,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_execute_in_worker",
-      "community": 33,
+      "community": 44,
       "norm_label": "._execute_in_worker()"
     },
     {
@@ -22754,7 +22924,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_spawn_worker",
-      "community": 33,
+      "community": 44,
       "norm_label": "._spawn_worker()"
     },
     {
@@ -22764,7 +22934,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_find_free_worker",
-      "community": 33,
+      "community": 44,
       "norm_label": "._find_free_worker()"
     },
     {
@@ -22774,7 +22944,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_store_result",
-      "community": 33,
+      "community": 44,
       "norm_label": "._store_result()"
     },
     {
@@ -22784,7 +22954,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_estimate_saved_tokens",
-      "community": 33,
+      "community": 44,
       "norm_label": "._estimate_saved_tokens()"
     },
     {
@@ -22794,7 +22964,7 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_busy_workers",
-      "community": 33,
+      "community": 44,
       "norm_label": ".busy_workers()"
     },
     {
@@ -22804,7 +22974,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_idle_workers",
-      "community": 33,
+      "community": 44,
       "norm_label": ".idle_workers()"
     },
     {
@@ -22814,7 +22984,7 @@
       "source_location": "L325",
       "_origin": "ast",
       "id": "workers_worker_pool_workerpool_stats",
-      "community": 33,
+      "community": 44,
       "norm_label": ".stats()"
     },
     {
@@ -22824,7 +22994,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_26",
-      "community": 33,
+      "community": 80,
       "norm_label": "a job dispatched to an isolated worker."
     },
     {
@@ -22834,7 +23004,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_43",
-      "community": 33,
+      "community": 44,
       "norm_label": "summary returned by worker \u2014 parent sees only this, not raw data."
     },
     {
@@ -22844,7 +23014,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_72",
-      "community": 33,
+      "community": 44,
       "norm_label": "pool of isolated worker processes for agent execution.      each worker runs in"
     },
     {
@@ -22854,7 +23024,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_133",
-      "community": 33,
+      "community": 44,
       "norm_label": "dispatch a job to a worker. returns summary when done.          backpressure: if"
     },
     {
@@ -22864,7 +23034,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_164",
-      "community": 33,
+      "community": 44,
       "norm_label": "main loop: pick jobs from queue, assign to free workers or spawn new ones."
     },
     {
@@ -22874,7 +23044,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_186",
-      "community": 33,
+      "community": 44,
       "norm_label": "run a job in a specific worker process."
     },
     {
@@ -22884,7 +23054,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_289",
-      "community": 33,
+      "community": 44,
       "norm_label": "spawn a new worker slot."
     },
     {
@@ -22894,7 +23064,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "workers_worker_pool_rationale_310",
-      "community": 33,
+      "community": 44,
       "norm_label": "estimate how many tokens were kept out of the parent context."
     },
     {
@@ -27488,6 +27658,126 @@
       "norm_label": "tests for instance rendering in page_composer.py."
     },
     {
+      "label": "test_page_composer_multi.py",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi",
+      "community": 95,
+      "norm_label": "test_page_composer_multi.py"
+    },
+    {
+      "label": "_load_page_composer()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_load_page_composer",
+      "community": 95,
+      "norm_label": "_load_page_composer()"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "tests_figma_test_page_composer_multi_py_any",
+      "community": 95,
+      "norm_label": "any"
+    },
+    {
+      "label": "_minimal_page()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_minimal_page",
+      "community": 95,
+      "norm_label": "_minimal_page()"
+    },
+    {
+      "label": "test_compose_page_emits_full_metadata()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_compose_page_emits_full_metadata",
+      "community": 95,
+      "norm_label": "test_compose_page_emits_full_metadata()"
+    },
+    {
+      "label": "test_compose_page_client_drops_metadata()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_compose_page_client_drops_metadata",
+      "community": 95,
+      "norm_label": "test_compose_page_client_drops_metadata()"
+    },
+    {
+      "label": "test_compose_pages_detects_multiple_pages()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages",
+      "community": 95,
+      "norm_label": "test_compose_pages_detects_multiple_pages()"
+    },
+    {
+      "label": "test_compose_pages_fallback_single_page()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_compose_pages_fallback_single_page",
+      "community": 95,
+      "norm_label": "test_compose_pages_fallback_single_page()"
+    },
+    {
+      "label": "test_write_pages_creates_app_directories()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_write_pages_creates_app_directories",
+      "community": 95,
+      "norm_label": "test_write_pages_creates_app_directories()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "tests_figma_test_page_composer_multi_py_path",
+      "community": 95,
+      "norm_label": "path"
+    },
+    {
+      "label": "test_compose_layout_has_seo_metadata()",
+      "file_type": "code",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L119",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_test_compose_layout_has_seo_metadata",
+      "community": 95,
+      "norm_label": "test_compose_layout_has_seo_metadata()"
+    },
+    {
+      "label": "Unit tests for multi-page generation and SEO metadata in page_composer.py.",
+      "file_type": "rationale",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "figma_test_page_composer_multi_rationale_1",
+      "community": 95,
+      "norm_label": "unit tests for multi-page generation and seo metadata in page_composer.py."
+    },
+    {
       "label": "test_precise_mode_auditor.py",
       "file_type": "code",
       "source_file": "tests/figma/test_precise_mode_auditor.py",
@@ -30084,7 +30374,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_test_memanto_server",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_server.py"
     },
     {
@@ -30094,7 +30384,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_memanto_server",
-      "community": 44,
+      "community": 614,
       "norm_label": "memanto_server()"
     },
     {
@@ -30104,7 +30394,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "memantomcpserver",
-      "community": 44,
+      "community": 614,
       "norm_label": "memantomcpserver"
     },
     {
@@ -30114,7 +30404,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_degraded_server",
-      "community": 44,
+      "community": 614,
       "norm_label": "degraded_server()"
     },
     {
@@ -30124,7 +30414,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_mcp_test_memanto_server_py_path",
-      "community": 44,
+      "community": 614,
       "norm_label": "path"
     },
     {
@@ -30134,7 +30424,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_server_initializes",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_server_initializes()"
     },
     {
@@ -30144,7 +30434,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_server_degraded_without_server",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_server_degraded_without_server()"
     },
     {
@@ -30154,7 +30444,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_server_ping",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_server_ping()"
     },
     {
@@ -30164,7 +30454,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_tool_schemas",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_tool_schemas()"
     },
     {
@@ -30174,7 +30464,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_simulate_client_available",
-      "community": 44,
+      "community": 614,
       "norm_label": "_simulate_client_available()"
     },
     {
@@ -30184,7 +30474,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_remember_invokes_client",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_remember_invokes_client()"
     },
     {
@@ -30194,7 +30484,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_recall_invokes_client",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_recall_invokes_client()"
     },
     {
@@ -30204,7 +30494,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_answer_invokes_client",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_answer_invokes_client()"
     },
     {
@@ -30214,7 +30504,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_test_memanto_create_agent_invokes_client",
-      "community": 44,
+      "community": 614,
       "norm_label": "test_memanto_create_agent_invokes_client()"
     },
     {
@@ -30224,7 +30514,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "mcp_test_memanto_server_rationale_1",
-      "community": 44,
+      "community": 614,
       "norm_label": "pytest tests for the memanto mcp server.  these tests verify tool registration,"
     },
     {
@@ -30634,7 +30924,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "mcp_test_registry_test_create_registry_lazy_does_not_build_servers",
-      "community": 74,
+      "community": 1881,
       "norm_label": "test_create_registry_lazy_does_not_build_servers()"
     },
     {
@@ -30664,7 +30954,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "mcp_test_registry_rationale_87",
-      "community": 74,
+      "community": 1881,
       "norm_label": "create_registry(lazy=true) must not call _build_server() for any category     un"
     },
     {
@@ -32664,7 +32954,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_pipeline_figma.py"
     },
     {
@@ -32674,7 +32964,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_make_runner",
-      "community": 91,
+      "community": 1299,
       "norm_label": "_make_runner()"
     },
     {
@@ -32684,7 +32974,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_path",
-      "community": 91,
+      "community": 1299,
       "norm_label": "path"
     },
     {
@@ -32694,7 +32984,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_figma_py_pipelinerunner",
-      "community": 91,
+      "community": 2583,
       "norm_label": "pipelinerunner"
     },
     {
@@ -32704,7 +32994,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_available_when_configured",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_figma_available_when_configured()"
     },
     {
@@ -32714,7 +33004,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_exposed_when_available",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_figma_category_exposed_when_available()"
     },
     {
@@ -32724,7 +33014,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_figma_category_hidden_when_mcp_disabled",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_figma_category_hidden_when_mcp_disabled()"
     },
     {
@@ -32734,7 +33024,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_execute_mcp_figma_tool_dry_run",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_execute_mcp_figma_tool_dry_run()"
     },
     {
@@ -32744,7 +33034,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_short_circuits_for_full_code",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_design_intake_short_circuits_for_full_code()"
     },
     {
@@ -32754,7 +33044,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_design_intake_continues_planning_for_spec",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_design_intake_continues_planning_for_spec()"
     },
     {
@@ -32764,7 +33054,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_test_extract_figma_file_key_and_node_id",
-      "community": 91,
+      "community": 1299,
       "norm_label": "test_extract_figma_file_key_and_node_id()"
     },
     {
@@ -32774,7 +33064,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_figma_rationale_1",
-      "community": 91,
+      "community": 1299,
       "norm_label": "integration tests for figma wiring inside pipelinerunner.  these tests verify th"
     },
     {
@@ -32804,7 +33094,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_fs_guard_py_path",
-      "community": 20,
+      "community": 2583,
       "norm_label": "path"
     },
     {
@@ -32814,7 +33104,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_fs_guard_py_pipelinerunner",
-      "community": 20,
+      "community": 2583,
       "norm_label": "pipelinerunner"
     },
     {
@@ -32914,7 +33204,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "community": 61,
+      "community": 2583,
       "norm_label": "path"
     },
     {
@@ -32924,7 +33214,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "community": 61,
+      "community": 2583,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33164,7 +33454,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_pipeline_network_guard.py"
     },
     {
@@ -33174,7 +33464,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_make_runner",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "_make_runner()"
     },
     {
@@ -33184,7 +33474,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_network_guard_py_path",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "path"
     },
     {
@@ -33194,7 +33484,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_runtime_test_pipeline_network_guard_py_pipelinerunner",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "pipelinerunner"
     },
     {
@@ -33204,7 +33494,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_blocked_for_localhost",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_mcp_send_request_blocked_for_localhost()"
     },
     {
@@ -33214,7 +33504,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_browser_navigate_blocked_for_private_ip",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_mcp_browser_navigate_blocked_for_private_ip()"
     },
     {
@@ -33224,7 +33514,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_allowed_for_figma",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_mcp_send_request_allowed_for_figma()"
     },
     {
@@ -33234,7 +33524,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_send_request_blocked_for_unknown_domain",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_mcp_send_request_blocked_for_unknown_domain()"
     },
     {
@@ -33244,7 +33534,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_test_mcp_non_network_tool_skips_guard",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "test_mcp_non_network_tool_skips_guard()"
     },
     {
@@ -33254,7 +33544,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "runtime_test_pipeline_network_guard_rationale_1",
-      "community": 1299,
+      "community": 2583,
       "norm_label": "integration tests for networkguard wired into pipelinerunner mcp execution."
     },
     {
@@ -70134,6 +70424,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L701",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_build_json_ld_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L660",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_build_metadata_block",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L218",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70214,6 +70524,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L904",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_compose_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L158",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70284,6 +70604,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L899",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_extract_page_ast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L94",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70334,6 +70664,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L632",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_infer_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L607",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70344,11 +70684,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L886",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_is_page_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L737",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
       "target": "figma_agent_core_page_composer_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L696",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_metadata_keywords_array",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -70419,6 +70779,16 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
       "target": "figma_agent_core_page_composer_sanitize_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L624",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_slugify",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -70499,6 +70869,16 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer",
       "target": "figma_agent_core_page_composer_write_page"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L970",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer",
+      "target": "figma_agent_core_page_composer_write_pages",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -70593,6 +70973,28 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L701",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_build_json_ld_script",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L660",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_build_metadata_block",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L218",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70642,6 +71044,17 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_page",
       "target": "figma_agent_core_page_composer_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L904",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -70714,6 +71127,17 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L899",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_extract_page_ast",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L94",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -70747,11 +71171,33 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L632",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_infer_page_metadata",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L607",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_infer_page_title",
       "target": "figma_agent_core_page_composer_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L886",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_is_page_node",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -70807,6 +71253,28 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_to_camel_case_prop",
       "target": "figma_agent_core_page_composer_py_any"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L725",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_wrap_page",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L970",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_write_pages",
+      "target": "figma_agent_core_page_composer_py_any",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -70971,6 +71439,28 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_main",
       "target": "figma_agent_core_page_composer_py_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L977",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_write_pages",
+      "target": "figma_agent_core_page_composer_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L640",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_infer_page_metadata",
+      "target": "figma_agent_core_page_composer_node_text",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -71155,6 +71645,17 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_detect_interactive_imports",
       "target": "figma_agent_core_page_composer_collect_all_nodes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L635",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_infer_page_metadata",
+      "target": "figma_agent_core_page_composer_collect_all_nodes",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -71390,6 +71891,112 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L927",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_slugify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L625",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_625",
+      "target": "figma_agent_core_page_composer_slugify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L870",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_page",
+      "target": "figma_agent_core_page_composer_infer_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L633",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_633",
+      "target": "figma_agent_core_page_composer_infer_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L754",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_wrap_page",
+      "target": "figma_agent_core_page_composer_infer_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L677",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_build_metadata_block",
+      "target": "figma_agent_core_page_composer_metadata_keywords_array",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L661",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_661",
+      "target": "figma_agent_core_page_composer_build_metadata_block",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L755",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_wrap_page",
+      "target": "figma_agent_core_page_composer_build_metadata_block",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L702",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_702",
+      "target": "figma_agent_core_page_composer_build_json_ld_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L757",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_wrap_page",
+      "target": "figma_agent_core_page_composer_build_json_ld_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L664",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -71411,11 +72018,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L679",
+      "source_location": "L787",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_page_composer_rationale_679",
-      "target": "figma_agent_core_page_composer_collect_fonts"
+      "source": "figma_agent_core_page_composer_rationale_787",
+      "target": "figma_agent_core_page_composer_collect_fonts",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -71427,6 +72034,17 @@
       "confidence_score": 1.0,
       "source": "figma_agent_core_page_composer_compose_page",
       "target": "figma_agent_core_page_composer_infer_page_title"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L926",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_infer_page_title",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -71455,6 +72073,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L941",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_compose_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
       "source_location": "L762",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -71465,11 +72094,95 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "figma-agent-core/page_composer.py",
-      "source_location": "L711",
+      "source_location": "L825",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "figma_agent_core_page_composer_rationale_711",
-      "target": "figma_agent_core_page_composer_compose_page"
+      "source": "figma_agent_core_page_composer_rationale_825",
+      "target": "figma_agent_core_page_composer_compose_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L923",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_is_page_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L887",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_887",
+      "target": "figma_agent_core_page_composer_is_page_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L925",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_compose_pages",
+      "target": "figma_agent_core_page_composer_extract_page_ast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L900",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_900",
+      "target": "figma_agent_core_page_composer_extract_page_ast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L1167",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_main",
+      "target": "figma_agent_core_page_composer_compose_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L911",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_911",
+      "target": "figma_agent_core_page_composer_compose_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L1174",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_main",
+      "target": "figma_agent_core_page_composer_write_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "figma-agent-core/page_composer.py",
+      "source_location": "L975",
+      "weight": 1.0,
+      "source": "figma_agent_core_page_composer_rationale_975",
+      "target": "figma_agent_core_page_composer_write_pages",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -91991,9 +92704,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 1.0
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "calls",
@@ -92002,9 +92715,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 1.0
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "imports",
@@ -92180,9 +92893,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L21",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "uses",
@@ -92190,9 +92903,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L21",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_agent_loader_agentloader",
-      "confidence_score": 0.5
+      "target": "engine_agent_loader_agentloader"
     },
     {
       "relation": "uses",
@@ -94481,9 +95194,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "imports",
@@ -94615,9 +95328,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -94625,9 +95338,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_llm_engine_llmprovider",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmprovider"
     },
     {
       "relation": "uses",
@@ -95372,9 +96085,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "calls",
@@ -95383,9 +96096,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "imports",
@@ -95561,9 +96274,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "uses",
@@ -95571,9 +96284,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_llm_engine_llmconfig",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmconfig"
     },
     {
       "relation": "uses",
@@ -96214,9 +96927,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "calls",
@@ -96225,9 +96938,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 1.0
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "imports",
@@ -96403,9 +97116,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "uses",
@@ -96413,9 +97126,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L22",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_llm_engine_llmengine",
-      "confidence_score": 0.5
+      "target": "engine_llm_engine_llmengine"
     },
     {
       "relation": "uses",
@@ -99035,9 +99748,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 1.0
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "calls",
@@ -99046,9 +99759,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 1.0
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "imports",
@@ -99316,9 +100029,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L23",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "uses",
@@ -99326,9 +100039,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L23",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_message_bus_messagebus",
-      "confidence_score": 0.5
+      "target": "engine_message_bus_messagebus"
     },
     {
       "relation": "uses",
@@ -101764,9 +102477,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1046",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_pipelinerunner",
-      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool"
     },
     {
       "relation": "method",
@@ -102106,9 +102819,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "calls",
@@ -102117,9 +102830,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "imports",
@@ -102285,9 +102998,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "uses",
@@ -102295,9 +103008,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_pipeline_runner_pipelinerunner",
-      "confidence_score": 0.5
+      "target": "engine_pipeline_runner_pipelinerunner"
     },
     {
       "relation": "uses",
@@ -102787,9 +103500,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L533",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_533",
-      "target": "engine_pipeline_runner_pipelinerunner_execute_mcp_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_execute_mcp_tool"
     },
     {
       "relation": "rationale_for",
@@ -102797,9 +103510,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L575",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_575",
-      "target": "engine_pipeline_runner_pipelinerunner_check_fs_for_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_check_fs_for_tool"
     },
     {
       "relation": "rationale_for",
@@ -102807,9 +103520,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L598",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_598",
-      "target": "engine_pipeline_runner_pipelinerunner_check_network_for_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_check_network_for_tool"
     },
     {
       "relation": "calls",
@@ -102839,9 +103552,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L628",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_628",
-      "target": "engine_pipeline_runner_pipelinerunner_get_mcp_categories",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_get_mcp_categories"
     },
     {
       "relation": "calls",
@@ -103014,9 +103727,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L894",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_894",
-      "target": "engine_pipeline_runner_pipelinerunner_run_design_intake",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_run_design_intake"
     },
     {
       "relation": "calls",
@@ -103046,9 +103759,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L916",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_916",
-      "target": "engine_pipeline_runner_pipelinerunner_run_design_pipeline",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_run_design_pipeline"
     },
     {
       "relation": "references",
@@ -103153,9 +103866,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1001",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_1001",
-      "target": "engine_pipeline_runner_pipelinerunner_run_phase",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_run_phase"
     },
     {
       "relation": "calls",
@@ -103175,9 +103888,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1032",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_pipelinerunner_run_execution",
-      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool"
     },
     {
       "relation": "rationale_for",
@@ -103185,9 +103898,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1047",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_1047",
-      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_is_registered_mcp_tool"
     },
     {
       "relation": "calls",
@@ -103282,9 +103995,9 @@
       "source_file": "runtime/engine/pipeline_runner.py",
       "source_location": "L1209",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "engine_pipeline_runner_rationale_1209",
-      "target": "engine_pipeline_runner_pipelinerunner_publish_progress",
-      "confidence_score": 1.0
+      "target": "engine_pipeline_runner_pipelinerunner_publish_progress"
     },
     {
       "relation": "contains",
@@ -103914,9 +104627,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 1.0
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "calls",
@@ -103925,9 +104638,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 1.0
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "imports",
@@ -104185,9 +104898,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "uses",
@@ -104195,9 +104908,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "target": "engine_state_manager_statemanager",
-      "confidence_score": 0.5
+      "target": "engine_state_manager_statemanager"
     },
     {
       "relation": "uses",
@@ -121996,6 +122709,129 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_load_page_composer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_minimal_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_compose_layout_has_seo_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_compose_page_client_drops_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_compose_page_emits_full_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_compose_pages_fallback_single_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi",
+      "target": "figma_test_page_composer_multi_test_write_pages_creates_app_directories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi_rationale_1",
+      "target": "figma_test_page_composer_multi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi_load_page_composer",
+      "target": "tests_figma_test_page_composer_multi_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi_test_compose_pages_detects_multiple_pages",
+      "target": "figma_test_page_composer_multi_minimal_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/figma/test_page_composer_multi.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "figma_test_page_composer_multi_test_write_pages_creates_app_directories",
+      "target": "tests_figma_test_page_composer_multi_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/figma/test_precise_mode_auditor.py",
       "source_location": "L16",
       "weight": 1.0,
@@ -130914,9 +131750,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "contains",
@@ -130924,9 +131760,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_database_in_memory",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_database_in_memory"
     },
     {
       "relation": "contains",
@@ -130934,9 +131770,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_read_file_tool",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_read_file_tool"
     },
     {
       "relation": "contains",
@@ -130944,9 +131780,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_runcom_sandbox_check",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_runcom_sandbox_check"
     },
     {
       "relation": "contains",
@@ -130954,9 +131790,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L72",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_web_build_request",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_execute_mcp_web_build_request"
     },
     {
       "relation": "contains",
@@ -130964,9 +131800,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_fs_guard_blocks_read_file_outside_workspace",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_fs_guard_blocks_read_file_outside_workspace"
     },
     {
       "relation": "contains",
@@ -130974,9 +131810,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_for_unknown",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_for_unknown"
     },
     {
       "relation": "contains",
@@ -130984,9 +131820,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_when_mcp_disabled",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_when_mcp_disabled"
     },
     {
       "relation": "contains",
@@ -130994,9 +131830,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_true_for_read_tool",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_true_for_read_tool"
     },
     {
       "relation": "contains",
@@ -131004,9 +131840,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L141",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_network_guard_blocks_disallowed_url",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_network_guard_blocks_disallowed_url"
     },
     {
       "relation": "contains",
@@ -131014,9 +131850,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L106",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution",
-      "target": "runtime_test_pipeline_mcp_execution_test_run_execution_routes_non_figma_mcp_tool",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_test_run_execution_routes_non_figma_mcp_tool"
     },
     {
       "relation": "rationale_for",
@@ -131024,9 +131860,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_rationale_1",
-      "target": "runtime_test_pipeline_mcp_execution",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution"
     },
     {
       "relation": "references",
@@ -131035,9 +131871,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "tests_runtime_test_pipeline_mcp_execution_py_path",
-      "confidence_score": 1.0
+      "target": "tests_runtime_test_pipeline_mcp_execution_py_path"
     },
     {
       "relation": "references",
@@ -131046,9 +131882,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_make_runner",
-      "target": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner",
-      "confidence_score": 1.0
+      "target": "tests_runtime_test_pipeline_mcp_execution_py_pipelinerunner"
     },
     {
       "relation": "calls",
@@ -131057,9 +131893,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L95",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_execute_mcp_database_in_memory",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131068,9 +131904,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_execute_mcp_read_file_tool",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131079,9 +131915,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_execute_mcp_runcom_sandbox_check",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131090,9 +131926,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_execute_mcp_web_build_request",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131101,9 +131937,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L131",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_fs_guard_blocks_read_file_outside_workspace",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131112,9 +131948,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_for_unknown",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131123,9 +131959,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_false_when_mcp_disabled",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131134,9 +131970,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_is_registered_mcp_tool_true_for_read_tool",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131145,9 +131981,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_network_guard_blocks_disallowed_url",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "calls",
@@ -131156,9 +131992,9 @@
       "source_file": "tests/runtime/test_pipeline_mcp_execution.py",
       "source_location": "L107",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "runtime_test_pipeline_mcp_execution_test_run_execution_routes_non_figma_mcp_tool",
-      "target": "runtime_test_pipeline_mcp_execution_make_runner",
-      "confidence_score": 1.0
+      "target": "runtime_test_pipeline_mcp_execution_make_runner"
     },
     {
       "relation": "contains",
@@ -148028,5 +148864,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f017d3139610fffd6dec26dca4c5615aaff52490"
+  "built_at_commit": "82678be69b8bf5acd19ef4f1e7d4e95911b41543"
 }
