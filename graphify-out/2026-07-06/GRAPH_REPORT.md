@@ -1,11 +1,11 @@
 # Graph Report - Agentic_Loop_Graph  (2026-07-06)
 
 ## Corpus Check
-- 3811 files · ~5,089,218 words
+- 3814 files · ~5,089,561 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 62160 nodes · 106088 edges · 3170 communities (2638 shown, 532 thin omitted)
+- 62165 nodes · 106090 edges · 3237 communities (2699 shown, 538 thin omitted)
 - Extraction: 85% EXTRACTED · 15% INFERRED · 0% AMBIGUOUS · INFERRED: 15612 edges (avg confidence: 0.62)
 - Token cost: 0 input · 0 output
 
@@ -2168,6 +2168,7 @@
 - [[_COMMUNITY_Community 2229|Community 2229]]
 - [[_COMMUNITY_Community 2230|Community 2230]]
 - [[_COMMUNITY_Community 2231|Community 2231]]
+- [[_COMMUNITY_Community 2232|Community 2232]]
 - [[_COMMUNITY_Community 2233|Community 2233]]
 - [[_COMMUNITY_Community 2234|Community 2234]]
 - [[_COMMUNITY_Community 2235|Community 2235]]
@@ -2179,6 +2180,7 @@
 - [[_COMMUNITY_Community 2241|Community 2241]]
 - [[_COMMUNITY_Community 2242|Community 2242]]
 - [[_COMMUNITY_Community 2243|Community 2243]]
+- [[_COMMUNITY_Community 2244|Community 2244]]
 - [[_COMMUNITY_Community 2245|Community 2245]]
 - [[_COMMUNITY_Community 2246|Community 2246]]
 - [[_COMMUNITY_Community 2247|Community 2247]]
@@ -2189,6 +2191,7 @@
 - [[_COMMUNITY_Community 2252|Community 2252]]
 - [[_COMMUNITY_Community 2253|Community 2253]]
 - [[_COMMUNITY_Community 2254|Community 2254]]
+- [[_COMMUNITY_Community 2255|Community 2255]]
 - [[_COMMUNITY_Community 2256|Community 2256]]
 - [[_COMMUNITY_Community 2257|Community 2257]]
 - [[_COMMUNITY_Community 2258|Community 2258]]
@@ -2205,14 +2208,17 @@
 - [[_COMMUNITY_Community 2269|Community 2269]]
 - [[_COMMUNITY_Community 2270|Community 2270]]
 - [[_COMMUNITY_Community 2271|Community 2271]]
+- [[_COMMUNITY_Community 2272|Community 2272]]
 - [[_COMMUNITY_Community 2273|Community 2273]]
 - [[_COMMUNITY_Community 2274|Community 2274]]
 - [[_COMMUNITY_Community 2275|Community 2275]]
+- [[_COMMUNITY_Community 2276|Community 2276]]
 - [[_COMMUNITY_Community 2277|Community 2277]]
 - [[_COMMUNITY_Community 2278|Community 2278]]
 - [[_COMMUNITY_Community 2279|Community 2279]]
 - [[_COMMUNITY_Community 2280|Community 2280]]
 - [[_COMMUNITY_Community 2281|Community 2281]]
+- [[_COMMUNITY_Community 2282|Community 2282]]
 - [[_COMMUNITY_Community 2283|Community 2283]]
 - [[_COMMUNITY_Community 2284|Community 2284]]
 - [[_COMMUNITY_Community 2285|Community 2285]]
@@ -2242,6 +2248,7 @@
 - [[_COMMUNITY_Community 2310|Community 2310]]
 - [[_COMMUNITY_Community 2311|Community 2311]]
 - [[_COMMUNITY_Community 2312|Community 2312]]
+- [[_COMMUNITY_Community 2313|Community 2313]]
 - [[_COMMUNITY_Community 2314|Community 2314]]
 - [[_COMMUNITY_Community 2315|Community 2315]]
 - [[_COMMUNITY_Community 2316|Community 2316]]
@@ -2253,6 +2260,7 @@
 - [[_COMMUNITY_Community 2322|Community 2322]]
 - [[_COMMUNITY_Community 2323|Community 2323]]
 - [[_COMMUNITY_Community 2324|Community 2324]]
+- [[_COMMUNITY_Community 2325|Community 2325]]
 - [[_COMMUNITY_Community 2326|Community 2326]]
 - [[_COMMUNITY_Community 2327|Community 2327]]
 - [[_COMMUNITY_Community 2328|Community 2328]]
@@ -2281,6 +2289,7 @@
 - [[_COMMUNITY_Community 2351|Community 2351]]
 - [[_COMMUNITY_Community 2352|Community 2352]]
 - [[_COMMUNITY_Community 2353|Community 2353]]
+- [[_COMMUNITY_Community 2354|Community 2354]]
 - [[_COMMUNITY_Community 2355|Community 2355]]
 - [[_COMMUNITY_Community 2356|Community 2356]]
 - [[_COMMUNITY_Community 2357|Community 2357]]
@@ -2289,6 +2298,7 @@
 - [[_COMMUNITY_Community 2360|Community 2360]]
 - [[_COMMUNITY_Community 2361|Community 2361]]
 - [[_COMMUNITY_Community 2362|Community 2362]]
+- [[_COMMUNITY_Community 2363|Community 2363]]
 - [[_COMMUNITY_Community 2364|Community 2364]]
 - [[_COMMUNITY_Community 2365|Community 2365]]
 - [[_COMMUNITY_Community 2366|Community 2366]]
@@ -2303,6 +2313,7 @@
 - [[_COMMUNITY_Community 2375|Community 2375]]
 - [[_COMMUNITY_Community 2376|Community 2376]]
 - [[_COMMUNITY_Community 2377|Community 2377]]
+- [[_COMMUNITY_Community 2378|Community 2378]]
 - [[_COMMUNITY_Community 2379|Community 2379]]
 - [[_COMMUNITY_Community 2380|Community 2380]]
 - [[_COMMUNITY_Community 2381|Community 2381]]
@@ -2315,10 +2326,12 @@
 - [[_COMMUNITY_Community 2388|Community 2388]]
 - [[_COMMUNITY_Community 2389|Community 2389]]
 - [[_COMMUNITY_Community 2390|Community 2390]]
+- [[_COMMUNITY_Community 2391|Community 2391]]
 - [[_COMMUNITY_Community 2392|Community 2392]]
 - [[_COMMUNITY_Community 2393|Community 2393]]
 - [[_COMMUNITY_Community 2394|Community 2394]]
 - [[_COMMUNITY_Community 2395|Community 2395]]
+- [[_COMMUNITY_Community 2396|Community 2396]]
 - [[_COMMUNITY_Community 2397|Community 2397]]
 - [[_COMMUNITY_Community 2398|Community 2398]]
 - [[_COMMUNITY_Community 2399|Community 2399]]
@@ -2348,6 +2361,7 @@
 - [[_COMMUNITY_Community 2423|Community 2423]]
 - [[_COMMUNITY_Community 2424|Community 2424]]
 - [[_COMMUNITY_Community 2425|Community 2425]]
+- [[_COMMUNITY_Community 2426|Community 2426]]
 - [[_COMMUNITY_Community 2427|Community 2427]]
 - [[_COMMUNITY_Community 2428|Community 2428]]
 - [[_COMMUNITY_Community 2429|Community 2429]]
@@ -2356,6 +2370,7 @@
 - [[_COMMUNITY_Community 2432|Community 2432]]
 - [[_COMMUNITY_Community 2433|Community 2433]]
 - [[_COMMUNITY_Community 2434|Community 2434]]
+- [[_COMMUNITY_Community 2435|Community 2435]]
 - [[_COMMUNITY_Community 2437|Community 2437]]
 - [[_COMMUNITY_Community 2438|Community 2438]]
 - [[_COMMUNITY_Community 2439|Community 2439]]
@@ -2364,11 +2379,13 @@
 - [[_COMMUNITY_Community 2442|Community 2442]]
 - [[_COMMUNITY_Community 2443|Community 2443]]
 - [[_COMMUNITY_Community 2444|Community 2444]]
+- [[_COMMUNITY_Community 2445|Community 2445]]
 - [[_COMMUNITY_Community 2446|Community 2446]]
 - [[_COMMUNITY_Community 2447|Community 2447]]
 - [[_COMMUNITY_Community 2448|Community 2448]]
 - [[_COMMUNITY_Community 2449|Community 2449]]
 - [[_COMMUNITY_Community 2450|Community 2450]]
+- [[_COMMUNITY_Community 2451|Community 2451]]
 - [[_COMMUNITY_Community 2452|Community 2452]]
 - [[_COMMUNITY_Community 2453|Community 2453]]
 - [[_COMMUNITY_Community 2454|Community 2454]]
@@ -2384,6 +2401,7 @@
 - [[_COMMUNITY_Community 2464|Community 2464]]
 - [[_COMMUNITY_Community 2465|Community 2465]]
 - [[_COMMUNITY_Community 2466|Community 2466]]
+- [[_COMMUNITY_Community 2467|Community 2467]]
 - [[_COMMUNITY_Community 2468|Community 2468]]
 - [[_COMMUNITY_Community 2469|Community 2469]]
 - [[_COMMUNITY_Community 2470|Community 2470]]
@@ -2400,6 +2418,10 @@
 - [[_COMMUNITY_Community 2481|Community 2481]]
 - [[_COMMUNITY_Community 2482|Community 2482]]
 - [[_COMMUNITY_Community 2483|Community 2483]]
+- [[_COMMUNITY_Community 2484|Community 2484]]
+- [[_COMMUNITY_Community 2485|Community 2485]]
+- [[_COMMUNITY_Community 2486|Community 2486]]
+- [[_COMMUNITY_Community 2487|Community 2487]]
 - [[_COMMUNITY_Community 2489|Community 2489]]
 - [[_COMMUNITY_Community 2490|Community 2490]]
 - [[_COMMUNITY_Community 2491|Community 2491]]
@@ -2408,12 +2430,14 @@
 - [[_COMMUNITY_Community 2494|Community 2494]]
 - [[_COMMUNITY_Community 2495|Community 2495]]
 - [[_COMMUNITY_Community 2496|Community 2496]]
+- [[_COMMUNITY_Community 2497|Community 2497]]
 - [[_COMMUNITY_Community 2498|Community 2498]]
 - [[_COMMUNITY_Community 2499|Community 2499]]
 - [[_COMMUNITY_Community 2500|Community 2500]]
 - [[_COMMUNITY_Community 2501|Community 2501]]
 - [[_COMMUNITY_Community 2502|Community 2502]]
 - [[_COMMUNITY_Community 2503|Community 2503]]
+- [[_COMMUNITY_Community 2504|Community 2504]]
 - [[_COMMUNITY_Community 2505|Community 2505]]
 - [[_COMMUNITY_Community 2506|Community 2506]]
 - [[_COMMUNITY_Community 2507|Community 2507]]
@@ -2445,6 +2469,7 @@
 - [[_COMMUNITY_Community 2533|Community 2533]]
 - [[_COMMUNITY_Community 2534|Community 2534]]
 - [[_COMMUNITY_Community 2535|Community 2535]]
+- [[_COMMUNITY_Community 2536|Community 2536]]
 - [[_COMMUNITY_Community 2537|Community 2537]]
 - [[_COMMUNITY_Community 2538|Community 2538]]
 - [[_COMMUNITY_Community 2539|Community 2539]]
@@ -2453,12 +2478,14 @@
 - [[_COMMUNITY_Community 2542|Community 2542]]
 - [[_COMMUNITY_Community 2544|Community 2544]]
 - [[_COMMUNITY_Community 2545|Community 2545]]
+- [[_COMMUNITY_Community 2546|Community 2546]]
 - [[_COMMUNITY_Community 2547|Community 2547]]
 - [[_COMMUNITY_Community 2548|Community 2548]]
 - [[_COMMUNITY_Community 2550|Community 2550]]
 - [[_COMMUNITY_Community 2551|Community 2551]]
 - [[_COMMUNITY_Community 2552|Community 2552]]
 - [[_COMMUNITY_Community 2553|Community 2553]]
+- [[_COMMUNITY_Community 2554|Community 2554]]
 - [[_COMMUNITY_Community 2555|Community 2555]]
 - [[_COMMUNITY_Community 2556|Community 2556]]
 - [[_COMMUNITY_Community 2557|Community 2557]]
@@ -2486,6 +2513,7 @@
 - [[_COMMUNITY_Community 2580|Community 2580]]
 - [[_COMMUNITY_Community 2581|Community 2581]]
 - [[_COMMUNITY_Community 2582|Community 2582]]
+- [[_COMMUNITY_Community 2583|Community 2583]]
 - [[_COMMUNITY_Community 2584|Community 2584]]
 - [[_COMMUNITY_Community 2585|Community 2585]]
 - [[_COMMUNITY_Community 2586|Community 2586]]
@@ -2494,11 +2522,16 @@
 - [[_COMMUNITY_Community 2589|Community 2589]]
 - [[_COMMUNITY_Community 2590|Community 2590]]
 - [[_COMMUNITY_Community 2591|Community 2591]]
+- [[_COMMUNITY_Community 2592|Community 2592]]
 - [[_COMMUNITY_Community 2593|Community 2593]]
+- [[_COMMUNITY_Community 2594|Community 2594]]
+- [[_COMMUNITY_Community 2595|Community 2595]]
+- [[_COMMUNITY_Community 2596|Community 2596]]
 - [[_COMMUNITY_Community 2597|Community 2597]]
 - [[_COMMUNITY_Community 2598|Community 2598]]
 - [[_COMMUNITY_Community 2599|Community 2599]]
 - [[_COMMUNITY_Community 2600|Community 2600]]
+- [[_COMMUNITY_Community 2601|Community 2601]]
 - [[_COMMUNITY_Community 2602|Community 2602]]
 - [[_COMMUNITY_Community 2603|Community 2603]]
 - [[_COMMUNITY_Community 2604|Community 2604]]
@@ -2533,6 +2566,8 @@
 - [[_COMMUNITY_Community 2633|Community 2633]]
 - [[_COMMUNITY_Community 2634|Community 2634]]
 - [[_COMMUNITY_Community 2635|Community 2635]]
+- [[_COMMUNITY_Community 2636|Community 2636]]
+- [[_COMMUNITY_Community 2637|Community 2637]]
 - [[_COMMUNITY_Community 2638|Community 2638]]
 - [[_COMMUNITY_Community 2639|Community 2639]]
 - [[_COMMUNITY_Community 2640|Community 2640]]
@@ -2543,11 +2578,18 @@
 - [[_COMMUNITY_Community 2645|Community 2645]]
 - [[_COMMUNITY_Community 2646|Community 2646]]
 - [[_COMMUNITY_Community 2647|Community 2647]]
+- [[_COMMUNITY_Community 2648|Community 2648]]
+- [[_COMMUNITY_Community 2649|Community 2649]]
+- [[_COMMUNITY_Community 2650|Community 2650]]
+- [[_COMMUNITY_Community 2651|Community 2651]]
+- [[_COMMUNITY_Community 2652|Community 2652]]
+- [[_COMMUNITY_Community 2653|Community 2653]]
 - [[_COMMUNITY_Community 2654|Community 2654]]
 - [[_COMMUNITY_Community 2655|Community 2655]]
 - [[_COMMUNITY_Community 2656|Community 2656]]
 - [[_COMMUNITY_Community 2658|Community 2658]]
 - [[_COMMUNITY_Community 2659|Community 2659]]
+- [[_COMMUNITY_Community 2660|Community 2660]]
 - [[_COMMUNITY_Community 2661|Community 2661]]
 - [[_COMMUNITY_Community 2662|Community 2662]]
 - [[_COMMUNITY_Community 2663|Community 2663]]
@@ -2563,6 +2605,7 @@
 - [[_COMMUNITY_Community 2674|Community 2674]]
 - [[_COMMUNITY_Community 2675|Community 2675]]
 - [[_COMMUNITY_Community 2676|Community 2676]]
+- [[_COMMUNITY_Community 2677|Community 2677]]
 - [[_COMMUNITY_Community 2678|Community 2678]]
 - [[_COMMUNITY_Community 2679|Community 2679]]
 - [[_COMMUNITY_Community 2680|Community 2680]]
@@ -2575,6 +2618,7 @@
 - [[_COMMUNITY_Community 2687|Community 2687]]
 - [[_COMMUNITY_Community 2688|Community 2688]]
 - [[_COMMUNITY_Community 2689|Community 2689]]
+- [[_COMMUNITY_Community 2690|Community 2690]]
 - [[_COMMUNITY_Community 2691|Community 2691]]
 - [[_COMMUNITY_Community 2692|Community 2692]]
 - [[_COMMUNITY_Community 2694|Community 2694]]
@@ -2663,6 +2707,7 @@
 - [[_COMMUNITY_Community 2779|Community 2779]]
 - [[_COMMUNITY_Community 2780|Community 2780]]
 - [[_COMMUNITY_Community 2781|Community 2781]]
+- [[_COMMUNITY_Community 2783|Community 2783]]
 - [[_COMMUNITY_Community 2784|Community 2784]]
 - [[_COMMUNITY_Community 2785|Community 2785]]
 - [[_COMMUNITY_Community 2786|Community 2786]]
@@ -2718,6 +2763,7 @@
 - [[_COMMUNITY_Community 2848|Community 2848]]
 - [[_COMMUNITY_Community 2858|Community 2858]]
 - [[_COMMUNITY_Community 2859|Community 2859]]
+- [[_COMMUNITY_Community 2860|Community 2860]]
 - [[_COMMUNITY_Community 2863|Community 2863]]
 - [[_COMMUNITY_Community 2864|Community 2864]]
 - [[_COMMUNITY_Community 2865|Community 2865]]
@@ -2746,6 +2792,7 @@
 - [[_COMMUNITY_Community 2890|Community 2890]]
 - [[_COMMUNITY_Community 2891|Community 2891]]
 - [[_COMMUNITY_Community 2892|Community 2892]]
+- [[_COMMUNITY_Community 2893|Community 2893]]
 - [[_COMMUNITY_Community 2894|Community 2894]]
 - [[_COMMUNITY_Community 2897|Community 2897]]
 - [[_COMMUNITY_Community 2901|Community 2901]]
@@ -2757,6 +2804,7 @@
 - [[_COMMUNITY_Community 2908|Community 2908]]
 - [[_COMMUNITY_Community 2909|Community 2909]]
 - [[_COMMUNITY_Community 2911|Community 2911]]
+- [[_COMMUNITY_Community 2912|Community 2912]]
 - [[_COMMUNITY_Community 2913|Community 2913]]
 - [[_COMMUNITY_Community 2914|Community 2914]]
 - [[_COMMUNITY_Community 2915|Community 2915]]
@@ -2855,6 +2903,7 @@
 - [[_COMMUNITY_Community 3034|Community 3034]]
 - [[_COMMUNITY_Community 3035|Community 3035]]
 - [[_COMMUNITY_Community 3036|Community 3036]]
+- [[_COMMUNITY_Community 3037|Community 3037]]
 - [[_COMMUNITY_Community 3038|Community 3038]]
 - [[_COMMUNITY_Community 3039|Community 3039]]
 - [[_COMMUNITY_Community 3040|Community 3040]]
@@ -2917,17 +2966,33 @@
 - [[_COMMUNITY_Community 3205|Community 3205]]
 - [[_COMMUNITY_Community 3206|Community 3206]]
 - [[_COMMUNITY_Community 3207|Community 3207]]
+- [[_COMMUNITY_Community 3208|Community 3208]]
+- [[_COMMUNITY_Community 3209|Community 3209]]
 - [[_COMMUNITY_Community 3210|Community 3210]]
 - [[_COMMUNITY_Community 3211|Community 3211]]
 - [[_COMMUNITY_Community 3212|Community 3212]]
+- [[_COMMUNITY_Community 3213|Community 3213]]
 - [[_COMMUNITY_Community 3214|Community 3214]]
 - [[_COMMUNITY_Community 3215|Community 3215]]
 - [[_COMMUNITY_Community 3216|Community 3216]]
+- [[_COMMUNITY_Community 3217|Community 3217]]
 - [[_COMMUNITY_Community 3218|Community 3218]]
 - [[_COMMUNITY_Community 3219|Community 3219]]
+- [[_COMMUNITY_Community 3220|Community 3220]]
 - [[_COMMUNITY_Community 3221|Community 3221]]
+- [[_COMMUNITY_Community 3222|Community 3222]]
 - [[_COMMUNITY_Community 3223|Community 3223]]
 - [[_COMMUNITY_Community 3225|Community 3225]]
+- [[_COMMUNITY_Community 3226|Community 3226]]
+- [[_COMMUNITY_Community 3227|Community 3227]]
+- [[_COMMUNITY_Community 3228|Community 3228]]
+- [[_COMMUNITY_Community 3229|Community 3229]]
+- [[_COMMUNITY_Community 3230|Community 3230]]
+- [[_COMMUNITY_Community 3231|Community 3231]]
+- [[_COMMUNITY_Community 3232|Community 3232]]
+- [[_COMMUNITY_Community 3233|Community 3233]]
+- [[_COMMUNITY_Community 3234|Community 3234]]
+- [[_COMMUNITY_Community 3235|Community 3235]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `ContentRouter` - 185 edges
@@ -2950,8 +3015,8 @@
   .tmp_mem0/mem0/vector_stores/chroma.py → .tmp_headroom/agent-evals/src/agent_evals/config.py
 - `Client` --uses--> `Settings`  [INFERRED]
   .tmp_mem0/mem0/vector_stores/chroma.py → .tmp_headroom/agent-evals/src/agent_evals/config.py
-- `GET()` --calls--> `NotFound()`  [INFERRED]
-  .tmp_headroom/docs/app/og/docs/[...slug]/route.tsx → .tmp_mem0/openmemory/ui/app/not-found.tsx
+- `PlatformConfig` --uses--> `Backend`  [INFERRED]
+  .tmp_mem0/cli/python/src/mem0_cli/backend/platform.py → .tmp_headroom/headroom/backends/base.py
 
 ## Import Cycles
 - 1-file cycle: `.tmp_headroom/.github/scripts/pr-health-labels.py -> .tmp_headroom/.github/scripts/pr-health-labels.py`
@@ -2975,11 +3040,11 @@
 - 1-file cycle: `.tmp_headroom/crates/headroom-core/src/relevance/bm25.rs -> .tmp_headroom/crates/headroom-core/src/relevance/bm25.rs`
 - 1-file cycle: `.tmp_headroom/crates/headroom-core/src/relevance/embedding.rs -> .tmp_headroom/crates/headroom-core/src/relevance/embedding.rs`
 
-## Communities (3170 total, 532 thin omitted)
+## Communities (3237 total, 538 thin omitted)
 
 ### Community 0 - "MCP Web/Search/DB Servers"
 Cohesion: 0.01
-Nodes (244): InMemoryGraphStore, Entity, Graph data models for Headroom's knowledge graph memory system.  Provides Entity, A subset of the knowledge graph containing entities and their relationships., Get all entity IDs in the subgraph., Get all relationship IDs in the subgraph., Direction for relationship queries., Get an entity by ID from this subgraph. (+236 more)
+Nodes (377): InMemoryGraphStore, Entity, Graph data models for Headroom's knowledge graph memory system.  Provides Entity, A subset of the knowledge graph containing entities and their relationships., Get all entity IDs in the subgraph., Get all relationship IDs in the subgraph., Direction for relationship queries., Get an entity by ID from this subgraph. (+369 more)
 
 ### Community 1 - "Memory Store Pipeline"
 Cohesion: 0.15
@@ -2991,15 +3056,15 @@ Nodes (20): ActionGenerator, BackendBridge, BackendSpec, Endpoint, main(), Model
 
 ### Community 3 - "Runtime Engine Core"
 Cohesion: 0.01
-Nodes (151): compressor(), default_config(), generate_go_code(), generate_javascript_code(), Tests for Code-Aware Compressor using tree-sitter AST parsing.  Comprehensive te, Generate JavaScript code for testing., Guards against the regression where the code-aware compressor silently     fell, The parser must yield nodes with the stock tree_sitter property API         that (+143 more)
+Nodes (193): compressor(), default_config(), generate_go_code(), generate_javascript_code(), generate_python_code(), Tests for Code-Aware Compressor using tree-sitter AST parsing.  Comprehensive te, Parser is loaded after compression., unload_tree_sitter clears loaded parsers. (+185 more)
 
 ### Community 4 - "Replace File Pipeline"
 Cohesion: 0.14
 Nodes (14): _load_fixture(), _load_layout_engine_module(), _load_override_module(), _load_registry_module(), Unit tests for figma-agent-core/mapper_override.py., test_add_override_replaces_duplicate(), test_component_registry_build_and_write_applies_override(), test_component_registry_load_with_overrides() (+6 more)
 
 ### Community 5 - "Agent Loop Architecture"
-Cohesion: 0.03
-Nodes (85): AgentLoader, AgentSpec, ContractSpec, DecisionStep, AgentLoader, CircuitBreaker, CircuitBreakerConfig, EvaluationEngine (+77 more)
+Cohesion: 0.05
+Nodes (88): AgentLoader, DeliveryGuarantee, DeliveryReceipt, Message, MessageStatus, MessageType, AgentLoader, EvaluationEngine (+80 more)
 
 ### Community 6 - "Message Bus Contracts"
 Cohesion: 0.06
@@ -3007,15 +3072,15 @@ Nodes (59): _collect_top_level_sections(), main(), Any, CompletedProcess, Эта
 
 ### Community 7 - "Safety Audit Logger"
 Cohesion: 0.01
-Nodes (129): _digest(), main(), Record SmartCrusher parity fixtures.  Standalone recorder for `SmartCrusher.crus, Initial parity scenarios. All use `query=""` to keep embeddings     out of the c, _record(), _scenarios(), get_default_toin_storage_path(), Get the default TOIN storage path.      Checks for the HEADROOM_TOIN_PATH enviro (+121 more)
+Nodes (327): AfterToolCallEvent, CCRConfig, CacheOptimizerConfig, CachePrefixMetrics, CCRConfig, CompressionProfile, DiffArtifact, Configuration models for Headroom SDK. (+319 more)
 
 ### Community 8 - "Engine Circuit Breaker"
 Cohesion: 0.10
 Nodes (50): _apply_component_mappings(), _build_data_model_consts(), _build_form_hooks(), _build_handler(), _build_state_hooks(), _class_string(), _collect_all_nodes(), _collect_fonts() (+42 more)
 
 ### Community 9 - "Control Human Oversight"
-Cohesion: 0.08
-Nodes (25): _asset_dest_path(), AssetDownloader, AssetExtractor, AssetOptimizer, AssetPipeline, _extract_box_size(), FontCollector, InlineSvgExtractor (+17 more)
+Cohesion: 0.16
+Nodes (14): _asset_dest_path(), AssetOptimizer, AssetPipeline, InlineSvgExtractor, main(), _public_path(), Path, Пытается безопасно инлайнить простой SVG для page_composer. (+6 more)
 
 ### Community 10 - "Pipeline Runner"
 Cohesion: 0.12
@@ -3026,8 +3091,8 @@ Cohesion: 0.04
 Nodes (44): 10. Критерии приёмки, 11. Статус реализации, 1. Общие сведения, 2.1 Головной цикл (main_loop), 2.2 Оркестратор (orchestrator) — 6 агентов, 2.3 Безопасность (safety-control) — 9 агентов, 2.4 Взаимная проверка (mutual_check) — 10 агентов, 2.5 Контроль (control) — 7 агентов (+36 more)
 
 ### Community 13 - "Agent Loop Tools Replace"
-Cohesion: 0.11
-Nodes (25): FigmaMCPServer, FigmaMCPServer, Any, MCP server that wraps the figma-agent-core Figma-to-code pipeline.      The wrap, degraded_server(), figma_server(), project_root(), pytest tests for the Figma MCP server.  These tests mock subprocess invocation a (+17 more)
+Cohesion: 0.15
+Nodes (22): FigmaMCPServer, degraded_server(), figma_server(), project_root(), pytest tests for the Figma MCP server.  These tests mock subprocess invocation a, Live FigmaMCPServer pointing at the real figma-agent-core directory., FigmaMCPServer with a missing figma-agent-core directory (degraded)., test_figma_analyze_schema_has_optional_file() (+14 more)
 
 ### Community 14 - "Agent Loop Tools Runcom"
 Cohesion: 0.08
@@ -3038,12 +3103,12 @@ Cohesion: 0.09
 Nodes (35): _load_page_composer(), _minimal_ast(), Unit tests for figma-agent-core/page_composer.py.  Loads the module via importli, test_compose_backdrop_filter_inline_style(), test_compose_component_reference(), test_compose_component_with_props(), test_compose_data_binding_renders_item_map(), test_compose_emits_data_figma_id() (+27 more)
 
 ### Community 16 - "Agent Loop Tools Database"
-Cohesion: 0.11
-Nodes (4): PhaseTransitionManager, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
+Cohesion: 0.09
+Nodes (6): PhaseTransitionManager, Resolve a value from the state dict.          Tries the dotted path first, then, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Decide the next ReAct phase and optional safety override., Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
 
 ### Community 17 - "Community 17"
-Cohesion: 0.03
-Nodes (47): MCPServer, MCPTool, MCPToolResult, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe, _build_server() (+39 more)
+Cohesion: 0.09
+Nodes (17): _build_server(), create_registry(), main(), Any, MCPRegistry, MCPServer, Path, Create and populate the MCP registry with all 16 servers.      Args:         wor (+9 more)
 
 ### Community 18 - "Agent Loop Tools Terminal"
 Cohesion: 0.10
@@ -3083,7 +3148,7 @@ Nodes (25): For /graphify add and --watch, For /graphify query, For the commit h
 
 ### Community 27 - "Agent Loop ReAct Planning"
 Cohesion: 0.03
-Nodes (92): Initialize the LRU cache.          Args:             max_size: Maximum number of, Initialize direct client.          Args:             api_key: Moorcheh API key (, Initialize SDK client.          Args:             api_key: Moorcheh API key (req, MemoryType, generate_additive_extraction_prompt(), Build the user prompt for additive (ADD-only) extraction with linking.      Pair, MCPServerSettings, Server settings loaded from env / ``.env``.      Required:         moorcheh_api_ (+84 more)
+Nodes (93): Initialize the LRU cache.          Args:             max_size: Maximum number of, LLMError, Raised when LLM operations fail.          This exception is raised when LLM oper, MCPServerSettings, Server settings loaded from env / ``.env``.      Required:         moorcheh_api_, Validate configuration., AsyncMemory, _build_filters_and_metadata() (+85 more)
 
 ### Community 28 - "Agent Loop ReAct Execution"
 Cohesion: 0.21
@@ -3102,12 +3167,12 @@ Cohesion: 0.13
 Nodes (23): _build_mock_page(), _build_mock_playwright(), _load_visual_qa(), Unit tests for figma-agent-core/visual_qa.py.  Loads the module via importlib be, test_disallowed_file_outside_workspace(), test_visual_qa_bbox_comparison_fails_outside_tolerance(), test_visual_qa_bbox_comparison_passes_within_tolerance(), test_visual_qa_blocked_for_disallowed_url() (+15 more)
 
 ### Community 32 - "Agent Loop Main Loop"
-Cohesion: 0.13
-Nodes (12): Any, CompressionSummary, ContextCompressor, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+4 more)
+Cohesion: 0.08
+Nodes (28): build_parser(), cmd_approve(), cmd_demo(), cmd_mcp_connect(), cmd_run(), cmd_status(), cmd_validate(), fmt_duration() (+20 more)
 
 ### Community 33 - "MCP Servers Bootstrap"
-Cohesion: 0.05
-Nodes (29): ContextIsolator, CircuitBreakerOpenError, CircuitState, TestMCPHealthCheck, TestWorkerJobPriority, TestWorkerPoolBackpressure, Any, Path (+21 more)
+Cohesion: 0.03
+Nodes (48): ContextIsolator, CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, EvaluatorResponse, MockLLMEngine, Strict pass/fail verdict produced by the fast /goal evaluator. (+40 more)
 
 ### Community 34 - "MCP Base Server"
 Cohesion: 0.05
@@ -3119,7 +3184,7 @@ Nodes (19): _apply_layout_adjustments(), _check_reason(), _extract_figma_id(), _
 
 ### Community 36 - "Runtime Memory Manager"
 Cohesion: 0.01
-Nodes (196): LRUMemoryCache, Invalidate (remove) a memory from cache.          Args:             memory_id: T, Invalidate multiple memories from cache.          Args:             memory_ids:, Thread-safe LRU (Least Recently Used) cache for Memory objects.      Implements, Invalidate all cached memories at or below a scope.          Args:             u, Remove all entries from the cache., Get the current number of entries in the cache.          Returns:             Nu, Get the maximum cache size.          Returns:             Maximum number of entr (+188 more)
+Nodes (179): LRUMemoryCache, Put a memory in the cache.          If the memory already exists, updates the va, Put multiple memories in the cache.          Args:             memories: List of, Invalidate (remove) a memory from cache.          Args:             memory_id: T, Invalidate multiple memories from cache.          Args:             memory_ids:, Thread-safe LRU (Least Recently Used) cache for Memory objects.      Implements, Invalidate all cached memories at or below a scope.          Args:             u, Remove all entries from the cache. (+171 more)
 
 ### Community 37 - "Observability Environment Result"
 Cohesion: 0.26
@@ -3135,7 +3200,7 @@ Nodes (4): MemoryMCPServer, Any, Path, MCP server for tools_memory — memory st
 
 ### Community 40 - "Memory Store Consistency"
 Cohesion: 0.02
-Nodes (56): Raised when setup validation fails.      This is raised by validate_setup() when, ValidationError, client(), _mock_memory(), Tests for REST API parameter forwarding.  Verifies that the Pydantic request mod, threshold=0.0 is a valid falsy value that must not be filtered out., Verify that the explain parameter is accepted and forwarded., Verify that the infer parameter is accepted and forwarded to Memory.add(). (+48 more)
+Nodes (60): MemoryType, Raised when setup validation fails.      This is raised by validate_setup() when, ValidationError, _AsyncOSSProject, _OSSProject, get_decay_feature_error_message_async(), client(), _mock_memory() (+52 more)
 
 ### Community 41 - "MCP Replace Server"
 Cohesion: 0.27
@@ -3251,11 +3316,11 @@ Nodes (16): _load_refinement(), Unit tests for figma-agent-core/refinement_loop.
 
 ### Community 69 - "Observability Metrics"
 Cohesion: 0.01
-Nodes (239): CompressionFeedback, CompressionHints, Hints for optimizing compression of a specific tool's output., Learn from retrieval patterns to improve compression.      This class analyzes r, Initialize feedback analyzer.          Args:             store: CompressionStore, Get the compression store (lazy load global if not set)., Get compression hints for a specific tool based on learned patterns.          Ar, Get feedback statistics for monitoring.          Returns:             Dict with (+231 more)
+Nodes (173): CompressionFeedback, Learn from retrieval patterns to improve compression.      This class analyzes r, Initialize feedback analyzer.          Args:             store: CompressionStore, Get the compression store (lazy load global if not set)., Get feedback statistics for monitoring.          Returns:             Dict with, _build_parser(), _eligible_rows(), _format_row() (+165 more)
 
 ### Community 70 - "State Manager Session Create"
-Cohesion: 0.04
-Nodes (59): _check_langchain_available(), compress_tool_messages(), CompressToolMessagesConfig, CompressToolMessagesResult, create_compress_tool_messages_node(), _CrusherSingleton, _estimate_tokens(), _get_crusher() (+51 more)
+Cohesion: 0.05
+Nodes (44): MEMANTO SDK Client  Uses the official moorcheh_sdk to interact with Moorcheh API, Return (or create) the backend-aware Moorcheh client.          Dispatches to clo, Generate a daily AI summary from session MD files (on-demand).          Conflict, Generate the conflict report for an agent/date.          Runs the LLM conflict-d, Load unresolved conflicts from the JSON conflict report.          Args:, Return (or create) the ``MemoryWriteService`` singleton., Resolve a single conflict by index.          Args:             agent_id: Target, Return (or create) the ``MemoryReadService`` singleton. (+36 more)
 
 ### Community 71 - "Graph Pilot Token Guards"
 Cohesion: 0.19
@@ -3270,8 +3335,8 @@ Cohesion: 0.14
 Nodes (5): FTSIndex, Insert or replace a document in the FTS index., BM25-ranked keyword search., TestFTSIndex, Any
 
 ### Community 74 - "MCP Filesystem TSConfig"
-Cohesion: 0.04
-Nodes (27): AddMemoryOptions, DeleteAllMemoryOptions, Entity, GetAllMemoryOptions, SearchMemoryOptions, UpdateProjectOptions, VectorStoreFactory, AzureAISearch (+19 more)
+Cohesion: 0.03
+Nodes (40): AddMemoryOptions, DeleteAllMemoryOptions, Entity, GetAllMemoryOptions, SearchMemoryOptions, UpdateProjectOptions, mockEmbedding, VectorStoreFactory (+32 more)
 
 ### Community 75 - "MCP Commander TSConfig"
 Cohesion: 0.25
@@ -3338,12 +3403,12 @@ Cohesion: 0.14
 Nodes (13): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution, outDir, rootDir (+5 more)
 
 ### Community 91 - "Community 91"
-Cohesion: 0.05
-Nodes (40): cmd_entities_delete(), cmd_entities_list(), Entity management commands., List entities of a given type., Delete an entity and all its memories (cascade delete)., cmd_add(), cmd_delete(), cmd_delete_all() (+32 more)
+Cohesion: 0.06
+Nodes (29): cmd_entities_delete(), cmd_entities_list(), Entity management commands., List entities of a given type., Delete an entity and all its memories (cascade delete)., cmd_add(), cmd_search(), _make_console() (+21 more)
 
 ### Community 92 - "MCP Replace Package Duplicate"
 Cohesion: 0.06
-Nodes (21): AzureOpenAILLM, LLM, LLMResponse, GoogleLLM, convertToLangchainMessages(), MistralLLM, MemoryUpdateSchema, mockGenerateContent (+13 more)
+Nodes (20): AzureOpenAILLM, LLM, LLMResponse, GoogleLLM, convertToLangchainMessages(), MistralLLM, mockGenerateContent, AnthropicLLM (+12 more)
 
 ### Community 93 - "Agent Loop Result Action Report Duplicate"
 Cohesion: 0.06
@@ -3410,8 +3475,8 @@ Cohesion: 0.27
 Nodes (9): { embed, bufferToVector, cosineSimilarity }, entrySimilarity(), expandQuery(), { getDb }, mmrDiversify(), parseIntent(), processRecall(), rankResults() (+1 more)
 
 ### Community 109 - "Community 109"
-Cohesion: 0.05
-Nodes (8): DummyHistoryManager, HistoryEntry, MemoryHistoryManager, SQLiteManager, ensureSQLiteDirectory(), getDefaultVectorStoreDbPath(), MemoryVector, MemoryVectorStore
+Cohesion: 0.07
+Nodes (5): SQLiteManager, ensureSQLiteDirectory(), getDefaultVectorStoreDbPath(), MemoryVector, MemoryVectorStore
 
 ### Community 110 - "Community 110"
 Cohesion: 0.20
@@ -3787,7 +3852,7 @@ Nodes (7): _ensure_dotenv(), FigmaConfig, is_figma_configured(), load_figma_conf
 
 ### Community 203 - "Community 203"
 Cohesion: 0.02
-Nodes (118): AddMemoryOptions, AsyncMemoryClient, _maybe_alias_anon_to_email(), MemoryClient, Validate the API key by making a test request., Prepare the payload for API requests.          Args:             messages: The m, Prepare query parameters for API requests.          Args:             kwargs: Ke, Add a new memory.          Args:             messages: A list of message diction (+110 more)
+Nodes (116): AddMemoryOptions, AsyncMemoryClient, MemoryClient, Validate the API key by making a test request., Prepare the payload for API requests.          Args:             messages: The m, Prepare query parameters for API requests.          Args:             kwargs: Ke, Add a new memory.          Args:             messages: A list of message diction, Retrieve all memories, with optional filtering.          Args:             optio (+108 more)
 
 ### Community 204 - "Community 204"
 Cohesion: 0.36
@@ -4279,11 +4344,11 @@ Nodes (31): BaseTool, AnswerInput, create_memanto_tools(), MemantoAnswerTool, Me
 
 ### Community 344 - "Community 344"
 Cohesion: 0.04
-Nodes (52): MemoryHandler, Check if response contains memory tool calls., Extract tool calls from response based on provider format., Execute memory tool calls and return results.          Args:             respons, Execute a memory tool and return result string., Execute memory_save tool with provenance, dedup hints, and async background dedu, Auto-supersede obvious duplicates in background (fire-and-forget).          If a, Execute memory_search tool. (+44 more)
+Nodes (60): apply_session_sticky_ccr_tool(), get_session_ccr_tracker(), Bounded LRU tracker recording per-(provider, session_id) CCR state.      Two pie, Return True iff this session has previously performed CCR., Return the recorded golden tool-definition bytes, or None., Mark the session as having performed CCR and pin the golden bytes.          Firs, Clear all session state (test helper)., Return the process-wide :class:`SessionCcrTracker` singleton. (+52 more)
 
 ### Community 345 - "Community 345"
-Cohesion: 0.02
-Nodes (58): ComponentStats, MemoryTracker, Memory tracking infrastructure for headroom.  This module provides centralized m, Singleton that tracks memory usage across all components.      Usage:         #, Initialize the tracker.          Args:             target_budget_mb: Target memo, Get or create the singleton instance.          Args:             target_budget_m, Reset the singleton instance. Useful for testing., Set the target memory budget.          Args:             budget_mb: Target budge (+50 more)
+Cohesion: 0.03
+Nodes (42): Clear all TOIN data. Mainly for testing., Reset the global TOIN instance. Mainly for testing., reset_toin(), isolated_toin(), fresh_toin(), Per-test TOIN instance backed by a tempdir to avoid global drift., Same instance shouldn't be counted twice even after cap hit., With 3 users (min for network effect), boost should be meaningful. (+34 more)
 
 ### Community 346 - "Community 346"
 Cohesion: 0.21
@@ -4295,19 +4360,19 @@ Nodes (3): _find_node_by_figma_id(), test_data_model_image_alt_binding(), test_d
 
 ### Community 348 - "Community 348"
 Cohesion: 0.01
-Nodes (161): main(), ContractSpec, DecisionStep, ExecutionMode, FailureMode, MemoryType, Parameter, StateScope (+153 more)
+Nodes (165): main(), ExecutionMode, MemoryType, StateScope, Topic, ConsistencyLevel, Enum, Persistent install / deployment helpers for Headroom. (+157 more)
 
 ### Community 349 - "Community 349"
-Cohesion: 0.05
-Nodes (59): ABC, BaseEmbedderConfig, Config for Embeddings., ConversationScanner, LearnPlugin, Base class for headroom learn plugins.  Each coding agent (Claude Code, Codex, G, Discover all projects with conversation data for this agent., Scan all sessions for a project, returning normalized data.          Args: (+51 more)
+Cohesion: 0.04
+Nodes (78): ABC, BaseEmbedderConfig, Config for Embeddings., ConversationScanner, LearnPlugin, Base class for headroom learn plugins.  Each coding agent (Claude Code, Codex, G, Discover all projects with conversation data for this agent., Scan all sessions for a project, returning normalized data.          Args: (+70 more)
 
 ### Community 350 - "Community 350"
 Cohesion: 0.06
 Nodes (38): ComponentMapper, ComponentRegistry, ComponentRegistryError, _extract_exports_and_props(), _extract_jsdoc_blocks(), _find(), _find_jsdoc_before(), InstanceEntry (+30 more)
 
 ### Community 351 - "Community 351"
-Cohesion: 0.02
-Nodes (160): AnswerRequest, BatchRememberRequest, DirectClient, Point-in-time recall: what memories existed at a given moment?          Args:, Differential retrieval: what changed since a given date?          Args:, Recall the most recently stored memories (newest first).          Args:, Answer a question using RAG (Retrieval-Augmented Generation).          Retrieves, Generate a daily AI summary from session MD files (on-demand).          Conflict (+152 more)
+Cohesion: 0.04
+Nodes (71): AnswerRequest, BatchRememberRequest, DirectClient, Point-in-time recall: what memories existed at a given moment?          Args:, Differential retrieval: what changed since a given date?          Args:, Recall the most recently stored memories (newest first).          Args:, Answer a question using RAG (Retrieval-Augmented Generation).          Retrieves, Generate a daily AI summary from session MD files (on-demand).          Conflict (+63 more)
 
 ### Community 352 - "Community 352"
 Cohesion: 0.14
@@ -4315,15 +4380,11 @@ Nodes (13): _field_weight(), _jaccard(), _levenshtein_ratio(), _ngram_set(), _no
 
 ### Community 353 - "Community 353"
 Cohesion: 0.02
-Nodes (115): Run LoCoMo V2 memory evaluation (LLM-controlled tools)., _run_memory_eval_v2(), DialogueTurn, download_locomo(), get_locomo_stats(), load_locomo(), LoCoMoCase, LoCoMoConversation (+107 more)
+Nodes (149): LocalBackendConfig, Local backend adapter for Headroom's hierarchical memory system.  Provides a ful, Initialize the local backend.          Args:             config: Configuration f, Configuration for local backend.      Attributes:         db_path: Path to the S, Run LoCoMo V2 memory evaluation (LLM-controlled tools)., _run_memory_eval_v2(), Simple rule-based judge using F1 score.      Useful for quick evaluation without, simple_judge() (+141 more)
 
 ### Community 354 - "Community 354"
 Cohesion: 0.25
 Nodes (13): _load_auditor_module(), _make_node(), Unit tests for figma-agent-core/precise_mode_auditor.py., test_audit_returns_expected_report_keys(), test_auto_width_text_is_considered_snug(), test_content_box_within_tolerance_is_snug(), test_critical_issue_overrides_score(), test_fixed_width_text_with_loose_content_box_is_flagged() (+5 more)
-
-### Community 355 - "Community 355"
-Cohesion: 0.05
-Nodes (29): ENTITY_PARAMS, AdditiveExtractionSchema, extractJson(), factItem, FactRetrievalSchema, formatConversationHistory(), generateAdditiveExtractionPrompt(), getFactRetrievalMessages() (+21 more)
 
 ### Community 356 - "Community 356"
 Cohesion: 0.28
@@ -4358,8 +4419,8 @@ Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, Image Enrichment Agent, Receives, Returns, Role, Side effects
 
 ### Community 367 - "Community 367"
-Cohesion: 0.10
-Nodes (57): appendNoticeCapEvent(), coerceNonnegativeInteger(), countAddedMemories(), DecayUsageTrigger, detectPerformanceSlowQuery(), detectScaleThresholdFromAddResult(), detectScaleThresholdFromTopK(), detectTemporalUsageFromMetadata() (+49 more)
+Cohesion: 0.07
+Nodes (65): appendNoticeCapEvent(), coerceNonnegativeInteger(), countAddedMemories(), DecayUsageTrigger, detectPerformanceSlowQuery(), detectScaleThresholdFromAddResult(), detectScaleThresholdFromTopK(), detectTemporalUsageFromMetadata() (+57 more)
 
 ### Community 368 - "Community 368"
 Cohesion: 0.22
@@ -4407,19 +4468,19 @@ Nodes (5): Contract, Decision Flow, Failure Modes, Lighthouse Optimizer, Role
 
 ### Community 379 - "Community 379"
 Cohesion: 0.02
-Nodes (113): LocalBackend, Delete a memory.          Removes the memory from storage and indexes. Also clea, Whether this backend supports knowledge graph operations.          Returns:, Whether this backend supports semantic vector search.          Returns:, Whether this backend supports full-text search.          Returns:             Tr, Clear all memories and graph data for a user.          Args:             user_id, Local backend using embedded databases.      This backend provides a fully local, Close the backend and release resources. (+105 more)
+Nodes (136): LocalBackend, Ensure the backend is initialized with all components.          Creates the Hier, Search memories with optional graph expansion.          Performs vector search v, Update a memory with new content (creates versioned history).          Uses Hier, Delete a memory.          Removes the memory from storage and indexes. Also clea, Get a memory by ID.          Args:             memory_id: The unique identifier, Whether this backend supports knowledge graph operations.          Returns:, Whether this backend supports semantic vector search.          Returns: (+128 more)
 
 ### Community 380 - "Community 380"
 Cohesion: 0.02
-Nodes (124): BatchContext, BatchRequestContext, APIClient, BatchResultProcessor, BatchResultProcessorConfig, process_batch_results(), ProcessedBatchResult, Batch result post-processor for CCR tool call handling.  When batch results are (+116 more)
+Nodes (128): APIClient, BatchResultProcessor, BatchResultProcessorConfig, process_batch_results(), ProcessedBatchResult, Batch result post-processor for CCR tool call handling.  When batch results are, Protocol for making API calls., Configuration for batch result processing. (+120 more)
 
 ### Community 381 - "Community 381"
-Cohesion: 0.03
-Nodes (46): Tests for the relevance scoring module.  Tests all scorer tiers: - BM25Scorer (z, BM25Scorer is always available., IDF rewards rare terms and decays toward zero for common terms., A discriminative term outranks one shared across the whole corpus.          ``sh, Corpus IDF affects ranking only, not which terms are reported., Tests for embedding-based semantic scorer., Create embedding scorer if available., Embeddings find semantic matches. (+38 more)
+Cohesion: 0.06
+Nodes (37): BaseChatModel, ChatGenerationChunk, ChatResult, _check_langchain_available(), HeadroomChatModel, optimize_messages(), LangChain chat model wrapper that applies Headroom optimizations.      Wraps any, Initialize HeadroomChatModel.          Args:             wrapped_model: Any Lang (+29 more)
 
 ### Community 382 - "Community 382"
-Cohesion: 0.02
-Nodes (108): BaseChatModel, ChatGenerationChunk, ChatResult, Headroom integrations with popular LLM frameworks.  Available integrations:  Lan, get_tool_metrics(), Agent tool integration for LangChain with output compression.  This module provi, Get the global tool metrics collector., Reset global tool metrics. (+100 more)
+Cohesion: 0.03
+Nodes (87): Headroom integrations with popular LLM frameworks.  Available integrations:  Lan, get_tool_metrics(), Agent tool integration for LangChain with output compression.  This module provi, Get the global tool metrics collector., Reset global tool metrics., Record compression metrics.          Args:             original: Original output, Metrics from a single tool compression., Collects compression metrics across all tool invocations. (+79 more)
 
 ### Community 383 - "Community 383"
 Cohesion: 0.05
@@ -4427,11 +4488,11 @@ Nodes (43): _FakeBackend, _init_db(), Tests for the Traffic Pattern Learner.  Te
 
 ### Community 384 - "Community 384"
 Cohesion: 0.02
-Nodes (127): AgentPattern, LowerStr, MoorchehClient, MEMANTO Direct Client  Calls the Moorcheh API directly through existing service, A lightweight, zero-dependency Moorcheh client using urllib, MEMANTO SDK Client  Uses the official moorcheh_sdk to interact with Moorcheh API, Return (or create) the backend-aware Moorcheh client.          Dispatches to clo, Generate a daily AI summary from session MD files (on-demand).          Conflict (+119 more)
+Nodes (108): AgentInfo, AgentList, AgentPattern, LowerStr, MoorchehClient, MEMANTO Direct Client  Calls the Moorcheh API directly through existing service, A lightweight, zero-dependency Moorcheh client using urllib, AgentCreate (+100 more)
 
 ### Community 385 - "Community 385"
-Cohesion: 0.02
-Nodes (110): PrefixFreezeConfig, Prefix Cache Tracker — session-scoped state for cache-aware compression.  Tracks, Manages PrefixCacheTracker instances across sessions.      Keyed by session ID (, Get existing tracker or create a new one for this session., Remove expired trackers periodically., Number of active session trackers., Configuration for cache-aware prefix freezing., SessionTrackerStore (+102 more)
+Cohesion: 0.01
+Nodes (247): BackendRouter, Mem0Config, Configuration for Direct Mem0 adapter.      Qdrant connection fields default to, PrefixFreezeConfig, Prefix Cache Tracker — session-scoped state for cache-aware compression.  Tracks, Manages PrefixCacheTracker instances across sessions.      Keyed by session ID (, Get existing tracker or create a new one for this session., Remove expired trackers periodically. (+239 more)
 
 ### Community 386 - "Community 386"
 Cohesion: 0.02
@@ -4439,11 +4500,11 @@ Nodes (112): BenchmarkResult, main(), print_comparison(), print_results(), Run b
 
 ### Community 387 - "Community 387"
 Cohesion: 0.02
-Nodes (208): append_text_to_latest_user_input_item(), apply_session_sticky_ccr_tool(), apply_session_sticky_memory_tools(), capture_codex_wire_debug(), _codex_wire_debug_dir(), codex_wire_debug_enabled(), _coerce_float(), _coerce_int() (+200 more)
+Nodes (141): append_text_to_latest_user_input_item(), apply_session_sticky_memory_tools(), capture_codex_wire_debug(), _codex_wire_debug_dir(), codex_wire_debug_enabled(), _coerce_float(), _coerce_int(), _context_tool_default_scope() (+133 more)
 
 ### Community 388 - "Community 388"
-Cohesion: 0.02
-Nodes (90): MemorySystem, MemorySystem orchestrator for LLM-driven memory operations.  This module provide, Delete a memory from the backend.          Args:             memory_id: ID of th, Retrieve a specific memory by ID.          Args:             memory_id: The memo, Orchestrator for LLM-driven memory operations.      MemorySystem provides a high, Initialize the MemorySystem.          Args:             backend: The memory stor, Get the memory tool definitions for LLM function calling.          Args:, Process a tool call from the LLM.          Dispatches the tool call to the appro (+82 more)
+Cohesion: 0.03
+Nodes (60): get_memory_tools(), get_memory_tools_optimized(), get_tool_names(), Memory tool definitions for LLM function calling.  This module defines the tool, Return the list of memory tool definitions.      Returns:         List of tool d, Return the names of all memory tools.      Returns:         List of tool names., Return the optimized memory tool definitions with pre-extraction support.      U, MemoryToolsChatCompletions (+52 more)
 
 ### Community 389 - "Community 389"
 Cohesion: 0.02
@@ -4454,36 +4515,36 @@ Cohesion: 0.02
 Nodes (92): Comprehensive tests for search_compressor.py.  Tests cover: 1. grep/ripgrep outp, Mixed valid and invalid lines parse valid ones., Tests for grouping matches by file., Matches are correctly grouped by filename., FileMatches.first returns first match., FileMatches.last returns last match., FileMatches with no matches handles first/last., Tests for match relevance scoring. (+84 more)
 
 ### Community 391 - "Community 391"
-Cohesion: 0.03
-Nodes (112): CompressionHooks, ChatCompletions, HeadroomClient, Messages, Main HeadroomClient implementation for Headroom SDK., Simulate optimization without calling the API.          Args:             model:, Update in-memory session statistics., Wrapper for messages API (Anthropic-style). (+104 more)
+Cohesion: 0.02
+Nodes (148): CompressionHooks, ChatCompletions, HeadroomClient, Messages, Main HeadroomClient implementation for Headroom SDK., Simulate optimization without calling the API.          Args:             model:, Update in-memory session statistics., Wrapper for messages API (Anthropic-style). (+140 more)
 
 ### Community 392 - "Community 392"
 Cohesion: 0.02
-Nodes (222): _agent_savings_config_mismatches(), aider(), _append_text(), _apply_project_header_env(), _apply_rtk_to_systemmessage_field(), _build_openclaw_plugin_entry(), _build_openclaw_unwrap_entry(), _check_proxy() (+214 more)
+Nodes (227): _agent_savings_config_mismatches(), aider(), _append_text(), _apply_project_header_env(), _apply_rtk_to_systemmessage_field(), _build_openclaw_plugin_entry(), _build_openclaw_unwrap_entry(), _check_proxy() (+219 more)
 
 ### Community 393 - "Community 393"
 Cohesion: 0.02
-Nodes (111): CompressionEntry, A cached compression entry with metadata for retrieval and feedback., _capture_headroom_retrieve_events(), Comprehensive unit tests for CompressionStore.  Tests cover: 1. CompressionStore, Concurrent retrieves don't corrupt data., Concurrent stores and retrieves don't corrupt data., Tests for global store singleton pattern., reset_compression_store clears the global store. (+103 more)
+Nodes (153): CompressionEntry, CompressionStore, A cached compression entry with metadata for retrieval and feedback., Check if this entry has expired., Record an access to this entry for feedback tracking., Event logged when content is retrieved from cache., Thread-safe store for compressed content with retrieval support.      This is th, Default TTL applied to new entries when callers do not override it. (+145 more)
 
 ### Community 394 - "Community 394"
-Cohesion: 0.03
-Nodes (95): AdversarialResult, main(), ATTACK: Score field that doesn't indicate importance.      Items with score=0.99, ATTACK: Anomaly in timestamp, not in measured value.      One entry is from the, ATTACK: Extremely deep nesting to cause stack overflow.      100 levels of neste, ATTACK: Score fields with NaN, Infinity, -Infinity.      These are valid JSON wh, ATTACK: Array with mixed types (dicts, strings, numbers, nulls).      SmartCrush, ATTACK: Search query designed to cause catastrophic backtracking.      Pattern l (+87 more)
+Cohesion: 0.02
+Nodes (124): AdversarialResult, main(), ATTACK: Score field that doesn't indicate importance.      Items with score=0.99, ATTACK: Anomaly in timestamp, not in measured value.      One entry is from the, ATTACK: Extremely deep nesting to cause stack overflow.      100 levels of neste, ATTACK: Score fields with NaN, Infinity, -Infinity.      These are valid JSON wh, ATTACK: Array with mixed types (dicts, strings, numbers, nulls).      SmartCrush, ATTACK: Search query designed to cause catastrophic backtracking.      Pattern l (+116 more)
 
 ### Community 395 - "Community 395"
-Cohesion: 0.04
-Nodes (72): AnalysisResult, _build_digest(), _build_prior_patterns_section(), _call_llm(), FailureAnalyzer, _format_event(), _format_tool_call(), _parse_llm_response() (+64 more)
+Cohesion: 0.05
+Nodes (41): _build_digest(), FailureAnalyzer, _parse_llm_response(), Analyzes session data via LLM to produce actionable recommendations.      Uses L, Analyze sessions and produce recommendations via LLM., Build a token-efficient text digest of all session events.      The digest inclu, Convert LLM structured output into Recommendation objects., Safely convert a value to int. (+33 more)
 
 ### Community 396 - "Community 396"
-Cohesion: 0.03
-Nodes (57): lifespan(), MEMANTO FastAPI Application, Fail fast when mandatory external dependencies are misconfigured., _validate_startup_dependencies(), Backend, get_active_llm_model(), parse_backend(), Backend selection and protocol for Memanto's Moorcheh client.  Memanto can talk (+49 more)
+Cohesion: 0.04
+Nodes (53): lifespan(), MEMANTO FastAPI Application, Fail fast when mandatory external dependencies are misconfigured., _validate_startup_dependencies(), Backend, get_active_llm_model(), parse_backend(), Backend selection and protocol for Memanto's Moorcheh client.  Memanto can talk (+45 more)
 
 ### Community 397 - "Community 397"
 Cohesion: 0.04
 Nodes (98): BreakpointLocation, AnthropicCacheOptimizer, BreakpointPlan, ContentSection, Anthropic Cache Optimizer.  Implements cache optimization for Anthropic's explic, Optimize messages for Anthropic's cache.          Steps:         1. Analyze mess, Analyze messages to identify distinct content sections., Determine if a message looks like a few-shot example. (+90 more)
 
 ### Community 398 - "Community 398"
-Cohesion: 0.02
-Nodes (71): Callbacks, BaseDocumentCompressor, _check_langchain_available(), HeadroomDocumentCompressor, Compresses retrieved documents based on relevance to query.      Uses BM25-style, Initialize HeadroomDocumentCompressor.          Args:             max_documents:, Compress documents based on relevance to query.          Args:             docum, Score a document's relevance to the query using BM25-style scoring.          Arg (+63 more)
+Cohesion: 0.03
+Nodes (56): Callbacks, BaseDocumentCompressor, _check_langchain_available(), HeadroomDocumentCompressor, Compresses retrieved documents based on relevance to query.      Uses BM25-style, Initialize HeadroomDocumentCompressor.          Args:             max_documents:, Compress documents based on relevance to query.          Args:             docum, Score a document's relevance to the query using BM25-style scoring.          Arg (+48 more)
 
 ### Community 399 - "Community 399"
 Cohesion: 0.02
@@ -4491,23 +4552,23 @@ Nodes (128): App, Category, Memory, MemoryBase, MemoryCreate, MemoryUpdate, Pagi
 
 ### Community 400 - "Community 400"
 Cohesion: 0.02
-Nodes (130): Lazy-load the ONNX model and tokenizer., BoundedSemaphore, dict, create_cpu_session_options(), hf_hub_download_local_first(), ONNX Runtime helpers for long-running Headroom processes., Ask glibc to return unused heap pages to the OS when available., Resolve the HF revision to download: explicit arg wins, else the pinned     SHA (+122 more)
+Nodes (127): Lazy-load the ONNX model and tokenizer., BoundedSemaphore, dict, create_cpu_session_options(), hf_hub_download_local_first(), ONNX Runtime helpers for long-running Headroom processes., Ask glibc to return unused heap pages to the OS when available., Resolve the HF revision to download: explicit arg wins, else the pinned     SHA (+119 more)
 
 ### Community 401 - "Community 401"
-Cohesion: 0.04
-Nodes (31): CompressionStoreBackend, Get all hash keys in storage.          Returns:             List of all hash key, Get all entries as (hash_key, entry) pairs.          Returns:             List o, Get backend-specific statistics.          Returns:             Dict with backend, Protocol for CompressionStore storage backends.      This protocol defines the m, Retrieve an entry by hash key.          Args:             hash_key: The unique h, Store an entry with the given hash key.          Args:             hash_key: The, Delete an entry by hash key.          Args:             hash_key: The unique has (+23 more)
+Cohesion: 0.05
+Nodes (28): CompressionStoreBackend, Get all hash keys in storage.          Returns:             List of all hash key, Get all entries as (hash_key, entry) pairs.          Returns:             List o, Get backend-specific statistics.          Returns:             Dict with backend, Protocol for CompressionStore storage backends.      This protocol defines the m, Retrieve an entry by hash key.          Args:             hash_key: The unique h, Store an entry with the given hash key.          Args:             hash_key: The, Delete an entry by hash key.          Args:             hash_key: The unique has (+20 more)
 
 ### Community 402 - "Community 402"
 Cohesion: 0.03
-Nodes (103): format_retrieval_miss_detail(), Return an operator-facing miss reason for CCR retrieval failures., CCR (Compress-Cache-Retrieve) module for reversible compression.  This module pr, CCRResponseHandler, CCRToolCall, CCRToolResult, Response handling for CCR (Compress-Cache-Retrieve).  This module provides respo, Check if response contains CCR tool calls.          Args:             response: (+95 more)
+Nodes (99): format_retrieval_miss_detail(), Return an operator-facing miss reason for CCR retrieval failures., CCRResponseHandler, CCRToolCall, CCRToolResult, Response handling for CCR (Compress-Cache-Retrieve).  This module provides respo, Check if response contains CCR tool calls.          Args:             response:, Extract tool calls from response based on provider format. (+91 more)
 
 ### Community 403 - "Community 403"
 Cohesion: 0.02
-Nodes (138): compute_hash(), create_dropped_context_marker(), create_marker(), create_tool_digest_marker(), create_truncated_marker(), estimate_cost(), extract_markers(), fast_hash() (+130 more)
+Nodes (109): format_timestamp(), parse_timestamp(), Format datetime as ISO8601 string., Parse ISO8601 timestamp string., Storage, Base storage interface for Headroom SDK., Get summary statistics.          Args:             start_time: Filter by timesta, Close storage connection if applicable. (+101 more)
 
 ### Community 404 - "Community 404"
-Cohesion: 0.02
-Nodes (71): Get accumulated content., Get estimated output token count., Get number of chunks received., Get duration in milliseconds (after finish())., Reset tracker for reuse., Context manager for tracking streaming metrics.      Provides a clean interface, Initialize StreamingMetricsCallback.          Args:             model: Model nam, Enter context, return tracker. (+63 more)
+Cohesion: 0.03
+Nodes (66): Get accumulated content., Get estimated output token count., Get number of chunks received., Get duration in milliseconds (after finish())., Reset tracker for reuse., Context manager for tracking streaming metrics.      Provides a clean interface, Initialize StreamingMetricsCallback.          Args:             model: Model nam, Enter context, return tracker. (+58 more)
 
 ### Community 405 - "Community 405"
 Cohesion: 0.03
@@ -4515,47 +4576,47 @@ Nodes (76): ContentType, High-level content categories for compression routing.,
 
 ### Community 406 - "Community 406"
 Cohesion: 0.02
-Nodes (63): MemoryResult, Simple, zero-config memory API for developers.  This module provides the easiest, A single memory search result., memory_instance(), network_timeout_handler(), Tests for the simple Memory API (headroom.memory.easy).  Tests cover: - MemoryRe, Test MemoryResult with empty metadata., Tests for Memory class initialization. (+55 more)
+Nodes (106): DirectMem0Adapter, Direct Mem0 adapter that bypasses LLM extraction for pre-extracted data.  This a, Adapter that bypasses Mem0's LLM extraction for pre-extracted data.      This ad, Initialize the Direct Mem0 adapter.          Args:             config: Configura, Ensure all clients are initialized., Public initialization hook for callers that need readiness guarantees., Generate embedding for text using OpenAI., Generate a deterministic ID for a memory. (+98 more)
 
 ### Community 407 - "Community 407"
-Cohesion: 0.01
-Nodes (85): memory_system(), network_timeout_handler(), Tests for HierarchicalMemory core operations.  Tests cover: - Batch operations (, Test batch addition with different users., Test batch addition with full hierarchy fields., Test batch addition with custom importance scores., Test batch addition with metadata., Test that batch addition generates embeddings. (+77 more)
+Cohesion: 0.02
+Nodes (76): memory_system(), network_timeout_handler(), Tests for HierarchicalMemory core operations.  Tests cover: - Batch operations (, Test batch addition with different users., Test batch addition with full hierarchy fields., Test batch addition with custom importance scores., Test batch addition with metadata., Test that batch addition generates embeddings. (+68 more)
 
 ### Community 408 - "Community 408"
 Cohesion: 0.04
 Nodes (61): Event-driven Read lifecycle management.      Detects stale and superseded Read o, ReadLifecycleConfig, make_anthropic_edit(), make_anthropic_read(), make_anthropic_tool_result(), make_openai_edit(), make_openai_read(), make_openai_tool_result() (+53 more)
 
 ### Community 409 - "Community 409"
-Cohesion: 0.03
-Nodes (43): _normalize_duplicated_api_key(), MEMANTO CLI Configuration Manager  Handles configuration persistence:   - API ke, Get Letta API key from ~/.memanto/.env., Save Letta API key to ~/.memanto/.env., Write a single variable to ~/.memanto/.env and update os.environ., Base directory for a provider's analyze artifacts (e.g. 'supermemory')., Base directory for a provider's migrate artifacts (export + report)., Check if the active backend is configured.          Cloud: requires an API key. (+35 more)
+Cohesion: 0.04
+Nodes (48): _normalize_duplicated_api_key(), MEMANTO CLI Configuration Manager  Handles configuration persistence:   - API ke, Get Letta API key from ~/.memanto/.env., Save Letta API key to ~/.memanto/.env., Write a single variable to ~/.memanto/.env and update os.environ., Base directory for a provider's analyze artifacts (e.g. 'supermemory')., Base directory for a provider's migrate artifacts (export + report)., Check if the active backend is configured.          Cloud: requires an API key. (+40 more)
 
 ### Community 410 - "Community 410"
-Cohesion: 0.06
-Nodes (30): Convert Entity object to row dict for insertion., Convert database row to Entity object., Convert Relationship object to row dict for insertion., Convert database row to Relationship object., Add an entity to the graph store.          If an entity with the same ID already, Retrieve an entity by ID.          Args:             entity_id: The unique ident, Retrieve an entity by name (case-insensitive).          Args:             user_i, Delete an entity and all its relationships.          Relationships are automatic (+22 more)
+Cohesion: 0.05
+Nodes (32): Anthropic handler mixin for HeadroomProxy.  Contains all Anthropic Messages API, # NOTE: Upstream temporarily disabled broad image compression due to, AgentSavingsProfile, apply_agent_savings_env_defaults(), apply_agent_savings_profile(), CompressConfigLike, get_agent_savings_profile(), proxy_pipeline_kwargs() (+24 more)
 
 ### Community 411 - "Community 411"
-Cohesion: 0.03
-Nodes (105): AgentInfo, AgentList, FastMCP, MemoryProvider, Minimal stand-in so this module imports without a Hermes install., Configuration for the Memanto MCP server.  Loaded from environment variables (an, Memanto MCP Server.  Exposes Memanto's persistent semantic memory as Model Conte, MemantoLifecycle (+97 more)
+Cohesion: 0.05
+Nodes (72): MemoryProvider, Minimal stand-in so this module imports without a Hermes install., MemoryValidationService, Memory Validation Service, Validate memory according to policy, Check how many times similar content has been seen, Check if memory type requires validation, Get validation requirements for memory type (+64 more)
 
 ### Community 412 - "Community 412"
-Cohesion: 0.12
-Nodes (16): JSONLStorage, Query metrics with filters., Count metrics matching filters., Iterate over all stored metrics., JSONL file-based metrics storage., Get summary statistics., Initialize JSONL storage.          Args:             file_path: Path to JSONL fi, No-op for file storage. (+8 more)
+Cohesion: 0.04
+Nodes (36): fresh_store(), fresh_toin(), Comprehensive tests for TOIN implementation fixes.  This file tests all the fixe, Strategy with success rate < 0.5 should NOT be recommended., When optimal_strategy has low success, find a better alternative., Test preserve_fields merging in federated learning., Imported preserve_fields should be merged with existing., preserve_fields should be capped at 10 entries. (+28 more)
 
 ### Community 413 - "Community 413"
 Cohesion: 0.04
-Nodes (82): db_path_option(), delete_memories(), edit_memory(), _export_all(), export_memories(), get_scope_label(), _get_stats(), get_store() (+74 more)
+Nodes (81): db_path_option(), delete_memories(), edit_memory(), _export_all(), export_memories(), get_scope_label(), _get_stats(), get_store() (+73 more)
 
 ### Community 414 - "Community 414"
 Cohesion: 0.06
 Nodes (35): HumanMessage, Integration tests using real Ollama models with LangChain.      These tests requ, Test HeadroomChatModel wrapping real ChatOllama model., Actually invoke an LLM call with Ollama - full end-to-end test., Test _generate method with real Ollama model., Test that optimization metrics are tracked with real calls., Test multi-turn conversation with real Ollama., Test that Headroom optimization actually reduces token count. (+27 more)
 
 ### Community 415 - "Community 415"
-Cohesion: 0.02
-Nodes (99): _check_langchain_available(), HeadroomToolWrapper, Get per-tool statistics., Wraps a LangChain tool to compress its output.      Applies SmartCrusher compres, Initialize HeadroomToolWrapper.          Args:             tool: The LangChain B, Invoke the tool and compress output.          Args:             *args: Arguments, Invoke the tool (alias for __call__)., Apply compression to tool output.          Args:             output: Tool output (+91 more)
+Cohesion: 0.05
+Nodes (34): _check_langchain_available(), HeadroomToolWrapper, Get per-tool statistics., Wraps a LangChain tool to compress its output.      Applies SmartCrusher compres, Initialize HeadroomToolWrapper.          Args:             tool: The LangChain B, Invoke the tool and compress output.          Args:             *args: Arguments, Invoke the tool (alias for __call__)., Apply compression to tool output.          Args:             output: Tool output (+26 more)
 
 ### Community 416 - "Community 416"
-Cohesion: 0.07
-Nodes (33): ClaudeCodeWriter, Writes learned patterns to CLAUDE.local.md and MEMORY.md for Claude Code.      P, Override where CONTEXT_FILE recommendations are written.          Accepts a path, RecommendationTarget, Running learn twice should produce the same output, not duplicate., TestIdempotency, _legacy_block(), _project() (+25 more)
+Cohesion: 0.04
+Nodes (51): ClaudeCodeWriter, Writes learned patterns to CLAUDE.local.md and MEMORY.md for Claude Code.      P, Override where CONTEXT_FILE recommendations are written.          Accepts a path, RecommendationTarget, Integration tests for headroom learn — using real session data.  These tests run, sed printing file content with 'Error:' in it isn't a real error., Actual errors should be detected., Integration tests against real Codex session data. (+43 more)
 
 ### Community 417 - "Community 417"
 Cohesion: 0.03
@@ -4563,19 +4624,19 @@ Nodes (88): test_code_detection_identifies_language_and_thresholds(), test_diff_
 
 ### Community 418 - "Community 418"
 Cohesion: 0.02
-Nodes (83): AfterToolCallEvent, HookProvider, HookRegistry, _check_strands_available(), CompressionMetrics, HeadroomHookProvider, Strands SDK hook provider for Headroom tool output compression.  This module pro, Initialize the hook provider after dataclass construction. (+75 more)
+Nodes (69): HookProvider, HeadroomHookProvider, Lazily initialize SmartCrusher (thread-safe).          Returns:             The, Total tokens saved across all compressions.          Returns:             Cumula, History of compression metrics.          Returns:             Copy of the metric, Estimate token count for text.          Uses a simple heuristic of ~4 characters, Extract text content from a ToolResult.          Handles both text and JSON cont, Update the result content with compressed text.          Modifies the result in (+61 more)
 
 ### Community 419 - "Community 419"
 Cohesion: 0.02
-Nodes (212): AnthropicHandlerMixin, Deterministic sort key for Anthropic/OpenAI-style tool definitions., Return True when the final Anthropic tool list includes CCR retrieve., Extract observed Anthropic cache-write TTL bucket usage.          HeadroomProxy, Timeout for buffered Anthropic reads., Return tools in deterministic order to preserve prompt-cache stability., Return upstream tools, preserving client order for passthrough requests., Compress images only in the latest non-frozen user turn.          This avoids re (+204 more)
+Nodes (160): get_batch_context_store(), Get the global batch context store instance., AnthropicHandlerMixin, Deterministic sort key for Anthropic/OpenAI-style tool definitions., Return True when the final Anthropic tool list includes CCR retrieve., Extract observed Anthropic cache-write TTL bucket usage.          HeadroomProxy, Timeout for buffered Anthropic reads., Return tools in deterministic order to preserve prompt-cache stability. (+152 more)
 
 ### Community 420 - "Community 420"
 Cohesion: 0.04
-Nodes (83): Handler, append_text_to_latest_user_chat_message(), BodyMutationTracker, get_python_forwarder_mode(), prepare_outbound_body_bytes(), Return the active Python-forwarder mode.      Read at request time. Unknown valu, Re-serialize a request body deterministically with cache-stable formatting., Records whether a request body was mutated and why.      The forwarder reads ``m (+75 more)
+Nodes (81): Handler, append_text_to_latest_user_chat_message(), get_python_forwarder_mode(), prepare_outbound_body_bytes(), Return the active Python-forwarder mode.      Read at request time. Unknown valu, Re-serialize a request body deterministically with cache-stable formatting., Pick the outbound body bytes for a forwarder call.      Returns ``(outbound_byte, Append context text to the first text block of the latest user chat message. (+73 more)
 
 ### Community 421 - "Community 421"
-Cohesion: 0.10
-Nodes (18): IterationTrace, PipelineRunner, Resolve a value from the state dict.          Tries the dotted path first, then, Load lightweight project rules and CLAUDE.md from workspace root., Parse project_rules.md into sections., Compress markdown to headings, lists, tables, and short directives., Assemble the summarized project rules and CLAUDE.md into one system block., Return the shared system context for phases that must obey project-wide rules. (+10 more)
+Cohesion: 0.12
+Nodes (16): IterationTrace, PipelineRunner, Load lightweight project rules and CLAUDE.md from workspace root., Parse project_rules.md into sections., Compress markdown to headings, lists, tables, and short directives., Assemble the summarized project rules and CLAUDE.md into one system block., Return the shared system context for phases that must obey project-wide rules., True when figma-agent-core is present and Figma credentials are configured. (+8 more)
 
 ### Community 422 - "Community 422"
 Cohesion: 0.03
@@ -4583,19 +4644,19 @@ Nodes (57): get_sample_eval_cases(), HTMLEvalCase, HTMLEvalResult, HTMLEvalSuite
 
 ### Community 423 - "Community 423"
 Cohesion: 0.01
-Nodes (347): _magika_available(), Check if Magika is available without loading it., ContentSection, DetectionResult, is_tool_excluded(), Return True if ``name`` matches the tool-exclusion set.      Plain entries match, generate_python_code(), Parser is loaded after compression. (+339 more)
+Nodes (374): _magika_available(), Check if Magika is available without loading it., ContentSection, DetectionResult, PayloadSpec, One adversarial payload with its class label., is_tool_excluded(), Return True if ``name`` matches the tool-exclusion set.      Plain entries match (+366 more)
 
 ### Community 424 - "Community 424"
 Cohesion: 0.03
-Nodes (52): Tests for HTMLExtractor.  These are real tests using actual HTML content - no mo, Removes JavaScript content., Verifies significant compression ratio., Extracts page metadata., Tests for the is_html_content detection function., Handles empty HTML gracefully., Handles whitespace-only input., Detects HTML with DOCTYPE declaration. (+44 more)
+Nodes (55): Tests for HTMLExtractor.  These are real tests using actual HTML content - no mo, Removes JavaScript content., Verifies significant compression ratio., Extracts page metadata., Tests for the is_html_content detection function., Handles empty HTML gracefully., Handles whitespace-only input., Detects HTML with DOCTYPE declaration. (+47 more)
 
 ### Community 425 - "Community 425"
 Cohesion: 0.03
-Nodes (60): CCRToolInjector, Manages CCR tool injection into LLM requests.      This class handles:     1. De, Check if any compressed content was detected., Get list of detected compression hashes., Scan messages for compression markers and extract hashes.          Args:, Scan text for compression markers from any compressor., Inject CCR retrieval tool into tools list.          PR-B7 (`REALIGNMENT/04-phase, Inject retrieval instructions into system message.          Args:             me (+52 more)
+Nodes (46): CCRToolInjector, Manages CCR tool injection into LLM requests.      This class handles:     1. De, Check if any compressed content was detected., Get list of detected compression hashes., Scan messages for compression markers and extract hashes.          Args:, Scan text for compression markers from any compressor., Inject CCR retrieval tool into tools list.          PR-B7 (`REALIGNMENT/04-phase, Inject retrieval instructions into system message.          Args:             me (+38 more)
 
 ### Community 426 - "Community 426"
-Cohesion: 0.04
-Nodes (37): estimate_object_size(), MemoryReport, ProcessStats, Virtual memory size in MB., Available system memory in MB., Total system memory in MB., Convert to dictionary for JSON serialization., Complete memory report including process and component stats. (+29 more)
+Cohesion: 0.03
+Nodes (52): estimate_object_size(), MemoryReport, ProcessStats, Virtual memory size in MB., Available system memory in MB., Total system memory in MB., Convert to dictionary for JSON serialization., Complete memory report including process and component stats. (+44 more)
 
 ### Community 427 - "Community 427"
 Cohesion: 0.03
@@ -4610,48 +4671,48 @@ Cohesion: 0.04
 Nodes (49): _decode_project_path(), _greedy_path_decode(), Decode a Claude Code escaped project path., Greedily decode remaining path parts using real child directories., Unit tests for _greedy_path_decode — covers dot-in-path bug (GitHub.nosync)., Paths with dots (e.g. GitHub.nosync) must decode correctly.          Claude Code, Paths with literal hyphens decode correctly (existing behavior preserved)., Plain paths with no special chars still decode correctly. (+41 more)
 
 ### Community 430 - "Community 430"
-Cohesion: 0.07
-Nodes (69): _apply_mode_to_messages(), _assistant_blocks_from_content(), build_dataset_and_observed_from_files(), build_report_html(), build_report_markdown(), _canonical_block_key(), _checkpoint_path(), _checkpoint_path_for_session_id() (+61 more)
+Cohesion: 0.08
+Nodes (59): _assistant_blocks_from_content(), build_dataset_and_observed_from_files(), build_report_html(), build_report_markdown(), _canonical_block_key(), _checkpoint_path(), _checkpoint_path_for_session_id(), classify_metric_impact() (+51 more)
 
 ### Community 431 - "Community 431"
-Cohesion: 0.06
-Nodes (38): check_budget(), check_deployments(), check_proxy_liveness(), check_savings(), check_shell_env(), check_version_drift(), CheckResult, _classify_routing_url() (+30 more)
+Cohesion: 0.05
+Nodes (39): check_budget(), check_claude_routing(), check_codex_routing(), check_deployments(), check_proxy_liveness(), check_savings(), check_shell_env(), check_version_drift() (+31 more)
 
 ### Community 432 - "Community 432"
-Cohesion: 0.03
-Nodes (85): BackgroundTasks, _generate_narrative(), _load_or_export(), migrate_letta(), migrate_mem0(), migrate_supermemory(), MEMANTO CLI - Migrate from other memory providers into Memanto.  Replaces the ol, Prompt-or-fetch the provider API key the same way analyze used to. (+77 more)
+Cohesion: 0.05
+Nodes (60): BackgroundTasks, DirectClient, chunked(), load_export(), map_export(), MigrationSummary, Shared migration orchestrator.  Pipeline:     1. Load an export — either from di, Map + (optionally) batch-import.      Returns the summary and the mapped rows so (+52 more)
 
 ### Community 433 - "Community 433"
-Cohesion: 0.05
-Nodes (58): apply_to_messages(), _build_tool_use_index(), InterceptionResult, interceptor_failure_counts(), Protocol + registry + Transform adapter for tool_result interceptors., Add an interceptor to the registry. Idempotent on name., Scan once and build a dict of {tool_use_id: (tool_name, tool_input)}.      O(tot, Return the tool_use_id linked to a tool_result message. (+50 more)
+Cohesion: 0.04
+Nodes (62): apply_to_messages(), _build_tool_use_index(), InterceptionResult, interceptor_failure_counts(), Protocol + registry + Transform adapter for tool_result interceptors., Add an interceptor to the registry. Idempotent on name., Scan once and build a dict of {tool_use_id: (tool_name, tool_input)}.      O(tot, Return the tool_use_id linked to a tool_result message. (+54 more)
 
 ### Community 434 - "Community 434"
-Cohesion: 0.10
-Nodes (24): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Compress a list of chat messages before sending them to an LLM., Runtime configuration for Headroom context compression.      Values are read fro, Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed., Return a SharedContext instance for compressed inter-agent handoffs.          La (+16 more)
+Cohesion: 0.09
+Nodes (27): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Compress a list of chat messages before sending them to an LLM., Runtime configuration for Headroom context compression.      Values are read fro, Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed., Return a SharedContext instance for compressed inter-agent handoffs.          La (+19 more)
 
 ### Community 435 - "Community 435"
 Cohesion: 0.05
 Nodes (85): _load_init_module(), ``headroom init -v`` should emit diagnostic lines to stderr.      Different Clic, _ensure_codex_provider must write openai_base_url at the top level so that     s, `headroom init` injects `model_provider = "headroom"` for Codex, which     Codex, _strip_codex_init_block must remove both the managed block and any orphaned, Calling _enable_verbose_logging repeatedly keeps one handler attached., Backslash paths must become forward slashes so Git Bash hooks work (#724)., Paths with spaces must stay properly quoted after backslash normalization (#724) (+77 more)
 
 ### Community 436 - "Community 436"
-Cohesion: 0.09
-Nodes (42): _disable_serena_mcp(), _disable_tokensave_mcp(), _echo_unwrap_proxy_stop_status(), Remove Serena MCP only if the ledger proves Headroom installed it., Actively disable a Headroom-installed Serena entry, not merely skip it.      Ser, Register tokensave MCP with the given agent (idempotent).      Returns ``True``, Remove the tokensave MCP entry only if the ledger proves Headroom installed it., Make ``--no-tokensave`` actively remove a Headroom-installed tokensave entry. (+34 more)
+Cohesion: 0.07
+Nodes (53): _disable_serena_mcp(), _disable_tokensave_mcp(), _ignore_child_sigint(), Remove Serena MCP only if the ledger proves Headroom installed it., Actively disable a Headroom-installed Serena entry, not merely skip it.      Ser, Register tokensave MCP with the given agent (idempotent).      Returns ``True``, Remove the tokensave MCP entry only if the ledger proves Headroom installed it., Make ``--no-tokensave`` actively remove a Headroom-installed tokensave entry. (+45 more)
 
 ### Community 437 - "Community 437"
 Cohesion: 0.03
 Nodes (53): apply_mask_to_text(), compute_entropy_mask(), compute_entropy_mask_for_content(), EntropyScore, mask_to_spans(), MaskSpan, Structure mask system for compression.  A StructureMask identifies which parts o, Combine masks - preserve only if BOTH masks say preserve.          Useful for be (+45 more)
 
 ### Community 438 - "Community 438"
-Cohesion: 0.07
-Nodes (58): _ensure_profile_running(), Keep best-effort hook recovery from emitting invalid hook output., _suppress_hook_output(), Start or recover a matching persistent deployment for the requested port., Restart a persistent deployment after an idle stale-version detection., _recover_persistent_proxy(), _restart_persistent_proxy(), probe_ready() (+50 more)
+Cohesion: 0.04
+Nodes (89): install(), install_agent(), install_agent_ensure(), install_agent_run(), install_apply(), install_remove(), install_restart(), install_start() (+81 more)
 
 ### Community 439 - "Community 439"
 Cohesion: 0.04
-Nodes (78): _append_metric(), _escape_label_value(), _format_labels(), Prometheus-compatible metrics for the Headroom proxy.  Tracks request counts, to, Export metrics in Prometheus format., # NOTE: per-strategy compression breakdown is tracked, _is_base64_image_payload(), Request logger for the Headroom proxy.  Logs requests to an in-memory deque and (+70 more)
+Nodes (72): _is_base64_image_payload(), Request logger for the Headroom proxy.  Logs requests to an in-memory deque and, Return True if ``value`` is an over-threshold base64 image.      Per M2 remediat, Recursively redact base64-image payloads in a JSON-ish value.      Returns a new, Public entry point for base64-image redaction.      Walks ``payload`` (a dict, l, Log requests to JSONL file.      Uses a deque with max 10,000 entries to prevent, Log a request. Oldest entries are automatically removed when limit reached., Get recent log entries (without request/compressed messages and response_content (+64 more)
 
 ### Community 440 - "Community 440"
 Cohesion: 0.04
-Nodes (50): _check_sqlite_vec_available(), is_sqlite_vec_available(), SQLite vector index for Headroom Memory using sqlite-vec.  Provides vector simil, Serialize to JSON string., Deserialize from JSON string., Create metadata from a Memory object., Reconstruct a Memory object from metadata., SQLite-based vector index using sqlite-vec extension.      Features:     - Cosin (+42 more)
+Nodes (47): _check_sqlite_vec_available(), Serialize to JSON string., Deserialize from JSON string., Create metadata from a Memory object., Reconstruct a Memory object from metadata., SQLite-based vector index using sqlite-vec extension.      Features:     - Cosin, Initialize the SQLite vector index.          Args:             dimension: Embedd, Create a SQLite connection with sqlite-vec loaded. (+39 more)
 
 ### Community 441 - "Community 441"
 Cohesion: 0.06
@@ -4674,36 +4735,36 @@ Cohesion: 0.05
 Nodes (38): apply_verbosity_steering(), classify_turn(), OutputShaperSettings, Output token shaping for proxied Anthropic requests.  Headroom's transforms comp, Resolve the live verbosity level and its source.      Precedence:       1. ``HEA, What the shaper did to a request body., Classify the latest turn from message structure alone.      - Any text block in, The full steering block for a verbosity level, or None for level 0. (+30 more)
 
 ### Community 446 - "Community 446"
-Cohesion: 0.07
-Nodes (38): Mechanism B: hold-back Read maturation (compress before cache entry).      Motiv, ReadMaturationConfig, ReadMaturationConfig, ReadMaturationManager, call(), conv_base(), Live validation of Mechanism B's no-bust invariant against the real API.  The de, TestNoBustInvariantLive (+30 more)
+Cohesion: 0.06
+Nodes (38): InMemoryBackend, Get all hash keys in storage.          Returns:             List of all hash key, Get all entries as (hash_key, entry) pairs.          Returns:             List o, Get backend statistics.          Returns:             Dict with stats including, Thread-safe in-memory storage backend.      This is the default backend for Comp, Initialize the in-memory backend., Retrieve an entry by hash key.          Args:             hash_key: The unique h, Store an entry with the given hash key.          Args:             hash_key: The (+30 more)
 
 ### Community 447 - "Community 447"
 Cohesion: 0.07
-Nodes (61): CrushResult, IntoIter, IntoIterator, canonical_array_json(), canonical_json_for_match(), ccr_hash_changes_with_input(), ccr_hash_is_deterministic(), compaction_kind_str() (+53 more)
+Nodes (59): CrushResult, IntoIter, IntoIterator, canonical_array_json(), canonical_json_for_match(), ccr_hash_changes_with_input(), ccr_hash_is_deterministic(), compaction_kind_str() (+51 more)
 
 ### Community 448 - "Community 448"
-Cohesion: 0.02
-Nodes (111): OptimizationMetrics, History of optimization metrics., Metrics from a single optimization pass., Messages, __getattr__(), Strands Agents integration for Headroom SDK.  This module provides seamless inte, Check if strands-agents is installed and available.      Returns:         True i, Lazy import of integration components. (+103 more)
+Cohesion: 0.04
+Nodes (38): HeadroomStrandsModel, Forward config access to wrapped model (required by Strands Agent)., Total tokens saved across all calls., History of optimization metrics., Get the configuration of the wrapped model.          Returns:             The mo, Update the configuration of the wrapped model.          Args:             **mode, Get summary of token savings., Reset all tracked metrics (thread-safe).          Clears the metrics history and (+30 more)
 
 ### Community 449 - "Community 449"
-Cohesion: 0.04
-Nodes (74): _h(), Build a plain-dict header set in one expression., _CollectingLogger, _FunnelHarness, _outcome(), Tests for :class:`headroom.proxy.outcome.RequestOutcome` and the :meth:`Headroom, The ``client`` field is the proof point that the refactor pays     out across ha, ``None`` is the loud "unidentified" signal — downstream consumers     can group (+66 more)
+Cohesion: 0.10
+Nodes (26): Tests for :class:`headroom.proxy.outcome.RequestOutcome` and the :meth:`Headroom, Minimal kwargs for ``RequestOutcome.from_stream``; override per test., One of the six derivations the three finalizers each computed     inline. Centra, ``num_messages`` powers PERF ``msgs=N``. Computing it from the     body in one p, Empty body — e.g. a probe request — must yield num_messages=0,     not raise Key, The bug the helper is fixing: pre-refactor, only the Bedrock     finalizer calle, ``transforms_applied`` is typed as ``tuple[str, ...]`` on the     dataclass (fro, ``tags=None`` is the common case (no routing tags); the dataclass     contract i (+18 more)
 
 ### Community 450 - "Community 450"
-Cohesion: 0.03
-Nodes (41): _get_ollama_model(), large_conversation(), mock_agno_model(), mock_claude_model(), _ollama_available(), Comprehensive tests for Agno integration.  Tests cover: 1. HeadroomAgnoModel - W, Check if Ollama is running and has a model available., Get an available Ollama model for testing. (+33 more)
+Cohesion: 0.04
+Nodes (41): OptimizationMetrics, History of optimization metrics., Metrics from a single optimization pass., _get_ollama_model(), large_conversation(), mock_agno_model(), mock_claude_model(), _ollama_available() (+33 more)
 
 ### Community 451 - "Community 451"
 Cohesion: 0.03
 Nodes (41): JSONStructureHandler, Check if content is valid JSON., Handler for JSON content.      Preserves:     - All keys (navigational - LLM see, Initialize the JSON handler.          Args:             preserve_short_values: P, Tests for JSON structure handler., Test that long string values are marked compressible., Test that high-entropy values (UUIDs) are preserved., Test handling of nested objects. (+33 more)
 
 ### Community 452 - "Community 452"
-Cohesion: 0.05
-Nodes (79): MCPRegistrar, Abstract base for per-agent MCP registrars.  The MCP protocol itself is universa, Idempotently register an MCP server., Remove the named server. Returns True on success., Outcome of a :meth:`MCPRegistrar.register_server` call., Universal description of an MCP server to register.      Each registrar serializ, Outcome plus a human-readable detail string., True when the server is registered (newly or already). (+71 more)
+Cohesion: 0.09
+Nodes (45): MCPRegistrar, Abstract base for per-agent MCP registrars.  The MCP protocol itself is universa, Idempotently register an MCP server., Remove the named server. Returns True on success., Outcome of a :meth:`MCPRegistrar.register_server` call., Universal description of an MCP server to register.      Each registrar serializ, Outcome plus a human-readable detail string., True when the server is registered (newly or already). (+37 more)
 
 ### Community 453 - "Community 453"
-Cohesion: 0.05
-Nodes (34): AgentCapability, Mem0Backend, Mem0 backend adapter for Headroom's hierarchical memory system.  Provides integr, Initialize the Mem0 backend.          Args:             config: Configuration fo, Ensure Mem0 client is initialized.          Returns:             The initialized, Convert Memory object to Mem0 metadata dict.          Args:             memory:, Convert Mem0 result dict to Memory object.          Args:             result: Th, Build Mem0 filter dict from MemoryFilter or VectorFilter.          Args: (+26 more)
+Cohesion: 0.04
+Nodes (50): Mem0Backend, Mem0 backend adapter for Headroom's hierarchical memory system.  Provides integr, Initialize the Mem0 backend.          Args:             config: Configuration fo, Ensure Mem0 client is initialized.          Returns:             The initialized, Convert Memory object to Mem0 metadata dict.          Args:             memory:, Convert Mem0 result dict to Memory object.          Args:             result: Th, Build Mem0 filter dict from MemoryFilter or VectorFilter.          Args:, Save a memory to Mem0.          Maps to mem0.add().          Args:             m (+42 more)
 
 ### Community 454 - "Community 454"
 Cohesion: 0.08
@@ -4714,20 +4775,20 @@ Cohesion: 0.08
 Nodes (72): Tests for `headroom wrap opencode` and `headroom unwrap opencode`., If the opencode binary is missing the command must fail with a clear error., `wrap opencode --prepare-only` writes the provider config to opencode.json., `--no-mcp` skips MCP server injection., MCP is included in OPENCODE_CONFIG_CONTENT by default., RTK instructions are injected into global and project AGENTS.md., Running wrap twice must not duplicate the RTK block in AGENTS.md., Unwrap restores the pre-wrap backup and removes it. (+64 more)
 
 ### Community 456 - "Community 456"
-Cohesion: 0.05
-Nodes (34): default_db_path(), SQLite storage backend for CompressionStore.  Default backend for the CCR store., Only genuine file corruption justifies recreating the database.          ``sqlit, Corruption → recreate (loud). Anything else (busy/locked/io) →         log and t, Delete expired rows; called opportunistically under the lock., Resolve the database path (env override or ~/.headroom/)., Thread-safe SQLite storage backend (WAL mode).      Entries are serialized as on, SQLiteBackend (+26 more)
+Cohesion: 0.04
+Nodes (36): default_db_path(), SQLite storage backend for CompressionStore.  Default backend for the CCR store., Only genuine file corruption justifies recreating the database.          ``sqlit, Corruption → recreate (loud). Anything else (busy/locked/io) →         log and t, Delete expired rows; called opportunistically under the lock., Resolve the database path (env override or ~/.headroom/)., Thread-safe SQLite storage backend (WAL mode).      Entries are serialized as on, SQLiteBackend (+28 more)
 
 ### Community 457 - "Community 457"
-Cohesion: 0.05
-Nodes (66): generate_agentic_conversation(), generate_anthropic_agentic_conversation(), _generate_api_doc(), _generate_assistant_summary(), _generate_config_doc(), _generate_faq_doc(), _generate_rag_answer(), _generate_rag_context() (+58 more)
+Cohesion: 0.09
+Nodes (34): generate_agentic_conversation(), generate_anthropic_agentic_conversation(), _generate_api_doc(), _generate_assistant_summary(), _generate_config_doc(), _generate_faq_doc(), _generate_rag_answer(), _generate_rag_context() (+26 more)
 
 ### Community 458 - "Community 458"
 Cohesion: 0.05
-Nodes (53): BatchCompressionEvaluator, BatchEvalResult, BatchEvalSuiteResult, BatchRequest, BatchTestCase, evaluate_token_counting_accuracy(), generate_code_understanding_test_cases(), generate_factual_test_cases() (+45 more)
+Nodes (55): BatchCompressionEvaluator, BatchEvalResult, BatchEvalSuiteResult, BatchRequest, BatchTestCase, evaluate_token_counting_accuracy(), generate_code_understanding_test_cases(), generate_factual_test_cases() (+47 more)
 
 ### Community 459 - "Community 459"
 Cohesion: 0.04
-Nodes (55): Clear active mid-turn state, optionally returning queued messages., Extract observed Anthropic cache-write TTL bucket usage., Parse usage information from SSE chunk.          For Anthropic: Looks for messag, Stream response from Bedrock backend with metrics tracking.          Translates, Stream OpenAI chat completion response from backend.          Routes stream:true, Parse usage from buffered SSE data, handling split chunks.          Processes co, Parse SSE data to reconstruct the API response JSON.          Args:, Convert a response dict back to SSE format.          Args:             response: (+47 more)
+Nodes (43): Clear active mid-turn state, optionally returning queued messages., Extract observed Anthropic cache-write TTL bucket usage., Parse usage information from SSE chunk.          For Anthropic: Looks for messag, Stream response from Bedrock backend with metrics tracking.          Translates, Stream OpenAI chat completion response from backend.          Routes stream:true, Parse usage from buffered SSE data, handling split chunks.          Processes co, Parse SSE data to reconstruct the API response JSON.          Args:, Convert a response dict back to SSE format.          Args:             response: (+35 more)
 
 ### Community 460 - "Community 460"
 Cohesion: 0.03
@@ -4739,23 +4800,23 @@ Nodes (42): BTreeSet, Default, HashSet, Option, Self, String, AnchorSelector, An
 
 ### Community 462 - "Community 462"
 Cohesion: 0.06
-Nodes (70): _apply_user_env(), _claude_scope_path(), _codex_dotted_feature_block(), _codex_feature_block(), _codex_features(), _codex_features_has_hooks(), _codex_features_table_index(), _codex_hooks_path() (+62 more)
+Nodes (73): _apply_user_env(), _claude_scope_path(), _codex_dotted_feature_block(), _codex_feature_block(), _codex_features(), _codex_features_has_hooks(), _codex_features_table_index(), _codex_hooks_path() (+65 more)
 
 ### Community 463 - "Community 463"
 Cohesion: 0.06
-Nodes (67): _default_db_path(), Resolve the memory DB the proxy/install actually use.      Prefer the project-sc, beacon_lock_path(), bin_dir(), bridge_state_path(), codex_wire_debug_dir(), config_dir(), debug_400_dir() (+59 more)
+Nodes (65): _default_db_path(), Resolve the memory DB the proxy/install actually use.      Prefer the project-sc, beacon_lock_path(), bin_dir(), bridge_state_path(), codex_wire_debug_dir(), config_dir(), debug_400_dir() (+57 more)
 
 ### Community 464 - "Community 464"
 Cohesion: 0.02
-Nodes (173): EvalCase, EvalMode, EvalResult, CompressionEvaluator, EvalCase, EvalMode, EvalResult, EvalSuite (+165 more)
+Nodes (149): EvalCase, EvalMode, EvalResult, CompressionEvaluator, EvalCase, EvalMode, EvalResult, EvalSuite (+141 more)
 
 ### Community 465 - "Community 465"
-Cohesion: 0.07
-Nodes (31): Block, Block, Atomic unit of context analysis., Detected waste signals in a request., Total waste tokens detected., Convert to dictionary for storage., WasteSignals, _canonical_call_key() (+23 more)
+Cohesion: 0.06
+Nodes (34): Block, Block, Atomic unit of context analysis., _canonical_call_key(), _coerce_tool_call_to_dict(), compute_hash(), _extract_tool_result_text(), find_tool_units() (+26 more)
 
 ### Community 466 - "Community 466"
 Cohesion: 0.07
-Nodes (30): parse_messages(), Parse all messages into blocks with analysis.      Args:         messages: List, Tests for re-issued-call (arg-match) reread detection in parse_messages., Mirror mock_tokenizer + message overhead used for tool_result blocks., Interleaved turns that push a repeat beyond the polling gap., Identical call re-issued far apart counts even when result bytes differ., Byte-identical repeat is counted once (content-hash pass wins)., Back-to-back identical calls (poll loop) are not re-reads. (+22 more)
+Nodes (31): parse_messages(), Parse all messages into blocks with analysis.      Args:         messages: List, Tests for re-issued-call (arg-match) reread detection in parse_messages., Mirror mock_tokenizer + message overhead used for tool_result blocks., Interleaved turns that push a repeat beyond the polling gap., Identical call re-issued far apart counts even when result bytes differ., Byte-identical repeat is counted once (content-hash pass wins)., Back-to-back identical calls (poll loop) are not re-reads. (+23 more)
 
 ### Community 467 - "Community 467"
 Cohesion: 0.08
@@ -4770,8 +4831,8 @@ Cohesion: 0.07
 Nodes (60): Pricing, Run-level (not per-task) savings, read from the ``/stats`` lifetime snapshot agg, USD per 1M tokens for the pinned model snapshot. Injected via config — never a l, Per-task Layer-1 savings, parsed from the per-response ``x-headroom-*`` headers., Build from raw token counts, deriving saved/percent/ratio/cost. Guards divide-by, RunSavings, TaskSavings, _coerce_int() (+52 more)
 
 ### Community 470 - "Community 470"
-Cohesion: 0.06
-Nodes (30): create_headroom_hooks(), HeadroomPostHook, HeadroomPreHook, HookMetrics, Agno hooks for Headroom integration.  This module provides pre_hooks and post_ho, History of optimization metrics (thread-safe copy)., Track the run input.          This is called by Agno before the LLM processes th, Get summary of token savings (thread-safe). (+22 more)
+Cohesion: 0.05
+Nodes (38): create_headroom_hooks(), HeadroomPostHook, HeadroomPreHook, HookMetrics, Agno hooks for Headroom integration.  This module provides pre_hooks and post_ho, History of optimization metrics (thread-safe copy)., Track the run input.          This is called by Agno before the LLM processes th, Get summary of token savings (thread-safe). (+30 more)
 
 ### Community 471 - "Community 471"
 Cohesion: 0.05
@@ -4786,24 +4847,24 @@ Cohesion: 0.09
 Nodes (55): BTreeMap, CcrStore, Default, Option, Regex, Self, String, DiffCompressionResult (+47 more)
 
 ### Community 474 - "Community 474"
-Cohesion: 0.11
-Nodes (12): FileSystemTOINBackend, Filesystem storage backend for TOIN.  Stores TOIN patterns as a JSON file with a, Filesystem-backed TOIN storage using atomic JSON writes.      Characteristics:, Load TOIN data from the JSON file.          Returns:             Parsed JSON dat, Save TOIN data to the JSON file with atomic write.          Uses a temporary fil, fs_backend(), save() creates parent directories if they don't exist., If save fails mid-write, original data is preserved. (+4 more)
+Cohesion: 0.03
+Nodes (41): FileSystemTOINBackend, Filesystem storage backend for TOIN.  Stores TOIN patterns as a JSON file with a, Filesystem-backed TOIN storage using atomic JSON writes.      Characteristics:, Load TOIN data from the JSON file.          Returns:             Parsed JSON dat, Save TOIN data to the JSON file with atomic write.          Uses a temporary fil, _clean_globals(), fs_backend(), _make_tool_signature() (+33 more)
 
 ### Community 475 - "Community 475"
 Cohesion: 0.04
 Nodes (63): api_responses_100(), cache_aligner_config(), conversation_10_turns(), conversation_200_turns(), conversation_50_turns(), database_rows_100(), database_rows_1000(), items_100() (+55 more)
 
 ### Community 476 - "Community 476"
-Cohesion: 0.02
-Nodes (135): CacheOptimizerConfig, CachePrefixMetrics, CCRConfig, CompressionProfile, DiffArtifact, Configuration models for Headroom SDK., Configuration for relevance scoring in SmartCrusher.      Relevance scoring dete, Per-tool compression bias applied to statistically-determined K.      Instead of (+127 more)
+Cohesion: 0.11
+Nodes (20): _FailingTransform, _filler_messages(), _FlakyTransform, _InflatingPipeline, Compression safety rails (issue #847).  Three rails, each of which only ever mak, Grep-style output mentioning "error" must not skip compression., `"errors": []` JSON without `is_error` must not skip compression., The explicit `is_error` flag needs no indicator corroboration. (+12 more)
 
 ### Community 477 - "Community 477"
-Cohesion: 0.07
-Nodes (28): apply_global_tls_relaxation(), find_ca_bundle(), Return a CA verification target for httpx's ``verify=`` parameter.      ``SSL_CE, Strip ``VERIFY_X509_STRICT`` from urllib3's context builder when opted in., True when ``HEADROOM_TLS_STRICT`` opts out of OpenSSL strict mode.      Default, tls_strict_disabled(), ca_pem_file(), _clean_env() (+20 more)
+Cohesion: 0.06
+Nodes (42): _additive_ca_context(), apply_global_tls_relaxation(), build_httpx_verify(), _clear_x509_strict(), _default_strict_relaxed_context(), find_ca_bundle(), SSL context builder for the Headroom upstream httpx client.  Respects the standa, Build an additive trust-store context from a CA bundle path. (+34 more)
 
 ### Community 478 - "Community 478"
-Cohesion: 0.07
-Nodes (57): BackendRouter, LocalBackendConfig, Lock, BackendRouter, BackendRouterConfig, extract_system_prompt(), MemoryStorageMode, ProjectResolver (+49 more)
+Cohesion: 0.08
+Nodes (32): __getattr__(), Strands Agents integration for Headroom SDK.  This module provides seamless inte, Check if strands-agents is installed and available.      Returns:         True i, Lazy import of integration components., strands_available(), _check_strands_available(), OptimizationMetrics, optimize_messages() (+24 more)
 
 ### Community 479 - "Community 479"
 Cohesion: 0.12
@@ -4811,7 +4872,7 @@ Nodes (27): compute_turn_id(), Group all agent-loop API calls triggered by a sin
 
 ### Community 480 - "Community 480"
 Cohesion: 0.08
-Nodes (32): MemantoStore, MemantoStore - a LangGraph BaseStore backed by Memanto.  Compile the graph with, Initialize MemantoStore with an API key., Execute a batch of store operations synchronously., Execute a batch of store operations asynchronously., Lookup a single memory by key.          Uses ``recall_recent`` first (no semanti, Persist a ``PutOp.value`` as a Memanto memory.          When no ``kind``/``type`, Retrieve memories matching the namespace.          Uses ``recall_recent`` for wi (+24 more)
+Nodes (33): BaseStore, MemantoStore, MemantoStore - a LangGraph BaseStore backed by Memanto.  Compile the graph with, Initialize MemantoStore with an API key., Execute a batch of store operations synchronously., Execute a batch of store operations asynchronously., Lookup a single memory by key.          Uses ``recall_recent`` first (no semanti, Persist a ``PutOp.value`` as a Memanto memory.          When no ``kind``/``type` (+25 more)
 
 ### Community 481 - "Community 481"
 Cohesion: 0.06
@@ -4823,7 +4884,7 @@ Nodes (10): _bash_binaries_match(), _commands_related_as_retry(), _levenshtein()
 
 ### Community 483 - "Community 483"
 Cohesion: 0.06
-Nodes (36): MemoryToolAdapter, MemoryToolAdapterConfig, Memory tool adapter for multi-provider support.  This module provides a unified, Handle STR_REPLACE command - update memory content., Handle DELETE command - remove from vector store., Perform semantic search and format results., Get memory overview with search instructions., Execute a custom memory tool. (+28 more)
+Nodes (34): MemoryToolAdapter, Memory tool adapter for multi-provider support.  This module provides a unified, Handle STR_REPLACE command - update memory content., Handle DELETE command - remove from vector store., Perform semantic search and format results., Get memory overview with search instructions., Execute a custom memory tool., Execute memory_save tool. (+26 more)
 
 ### Community 484 - "Community 484"
 Cohesion: 0.10
@@ -4838,12 +4899,12 @@ Cohesion: 0.07
 Nodes (25): _check_langchain_available(), HeadroomLangSmithCallbackHandler, PendingMetrics, Initialize HeadroomLangSmithCallbackHandler.          Args:             langsmit, Set Headroom metrics for a run.          Call this from HeadroomChatModel after, Called when chat model starts.          Records the run ID for later metric atta, Called when LLM completes.          Attaches pending Headroom metrics to the Lan, Attach Headroom metrics to a LangSmith run.          Args:             run_id: T (+17 more)
 
 ### Community 487 - "Community 487"
-Cohesion: 0.08
-Nodes (47): Persistent install / deployment helpers for Headroom., ConfigScope, DeploymentManifest, InstallPreset, ProviderSelectionMode, Models used by the install / deployment subsystem., User-facing persistent runtime presets., How a persistent deployment is kept alive. (+39 more)
+Cohesion: 0.05
+Nodes (30): large_conversation(), mock_strands_model(), Unit tests for Strands HeadroomStrandsModel.  These tests use mocks and do NOT r, Tests for TransformPipeline lazy initialization., Pipeline is not created until first access., Create a mock Strands model., Tests for get_savings_summary method., Returns zero values when no metrics recorded. (+22 more)
 
 ### Community 488 - "Community 488"
-Cohesion: 0.10
-Nodes (41): _codex_lite_headers(), _DummyOpenAIHandler, _FakeWebSocket, _first_frame(), _make_fake_websockets_module(), Unit 3: WebSocket session lifecycle + deterministic relay cancellation.  These t, Scripted client WebSocket that can delay / disconnect mid-stream., Build a fake ``websockets`` module.      Production now does ``upstream = await (+33 more)
+Cohesion: 0.08
+Nodes (45): _codex_lite_headers(), _DummyOpenAIHandler, _FakeUpstream, _FakeWebSocket, _first_frame(), _make_fake_websockets_module(), Unit 3: WebSocket session lifecycle + deterministic relay cancellation.  These t, Scripted client WebSocket that can delay / disconnect mid-stream. (+37 more)
 
 ### Community 489 - "Community 489"
 Cohesion: 0.03
@@ -4854,16 +4915,16 @@ Cohesion: 0.10
 Nodes (32): _cache_path(), _env_off(), _env_on(), fetch_latest_version(), format_update_notice(), _in_docker(), installed_version(), _is_source_checkout() (+24 more)
 
 ### Community 491 - "Community 491"
-Cohesion: 0.13
-Nodes (43): CompressionPipelineBuilder, AlwaysInternalError, builder_dispatches_by_applies_to(), builder_preserves_registration_order_for_offloads(), CompressionPipeline, CompressionPipelineBuilder, ctx(), empty_input_returns_empty_output() (+35 more)
+Cohesion: 0.29
+Nodes (27): CompressionPipelineBuilder, builder_dispatches_by_applies_to(), builder_preserves_registration_order_for_offloads(), ctx(), empty_input_returns_empty_output(), empty_pipeline_passes_input_through(), end_to_end_diff_noise_drops_lockfile_then_diff_offload_handles_rest(), end_to_end_diff_offload_compresses_context_heavy_diff() (+19 more)
 
 ### Community 492 - "Community 492"
-Cohesion: 0.12
-Nodes (31): _bucket_start(), _coerce_float(), _coerce_int(), _empty_display_session(), _empty_project_entry(), get_default_savings_storage_path(), _normalize_display_session(), _normalize_history_entry() (+23 more)
+Cohesion: 0.10
+Nodes (39): _bucket_start(), _coerce_float(), _coerce_int(), _empty_display_session(), _empty_project_entry(), _estimate_compression_savings_usd(), _estimate_input_cost_usd(), get_default_savings_storage_path() (+31 more)
 
 ### Community 493 - "Community 493"
-Cohesion: 0.15
-Nodes (30): _FakeResult, _FakeUpstream, _forwarded(), _install_fake_client(), _make_config(), _paths(), Tests for the AWS Bedrock InvokeModel passthrough handler.  Covers the routes re, Return (url, parsed_json_body_or_raw) handed to build_request. (+22 more)
+Cohesion: 0.06
+Nodes (20): Delete a memory from the backend.          Args:             memory_id: ID of th, Retrieve a specific memory by ID.          Args:             memory_id: The memo, Get the memory tool definitions for LLM function calling.          Args:, Process a tool call from the LLM.          Dispatches the tool call to the appro, Save a new memory.          Args:             content: The information to rememb, Search for relevant memories.          Args:             query: Natural language, Update an existing memory.          Args:             memory_id: ID of the memor, Save a new memory to the backend.          Args:             content: The memory (+12 more)
 
 ### Community 494 - "Community 494"
 Cohesion: 0.07
@@ -4883,7 +4944,7 @@ Nodes (40): estimate_ingestion_cost(), Shared ingestion-tax estimates for provid
 
 ### Community 498 - "Community 498"
 Cohesion: 0.05
-Nodes (44): _activate_output_shaper(), _AgentChoice, learn(), _make_llm_judge(), CLI commands for Headroom Learn — offline failure learning., Learn from past tool call failures to prevent future ones.      Analyzes convers, Dynamic Click type that validates against the plugin registry., Build an LLM judge callable for verbosity, or None if unavailable.      The judg (+36 more)
+Nodes (46): _activate_output_shaper(), _AgentChoice, learn(), _make_llm_judge(), CLI commands for Headroom Learn — offline failure learning., Learn from past tool call failures to prevent future ones.      Analyzes convers, Dynamic Click type that validates against the plugin registry., Build an LLM judge callable for verbosity, or None if unavailable.      The judg (+38 more)
 
 ### Community 499 - "Community 499"
 Cohesion: 0.10
@@ -4899,7 +4960,7 @@ Nodes (43): IndexDatapoint, Restriction, Any, Document, config(), list() must ca
 
 ### Community 502 - "Community 502"
 Cohesion: 0.02
-Nodes (115): SQLite FTS5 full-text search index for Headroom Memory.  Provides fast, local fu, HierarchicalMemory, Core HierarchicalMemory orchestrator for Headroom.  This module provides the mai, Create a HierarchicalMemory instance from configuration.          This is the re, Add a new memory to the system.          Creates a memory with the specified con, Add multiple memories in a batch operation.          More efficient than calling, Get a memory by ID.          Checks cache first, then falls back to store., Query memories with filtering.          Args:             filter: Filter criteri (+107 more)
+Nodes (133): SQLite FTS5 full-text search index for Headroom Memory.  Provides fast, local fu, SQLite vector index for Headroom Memory using sqlite-vec.  Provides vector simil, Mem0Config, Configuration for Mem0 backend.      Qdrant connection fields default to values, HierarchicalMemory, Core HierarchicalMemory orchestrator for Headroom.  This module provides the mai, Create a HierarchicalMemory instance from configuration.          This is the re, Add a new memory to the system.          Creates a memory with the specified con (+125 more)
 
 ### Community 503 - "Community 503"
 Cohesion: 0.05
@@ -4931,15 +4992,15 @@ Nodes (32): Initialize LiteLLM token counter.          Args:             model: 
 
 ### Community 510 - "Community 510"
 Cohesion: 0.02
-Nodes (116): AnonymizedToolStats, CompressionEvent, FieldDistribution, format_telemetry_notice(), is_telemetry_enabled(), is_telemetry_warn_enabled(), Telemetry opt-in state for Headroom.  Headroom collects only **local**, aggregat, Check if local telemetry collection is enabled (off by default, opt-in).      Fa (+108 more)
+Nodes (100): AnonymizedToolStats, CompressionEvent, FieldDistribution, is_telemetry_enabled(), Telemetry opt-in state for Headroom.  Headroom collects only **local**, aggregat, Check if local telemetry collection is enabled (off by default, opt-in).      Fa, get_telemetry_collector(), TelemetryCollector for privacy-preserving statistics collection.  This module co (+92 more)
 
 ### Community 511 - "Community 511"
 Cohesion: 0.04
 Nodes (41): anthropic_api_key(), anthropic_batch_client(), create_large_messages(), openai_api_key(), openai_batch_client(), Integration tests for proxy batch APIs with compression.  These tests verify tha, Test OpenAI /v1/batches create endpoint with compression., POST /v1/batches without input_file_id returns validation error. (+33 more)
 
 ### Community 512 - "Community 512"
-Cohesion: 0.09
-Nodes (17): Backend, AnyLLMBackend, Convert Anthropic content blocks to OpenAI format., Convert any-llm/OpenAI response to Anthropic format., Send message via any-llm., Stream message via any-llm., Backend using any-llm for multi-provider support., Send OpenAI-format message via any-llm (no conversion). (+9 more)
+Cohesion: 0.10
+Nodes (16): Backend, AnyLLMBackend, Convert Anthropic content blocks to OpenAI format., Convert any-llm/OpenAI response to Anthropic format., Send message via any-llm., Stream message via any-llm., Backend using any-llm for multi-provider support., Send OpenAI-format message via any-llm (no conversion). (+8 more)
 
 ### Community 513 - "Community 513"
 Cohesion: 0.06
@@ -4955,7 +5016,7 @@ Nodes (24): cache(), Tests for CompressionCache with LRU eviction., Plain user/a
 
 ### Community 516 - "Community 516"
 Cohesion: 0.06
-Nodes (71): ArtifactRecord, ArtifactRecord, iso_utc_now(), ManagedMutation, Return the current UTC timestamp in ISO-8601 format., A reversible change applied by `headroom install`., A rendered file or platform object owned by the deployment., deploy_root() (+63 more)
+Nodes (70): DeploymentManifest, iso_utc_now(), ManagedMutation, Return the current UTC timestamp in ISO-8601 format., A reversible change applied by `headroom install`., Persisted deployment state for a named profile., deploy_root(), log_path() (+62 more)
 
 ### Community 517 - "Community 517"
 Cohesion: 0.07
@@ -4963,15 +5024,15 @@ Nodes (37): Cli, Cmd, first_line(), main(), Cmd, main(), builtin_comparators(), 
 
 ### Community 518 - "Community 518"
 Cohesion: 0.04
-Nodes (36): mock_base_history(), mock_provider(), Tests for LangChain memory integration with automatic compression.  Tests cover:, messages property returns empty list when no messages., messages returns uncompressed when below token threshold., messages applies compression when over token threshold., Compression tracks tokens saved., Tests for add_message methods. (+28 more)
+Nodes (36): mock_base_history(), mock_provider(), Tests for LangChain memory integration with automatic compression.  Tests cover:, Tests for message format conversion., Convert SystemMessage to OpenAI format., Convert HumanMessage to OpenAI format., Convert AIMessage to OpenAI format., Convert AIMessage with tool_calls to OpenAI format. (+28 more)
 
 ### Community 519 - "Community 519"
-Cohesion: 0.06
-Nodes (48): get_strip_internal_headers_mode(), Return the active internal-header strip mode.      Read at request time so opera, Return a copy of ``headers`` with internal ``x-headroom-*`` keys stripped., _strip_internal_headers(), StripInternalHeadersMode, _CapturingTransport, _FakePrefixTracker, _make_anthropic_app() (+40 more)
+Cohesion: 0.05
+Nodes (46): get_strip_internal_headers_mode(), Return the active internal-header strip mode.      Read at request time so opera, StripInternalHeadersMode, _CapturingTransport, _FakePrefixTracker, _make_anthropic_app(), Header-isolation tests for PR-A5 (P5-49 fix).  `x-headroom-*` request headers ar, Headers without the internal prefix must NOT be stripped. (+38 more)
 
 ### Community 520 - "Community 520"
-Cohesion: 0.04
-Nodes (58): create_app(), Create FastAPI application., _jwt(), Issue #478: under Codex ChatGPT-subscription OAuth, the proxy     must NOT forwa, test_codex_model_metadata_fetches_codex_registry_for_chatgpt_auth(), test_codex_responses_aliases_delegate_to_openai_handler(), test_codex_responses_subpath_aliases_delegate_to_passthrough(), test_codex_responses_subpath_passthrough_derives_chatgpt_routing_from_jwt() (+50 more)
+Cohesion: 0.05
+Nodes (68): create_app(), Create FastAPI application., _FakeResult, _FakeUpstream, _forwarded(), _install_fake_client(), _make_config(), _paths() (+60 more)
 
 ### Community 521 - "Community 521"
 Cohesion: 0.07
@@ -4998,8 +5059,8 @@ Cohesion: 0.10
 Nodes (28): Box, BTreeMap, CcrStore, D, Default, Into, LineImportanceDetector, Option (+20 more)
 
 ### Community 527 - "Community 527"
-Cohesion: 0.06
-Nodes (42): GeminiModelLike, mockFetch, withHeadroom(), OpenAILike, mockFetch, withHeadroom(), compressVercelMessages(), headroomMiddleware() (+34 more)
+Cohesion: 0.08
+Nodes (24): GeminiModelLike, mockFetch, withHeadroom(), OpenAILike, mockFetch, withHeadroom(), compress(), CompressContext (+16 more)
 
 ### Community 528 - "Community 528"
 Cohesion: 0.10
@@ -5014,56 +5075,56 @@ Cohesion: 0.07
 Nodes (40): extract_tenant_from_auth(), Extract tenant from Authorization header, explain_memory_retrieval(), export_memories(), get_memory_statistics(), Universal Adoption Endpoints, Export memories by scope for audits and migrations      Provides complete memory, Get memory usage statistics for the tenant      Returns:     - Total memory coun (+32 more)
 
 ### Community 531 - "Community 531"
-Cohesion: 0.09
-Nodes (10): _litellm_cost(), Compute input cost via litellm.cost_per_token (cache-aware).      Returns total, Resolve model name to one LiteLLM recognizes, adding provider prefix if needed., resolve_litellm_model(), Tests for DeepSeek model pricing and cost estimation., If litellm upstream already has these, our injection is a no-op., Tests that Anthropic provider's _get_pricing handles DeepSeek models., Tests for DeepSeek V4 pricing injection into litellm. (+2 more)
+Cohesion: 0.13
+Nodes (9): _litellm_cost(), Compute input cost via litellm.cost_per_token (cache-aware).      Returns total, Resolve model name to one LiteLLM recognizes, adding provider prefix if needed., Uncached resolution — called once per unique model name., resolve_litellm_model(), _resolve_litellm_model_uncached(), If litellm upstream already has these, our injection is a no-op., Tests for DeepSeek V4 pricing injection into litellm. (+1 more)
 
 ### Community 532 - "Community 532"
 Cohesion: 0.20
 Nodes (9): _make_config(), _make_signature(), observations increments even when sample_size < min_samples., get_recommendation() should NOT increment for unknown patterns., Create a TOIN config for testing., Create a minimal ToolSignature for testing., get_recommendation() should increment observations when pattern exists., ToolSignature (+1 more)
 
 ### Community 533 - "Community 533"
-Cohesion: 0.08
-Nodes (18): CacheMissAttribution, PrefixCacheTracker, Tracks provider prefix cache state across turns in a session.      Usage:, How many leading messages to skip compression on the next turn.          Returns, Update tracker with cache metrics from the API response.          Called after e, Effective prompt-cache lifetime for this session's provider., Attribute *this turn's* cache outcome: hit, TTL lapse, or prefix change., True if last turn's forwarded prefix is still an exact prefix of this turn's. (+10 more)
+Cohesion: 0.05
+Nodes (54): _collect_real_processed_events(), _corpus_fingerprint(), _excerpt_content(), _git_output(), main(), _message_preview(), parse_args(), _redact_path() (+46 more)
 
 ### Community 534 - "Community 534"
 Cohesion: 0.04
 Nodes (50): Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria (+42 more)
 
 ### Community 535 - "Community 535"
-Cohesion: 0.06
-Nodes (64): RouterCompressionResult, test_unit_router_receives_agent_target_ratio(), _compress(), Determinism regression test for the compression pipeline.  Prefix caching at Ant, Two independent runs of every fixture must produce identical     bytes. Fresh `C, Within one router, two calls on the same content must return     identical bytes, Companion guarantee to determinism: protected roles never see     any compressor, Stand-in tokenizer — matches the production token-counter protocol     used by ` (+56 more)
+Cohesion: 0.23
+Nodes (18): _handler_with_router(), Regression for #940: outputs for HEADROOM_EXCLUDE_TOOLS tools stay raw.      The, Excluded match is case-insensitive, and the debug path stays exercised.      The, Only excluded tools are protected; other tool outputs still compress., test_openai_responses_adapter_accepts_empty_input_list(), test_openai_responses_adapter_compresses_custom_tool_call_output(), test_openai_responses_adapter_compresses_non_excluded_tool_outputs(), test_openai_responses_adapter_compresses_only_live_text_slots() (+10 more)
 
 ### Community 536 - "Community 536"
 Cohesion: 0.07
 Nodes (30): _large_code_content(), _make_assistant_msg(), _make_openai_tool_msg(), _make_tool_result_msg(), _make_tool_use_msg(), _make_user_msg(), Integration tests for token mode (legacy token_headroom behavior).  Tests the Co, Messages age out progressively across turns. (+22 more)
 
 ### Community 537 - "Community 537"
-Cohesion: 0.07
-Nodes (29): Serialize numpy array to bytes for BLOB storage., Deserialize bytes back to numpy array., Convert Memory object to row dict for insertion., Convert database row to Memory object., Save or update a memory.          If a memory with the same ID exists, it will b, Save multiple memories in a single transaction.          Args:             memor, Retrieve a memory by ID.          Args:             memory_id: The unique identi, Retrieve multiple memories by ID.          Args:             memory_ids: List of (+21 more)
+Cohesion: 0.05
+Nodes (43): Thread-safe LRU cache for hot memories in Headroom Memory.  Provides O(1) get/se, SQLite memory store for Headroom's hierarchical memory system.  Provides persist, Serialize numpy array to bytes for BLOB storage., Deserialize bytes back to numpy array., Convert Memory object to row dict for insertion., Convert database row to Memory object., Save or update a memory.          If a memory with the same ID exists, it will b, Save multiple memories in a single transaction.          Args:             memor (+35 more)
 
 ### Community 538 - "Community 538"
-Cohesion: 0.13
-Nodes (28): install(), install_agent(), install_agent_ensure(), install_agent_run(), install_apply(), install_remove(), install_restart(), install_start() (+20 more)
+Cohesion: 0.09
+Nodes (23): AnthropicLike, mockFetch, withHeadroom(), compressVercelMessages(), headroomMiddleware(), LanguageModel, mockFetch, VercelMessage (+15 more)
 
 ### Community 539 - "Community 539"
-Cohesion: 0.32
-Nodes (16): _collect_real_processed_events(), _corpus_fingerprint(), _excerpt_content(), _git_output(), main(), _message_preview(), parse_args(), _redact_path() (+8 more)
+Cohesion: 0.11
+Nodes (32): Benchmark scenario generators for Headroom SDK.  This package provides realistic, _format_template(), generate_api_responses(), _generate_attributes(), generate_database_rows(), generate_log_entries(), _generate_metric_row(), _generate_name() (+24 more)
 
 ### Community 540 - "Community 540"
 Cohesion: 0.15
 Nodes (49): Group, _clear_copilot_env(), _expected_project_prefix(), Tests for `headroom wrap copilot` command., Unit lock for #610: routing is override -> generic and must NOT depend on a, The /p/<name> prefix the wrap now embeds (launch-directory basename)., Subscription routing must not blanket-promote every model to the responses     A, `--subscription` must hand the *validated* token to the proxy.      The proxy ho (+41 more)
 
 ### Community 541 - "Community 541"
-Cohesion: 0.12
-Nodes (47): _asset_for_platform(), _binary_name(), BinaryError, BinaryFetchError, cache_dir(), _cached_path(), detect_platform(), _download() (+39 more)
+Cohesion: 0.08
+Nodes (55): _asset_for_platform(), _binary_name(), BinaryError, BinaryFetchError, cache_dir(), _cached_path(), detect_platform(), _download() (+47 more)
 
 ### Community 542 - "Community 542"
 Cohesion: 0.08
 Nodes (27): BudgetConfig, BudgetReport, MemoryBudgetManager, Memory file budget manager — token-optimized memory file maintenance.  Manages t, Apply temporal decay to importance scores., Separate fresh memories from stale ones.          A memory is stale if it refere, Check if a memory references entities that no longer exist., Get set of tracked files in the git repo. (+19 more)
 
 ### Community 543 - "Community 543"
-Cohesion: 0.01
-Nodes (118): get_compression_feedback(), Compression Feedback Loop for learning optimal compression strategies.  This mod, Get the global compression feedback instance.      Returns:         Global Compr, clear_request_compression_store(), get_compression_store(), _get_env_default_ttl_seconds(), _payload_for_retrieval_log(), Compression Store for CCR (Compress-Cache-Retrieve) architecture.  This module i (+110 more)
+Cohesion: 0.03
+Nodes (68): get_compression_store(), _get_env_default_ttl_seconds(), Get the compression store instance.      If a request-scoped store was set (e.g., Extract headroom_retrieve tool calls from a response and record feedback., Record headroom_retrieve feedback from OpenAI Chat Completions SSE.          Ope, Without request scope, get_compression_store() returns global singleton., ContextVars are per-thread — each thread sees its own store., fresh_store() (+60 more)
 
 ### Community 544 - "Community 544"
 Cohesion: 0.05
@@ -5079,7 +5140,7 @@ Nodes (20): any, MetricType, MilvusDB, OutputData, Insert vectors into a collect
 
 ### Community 547 - "Community 547"
 Cohesion: 0.07
-Nodes (29): _append_shared_event(), _format_session_summary(), HeadroomMCPServer, main(), Headroom MCP Server — Context engineering toolkit for AI coding tools.  Exposes, Append an event to the shared stats file (cross-process, file-locked)., Read shared events within the session time window, pruning old entries., Track compression statistics for the current MCP session. (+21 more)
+Nodes (31): _append_shared_event(), create_ccr_mcp_server(), _format_session_summary(), HeadroomMCPServer, main(), Headroom MCP Server — Context engineering toolkit for AI coding tools.  Exposes, Append an event to the shared stats file (cross-process, file-locked)., Read shared events within the session time window, pruning old entries. (+23 more)
 
 ### Community 548 - "Community 548"
 Cohesion: 0.07
@@ -5091,15 +5152,15 @@ Nodes (36): DataPattern, HybridScorer, cluster_sample_assigns_cluster_field(), c
 
 ### Community 550 - "Community 550"
 Cohesion: 0.09
-Nodes (42): DriftState, OpenAiShape, ProxyError, AppState, body_to_bytes(), build_app(), build_upstream_url(), catch_all() (+34 more)
+Nodes (43): DriftState, OpenAiShape, ProxyError, AppState, body_to_bytes(), build_app(), build_upstream_url(), catch_all() (+35 more)
 
 ### Community 551 - "Community 551"
 Cohesion: 0.13
 Nodes (15): LearnPlugin, OpenCodePlugin, Scan all sessions for a project and return normalized tool calls., Read OpenCode sessions from the SQLite database.      OpenCode stores all conver, Discover all projects that have at least one session., _create_opencode_db(), Tests for the OpenCode learn scanner., test_opencode_plugin_discovers_projects_and_scans_tool_failures() (+7 more)
 
 ### Community 552 - "Community 552"
-Cohesion: 0.03
-Nodes (72): main(), _doctor(), main(), ``memanto-skills`` CLI — manual control over the skill memory layer.  The lifecy, Dispatch the ``memanto-skills`` CLI.      Parses ``argv`` (defaulting to ``sys.a, _run_memory_command(), SkillMemory — the single integration point between Claude Code skills and Memant, Render the most recent slice of the Engineering Profile.          Used by the Se (+64 more)
+Cohesion: 0.04
+Nodes (58): _doctor(), main(), ``memanto-skills`` CLI — manual control over the skill memory layer.  The lifecy, Dispatch the ``memanto-skills`` CLI.      Parses ``argv`` (defaulting to ``sys.a, _run_memory_command(), SkillMemory — the single integration point between Claude Code skills and Memant, Render the most recent slice of the Engineering Profile.          Used by the Se, Distill a finished session into memories and persist them.          Leads with t (+50 more)
 
 ### Community 553 - "Community 553"
 Cohesion: 0.06
@@ -5126,20 +5187,20 @@ Cohesion: 0.07
 Nodes (43): Codex-specific provider helpers., apply_provider_scope(), build_install_env(), build_provider_section(), codex_uses_chatgpt_auth(), Codex install-time helpers., Revert Codex provider-scope configuration., Whether Codex authenticated via ChatGPT OAuth (vs an OpenAI API key).      The a (+35 more)
 
 ### Community 559 - "Community 559"
-Cohesion: 0.22
-Nodes (10): test_default_agent_loaded_from_env(), test_empty_api_key_raises(), test_invalid_agent_pattern_rejected(), test_invalid_log_level_rejected(), test_invalid_port_rejected(), test_log_level_normalized(), test_transport_enum_from_env(), test_valid_agent_patterns() (+2 more)
+Cohesion: 0.06
+Nodes (38): FastMCP, Configuration for the Memanto MCP server.  Loaded from environment variables (an, Memanto MCP Server.  Exposes Memanto's persistent semantic memory as Model Conte, _build_arg_parser(), main(), Module entrypoint: ``python -m memanto_mcp``.  Equivalent to the ``memanto-mcp``, build_server(), _configure_logging() (+30 more)
 
 ### Community 560 - "Community 560"
 Cohesion: 0.06
 Nodes (28): _get_ollama_model(), _langchain_ollama_available(), large_tool_output(), mock_chat_model(), _ollama_available(), Comprehensive tests for LangChain integration.  Tests cover: 1. HeadroomChatMode, Check if Ollama is running and has a model available., Check if langchain-ollama package is installed. (+20 more)
 
 ### Community 561 - "Community 561"
-Cohesion: 0.04
-Nodes (38): DEFAULT_MEMORY_CONFIG, AzureOpenAIEmbedder, Embedder, GoogleEmbedder, LangchainEmbedder, LMStudioEmbedder, OllamaEmbedder, OpenAIEmbedder (+30 more)
+Cohesion: 0.03
+Nodes (36): AzureOpenAIEmbedder, Embedder, GoogleEmbedder, LangchainEmbedder, LMStudioEmbedder, OllamaEmbedder, OpenAIEmbedder, HistoryManager (+28 more)
 
 ### Community 562 - "Community 562"
-Cohesion: 0.09
-Nodes (43): _make_router_with_mock_compress(), Stage-3d (PR5) wired `_detect_content` through the Rust chain     (`headroom._co, Brackets/braces inside JSON string values must not end the block early.      Reg, A JSON array embedded in prose stays one JSON section, not fragments.      With, Return a ContentRouter whose compress() always emits a half-length     ``[compre, HEADROOM_DETECT_BACKEND=python forces the pure-Python regex path., HEADROOM_DETECT_BACKEND pins the detector on any platform., Windows defaults to the pure-Python detector (native ONNX hang, #845). (+35 more)
+Cohesion: 0.11
+Nodes (38): _make_router_with_mock_compress(), Stage-3d (PR5) wired `_detect_content` through the Rust chain     (`headroom._co, Brackets/braces inside JSON string values must not end the block early.      Reg, A JSON array embedded in prose stays one JSON section, not fragments.      With, Return a ContentRouter whose compress() always emits a half-length     ``[compre, HEADROOM_DETECT_BACKEND=python forces the pure-Python regex path., HEADROOM_DETECT_BACKEND pins the detector on any platform., Windows defaults to the pure-Python detector (native ONNX hang, #845). (+30 more)
 
 ### Community 563 - "Community 563"
 Cohesion: 0.11
@@ -5147,7 +5208,7 @@ Nodes (22): agent_node(), AgentState, _AnthropicLLM, build_agent(), get_client()
 
 ### Community 564 - "Community 564"
 Cohesion: 0.03
-Nodes (46): POST(), retrieveMemories(), messages, serverFleet, inventory, ObservabilityHooks, stats, messages (+38 more)
+Nodes (48): messages, serverFleet, inventory, ObservabilityHooks, stats, messages, salesData, githubIssues (+40 more)
 
 ### Community 565 - "Community 565"
 Cohesion: 0.07
@@ -5167,15 +5228,15 @@ Nodes (44): 1. Correction, 2. Warning, 3. Temporary Ban, 4. Permanent Ban, Attri
 
 ### Community 569 - "Community 569"
 Cohesion: 0.05
-Nodes (43): _check_agno_available(), HeadroomAgnoModel, optimize_messages(), Agno model wrapper for Headroom optimization.  This module provides HeadroomAgno, Initialize HeadroomAgnoModel after dataclass construction., Forward capability attributes from wrapped model.          This ensures that fra, Check if the wrapped model has extended thinking enabled.          Extended thin, Forward attribute access to wrapped model. (+35 more)
+Nodes (35): _check_agno_available(), HeadroomAgnoModel, optimize_messages(), Initialize HeadroomAgnoModel after dataclass construction., Forward capability attributes from wrapped model.          This ensures that fra, Check if the wrapped model has extended thinking enabled.          Extended thin, Forward attribute access to wrapped model., Return the underlying model for type introspection.          Frameworks like Agn (+27 more)
 
 ### Community 570 - "Community 570"
-Cohesion: 0.06
-Nodes (38): build_proxy_provider_runtime(), _call_anthropic_transport(), _call_openai_transport(), create_proxy_backend(), format_backend_status(), _is_anthropic_auth(), _is_claude_code_client(), _load_anyllm_backend() (+30 more)
+Cohesion: 0.05
+Nodes (42): Backend, Check if this backend supports a model.          Args:             model: Model, Send an OpenAI-format message request.          Unlike send_message(), this take, Stream an OpenAI-format chat completion.          Yields SSE-formatted strings:, Clean up resources (e.g., close HTTP clients)., Abstract base class for LLM API backends.      Backends are responsible for:, Backend name (e.g., 'anthropic', 'bedrock')., Send a non-streaming message request.          Args:             body: Request b (+34 more)
 
 ### Community 571 - "Community 571"
-Cohesion: 0.09
-Nodes (12): RedisDB, DEFAULT_FIELDS, EXCLUDED_KEYS, RedisConfig, RedisDocument, RedisEntry, RedisField, RedisModule (+4 more)
+Cohesion: 0.06
+Nodes (20): Tests for extended LangChain integration modules.  Tests cover: 1. langchain_pro, Tests for HeadroomChatMessageHistory memory wrapper., Initialize with base history., clear delegates to base history., Get compression statistics., Tests for HeadroomDocumentCompressor retriever integration., Initialize with defaults., Initialize with custom settings. (+12 more)
 
 ### Community 572 - "Community 572"
 Cohesion: 0.07
@@ -5194,8 +5255,8 @@ Cohesion: 0.07
 Nodes (34): _fmt_ms(), _fmt_tokens(), format_markdown_report(), format_terminal_report(), generate_plain_text(), generate_python_code(), _generate_python_function(), generate_scenarios() (+26 more)
 
 ### Community 576 - "Community 576"
-Cohesion: 0.04
-Nodes (34): LocalToolPattern, Find the strategy with lowest retrieval rate (most successful)., Record that a compression occurred.          Called by SmartCrusher after compre, Record a retrieval event for pattern learning.          Called by CompressionSto, Truncate strategy_compressions and strategy_retrievals in sync.          CRITICA, Extract potential field names from search queries.          Common patterns:, Learned patterns for a specific tool type (local feedback).      MEDIUM FIX #18:, Get all learned tool patterns.          Returns:             Dict mapping tool n (+26 more)
+Cohesion: 0.14
+Nodes (5): MCPServer, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe
 
 ### Community 577 - "Community 577"
 Cohesion: 0.09
@@ -5206,8 +5267,8 @@ Cohesion: 0.04
 Nodes (44): Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Acceptance criteria, Blocked by, Blocked by (+36 more)
 
 ### Community 579 - "Community 579"
-Cohesion: 0.08
-Nodes (30): AnthropicLike, mockFetch, withHeadroom(), CacheError, ConfigurationError, ERROR_TYPE_MAP, HeadroomAuthError, HeadroomCompressError (+22 more)
+Cohesion: 0.10
+Nodes (25): CacheError, ConfigurationError, ERROR_TYPE_MAP, HeadroomAuthError, HeadroomCompressError, HeadroomConnectionError, HeadroomError, mapProxyError() (+17 more)
 
 ### Community 580 - "Community 580"
 Cohesion: 0.06
@@ -5246,28 +5307,28 @@ Cohesion: 0.06
 Nodes (15): Option, compute_optimal_k(), compute_unique_bigram_curve(), count_unique_simhash(), find_knee(), hamming_distance(), simhash(), validate_with_zlib() (+7 more)
 
 ### Community 589 - "Community 589"
-Cohesion: 0.05
-Nodes (43): description, devDependencies, tsup, typescript, vitest, engines, node, files (+35 more)
+Cohesion: 0.14
+Nodes (13): description, engines, node, files, license, main, module, name (+5 more)
 
 ### Community 590 - "Community 590"
 Cohesion: 0.06
 Nodes (78): PlanError, SlotKind, From, Option, RawValue, Result, Self, Value (+70 more)
 
 ### Community 591 - "Community 591"
-Cohesion: 0.06
-Nodes (27): IndexedMemoryMetadata, Serialize to dictionary for persistence., Deserialize from dictionary., Create metadata from a Memory object., Reconstruct a basic Memory object from metadata.          Note: This creates a p, Initialize the HNSW vector index.          Args:             dimension: Embeddin, Index a memory's embedding for similarity search.          The memory must have, Evict the lowest importance entries from the index.          Must be called with (+19 more)
+Cohesion: 0.03
+Nodes (62): _check_hnswlib_available(), HNSWVectorIndex, IndexedMemoryMetadata, HNSW vector index for Headroom Memory using hnswlib.  Provides fast approximate, Update the ef_search parameter for query time.          Higher values give bette, Serialize to dictionary for persistence., Deserialize from dictionary., Create metadata from a Memory object. (+54 more)
 
 ### Community 592 - "Community 592"
-Cohesion: 0.13
-Nodes (41): anthropic_body(), ApiKind, compute_structural_hash(), derive_session_key(), does_not_mutate_input(), drift_dims(), DriftState, early_messages_drift_detected_with_correct_dim() (+33 more)
+Cohesion: 0.12
+Nodes (42): anthropic_body(), ApiKind, compute_structural_hash(), derive_session_key(), does_not_mutate_input(), drift_dims(), DriftState, early_messages_drift_detected_with_correct_dim() (+34 more)
 
 ### Community 593 - "Community 593"
 Cohesion: 0.12
 Nodes (34): array_of_scalars_left_alone(), cascading_recursion_outer_table_sees_inner_compacted_string(), compact_document(), dc(), deeply_nested_arrays_compact_at_every_level(), DocumentCompactor, emit_opaque_ccr_marker(), humanize() (+26 more)
 
 ### Community 594 - "Community 594"
-Cohesion: 0.08
-Nodes (31): MCP (Model Context Protocol) integration for Headroom.  This package provides co, compress_tool_result(), compress_tool_result_with_metrics(), create_headroom_mcp_proxy(), HeadroomMCPClientWrapper, HeadroomMCPCompressor, MCPCompressionResult, MCPToolProfile (+23 more)
+Cohesion: 0.10
+Nodes (27): MCP (Model Context Protocol) integration for Headroom.  This package provides co, compress_tool_result(), compress_tool_result_with_metrics(), create_headroom_mcp_proxy(), HeadroomMCPCompressor, MCPCompressionResult, MCPToolProfile, Headroom MCP integration helpers for compressing tool outputs.  This module curr (+19 more)
 
 ### Community 595 - "Community 595"
 Cohesion: 0.11
@@ -5306,16 +5367,16 @@ Cohesion: 0.06
 Nodes (36): BloatConfigs, ConfigError, OffloadConfigs, OrchestratorConfig, bloat_log_weights_sum_to_at_most_one(), BloatConfigs, ConfigError, defaults_carry_reformat_and_offload_sections() (+28 more)
 
 ### Community 604 - "Community 604"
-Cohesion: 0.10
-Nodes (37): _config_ref(), install_static_token_source(), ProxyHandle, start_proxy(), start_proxy_with_state(), F, G, adc_bearer_token_signed_correctly() (+29 more)
+Cohesion: 0.18
+Nodes (26): install_static_token_source(), start_proxy_with_state(), F, G, adc_bearer_token_signed_correctly(), adc_failure_returns_5xx_no_silent_forward(), assert_byte_equal_sha256(), CapturedUpstream (+18 more)
 
 ### Community 605 - "Community 605"
-Cohesion: 0.04
-Nodes (29): Tests for InMemoryGraphStore., Test adding an entity., Test that adding an entity with same ID replaces it., Test getting a non-existent entity., Test deleting an entity., Test deleting a non-existent entity., Test that deleting an entity also deletes its relationships., Test adding a relationship. (+21 more)
+Cohesion: 0.08
+Nodes (30): append_headroom_plugin(), _parse_json_loose(), Parse JSON text, stripping line comments (// ...) when needed.      Tries standa, Append the optional OpenCode plugin entry if it is not already present., Tests for OpenCode config file helpers., _parse_json_loose ignores // comments., _parse_json_loose returns empty dict for invalid JSON., _parse_json_loose returns correct dict for valid JSON without comments. (+22 more)
 
 ### Community 606 - "Community 606"
 Cohesion: 0.06
-Nodes (43): _index_tokensave_project(), Index the current project into the tokensave graph (non-fatal).      Runs ``toke, File watcher for live code graph reindexing.  Monitors the project directory for, Trigger incremental reindex via codebase-memory-mcp., _candidate_security_commands(), macOS Keychain lookup helpers for GitHub Copilot CLI auth., Return a Copilot CLI OAuth token from macOS Keychain, if available., Return the last logged-in Copilot CLI username from ~/.copilot/config.json. (+35 more)
+Nodes (42): File watcher for live code graph reindexing.  Monitors the project directory for, Trigger incremental reindex via codebase-memory-mcp., _candidate_security_commands(), macOS Keychain lookup helpers for GitHub Copilot CLI auth., Return a Copilot CLI OAuth token from macOS Keychain, if available., Return the last logged-in Copilot CLI username from ~/.copilot/config.json., _read_copilot_config_login(), read_copilot_oauth_token() (+34 more)
 
 ### Community 607 - "Community 607"
 Cohesion: 0.07
@@ -5326,8 +5387,8 @@ Cohesion: 0.12
 Nodes (33): apply_drops_lockfile_and_stores_original(), apply_drops_whitespace_only_hunk(), apply_skipped_when_no_droppable_hunks(), build_diff(), cfg(), DiffNoise, empty_input_is_safe(), estimate_bloat_below_min_lines_zero() (+25 more)
 
 ### Community 609 - "Community 609"
-Cohesion: 0.03
-Nodes (38): FreezeStats, Statistics from prefix freezing for metrics/dashboard., Tests for PrefixCacheTracker — cache-aware compression., Below min_cached_tokens, no freeze., Disabled config always returns 0., Turn number should increment on each update., Stats should reflect tracker state., Recording bust avoided should update stats. (+30 more)
+Cohesion: 0.05
+Nodes (21): Below min_cached_tokens, no freeze., Disabled config always returns 0., Turn number should increment on each update., Stats should reflect tracker state., Recording bust avoided should update stats., Messages outside frozen prefix should always be compressed., For Anthropic (90% discount), compression must save >90% to be worth it., For OpenAI (50% discount), compression must save >50% to be worth it. (+13 more)
 
 ### Community 610 - "Community 610"
 Cohesion: 0.05
@@ -5339,23 +5400,23 @@ Nodes (19): LLMReranker, Rerank documents using LLM scoring.                  Ar
 
 ### Community 612 - "Community 612"
 Cohesion: 0.07
-Nodes (34): ChatOpenAI, openai_llm(), Real ChatOpenAI if OPENAI_API_KEY is set., build_support_graph(), _default_llm(), ExtractedMemories, ExtractedMemory, _json_candidates() (+26 more)
+Nodes (35): ChatOpenAI, openai_llm(), Real ChatOpenAI if OPENAI_API_KEY is set., build_support_graph(), _default_llm(), ExtractedMemories, ExtractedMemory, _json_candidates() (+27 more)
 
 ### Community 613 - "Community 613"
-Cohesion: 0.06
-Nodes (30): DirectMem0Adapter, Direct Mem0 adapter that bypasses LLM extraction for pre-extracted data.  This a, Adapter that bypasses Mem0's LLM extraction for pre-extracted data.      This ad, Initialize the Direct Mem0 adapter.          Args:             config: Configura, Ensure all clients are initialized., Public initialization hook for callers that need readiness guarantees., Generate embedding for text using OpenAI., Generate a deterministic ID for a memory. (+22 more)
+Cohesion: 0.11
+Nodes (21): CreateMemoryDialog(), MemoryPagination(), MemoryPaginationProps, PageSizeSelector(), PageSizeSelectorProps, Category, Client, Memory (+13 more)
 
 ### Community 614 - "Community 614"
-Cohesion: 0.07
-Nodes (38): MemantoClient, MemantoConfig, MemantoUnavailable, Runtime configuration for Memanto semantic memory layer.      Memanto can be rea, Store a memory record. Falls back to in-memory store if Memanto is down., Retrieve relevant memories. Falls back to substring search if Memanto is down., Generate a grounded answer from memory. Falls back to empty response if Memanto, Return availability and fallback store size. (+30 more)
+Cohesion: 0.12
+Nodes (21): MemantoClient, MemantoConfig, MemantoUnavailable, Runtime configuration for Memanto semantic memory layer.      Memanto can be rea, Store a memory record. Falls back to in-memory store if Memanto is down., Retrieve relevant memories. Falls back to substring search if Memanto is down., Generate a grounded answer from memory. Falls back to empty response if Memanto, Return availability and fallback store size. (+13 more)
 
 ### Community 615 - "Community 615"
-Cohesion: 0.05
-Nodes (25): provider_from_env(), Build a provider from ``HEADROOM_OAUTH2_*`` env vars, or None if TOKEN_URL is un, _split(), OAuth2Middleware, ASGI middleware that replaces the request Authorization with a minted bearer., OAuth2ClientCredentials, app(), _cfg() (+17 more)
+Cohesion: 0.06
+Nodes (15): OAuth2Middleware, ASGI middleware that replaces the request Authorization with a minted bearer., app(), _cfg(), _RecordingApp, test_install_fail_closed_on_bad_config(), test_install_fail_closed_on_bad_timeout(), test_install_noop_when_unset() (+7 more)
 
 ### Community 616 - "Community 616"
-Cohesion: 0.14
-Nodes (8): Tests for provider detection from Agno models., Detect OpenAI provider from OpenAIChat., Detect Anthropic provider from Claude model., Detect provider from model ID string., Fallback to OpenAI provider for unknown models., Extract model name from Agno model., Fallback model name when not found., TestProviderDetection
+Cohesion: 0.11
+Nodes (26): _generate_narrative(), _load_or_export(), migrate_letta(), migrate_mem0(), migrate_supermemory(), MEMANTO CLI - Migrate from other memory providers into Memanto.  Replaces the ol, Prompt-or-fetch the provider API key the same way analyze used to., Call the active agent's LLM for a comparison narrative (best-effort). (+18 more)
 
 ### Community 617 - "Community 617"
 Cohesion: 0.08
@@ -5363,7 +5424,7 @@ Nodes (36): boot_proxy(), Frame, FrameResult, main(), _parse_kv(), parse_log(), 
 
 ### Community 618 - "Community 618"
 Cohesion: 0.05
-Nodes (21): _convert_tool_choice(), Convert Anthropic tool_choice to OpenAI format.      Anthropic: {"type": "auto"}, Tests for backend bug fixes in LiteLLM and any-llm integrations.  Tests tool for, Test that tools are forwarded through LiteLLM send_message., Tools should be converted and passed to litellm.acompletion., Tool call arguments should be parsed from JSON string to dict., Test that stream_message emits tool_use blocks and correct stop_reason., Tool calls in streaming should produce content_block_start with type=tool_use. (+13 more)
+Nodes (26): Tests for backend bug fixes in LiteLLM and any-llm integrations.  Tests tool for, Test that tools are forwarded through LiteLLM send_message., Tools should be converted and passed to litellm.acompletion., Tool call arguments should be parsed from JSON string to dict., Test that _convert_messages_for_litellm converts Anthropic tool blocks to OpenAI, Anthropic tool_result blocks must become role=tool messages., tool_result with list content should be flattened to string., Assistant message with both text and tool_use blocks. (+18 more)
 
 ### Community 619 - "Community 619"
 Cohesion: 0.08
@@ -5379,7 +5440,7 @@ Nodes (27): DetectionResult, FallbackDetector, get_detector(), _get_magika(), Ma
 
 ### Community 622 - "Community 622"
 Cohesion: 0.09
-Nodes (29): date, get_anthropic_registry(), Anthropic model pricing information., Create and return an Anthropic pricing registry.      Returns:         PricingRe, DeepSeek model pricing information., Pricing module for LLM cost estimation.  This module provides pricing informatio, get_openai_registry(), OpenAI model pricing information. (+21 more)
+Nodes (28): date, get_anthropic_registry(), Anthropic model pricing information., Create and return an Anthropic pricing registry.      Returns:         PricingRe, DeepSeek model pricing information., Pricing module for LLM cost estimation.  This module provides pricing informatio, get_openai_registry(), OpenAI model pricing information. (+20 more)
 
 ### Community 623 - "Community 623"
 Cohesion: 0.08
@@ -5390,16 +5451,16 @@ Cohesion: 0.08
 Nodes (28): batch_compare_prompts(), compare_messages(), compare_prompts(), _parse_judge_response(), PromptComparer, PromptComparisonResult, Prompt Comparison System using LLM-as-Judge.  This module provides tools to veri, Convert result to dictionary. (+20 more)
 
 ### Community 625 - "Community 625"
-Cohesion: 0.11
-Nodes (32): _anthropic_call(), _build_cache_prefix(), _classify_auth_mode_from_headers(), proxy_client(), Wave 3 — multi-turn live integration tests for the Phase A+B realignment.  These, Headroom's load-bearing auth-mode classifier (Phase F-prep).      Mirrors the cl, Phase F-prep / B5 — no network calls. Three header shapes are sent     to the pr, Module-scoped proxy client with live-zone compression enabled.      The default (+24 more)
+Cohesion: 0.08
+Nodes (40): FixtureFunction, autouse_apply_env(), importorskip_no_env_leak(), load_env_overrides(), Local-only `.env` loader for tests that need provider API keys.  Why this exists, Read the project `.env` file (if present) into a plain dict.      Returns an emp, Build an autouse fixture that applies `overrides` for the test     function and, `pytest.importorskip` substitute that quarantines `os.environ` mutations.      W (+32 more)
 
 ### Community 626 - "Community 626"
-Cohesion: 0.07
-Nodes (36): _allowed_ws_origins_from_env(), _is_allowed_websocket_origin(), _is_loopback_ws_origin(), _normalize_origin(), Return True when the WebSocket Origin matches the configured policy.      Native, Resolve ChatGPT Codex routing hints from explicit headers or OAuth JWT., _resolve_codex_routing_headers(), _build_request() (+28 more)
+Cohesion: 0.04
+Nodes (81): _allowed_ws_origins_from_env(), _codex_compression_debug_enabled(), _codex_ws_text_shape(), _compact_openai_responses_tools(), _compact_openai_tool_schema_value(), _decode_openai_bearer_payload(), _ensure_responses_store_for_memory_tools(), _extract_codex_handshake_headers() (+73 more)
 
 ### Community 627 - "Community 627"
-Cohesion: 0.10
-Nodes (17): OpenAIHandlerMixin, _CapturingHandler, _DummyMetrics, _DummyOpenAIHandler, _FakeWebSocket, _make_fake_websockets_module(), _parse_stage_log(), Unit 2: stage-timing instrumentation on the Codex WS path. (+9 more)
+Cohesion: 0.07
+Nodes (19): OpenAIHandlerMixin, _CapturingHandler, _DummyMetrics, _DummyOpenAIHandler, _FakeUpstream, _FakeWebSocket, _make_fake_websockets_module(), _parse_stage_log() (+11 more)
 
 ### Community 628 - "Community 628"
 Cohesion: 0.10
@@ -5423,7 +5484,7 @@ Nodes (28): auth_still_flags_security_in_diff(), CategoryAutomaton, contains_err
 
 ### Community 633 - "Community 633"
 Cohesion: 0.16
-Nodes (38): CompletedProcess, Path, Popen, Response, Thread, assert_true(), create_shims(), log() (+30 more)
+Nodes (39): ThreadingHTTPServer, CompletedProcess, Path, Popen, Response, Thread, assert_true(), create_shims() (+31 more)
 
 ### Community 634 - "Community 634"
 Cohesion: 0.12
@@ -5434,8 +5495,8 @@ Cohesion: 0.15
 Nodes (19): BaselineModel, analyze(), _assistant_words_and_text(), _human_text(), _HumanMsg, _ordered_events(), _parse_session(), _parse_ts() (+11 more)
 
 ### Community 636 - "Community 636"
-Cohesion: 0.10
-Nodes (41): _apply_turn_metrics(), _cache_gap_within_ttl(), ReplayTurn, SessionReplay, _build_stable_append_only(), _build_suite(), _build_token_rewrite_pressure(), _build_ttl_resets() (+33 more)
+Cohesion: 0.11
+Nodes (36): _apply_turn_metrics(), _cache_gap_within_ttl(), ReplayTurn, SessionReplay, _build_stable_append_only(), _build_suite(), _build_token_rewrite_pressure(), _build_ttl_resets() (+28 more)
 
 ### Community 637 - "Community 637"
 Cohesion: 0.08
@@ -5446,8 +5507,8 @@ Cohesion: 0.11
 Nodes (33): Network capture comparison helpers., _anthropic_request_summary(), _body_bytes(), CapturedExchange, CaptureDiff, compare_captures(), exchange_from_record(), _header_delta() (+25 more)
 
 ### Community 639 - "Community 639"
-Cohesion: 0.11
-Nodes (28): Ensure rtk is installed and hooks are registered., _setup_rtk(), get_rtk_path(), is_rtk_installed(), _managed_rtk_candidates(), rtk (Rust Token Killer) integration for Headroom.  rtk compresses CLI output (te, Return known Headroom-managed rtk binary paths., Get path to rtk binary — check PATH first, then ~/.headroom/bin/. (+20 more)
+Cohesion: 0.08
+Nodes (34): Ensure rtk is installed and hooks are registered., _setup_rtk(), get_rtk_path(), is_rtk_installed(), _managed_rtk_candidates(), rtk (Rust Token Killer) integration for Headroom.  rtk compresses CLI output (te, Return known Headroom-managed rtk binary paths., Get path to rtk binary — check PATH first, then ~/.headroom/bin/. (+26 more)
 
 ### Community 640 - "Community 640"
 Cohesion: 0.05
@@ -5458,16 +5519,16 @@ Cohesion: 0.08
 Nodes (25): estimate_anthropic_tokens(), estimate_openai_tokens(), find_optimal_anthropic_dimensions(), find_optimal_openai_dimensions(), _optimize_content_block(), optimize_images_in_messages(), Tile-boundary image optimizer — reduce vision tokens with zero quality loss.  Re, Find dimensions that minimize OpenAI tile count.      Tries reducing to fewer ti (+17 more)
 
 ### Community 642 - "Community 642"
-Cohesion: 0.10
-Nodes (22): apply_emits_cache_key_and_stores_original_for_clustered_input(), apply_skipped_when_compressor_declines_ccr(), default_bloat(), estimate_bloat_clustered_matches_score_high(), estimate_bloat_distributed_matches_score_low(), estimate_bloat_moderate_clustering(), estimate_bloat_safe_on_huge_inputs(), extract_file_prefix() (+14 more)
+Cohesion: 0.09
+Nodes (23): InMemoryCcrStore, apply_emits_cache_key_and_stores_original_for_clustered_input(), apply_skipped_when_compressor_declines_ccr(), default_bloat(), estimate_bloat_clustered_matches_score_high(), estimate_bloat_distributed_matches_score_low(), estimate_bloat_moderate_clustering(), estimate_bloat_safe_on_huge_inputs() (+15 more)
 
 ### Community 643 - "Community 643"
-Cohesion: 0.07
-Nodes (58): Get the history of changes for a memory by ID.          Args:             memory, Create a new memory.          Adds new memories scoped to a single session id (e, _claim_first_run_notice(), _coerce_mapping(), _coerce_nonnegative_int(), _count_added_memories(), _decay_usage_at_capacity(), detect_decay_usage_from_delete() (+50 more)
+Cohesion: 0.09
+Nodes (49): _claim_first_run_notice(), _coerce_mapping(), _coerce_nonnegative_int(), _count_added_memories(), _decay_usage_at_capacity(), detect_decay_usage_from_delete(), detect_decay_usage_from_delete_all(), detect_scale_threshold_from_add_result() (+41 more)
 
 ### Community 644 - "Community 644"
-Cohesion: 0.08
-Nodes (28): _family_fallback(), _infer_provider(), list_models(), ModelInfo, ModelRegistry, Model registry with capabilities database.  Centralized database of LLM models w, Information about an LLM model.      Attributes:         name: Model identifier., Infer a provider from common model id prefixes. (+20 more)
+Cohesion: 0.07
+Nodes (29): _family_fallback(), _infer_provider(), list_models(), ModelInfo, ModelRegistry, Model registry with capabilities database.  Centralized database of LLM models w, Information about an LLM model.      Attributes:         name: Model identifier., Infer a provider from common model id prefixes. (+21 more)
 
 ### Community 645 - "Community 645"
 Cohesion: 0.11
@@ -5490,12 +5551,12 @@ Cohesion: 0.13
 Nodes (14): _frozen_messages(), _messages(), Net-cost mutation gate in ContentRouter (#856 P2, flag-gated).  ``HEADROOM_NET_C, A short conversation whose compressible tool dump sits *inside* the     frozen p, #856 P2b: let formula-positive deep edits through the frozen floor., #856 P3a: batch deep edits -- once one net-positive edit is admitted at     slot, #856 P3b: derive P_alive from idle time. As the session goes idle the     cached, router() (+6 more)
 
 ### Community 651 - "Community 651"
-Cohesion: 0.09
-Nodes (31): CcrBackendConfig, CcrBackendInitError, from_config(), CcrStore, compute_key(), compute_key_diverges_for_different_payloads(), compute_key_is_24_hex_chars(), compute_key_is_deterministic() (+23 more)
+Cohesion: 0.07
+Nodes (38): CcrBackendConfig, CcrBackendInitError, from_config(), CcrStore, compute_key(), compute_key_diverges_for_different_payloads(), compute_key_is_24_hex_chars(), compute_key_is_deterministic() (+30 more)
 
 ### Community 652 - "Community 652"
-Cohesion: 0.03
-Nodes (82): Mem0Config, Configuration for Direct Mem0 adapter.      Qdrant connection fields default to, MemoryConfig, MemoryMode, Memory integration handler for the proxy server.  This module provides memory ca, Configuration for memory handler.      Qdrant connection fields default to value, Initialize native memory directory., Memory injection mode (PR-B6).      AUTO_TAIL (default): Memory retrieval runs a (+74 more)
+Cohesion: 0.09
+Nodes (27): _build_handler(), PR-B6: tests that memory auto-injection lands in the live-zone tail.  These test, Build a MemoryHandler in AutoTail mode with the deterministic stub., AutoTail mode must append to the latest user message, not system., AutoTail also works for OpenAI Chat Completions (string + list content)., The cache hot zone (system / tools / instructions) must be untouched., Two independent runs of the same query must produce identical bytes., A MemoryConfig built without explicit mode must default to AUTO_TAIL. (+19 more)
 
 ### Community 653 - "Community 653"
 Cohesion: 0.05
@@ -5526,20 +5587,20 @@ Cohesion: 0.08
 Nodes (28): _clear_caches(), fake_urlopen(), _FakeResponse, _make_tar_gz(), _make_zip(), Unit tests for headroom.binaries — the lazy fetcher for bundled CLI tools.  No n, Mirror URLs with `?token=...` must not leak into the download filename.      Reg, Isolate every test from global state: cache dir, platform lru_cache, env. (+20 more)
 
 ### Community 660 - "Community 660"
-Cohesion: 0.04
-Nodes (41): _AsyncChunks, _ChatGPTAccountRequest, _fake_request(), _FreshCompressor, _ImageCompressor, _jwt(), _PassthroughRequest, Minimal Starlette/FastAPI-shaped request object for resolver tests. (+33 more)
+Cohesion: 0.07
+Nodes (19): _ChatGPTAccountRequest, _FreshCompressor, _ImageCompressor, _jwt(), _PassthroughRequest, _RecordingHttpClient, test_anthropic_image_compression_helper_only_rewrites_latest_eligible_turn(), test_chatgpt_passthrough_falls_back_when_h1_client_missing() (+11 more)
 
 ### Community 661 - "Community 661"
 Cohesion: 0.09
 Nodes (48): change_password(), ChangePasswordRequest, login(), LoginRequest, me(), onboarding_complete(), OnboardingCompleteRequest, Fire the one-shot telemetry event after the setup wizard reaches its success sta (+40 more)
 
 ### Community 662 - "Community 662"
-Cohesion: 0.10
-Nodes (17): generate_slack_messages(), Test basic compression functionality., Compression should return MCPCompressionResult., Compression should reduce token count., Compression should track items before/after., Small content should not be compressed., Generate realistic Slack search results., Test compression efficiency. (+9 more)
+Cohesion: 0.16
+Nodes (18): ClaudeRegistrar, _diff_specs(), _entry_to_spec(), Claude Code MCP registrar.  Claude Code 2.x stores MCP server configuration in `, Read a JSON file, returning empty dict if absent or unparseable., Two specs match when every field is equal., Render the difference between two specs for human consumption., Register MCP servers with Claude Code. (+10 more)
 
 ### Community 663 - "Community 663"
 Cohesion: 0.05
-Nodes (35): assistant_message(), base64_waste_text(), big_json_payload(), _FakeChoiceDeltaToolCall, _FakeDeltaToolCallFunction, html_waste_text(), json_bloat_text(), mock_tokenizer() (+27 more)
+Nodes (29): assistant_message(), base64_waste_text(), big_json_payload(), html_waste_text(), json_bloat_text(), mock_tokenizer(), multimodal_message(), rag_user_message() (+21 more)
 
 ### Community 664 - "Community 664"
 Cohesion: 0.11
@@ -5550,8 +5611,8 @@ Cohesion: 0.13
 Nodes (28): all_unique_lines_are_emitted_verbatim(), below_min_lines_skipped(), blank_lines_break_runs(), cfg(), empty_input_skipped(), LogTemplate, lossless_round_trip_via_template_and_variants(), name_and_applies_to() (+20 more)
 
 ### Community 666 - "Community 666"
-Cohesion: 0.05
-Nodes (24): fetch_user_data(), get_error_data(), get_small_status(), Real-world integration tests for Strands HeadroomHookProvider.  These tests use, Fetch detailed user data. Returns large JSON payload.      Args:         user_id, Simple calculator for basic operations.      Args:         a: First number, Real-world integration tests for HeadroomHookProvider with Bedrock., Create a BedrockModel instance using Claude 3 Haiku (fast and cheap). (+16 more)
+Cohesion: 0.08
+Nodes (13): Real-world integration tests for HeadroomHookProvider with Bedrock., Create a BedrockModel instance using Claude 3 Haiku (fast and cheap)., Create a HeadroomHookProvider with test configuration., Test that large tool outputs are compressed by the hook.          This test:, Test that small tool outputs are NOT compressed.          This test:         1., Test that error results are NOT compressed when preserve_errors=True.          T, Test that metrics are tracked correctly across multiple tool calls.          Thi, Test that multiple tool calls in a single agent request are all processed. (+5 more)
 
 ### Community 667 - "Community 667"
 Cohesion: 0.14
@@ -5574,20 +5635,20 @@ Cohesion: 0.14
 Nodes (32): ApiKind, apikind_anthropic_scans_correct_paths(), caps_findings_at_ten(), detect_volatile_content(), detects_iso8601_timestamp_in_system_prompt(), detects_request_id_field_in_nested_object(), detects_uuid_v4_in_user_message(), does_not_mutate_input() (+24 more)
 
 ### Community 672 - "Community 672"
-Cohesion: 0.08
-Nodes (14): Tests for parse_message_to_blocks function., System message creates system block., User message creates user block., Assistant message creates assistant block., Tool result creates tool_result block with tool_call_id., User message with RAG markers creates rag block., Multimodal content (list with text parts) is extracted., Tool calls create separate tool_call blocks. (+6 more)
+Cohesion: 0.14
+Nodes (17): MemantoMCPServer, Any, MCP server that wraps the Memanto semantic memory layer.      Exposes four tools, degraded_server(), memanto_server(), pytest tests for the Memanto MCP server.  These tests verify tool registration,, _simulate_client_available(), test_memanto_answer_invokes_client() (+9 more)
 
 ### Community 673 - "Community 673"
 Cohesion: 0.07
 Nodes (22): BaseStructureHandler, HandlerResult, NoOpHandler, Base class and protocol for structure handlers.  Structure handlers extract stru, Extract structure mask from content.          This is the main entry point. It h, Check if this handler can process the content.          Default implementation r, Extract structure mask from content.          Subclasses implement this to provi, Default tokenization - character-level.          Subclasses may override for mor (+14 more)
 
 ### Community 674 - "Community 674"
-Cohesion: 0.06
-Nodes (26): generate_database_results(), generate_github_issues(), generate_log_entries(), mcp_compressor(), Tests for MCP (Model Context Protocol) integration.  These tests verify that Hea, Generate realistic log entries., Generate realistic GitHub issues., Test error preservation - SmartCrusher detects errors via field patterns. (+18 more)
+Cohesion: 0.04
+Nodes (43): generate_database_results(), generate_github_issues(), generate_log_entries(), generate_slack_messages(), mcp_compressor(), Tests for MCP (Model Context Protocol) integration.  These tests verify that Hea, Generate realistic log entries., Generate realistic GitHub issues. (+35 more)
 
 ### Community 675 - "Community 675"
 Cohesion: 0.10
-Nodes (20): BaseStore, MemantoStore, MemantoStore - a LangGraph BaseStore backed by Memanto.  Compile the graph with, Initialize MemantoStore with an API key., Execute a batch of store operations synchronously., Execute a batch of store operations asynchronously., Lookup a single memory by key.          Uses ``recall_recent`` first (no semanti, Persist a ``PutOp.value`` as a Memanto memory.          When no ``kind``/``type` (+12 more)
+Nodes (19): MemantoStore, MemantoStore - a LangGraph BaseStore backed by Memanto.  Compile the graph with, Initialize MemantoStore with an API key., Execute a batch of store operations synchronously., Execute a batch of store operations asynchronously., Lookup a single memory by key.          Uses ``recall_recent`` first (no semanti, Persist a ``PutOp.value`` as a Memanto memory.          When no ``kind``/``type`, Retrieve memories matching the namespace.          Uses ``recall_recent`` for wi (+11 more)
 
 ### Community 676 - "Community 676"
 Cohesion: 0.11
@@ -5598,8 +5659,8 @@ Cohesion: 0.21
 Nodes (31): assertPluginName(), beaconLockPath(), binDir(), bridgeStatePath(), configDir(), debug400Dir(), deployRoot(), expandTilde() (+23 more)
 
 ### Community 678 - "Community 678"
-Cohesion: 0.07
-Nodes (41): get_quota_registry(), QuotaTracker, QuotaTrackerRegistry, Base abstractions for pluggable AI-tool quota / rate-limit trackers.  Every prov, Process-global registry of all :class:`QuotaTracker` instances.      Typical usa, Register a tracker.  Duplicate keys are rejected., Read-only snapshot of the registered tracker list., Return the process-global :class:`QuotaTrackerRegistry` singleton. (+33 more)
+Cohesion: 0.12
+Nodes (26): QuotaTrackerRegistry, Process-global registry of all :class:`QuotaTracker` instances.      Typical usa, _AlwaysOnTracker, _NoDataTracker, _PassiveTracker, Tests for the pluggable QuotaTracker / QuotaTrackerRegistry abstraction., Uses inherited no-op start/stop., test_duplicate_key_raises() (+18 more)
 
 ### Community 679 - "Community 679"
 Cohesion: 0.06
@@ -5614,8 +5675,8 @@ Cohesion: 0.06
 Nodes (35): description, devDependencies, tsup, typescript, vitest, engines, node, exports (+27 more)
 
 ### Community 682 - "Community 682"
-Cohesion: 0.04
-Nodes (36): AWSBedrockConfig, AWSBedrockLLM, AWSBedrockLLM, extract_provider(), Test connection to AWS Bedrock service., Initialize provider-specific settings and capabilities., Format messages for Anthropic models., Format messages for Cohere models. (+28 more)
+Cohesion: 0.06
+Nodes (31): AWSBedrockConfig, AWSBedrockLLM, AWSBedrockLLM, Test connection to AWS Bedrock service., Initialize provider-specific settings and capabilities., Format messages for Anthropic models., Format messages for Cohere models., Format messages for Amazon models (including Nova). (+23 more)
 
 ### Community 683 - "Community 683"
 Cohesion: 0.13
@@ -5658,12 +5719,12 @@ Cohesion: 0.08
 Nodes (21): call_openai(), LLMEvalResult, Real-world LLM evaluation tests for compression efficacy.  These tests use actua, Result from an LLM evaluation., Call OpenAI API with given prompt.      Args:         prompt: User prompt., Test that LLM can discover structure in compressed JSON., Test that LLM can identify available fields from compressed JSON., Test that LLM can answer questions about compressed data. (+13 more)
 
 ### Community 693 - "Community 693"
-Cohesion: 0.12
-Nodes (17): _ctrl(), install(), parse_headers(), Generic OAuth2 client-credentials upstream-auth extension for the Headroom proxy, Parse ``K=V,K2=V2`` into a dict. Drops pairs whose key/value contain control, Headroom proxy-extension entry point: install(app, config) -> None., ASGI middleware that injects a refreshed OAuth2 bearer on each upstream request., _https_or_local() (+9 more)
+Cohesion: 0.09
+Nodes (28): _ctrl(), install(), _int(), parse_headers(), provider_from_env(), Generic OAuth2 client-credentials upstream-auth extension for the Headroom proxy, Parse ``K=V,K2=V2`` into a dict. Drops pairs whose key/value contain control, Build a provider from ``HEADROOM_OAUTH2_*`` env vars, or None if TOKEN_URL is un (+20 more)
 
 ### Community 694 - "Community 694"
-Cohesion: 0.06
-Nodes (36): AdversarialReport, AdversarialReport, _benign_lines(), CellResult, ClassSummary, _compression_ratio(), _contains(), _normalize() (+28 more)
+Cohesion: 0.11
+Nodes (16): AdversarialReport, AdversarialReport, CellResult, ClassSummary, One payload x carrier x position measurement., Aggregate over all cells of one payload class., Payload survival relative to benign content survival (>1 = amplified)., Full grid output: per-cell results plus per-class aggregates. (+8 more)
 
 ### Community 695 - "Community 695"
 Cohesion: 0.10
@@ -5702,8 +5763,8 @@ Cohesion: 0.06
 Nodes (18): Tests for OpenAICacheOptimizer., Test OpenAICacheOptimizer functionality., Test detection of prefix changes., Test warning when below token threshold., Test savings estimation below threshold., Create optimizer instance., Test savings estimation above threshold., Test detection of UUIDs in content. (+10 more)
 
 ### Community 704 - "Community 704"
-Cohesion: 0.06
-Nodes (24): mock_claude_config_path(), mock_mcp_available(), Integration tests for MCP CLI commands.  These are real tests that: - Actually w, Test 'headroom mcp uninstall' command., Uninstall removes headroom from the legacy config file., Uninstall preserves other MCP servers., Uninstall with no config file exits cleanly., Uninstall when headroom not in config exits cleanly. (+16 more)
+Cohesion: 0.08
+Nodes (18): mock_claude_config_path(), mock_mcp_available(), Integration tests for MCP CLI commands.  These are real tests that: - Actually w, Test 'headroom mcp status' command., Status shows not configured when no config., Status reports configured when the legacy config has headroom., Test 'headroom mcp serve' command., Serve command shows help. (+10 more)
 
 ### Community 705 - "Community 705"
 Cohesion: 0.09
@@ -5715,15 +5776,15 @@ Nodes (23): pytest_importorskip_litellm(), pytest_importorskip_trafilatura(), Te
 
 ### Community 707 - "Community 707"
 Cohesion: 0.05
-Nodes (56): add(), _agent_rush_callback(), _build_help_json(), _config_callback(), delete(), _entity_callback(), entity_delete(), entity_list() (+48 more)
+Nodes (56): add(), _agent_rush_callback(), _build_help_json(), _config_callback(), config_get(), config_set(), config_show(), delete() (+48 more)
 
 ### Community 708 - "Community 708"
 Cohesion: 0.13
 Nodes (28): canonical_sha256(), derive_key(), different_model_yields_different_key(), different_system_yields_different_key(), different_tools_yields_different_key(), empty_string_key_treated_as_absent(), extract_system(), first_system_in_array() (+20 more)
 
 ### Community 709 - "Community 709"
-Cohesion: 0.06
-Nodes (31): evals(), memory_eval(), memory_eval_compat(), memory_eval_v2(), memory_eval_v2_compat(), _parse_categories(), Evaluation CLI commands., Parse a comma-separated ``--categories`` value into validated ints.      Raises (+23 more)
+Cohesion: 0.07
+Nodes (31): adversarial(), evals(), memory_eval(), memory_eval_compat(), memory_eval_v2(), memory_eval_v2_compat(), _parse_categories(), probes() (+23 more)
 
 ### Community 710 - "Community 710"
 Cohesion: 0.11
@@ -5734,8 +5795,8 @@ Cohesion: 0.12
 Nodes (32): IPv4Network, IPv6Network, load_trusted_gateway_cidrs(), _parse_cidr_list(), peer_is_trusted_gateway(), Load and parse the trusted-gateway CIDR allow-list.      ``raw`` is exposed for, Return True iff ``peer_host`` is inside any of the allow-list CIDRs.      Empty, Parse a comma-separated CIDR list. Empty / whitespace → empty tuple.      Whites (+24 more)
 
 ### Community 712 - "Community 712"
-Cohesion: 0.11
-Nodes (23): InMemoryCcrStore, apply_emits_cache_key_and_stores_original_for_repetitive_log(), apply_returns_skipped_when_underlying_compressor_declines_ccr(), default_bloat(), estimate_bloat_high_repetition_scores_high(), estimate_bloat_priority_dilution_alone_scores_meaningfully(), estimate_bloat_safe_on_huge_inputs(), estimate_bloat_unique_errors_score_low() (+15 more)
+Cohesion: 0.12
+Nodes (22): apply_emits_cache_key_and_stores_original_for_repetitive_log(), apply_returns_skipped_when_underlying_compressor_declines_ccr(), default_bloat(), estimate_bloat_high_repetition_scores_high(), estimate_bloat_priority_dilution_alone_scores_meaningfully(), estimate_bloat_safe_on_huge_inputs(), estimate_bloat_unique_errors_score_low(), LogOffload (+14 more)
 
 ### Community 713 - "Community 713"
 Cohesion: 0.06
@@ -5778,8 +5839,8 @@ Cohesion: 0.10
 Nodes (21): handle_write_idempotency(), IdempotencyHandler, IdempotencyRecord, IdempotencyStore, Idempotency Handling for MEMANTO, Idempotency handling utilities, Check if request is duplicate based on idempotency key, Store response for idempotency (+13 more)
 
 ### Community 723 - "Community 723"
-Cohesion: 0.04
-Nodes (63): _ccr_retrieve_items(), generate_report(), main(), Test that specific UUIDs can be found via CCR retrieval.      Scenario: User ask, Test that statistical anomalies are preserved during compression.      Scenario:, Test that full retrieval returns EXACTLY the original content., Test that the feedback system learns from retrieval patterns.      Scenario: Sim, Test that hash-keyed retrieval returns the full original content (the     needle (+55 more)
+Cohesion: 0.03
+Nodes (58): _ccr_retrieve_items(), generate_report(), main(), Test that specific UUIDs can be found via CCR retrieval.      Scenario: User ask, Test that statistical anomalies are preserved during compression.      Scenario:, Test that full retrieval returns EXACTLY the original content., Test that the feedback system learns from retrieval patterns.      Scenario: Sim, Test that hash-keyed retrieval returns the full original content (the     needle (+50 more)
 
 ### Community 724 - "Community 724"
 Cohesion: 0.13
@@ -5814,12 +5875,12 @@ Cohesion: 0.06
 Nodes (17): Tests for MEMORY_SAVE_TOOL_WITH_EXTRACTION schema., Tool schema should be a dictionary., Tool should have type field set to 'function'., Tool should have function field., Function should have name 'memory_save'., Function should have non-empty description., Description should mention pre-extraction., Function should have parameters field. (+9 more)
 
 ### Community 732 - "Community 732"
-Cohesion: 0.06
-Nodes (24): Warm-up should batch missing embeddings and vector indexing., test_warm_up_backend_batches_embedding_and_indexing(), _build_mcp_sdk_stub(), import_module_with_mcp_stub(), fresh_store(), A genuinely missing hash must still report "Content not found"., window-scoped stats output should be explicitly labeled after this change., Lifetime savings are appended from /stats persistent_savings.lifetime. (+16 more)
+Cohesion: 0.20
+Nodes (5): Warm-up should batch missing embeddings and vector indexing., test_warm_up_backend_batches_embedding_and_indexing(), _build_mcp_sdk_stub(), import_module_with_mcp_stub(), ModuleType
 
 ### Community 733 - "Community 733"
-Cohesion: 0.04
-Nodes (32): analyze_metrics(), get_database_records(), get_large_logs(), math_operation(), quick_lookup(), Real-world integration tests for Strands HeadroomStrandsModel.  These tests use, Analyze system metrics. Returns detailed metrics data.      Args:         metric, Quick key-value lookup. Returns small response.      Args:         key: The key (+24 more)
+Cohesion: 0.06
+Nodes (16): Real-world integration tests for HeadroomStrandsModel with Bedrock., Create a base BedrockModel instance using Claude 3 Haiku (fast and cheap)., Create a HeadroomStrandsModel wrapping the Bedrock model., Test that stream() works and returns proper StreamEvents.          The Strands A, Test that messages are actually optimized (tokens_before > tokens_after for larg, Test that get_savings_summary() returns correct metrics.          Verifies the s, Test that wrapped model produces valid responses., Test that wrapped model works correctly with tools. (+8 more)
 
 ### Community 734 - "Community 734"
 Cohesion: 0.09
@@ -5830,8 +5891,8 @@ Cohesion: 0.07
 Nodes (29): _force_lossy_config(), End-to-end CCR roundtrip via the Python bridge.  The Rust core integration test, Same roundtrip as the native test but driven through the     `headroom.transform, Full story: payload → crush → grab hash from result → ccr_get     → parse → byte, Same story, but through the Python shim (the proxy's actual     entry point). Pi, The compressed view (what the LLM sees inline) is a proper     subset of the ori, PR8 cornerstone: the public crush() output now carries the     `<<ccr:HASH ...>>, A long base64-ish blob in a field becomes a CCR marker AND the     original gets (+21 more)
 
 ### Community 736 - "Community 736"
-Cohesion: 0.06
-Nodes (35): FakeAsyncClient, Tests for OAuth Bearer token routing and auth detection., Return (client, fake) as a context manager., x-api-key takes precedence for rate key., Bearer token used for rate key when no x-api-key., No auth headers → IP-only rate key., Captures outbound requests instead of making real HTTP calls., TestCatchAllRouting (+27 more)
+Cohesion: 0.11
+Nodes (28): FakeAsyncClient, Return (client, fake) as a context manager., Captures outbound requests instead of making real HTTP calls., _app(), Issue #478: under Codex ChatGPT-subscription OAuth, the proxy     must NOT forwa, The single-model variant (`/v1/models/{id}`) is also called by     Codex for som, Non-ChatGPT auth (regular API key, Gemini, etc.) must still     forward to the u, Claude Code gateway/OAuth model discovery can use a Bearer token that     does n (+20 more)
 
 ### Community 737 - "Community 737"
 Cohesion: 0.06
@@ -5854,8 +5915,8 @@ Cohesion: 0.06
 Nodes (32): Cache Hit Improvement, CacheAligner, CodeAwareCompressor (Optional), Compression Strategies, Configuration, Configuration, Configuration, Configuration (+24 more)
 
 ### Community 742 - "Community 742"
-Cohesion: 0.16
-Nodes (26): AnyLLMBackend, FakeAnyLLMInstance, FakeAsyncStream, make_backend(), make_choice(), make_response(), make_tool_call(), Empty-string api_base/api_key must not be forwarded (env var set to ""). (+18 more)
+Cohesion: 0.09
+Nodes (41): AnyLLMBackend, any-llm backend for Headroom.  Talk to 38+ LLM providers (OpenAI, Mistral, Groq,, BackendResponse, Standardized response from a backend., A single event from a streaming response., StreamEvent, get_provider_config(), ProviderConfig (+33 more)
 
 ### Community 743 - "Community 743"
 Cohesion: 0.17
@@ -5890,16 +5951,16 @@ Cohesion: 0.09
 Nodes (27): build_research_graph(), compile_graph(), LangGraph pipeline for the Research + Writer team with Memanto memory., Build and compile the research pipeline graph.      Flow:         START → resear, Build and return a compiled graph ready to invoke., Run the full research → writer pipeline.      Args:         topic: The research, run_research(), LangGraph + Memanto: Persistent Multi-Agent Memory Integration  This package pro (+19 more)
 
 ### Community 751 - "Community 751"
-Cohesion: 0.08
-Nodes (14): Integration tests for headroom learn — using real session data.  These tests run, sed printing file content with 'Error:' in it isn't a real error., Actual errors should be detected., Integration tests against real Claude Code session data., Scanner should extract events including user messages., Scan → analyze on real data produces valid output., Dry run should never create files., Integration tests against real Codex session data. (+6 more)
+Cohesion: 0.15
+Nodes (17): Mem0MCPServer, Any, MCP server that wraps the Mem0 long-term memory layer.      Exposes four tools:, degraded_server(), mem0_server(), pytest tests for the Mem0 MCP server.  These tests verify tool registration, deg, _simulate_client_available(), test_mem0_add_invokes_client() (+9 more)
 
 ### Community 752 - "Community 752"
 Cohesion: 0.09
 Nodes (27): build_research_graph(), compile_graph(), LangGraph pipeline for the Research + Writer team with Memanto memory., Build and compile the research pipeline graph.      Flow:         START → resear, Build and return a compiled graph ready to invoke., Run the full research → writer pipeline.      Args:         topic: The research, run_research(), LangGraph + Memanto: Persistent Multi-Agent Memory Integration  This package pro (+19 more)
 
 ### Community 753 - "Community 753"
-Cohesion: 0.26
-Nodes (6): Azure AI Foundry + Claude Code compression wiring.  Covers the gap fixed by feat, _settings(), test_restore_foundry_mode_removes_foundry_key(), test_write_foundry_mode_sets_foundry_key(), test_write_non_foundry_mode_does_not_set_foundry_key(), Path
+Cohesion: 0.17
+Nodes (11): Resolve provider API URL overrides from CLI/config inputs and environment., resolve_api_overrides(), Azure AI Foundry + Claude Code compression wiring.  Covers the gap fixed by feat, _settings(), test_resolve_api_overrides_explicit_target_beats_foundry_base_url(), test_resolve_api_overrides_uses_foundry_base_url_as_anthropic_target(), test_restore_foundry_mode_removes_foundry_key(), test_write_foundry_mode_sets_foundry_key() (+3 more)
 
 ### Community 754 - "Community 754"
 Cohesion: 0.12
@@ -5959,11 +6020,11 @@ Nodes (21): BaseChatMessageHistory, _check_langchain_available(), HeadroomChatMe
 
 ### Community 768 - "Community 768"
 Cohesion: 0.05
-Nodes (42): api_error_handler(), APIError, _handle_http_error(), Exception raised for errors in the API.      Deprecated: Use specific exception, Decorator to handle API errors consistently.      This decorator catches HTTP an, AuthenticationError, CacheError, ConfigurationError (+34 more)
+Nodes (40): api_error_handler(), APIError, _handle_http_error(), Exception raised for errors in the API.      Deprecated: Use specific exception, Decorator to handle API errors consistently.      This decorator catches HTTP an, AuthenticationError, CacheError, ConfigurationError (+32 more)
 
 ### Community 769 - "Community 769"
-Cohesion: 0.07
-Nodes (32): cmd_config_get(), cmd_config_set(), cmd_config_show(), Display current configuration (secrets redacted)., cmd_event_list(), cmd_event_status(), Event commands: list and status., Get the status of a specific background event. (+24 more)
+Cohesion: 0.08
+Nodes (50): cmd_config_get(), cmd_config_set(), cmd_config_show(), Display current configuration (secrets redacted)., cmd_event_list(), cmd_event_status(), Event commands: list and status., Get the status of a specific background event. (+42 more)
 
 ### Community 770 - "Community 770"
 Cohesion: 0.10
@@ -5986,12 +6047,12 @@ Cohesion: 0.08
 Nodes (20): extract_json_schema(), JSONToken, JSONTokenType, JSON structure handler.  Extracts structural elements from JSON content: - Keys, Extract structure mask from JSON content.          Args:             content: JS, Determine if a token should be preserved.          Args:             token: The, Types of JSON tokens for structure detection., Tokenize JSON content into typed tokens.          This is a simple tokenizer tha (+12 more)
 
 ### Community 775 - "Community 775"
-Cohesion: 0.23
-Nodes (15): HeadroomMCPServer, degraded_server(), headroom_server(), pytest tests for the Headroom MCP server.  These tests verify tool registration,, Server created in a workspace that does not affect availability; we force     de, Clear degraded state and install a minimal mock headroom module., _simulate_sdk_available(), test_headroom_compress_invokes_sdk() (+7 more)
+Cohesion: 0.13
+Nodes (19): HeadroomMCPServer, HeadroomMCPServer, Any, MCP server that wraps Headroom context compression.      Exposes three tools:, Lazy-load the shared Headroom compression store., degraded_server(), headroom_server(), pytest tests for the Headroom MCP server.  These tests verify tool registration, (+11 more)
 
 ### Community 776 - "Community 776"
-Cohesion: 0.12
-Nodes (26): AgentMemoryAdapter, _build_sync_backend(), _db_fingerprint(), _load_sync_state(), main(), Universal memory sync engine for cross-agent interoperability.  Provides bidirec, Fast hash of the agent's memory state.          Used for no-op detection: if the, Load sync state from disk. (+18 more)
+Cohesion: 0.03
+Nodes (87): AgentMemory, AgentMemoryAdapter, _build_sync_backend(), _db_fingerprint(), _load_sync_state(), main(), Universal memory sync engine for cross-agent interoperability.  Provides bidirec, Fast hash of the agent's memory state.          Used for no-op detection: if the (+79 more)
 
 ### Community 777 - "Community 777"
 Cohesion: 0.12
@@ -6002,8 +6063,8 @@ Cohesion: 0.15
 Nodes (24): _equivalent(), _FakeRegistrar, tokensave is the primary coding-task compressor; Serena is the backup.  These te, Registrar mirroring real ``register_server`` overwrite semantics., _spy_compressor(), test_disable_noop_when_absent(), test_disable_preserves_user_managed(), test_disable_removes_headroom_installed() (+16 more)
 
 ### Community 779 - "Community 779"
-Cohesion: 0.10
-Nodes (20): GeminiWriter, Writes learned patterns to GEMINI.md for Gemini CLI., _make_gemini_session(), Unit tests for GeminiScanner — Google Gemini CLI session parsing.  Tests use syn, Wrap messages in a Gemini session JSON structure., Write a session JSON file to a chats directory., Sessions stored as bare array of messages (no wrapper object)., Session with only text (no tool calls) produces no tool_calls. (+12 more)
+Cohesion: 0.11
+Nodes (19): GeminiWriter, Writes learned patterns to GEMINI.md for Gemini CLI., _make_gemini_session(), Unit tests for GeminiScanner — Google Gemini CLI session parsing.  Tests use syn, Wrap messages in a Gemini session JSON structure., Write a session JSON file to a chats directory., Sessions stored as bare array of messages (no wrapper object)., Session with only text (no tool calls) produces no tool_calls. (+11 more)
 
 ### Community 780 - "Community 780"
 Cohesion: 0.11
@@ -6030,12 +6091,12 @@ Cohesion: 0.11
 Nodes (22): build_turn_messages(), call_anthropic(), extract_assistant_content(), extract_metrics(), inject_cache_markers(), inject_cc_style_markers(), main(), make_tool_result() (+14 more)
 
 ### Community 786 - "Community 786"
-Cohesion: 0.10
-Nodes (13): Memory, Initialize the backend on first use., Save a memory.          Args:             content: The memory content to save., Search memories by semantic similarity.          Args:             query: Natura, Delete a memory by ID.          Args:             memory_id: The memory ID to de, Clear all memories for a user.          Args:             user_id: User identifi, Close the memory backend and release resources., Get the backend type being used. (+5 more)
+Cohesion: 0.08
+Nodes (17): mock_tool(), mock_tool_with_large_output(), Tests for LangChain agent tool integration.  Tests cover: 1. ToolCompressionMetr, Create a mock LangChain tool., Tests for wrap_tools_with_headroom function., Create a mock tool that returns large output., Wrap with custom compression threshold., Wrap with shared metrics collector. (+9 more)
 
 ### Community 787 - "Community 787"
-Cohesion: 0.08
-Nodes (42): perf(), Analyze proxy performance from logs.      \b     Reads logs from ~/.headroom/log, build_perf_summary(), calculate_throughput(), _calculate_throughput_stats(), _cli_filtering_report_lines(), _context_tool_lifetime_savings(), format_report() (+34 more)
+Cohesion: 0.06
+Nodes (64): perf(), Analyze proxy performance from logs.      \b     Reads logs from ~/.headroom/log, build_perf_summary(), calculate_throughput(), _calculate_throughput_stats(), _cli_filtering_report_lines(), _context_tool_lifetime_savings(), format_report() (+56 more)
 
 ### Community 788 - "Community 788"
 Cohesion: 0.10
@@ -6050,8 +6111,8 @@ Cohesion: 0.18
 Nodes (18): cc-switch reconciler: keep Headroom in the request path without fighting cc-swit, reconciler_enabled(), _route_official(), _settings_path(), _make(), Tests for the cc-switch reconciler.  The reconciler keeps Headroom in the reques, test_enabled_flag(), test_missing_file_is_noop() (+10 more)
 
 ### Community 791 - "Community 791"
-Cohesion: 0.14
-Nodes (8): Return the registered tracker for *key*, or ``None``., Start every available tracker and log its status., Return ``{key: stats_dict}`` for every available tracker.          Trackers that, Return stats for a single tracker by key, or ``None``., Return ``True`` if this tracker should be activated.          Override to gate o, Start background polling.  No-op for passive trackers., Return the current snapshot as a serialisable dict, or ``None``.          ``None, Any
+Cohesion: 0.08
+Nodes (16): QuotaTracker, Register a tracker.  Duplicate keys are rejected., Return the registered tracker for *key*, or ``None``., Read-only snapshot of the registered tracker list., Start every available tracker and log its status., Stop all registered trackers (regardless of availability)., Return ``{key: stats_dict}`` for every available tracker.          Trackers that, Return stats for a single tracker by key, or ``None``. (+8 more)
 
 ### Community 792 - "Community 792"
 Cohesion: 0.10
@@ -6066,16 +6127,16 @@ Cohesion: 0.12
 Nodes (24): _attach_proxy_log_capture(), _detach_proxy_log_capture(), _find_perf_record(), _ListHandler, _make_bedrock_backend(), _make_openai_backend(), Cache-metric coverage for backend-routed streaming.  Two regressions in main as, Build a mock backend that yields Anthropic StreamEvent objects. (+16 more)
 
 ### Community 795 - "Community 795"
-Cohesion: 0.14
-Nodes (11): CompressionEventRecorder, probe_recorder_from_env(), Opt-in JSONL recorder for compression events (probe-based replay evals).  Record, Pipeline extension appending one JSONL line per compression event.      Only ``I, Build a recorder when ``HEADROOM_PROBE_RECORD_DIR`` is set, else None.      Fail, _event(), _metadata(), Tests for the opt-in compression event probe recorder. (+3 more)
+Cohesion: 0.08
+Nodes (22): Compute per-message compression bias.          Return a dict mapping message ind, Observe canonical pipeline lifecycle events.          Override when the integrat, Called before the compression pipeline runs.          Modify and return the mess, PipelineEvent, PipelineExtension, Event emitted at a canonical pipeline stage.      Extensions may mutate ``messag, Request lifecycle extension contract for the canonical pipeline., Handle a canonical pipeline event. (+14 more)
 
 ### Community 796 - "Community 796"
 Cohesion: 0.16
 Nodes (16): create_ccr_tool_definition(), Create the CCR retrieval tool definition.      This tool definition is injected, _ContinuationClient, _make_config(), _message_response(), Regression tests for Anthropic streaming CCR retrieval interception., test_mixed_ccr_and_client_tool_does_not_issue_continuation(), test_streaming_headroom_retrieve_is_intercepted_and_returned_as_sse() (+8 more)
 
 ### Community 797 - "Community 797"
-Cohesion: 0.13
-Nodes (16): AhoCorasick, BTreeMap, CcrStore, Default, Option, Self, LogCompressionResult, LogCompressor (+8 more)
+Cohesion: 0.18
+Nodes (10): AhoCorasick, BTreeMap, CcrStore, Option, LogCompressionResult, LogFormat, ccr_marker_emitted_when_thresholds_clear(), FormatDetector (+2 more)
 
 ### Community 798 - "Community 798"
 Cohesion: 0.10
@@ -6110,16 +6171,16 @@ Cohesion: 0.15
 Nodes (19): FramingError, comment_skipped_no_event_yielded(), data_line_only_yields_event_with_no_event_name(), done_sentinel_detected(), empty_buffer_yields_nothing(), event_name_and_data(), find_double_newline(), FramingError (+11 more)
 
 ### Community 806 - "Community 806"
-Cohesion: 0.02
-Nodes (94): ASGIApp, Anthropic handler mixin for HeadroomProxy.  Contains all Anthropic Messages API, # NOTE: Upstream temporarily disabled broad image compression due to, AgentSavingsProfile, apply_agent_savings_env_defaults(), apply_agent_savings_profile(), CompressConfigLike, get_agent_savings_profile() (+86 more)
+Cohesion: 0.05
+Nodes (33): ASGIApp, CompressionMiddleware, ASGI Middleware — add Headroom compression to any Python proxy.  Drop-in middlew, Compress locally using headroom.compress()., Compress via Headroom Cloud API (managed CCR, TOIN, analytics)., ASGI middleware that compresses LLM request messages.      Two modes:     - Loca, Whether cloud compression is enabled., Close the underlying httpx.AsyncClient, if one was created. (+25 more)
 
 ### Community 807 - "Community 807"
 Cohesion: 0.11
 Nodes (18): get_trace_summary(), MemantoTracer, Tracing Utilities for MEMANTO Observability, Get current active span, Add attribute to current span, Context manager for tracing spans, Decorator for tracing memory operations, Decorator for tracing Moorcheh SDK calls (+10 more)
 
 ### Community 808 - "Community 808"
-Cohesion: 0.13
-Nodes (26): _canonical_digest(), _json_default(), Fixture recorder for the Rust-vs-Python parity harness.  This module is new (no, Monkey-patch the Phase-1 transform classes so every call writes a     fixture. R, Monkey-patch a module-level free function the same way `_wrap_method`     handle, 20 varied log-compressor inputs: short, medium, long; pytest/npm/cargo/etc., Best-effort JSON fallback for dataclasses/enums/bytes., Hit every dispatch branch in `detect_content_type`. Each entry below     targets (+18 more)
+Cohesion: 0.05
+Nodes (53): _N, get_otel_metrics(), _canonical_digest(), _json_default(), Fixture recorder for the Rust-vs-Python parity harness.  This module is new (no, Monkey-patch the Phase-1 transform classes so every call writes a     fixture. R, Monkey-patch a module-level free function the same way `_wrap_method`     handle, 20 varied log-compressor inputs: short, medium, long; pytest/npm/cargo/etc. (+45 more)
 
 ### Community 809 - "Community 809"
 Cohesion: 0.10
@@ -6138,12 +6199,12 @@ Cohesion: 0.10
 Nodes (12): format_g(), mean(), median(), normalize_scientific_exp(), sample_stdev(), sample_stdev_basic(), sample_variance(), sample_variance_constant_values_is_zero() (+4 more)
 
 ### Community 813 - "Community 813"
-Cohesion: 0.14
-Nodes (20): TempPathFactory, _assert_delivery(), _codex_base_url_from_config(), codex_proxy_stack(), _CodexProxyStack, _free_port(), _manifest(), _MockOpenAIServer (+12 more)
+Cohesion: 0.15
+Nodes (19): TempPathFactory, _assert_delivery(), _codex_base_url_from_config(), codex_proxy_stack(), _CodexProxyStack, _free_port(), _manifest(), _MockOpenAIServer (+11 more)
 
 ### Community 814 - "Community 814"
 Cohesion: 0.04
-Nodes (37): _entity_collection_name(), _is_sensitive_field(), Lazily initialize entity store on first use., Check if a field should be redacted for telemetry safety.      Uses a layered ap, Safely deepcopy config, falling back to dict-based cloning for non-serializable, Lazily initialize entity store on first use., _safe_deepcopy_config(), MockConnectionClass (+29 more)
+Nodes (39): _entity_collection_name(), _is_sensitive_field(), Lazily initialize entity store on first use., Check if a field should be redacted for telemetry safety.      Uses a layered ap, Safely deepcopy config, falling back to dict-based cloning for non-serializable, Lazily initialize entity store on first use., _safe_deepcopy_config(), MockConnectionClass (+31 more)
 
 ### Community 815 - "Community 815"
 Cohesion: 0.07
@@ -6171,15 +6232,15 @@ Nodes (26): AgentDef, _display_path(), _inject_into_file(), install_agent(), _in
 
 ### Community 821 - "Community 821"
 Cohesion: 0.09
-Nodes (17): getMDXComponents(), Layout(), { rewrite: rewriteDocs }, { rewrite: rewriteSuffix }, Layout(), baseOptions(), gitConfig, getLLMText() (+9 more)
+Nodes (17): getStatusCode(), NotFound(), NotFoundProps, getMDXComponents(), { rewrite: rewriteDocs }, { rewrite: rewriteSuffix }, gitConfig, getLLMText() (+9 more)
 
 ### Community 822 - "Community 822"
 Cohesion: 0.15
 Nodes (10): _initialize_payload(), POST without the required Accept header should return 406., End-to-end JSON-RPC flows over Streamable HTTP., tools/list should return all registered MCP tools., Every tool returned by tools/list should have a non-empty description., Every tool should declare an inputSchema., Calling a non-existent tool should return a JSON-RPC error., An unknown JSON-RPC method should return an error. (+2 more)
 
 ### Community 823 - "Community 823"
-Cohesion: 0.10
-Nodes (21): get_headroom_command(), load_mcp_config(), mcp(), mcp_status(), mcp_uninstall(), MCP (Model Context Protocol) CLI commands for Claude Code integration.  Provides, Remove Headroom MCP server from Claude Code config.      \b     Removes headroom, Check Headroom MCP configuration status.      \b     Shows whether headroom is c (+13 more)
+Cohesion: 0.09
+Nodes (23): get_headroom_command(), load_mcp_config(), mcp(), mcp_serve(), mcp_status(), mcp_uninstall(), MCP (Model Context Protocol) CLI commands for Claude Code integration.  Provides, Remove Headroom MCP server from Claude Code config.      \b     Removes headroom (+15 more)
 
 ### Community 824 - "Community 824"
 Cohesion: 0.12
@@ -6210,16 +6271,16 @@ Cohesion: 0.17
 Nodes (22): aggregate_savings(), _Bucket, _coerce_timestamp(), estimate_cost_usd(), _label(), _maybe_compact(), _ranked(), Durable append-only savings event ledger.  Every compression — interactive ``hea (+14 more)
 
 ### Community 831 - "Community 831"
-Cohesion: 0.12
-Nodes (9): delete() should return False for keys that don't exist., exists() should return True for stored entries., exists() should return False for missing entries., count() should return 0 for empty backend., get_stats() should return required fields., Backend should handle empty string as key., Test suite for InMemoryBackend.      These tests define the contract for all bac, Create a fresh backend for each test. (+1 more)
+Cohesion: 0.10
+Nodes (16): InMemoryBackend, delete() should return False for keys that don't exist., exists() should return True for stored entries., exists() should return False for missing entries., count() should return 0 for empty backend., keys() should return empty list for empty backend., items() should return empty list for empty backend., get_stats() should return required fields. (+8 more)
 
 ### Community 832 - "Community 832"
 Cohesion: 0.03
 Nodes (30): Unit tests for Milvus vector store implementation.  These tests verify: 1. Corre, Test filter creation with multiple conditions., Test search with metadata filters (reproduces user's bug scenario)., Test that search works with different user_ids (reproduces reported bug)., Test that update correctly uses upsert operation., Test vector deletion., Test retrieving a vector by ID., get() must return None (not raise IndexError) for an unknown id. (+22 more)
 
 ### Community 833 - "Community 833"
-Cohesion: 0.03
-Nodes (115): Undo ``headroom wrap opencode`` edits to the active OpenCode config file.      B, unwrap_opencode(), append_headroom_plugin(), _inject_key_into_json(), inject_opencode_provider_config(), opencode_config_paths(), _opencode_home_dir(), _parse_json_loose() (+107 more)
+Cohesion: 0.10
+Nodes (29): _opencode_home_dir(), OpenCode config file helpers for wrap and persistent install., Render a Headroom MCP block as a JSON comment-wrapped snippet., Return the OpenCode home/config directory., Snapshot ``opencode.json`` to ``backup_file`` before the first injection.      G, Render a Headroom provider block as a JSON comment-wrapped snippet., _render_mcp_block(), _render_provider_block() (+21 more)
 
 ### Community 834 - "Community 834"
 Cohesion: 0.12
@@ -6234,16 +6295,16 @@ Cohesion: 0.12
 Nodes (15): URL-like values should not be used as category labels., Works correctly without kept_indices (uses _item_key fallback)., TestSummarizeDroppedItems, Counter, _categorize_by_fields(), _common_keys(), _find_notable_items(), _item_key() (+7 more)
 
 ### Community 838 - "Community 838"
-Cohesion: 0.10
-Nodes (13): FakeBackend, FakeMemory, Comprehensive tests for the universal memory sync engine.  Tests cover: - Core s, Test exporting from DB to agent files., Don't re-export memories that were imported FROM claude (anti-echo)., Test metadata tracking for audit and lineage., In-memory backend for testing sync without real DB., #1092: the sync subprocess must pick the torch-free ONNX embedder.      Defaulti (+5 more)
+Cohesion: 0.14
+Nodes (14): BatchContext, BatchRequestContext, Process batch results, handling CCR tool calls.          Args:             batch, Extract the custom ID from a result., Extract the actual response from a batch result., Process a single result with CCR tool calls.          Args:             original, Make a continuation API call.          Args:             messages: The messages, Make Anthropic continuation call. (+6 more)
 
 ### Community 839 - "Community 839"
 Cohesion: 0.09
 Nodes (13): Tests for durable proxy savings history., The /stats-history response must include cli_filtering (RTK) lifetime stats., In stateless mode the tracker updates in-memory counters but never     touches t, Control: default (stateless=False) behavior is unchanged — it persists., _record_request(), test_dashboard_includes_history_toggle_and_endpoint(), test_malformed_savings_state_is_ignored_safely(), test_non_stateless_savings_tracker_still_persists() (+5 more)
 
 ### Community 840 - "Community 840"
-Cohesion: 0.03
-Nodes (93): agent_activate(), agent_bootstrap(), agent_create(), agent_deactivate(), agent_delete(), agent_list(), MEMANTO CLI - Agent commands (create, list, activate, deactivate, delete, bootst, Activate an agent and start its active session. (+85 more)
+Cohesion: 0.05
+Nodes (36): agent_activate(), agent_bootstrap(), agent_create(), agent_deactivate(), agent_delete(), agent_list(), MEMANTO CLI - Agent commands (create, list, activate, deactivate, delete, bootst, Activate an agent and start its active session. (+28 more)
 
 ### Community 841 - "Community 841"
 Cohesion: 0.05
@@ -6258,12 +6319,12 @@ Cohesion: 0.11
 Nodes (19): CacheError, CompressionError, ConfigurationError, HeadroomError, ProviderError, Custom exceptions for Headroom.  This module provides explicit exception classes, Raised when compression fails.      This includes:     - Parse errors in tool ou, Raised when token counting fails.      This includes:     - Unknown model for to (+11 more)
 
 ### Community 844 - "Community 844"
-Cohesion: 0.10
-Nodes (12): Check if this entry has expired., Store compressed content and return hash for retrieval.          Args:, Get metadata about a stored entry without retrieving full content.          Usef, Check if a hash key exists and is not expired.          Args:             hash_k, Return availability and TTL metadata for a stored entry., Get store statistics for monitoring., Get memory statistics for the MemoryTracker.          Returns:             Compo, Evict old entries if at capacity. Must be called with lock held.          MEDIUM (+4 more)
+Cohesion: 0.13
+Nodes (18): _benign_lines(), _compression_ratio(), _contains(), _normalize(), _position_index(), Adversarial robustness grid for Headroom compressors (offline, no LLM).  Compres, Large deterministic carriers where compression actually drops content.      The, Inject the payload as a string field on a dict inside JSON content.      Attacke (+10 more)
 
 ### Community 845 - "Community 845"
-Cohesion: 0.03
-Nodes (54): _handle_headroom_retrieve(), Headroom CCR retrieve plugin.  The headroom proxy (127.0.0.1:8787) compresses la, Register the headroom_retrieve tool. Called by the plugin loader., register(), Memanto memory-agent provider for the Hermes agent.  Install the directory plugi, _as_bool(), _clean_text_for_capture(), _default_config() (+46 more)
+Cohesion: 0.09
+Nodes (7): _format_recall_block(), Render recall hits into a context block for prefetch injection., Unit tests for the Memanto Hermes memory provider.  These run without a Hermes i, test_format_recall_block_drops_item_that_was_only_a_delimiter(), test_format_recall_block_empty(), test_format_recall_block_renders_types_and_scores(), test_format_recall_block_strips_wrapper_delimiters()
 
 ### Community 846 - "Community 846"
 Cohesion: 0.05
@@ -6274,16 +6335,16 @@ Cohesion: 0.11
 Nodes (15): get_memory_answer_prompt(), Generate a balanced answer prompt for memory-based Q&A.      Based on research f, Tests for get_memory_answer_prompt() function., Function should return a string., Function should return non-empty prompt., Without speaker_names, context should be generic., Single speaker should add context about them., Multiple speakers should be joined with 'and'. (+7 more)
 
 ### Community 848 - "Community 848"
-Cohesion: 0.10
-Nodes (13): AgentMemory, A memory entry read from an agent's native format., CodexAdapter, Codex CLI memory sync adapter.  Syncs memories to/from a headroom-managed sectio, Sync adapter for Codex's AGENTS.md., Read memories from the headroom section of AGENTS.md., Write memories into the headroom section of AGENTS.md., Hash of AGENTS.md contents. (+5 more)
+Cohesion: 0.08
+Nodes (14): Tests for CCR tool injection and MCP integration., Test parsing of tool calls from LLM responses., Parse Anthropic tool call format., Parse OpenAI tool call format., Returns None for non-CCR tool calls., Handles malformed JSON in OpenAI arguments., Test hash validation security measures.      CCR hashes are 12 hex chars (SmartC, Rejects hash that's too short (potential spoofing attack). (+6 more)
 
 ### Community 849 - "Community 849"
-Cohesion: 0.12
-Nodes (14): TarFile, Tests for managed lean-ctx installation., test_download_lean_ctx_extracts_zip_binary(), test_download_lean_ctx_rejects_invalid_download_url(), test_download_lean_ctx_skips_verify_for_non_native_target(), test_download_lean_ctx_verifies_native_target(), test_get_lean_ctx_path_finds_windows_managed_binary(), Tests for host-target rtk installation overrides. (+6 more)
+Cohesion: 0.18
+Nodes (23): inject_opencode_provider_config(), Inject a Headroom model provider into OpenCode's config file.      Safe to call, inject_opencode_provider_config creates the config file when missing., inject_opencode_provider_config is safe to call multiple times., inject_opencode_provider_config preserves MCP without adding headroom., inject_opencode_provider_config is idempotent on complex configs., inject_opencode_provider_config preserves top-level keys like plugin, permission, Default config path resolves to ~/.config/opencode/opencode.json. (+15 more)
 
 ### Community 850 - "Community 850"
-Cohesion: 0.05
-Nodes (49): any-llm backend for Headroom.  Talk to 38+ LLM providers (OpenAI, Mistral, Groq,, Backend, BackendResponse, Check if this backend supports a model.          Args:             model: Model, Send an OpenAI-format message request.          Unlike send_message(), this take, Stream an OpenAI-format chat completion.          Yields SSE-formatted strings:, Clean up resources (e.g., close HTTP clients)., Standardized response from a backend. (+41 more)
+Cohesion: 0.08
+Nodes (22): _convert_anthropic_tool(), _convert_tool_choice(), LiteLLMBackend, Stream OpenAI-format chat completion via LiteLLM.          Yields SSE-formatted, Convert Anthropic tool format to OpenAI function format.      Anthropic: {"name", Convert Anthropic tool_choice to OpenAI format.      Anthropic: {"type": "auto"}, Backend using LiteLLM for multi-provider support.      Supports any provider Lit, Initialize LiteLLM backend.          Args:             provider: LiteLLM provide (+14 more)
 
 ### Community 851 - "Community 851"
 Cohesion: 0.08
@@ -6294,8 +6355,8 @@ Cohesion: 0.20
 Nodes (17): AnthropicStreamState, BlockState, parse_json(), payload_preview(), StateError, StreamStatus, UsageBuilder, Bytes (+9 more)
 
 ### Community 853 - "Community 853"
-Cohesion: 0.10
-Nodes (36): acquireDreamLock(), checkCheapGates(), checkMemoryGate(), DREAM_DEFAULTS, DreamConfig, DreamLock, DreamState, ensureDir() (+28 more)
+Cohesion: 0.08
+Nodes (41): acquireDreamLock(), checkCheapGates(), checkMemoryGate(), DREAM_DEFAULTS, DreamConfig, DreamLock, DreamState, ensureDir() (+33 more)
 
 ### Community 854 - "Community 854"
 Cohesion: 0.16
@@ -6371,27 +6432,27 @@ Nodes (25): 1. Create Agent (One-Time), 2. Activate Session, 3. Store Memory (NO
 
 ### Community 872 - "Community 872"
 Cohesion: 0.13
-Nodes (15): Eq, H, Hash, Ord, Ordering, PartialEq, PartialOrd, Into (+7 more)
+Nodes (13): Eq, H, Ord, PartialEq, PartialOrd, Into, String, LogLevel (+5 more)
 
 ### Community 873 - "Community 873"
-Cohesion: 0.09
-Nodes (20): _CacheEntry, CompressionCache, _extract_tool_result_content(), _is_tool_result_message(), Retrieve compressed content by hash, refreshing LRU position on hit., Store a compressed version keyed by content hash.          If the hash already e, Mark a content hash as stable (unchanged, not compressed).          Used for too, Mark all tool_result hashes in messages[:up_to] as stable. (+12 more)
+Cohesion: 0.11
+Nodes (15): _CacheEntry, _extract_tool_result_content(), _is_tool_result_message(), Retrieve compressed content by hash, refreshing LRU position on hit., Store a compressed version keyed by content hash.          If the hash already e, Mark all tool_result hashes in messages[:up_to] as stable., Compute a truncated SHA-256 hash for string or list content.          For list c, Count consecutive stable messages from the start.          A message is stable i (+7 more)
 
 ### Community 874 - "Community 874"
-Cohesion: 0.14
-Nodes (11): Best-effort text from a Responses item field (string or part list)., Convert a Responses payload to OpenAI-style messages for waste parsing (#820)., _responses_input_to_waste_messages(), _responses_part_text(), _big_output(), _fco(), Codex (OpenAI Responses API) waste-signal visibility (issue #820).  The /v1/resp, TestResponsesPartText (+3 more)
+Cohesion: 0.12
+Nodes (14): Best-effort text from a Responses item field (string or part list)., Convert a Responses payload to OpenAI-style messages for waste parsing (#820)., _responses_input_to_waste_messages(), _responses_part_text(), _big_output(), _fco(), Codex (OpenAI Responses API) waste-signal visibility (issue #820).  The /v1/resp, TestResponsesPartText (+6 more)
 
 ### Community 875 - "Community 875"
-Cohesion: 0.16
-Nodes (28): Start the installed supervisor or runtime for a deployment., Stop the installed supervisor for a deployment., start_supervisor(), stop_supervisor(), _LaunchctlResult, _manifest(), test_command_for_script_and_unix_runner(), test_install_supervisor_darwin_windows_and_unsupported() (+20 more)
+Cohesion: 0.12
+Nodes (47): ArtifactRecord, ArtifactRecord, A rendered file or platform object owned by the deployment., _command_for_script(), install_supervisor(), _is_windows(), _linux_service_unit(), _linux_task_spec() (+39 more)
 
 ### Community 876 - "Community 876"
 Cohesion: 0.20
 Nodes (23): ImageCompressor, _hide_module(), _install_fake_module(), _make_compressor(), OCR backend API-compat regression tests for issue #372.  The rapidocr ecosystem, Real-world v3 behavior: when detection finds nothing, RapidOCROutput     has txt, Inject a synthetic module into sys.modules so import sees it., Force ImportError when `name` is imported. (+15 more)
 
 ### Community 877 - "Community 877"
-Cohesion: 0.13
-Nodes (17): build_headroom_spec(), Construct the canonical :class:`ServerSpec` for the headroom server.      The sp, _FakeRegistrar, Tests for the install_everywhere orchestrator., Minimal registrar for orchestrator tests., test_build_spec_custom_proxy_sets_env(), test_build_spec_default_proxy_no_env(), test_build_spec_default_url_omits_env() (+9 more)
+Cohesion: 0.10
+Nodes (24): build_headroom_spec(), get_all_registrars(), install_everywhere(), Return one instance of every registrar implemented today.      The list grows as, Construct the canonical :class:`ServerSpec` for the headroom server.      The sp, Install the headroom MCP server into every detected agent.      Args:         pr, MCPRegistrar, _FakeRegistrar (+16 more)
 
 ### Community 878 - "Community 878"
 Cohesion: 0.10
@@ -6419,7 +6480,7 @@ Nodes (15): AuthModePolicyEnforcement, CacheControlAutoFrozen, CliArgs, Compress
 
 ### Community 884 - "Community 884"
 Cohesion: 0.04
-Nodes (46): Test that reset() does NOT call graph.reset() when graph is disabled., search() should reject user_id as top-level kwarg., get_all() should reject user_id as top-level kwarg., Sync Memory._create_memory must include text_lemmatized in payload for BM25 keyw, Regression test: AsyncMemory._create_memory must include text_lemmatized     in, Regression: Memory.reset() must clear the messages table, not just history., Regression: AsyncMemory.reset() must clear the messages table, not just history., Regression #5710: async LangChain path must call remove_code_blocks(). (+38 more)
+Nodes (51): normalize_facts(), Normalize LLM-extracted facts to a list of strings.      Smaller LLMs (e.g. llam, Test that reset() does NOT call graph.reset() when graph is disabled., search() should reject user_id as top-level kwarg., get_all() should reject user_id as top-level kwarg., Sync Memory._create_memory must include text_lemmatized in payload for BM25 keyw, Regression test: AsyncMemory._create_memory must include text_lemmatized     in, Regression: Memory.reset() must clear the messages table, not just history. (+43 more)
 
 ### Community 885 - "Community 885"
 Cohesion: 0.14
@@ -6442,12 +6503,12 @@ Cohesion: 0.13
 Nodes (22): AxMsg, ax_to_tg(), build_upstream_ws_url(), IntoResponseBody, run_ws_pump(), (StatusCode, String), tg_to_ax(), ws_handler() (+14 more)
 
 ### Community 890 - "Community 890"
-Cohesion: 0.07
-Nodes (16): Memory, rejectTopLevelEntityParams(), validateAndTrimEntityId(), validateSearchParams(), mockEmbedding, mockEmbedding, MemoryItem, SearchResult (+8 more)
+Cohesion: 0.05
+Nodes (43): DEFAULT_MEMORY_CONFIG, ENTITY_PARAMS, Memory, rejectTopLevelEntityParams(), validateAndTrimEntityId(), validateSearchParams(), AdditiveExtractionSchema, extractJson() (+35 more)
 
 ### Community 891 - "Community 891"
-Cohesion: 0.06
-Nodes (19): get_batch_context_store(), Get the global batch context store instance., Reset the global batch context store (for testing)., reset_batch_context_store(), Reset global store before each test., Reset global store before each test., Reset global store before each test., Reset global store before each test. (+11 more)
+Cohesion: 0.08
+Nodes (13): Reset the global batch context store (for testing)., reset_batch_context_store(), Reset global store before each test., Reset global store before each test., Reset global store before each test., Reset global store before each test., Reset global store before each test., Reset global store before each test. (+5 more)
 
 ### Community 892 - "Community 892"
 Cohesion: 0.18
@@ -6462,8 +6523,8 @@ Cohesion: 0.08
 Nodes (23): Agent wrapping, API endpoints, Bedrock via a local gateway, CLI options, Cloud providers, Context management, Core, Docker (+15 more)
 
 ### Community 895 - "Community 895"
-Cohesion: 0.10
-Nodes (12): Any, Input Validation and Cost Guards for MEMANTO, Memory write request with input validation, Memory read request with input validation, Memory answer request with input validation, Validate total request size, Validate metadata size, Validate k (result count) limit (+4 more)
+Cohesion: 0.03
+Nodes (93): HTTPException, check_namespace_exists(), create_namespace(), delete_namespace(), list_namespaces(), Namespace Management Routes, Create a new namespace, List all MEMANTO namespaces (+85 more)
 
 ### Community 896 - "Community 896"
 Cohesion: 0.18
@@ -6482,8 +6543,8 @@ Cohesion: 0.13
 Nodes (17): AuthenticatedUser, AuthService, get_current_user(), Authentication and Authorization for MEMANTO, Authorize access to specific scope, Validate that request tenant matches authenticated tenant, Dependency to get current authenticated user, Authenticated user/tenant information (+9 more)
 
 ### Community 900 - "Community 900"
-Cohesion: 0.07
-Nodes (39): Mem0Client, Mem0Config, Mem0Unavailable, Lazily construct the embedded Mem0 Memory instance., Runtime configuration for the optional Mem0 memory layer.      Mem0 can be used, Store a memory (or a conversation turn) in Mem0. Falls back to in-memory store i, Retrieve relevant memories by semantic query. Falls back to substring search if, List stored memories. Falls back to in-memory list if Mem0 is down. (+31 more)
+Cohesion: 0.12
+Nodes (22): Mem0Client, Mem0Config, Mem0Unavailable, Lazily construct the embedded Mem0 Memory instance., Runtime configuration for the optional Mem0 memory layer.      Mem0 can be used, Store a memory (or a conversation turn) in Mem0. Falls back to in-memory store i, Retrieve relevant memories by semantic query. Falls back to substring search if, List stored memories. Falls back to in-memory list if Mem0 is down. (+14 more)
 
 ### Community 901 - "Community 901"
 Cohesion: 0.17
@@ -6491,7 +6552,7 @@ Nodes (21): _anthropic_client(), AnthropicHttpStats, _asyncio_timeout(), build_p
 
 ### Community 902 - "Community 902"
 Cohesion: 0.06
-Nodes (55): bootstrap_via_backend(), claim_via_otp(), Agent Mode commands — bootstrap (unattended signup) and claim (OTP-based human u, Claim an existing Agent Mode account via OTP — no browser, no polling.      Reus, Defend against partial/malformed backend responses.      A backend regression th, POST /api/v1/auth/agent_mode/ and mutate config in place.      Args:         con, _utcnow_iso(), _validate_envelope() (+47 more)
+Nodes (48): bootstrap_via_backend(), claim_via_otp(), Agent Mode commands — bootstrap (unattended signup) and claim (OTP-based human u, Claim an existing Agent Mode account via OTP — no browser, no polling.      Reus, Defend against partial/malformed backend responses.      A backend regression th, POST /api/v1/auth/agent_mode/ and mutate config in place.      Args:         con, _utcnow_iso(), _validate_envelope() (+40 more)
 
 ### Community 903 - "Community 903"
 Cohesion: 0.17
@@ -6542,8 +6603,8 @@ Cohesion: 0.15
 Nodes (15): _Agg, audit_reads(), _audit_session(), _block_text(), _classify_path(), _fmt(), _parse_ts(), Read-opportunity audit over local Claude Code transcripts.  Measures, from REAL (+7 more)
 
 ### Community 915 - "Community 915"
-Cohesion: 0.11
-Nodes (14): ContextTracker, Analyze a query to find relevant compressed contexts.          Args:, Calculate relevance score between query and compressed context.          Uses si, Extract meaningful keywords from text., Generate human-readable reason for expansion recommendation., Get list of currently tracked hashes., Tracks compressed contexts across conversation turns.      This tracker maintain, Test formatting of expansions for context. (+6 more)
+Cohesion: 0.03
+Nodes (90): CompressedContext, ContextTracker, ContextTrackerConfig, ExpansionRecommendation, get_context_tracker(), Multi-turn context tracking for CCR (Compress-Cache-Retrieve).  This module trac, Track a compression event.          Args:             hash_key: The CCR hash for, Analyze a query to find relevant compressed contexts.          Args: (+82 more)
 
 ### Community 916 - "Community 916"
 Cohesion: 0.05
@@ -6574,20 +6635,20 @@ Cohesion: 0.20
 Nodes (22): _attach_footer(), _coerce_type(), _format_supporting_data(), map_letta(), map_mem0(), map_supermemory(), _now_utc(), _parse_dt() (+14 more)
 
 ### Community 923 - "Community 923"
-Cohesion: 0.17
-Nodes (7): check_claude_routing(), check_codex_routing(), Is Claude Code configured to route through the proxy?, Is Codex configured to route through the proxy?      Detection keys on the ``[mo, TestClaudeRouting, TestCodexRouting, Path
+Cohesion: 0.20
+Nodes (13): CodexRegistrar, _diff_specs(), _entry_to_spec(), _marker_end(), _marker_start(), OpenAI Codex CLI MCP registrar.  Codex stores MCP server config in ``$CODEX_HOME, Render a Headroom-marked TOML block for ``spec``., Render a Python string as a TOML basic string literal. (+5 more)
 
 ### Community 924 - "Community 924"
-Cohesion: 0.07
-Nodes (33): Where a recommendation should be written., RecommendationTarget, _build_section(), CodexWriter, _merge_into_file(), _merge_recommendations(), _parse_prior_recommendations(), Context writers — write learned patterns to agent-specific context files.  Write (+25 more)
+Cohesion: 0.08
+Nodes (52): AnalysisResult, _build_prior_patterns_section(), _format_event(), _format_tool_call(), Session analysis via LLM — replaces all regex/heuristic analysis.  Pipeline: Sca, Format the current marker blocks from CLAUDE.md / MEMORY.md for the LLM.      Re, Format a single event into a compact digest line., Format a single tool call into a compact digest line. (+44 more)
 
 ### Community 925 - "Community 925"
 Cohesion: 0.14
 Nodes (8): is_anthropic_auth(), Detect Anthropic auth signals in request headers., API key prefix in Bearer header still detected as Anthropic., Non-Anthropic Bearer tokens don't auto-detect as Anthropic., Claude Code sends both anthropic-version and Bearer token., TestIsAnthropicAuth, Tests for headroom.proxy.helpers.is_anthropic_auth., TestIsAnthropicAuth
 
 ### Community 926 - "Community 926"
-Cohesion: 0.06
-Nodes (27): AgentRushConfig, DefaultsConfig, ensure_config_dir(), get_nested_value(), Mem0Config, PlatformConfig, Configuration management for mem0 CLI.  Config precedence (highest to lowest): 1, Get a config value by dotted path, e.g. 'platform.api_key' or short form 'api_ke (+19 more)
+Cohesion: 0.05
+Nodes (31): mem0 identify — declare which agent owns the current agent-mode key.  Used when, AgentRushConfig, DefaultsConfig, ensure_config_dir(), get_nested_value(), Mem0Config, PlatformConfig, Configuration management for mem0 CLI.  Config precedence (highest to lowest): 1 (+23 more)
 
 ### Community 927 - "Community 927"
 Cohesion: 0.19
@@ -6602,8 +6663,8 @@ Cohesion: 0.11
 Nodes (20): doctor(), DoctorResult, run(), AnswerInput, BatchRememberItem, ConflictDateInput, ConversationMessage, CreateAgentInput (+12 more)
 
 ### Community 930 - "Community 930"
-Cohesion: 0.09
-Nodes (16): CopilotQuotaState, _CopilotQuotaTracker, discover_github_token(), get_copilot_quota_tracker(), GitHub Copilot monthly quota tracking via the copilot_internal/user API.  GitHub, Thread-safe singleton state for Copilot quota tracking., Return the first GitHub token found from known environment variables., Singleton background poller for GitHub Copilot quota.      Implements :class:`~h (+8 more)
+Cohesion: 0.12
+Nodes (12): CopilotQuotaState, _CopilotQuotaTracker, get_copilot_quota_tracker(), GitHub Copilot monthly quota tracking via the copilot_internal/user API.  GitHub, Thread-safe singleton state for Copilot quota tracking., Singleton background poller for GitHub Copilot quota.      Implements :class:`~h, Return the latest quota state dict, or ``None`` if no data yet., Start the background polling loop. (+4 more)
 
 ### Community 931 - "Community 931"
 Cohesion: 0.09
@@ -6614,12 +6675,12 @@ Cohesion: 0.18
 Nodes (20): _clear_claude_mode_env(), _Completed, _FakeProxyProcess, _invoke_wrap_claude(), Claude wrap Vertex upstream handoff tests., runner(), test_ensure_proxy_restarts_idle_proxy_for_vertex_api_url_mismatch(), test_ensure_proxy_restarts_idle_proxy_to_clear_vertex_api_url() (+12 more)
 
 ### Community 933 - "Community 933"
-Cohesion: 0.06
-Nodes (23): get_process_memory_mb(), get_tracked_memory(), Comprehensive integration tests for memory tracking with real components.  These, Test that HNSW vector index memory is tracked as vectors are added., Tests that exercise the proxy with real API calls and track memory., Get API key from environment., Reset the tracker singleton before each test., Test memory tracking with real API calls. (+15 more)
+Cohesion: 0.27
+Nodes (3): FigmaMCPServer, Any, MCP server that wraps the figma-agent-core Figma-to-code pipeline.      The wrap
 
 ### Community 934 - "Community 934"
-Cohesion: 0.12
-Nodes (22): Router, bedrock_proxy(), CapturedRequest, mount_capture_invoke(), oauth_policy_passthrough_prefer(), _pin(), sha256_hex(), test_credentials() (+14 more)
+Cohesion: 0.13
+Nodes (21): bedrock_proxy(), CapturedRequest, mount_capture_invoke(), oauth_policy_passthrough_prefer(), _pin(), sha256_hex(), test_credentials(), AppState (+13 more)
 
 ### Community 935 - "Community 935"
 Cohesion: 0.15
@@ -6734,8 +6795,8 @@ Cohesion: 0.15
 Nodes (19): OpenClaw-specific provider helpers., build_plugin_entry(), build_unwrap_entry(), decode_entry_json(), normalize_gateway_provider_ids(), OpenClaw wrapper provider helpers., Normalize configured OpenClaw provider ids., Decode a JSON payload captured from `openclaw config get` when available. (+11 more)
 
 ### Community 963 - "Community 963"
-Cohesion: 0.20
-Nodes (16): SmartCrusher, SmartCrusherBuilder, AnchorSelector, Arc, Box, CcrStore, CompactionStage, Constraint (+8 more)
+Cohesion: 0.18
+Nodes (18): CrushArrayResult, SmartCrusher, SmartCrusherBuilder, AnchorSelector, Arc, Box, CcrStore, CompactionStage (+10 more)
 
 ### Community 964 - "Community 964"
 Cohesion: 0.18
@@ -6770,20 +6831,20 @@ Cohesion: 0.16
 Nodes (18): _force_result(), Tests that ContentRouter.apply() gates the role="tool" STRING path against lossy, role=tool + lossy strategy + no CCR marker -> original preserved bit-for-bit., role=tool + lossy strategy WITH a CCR marker -> compressed accepted (recoverable, Same lossy-unmarked result on role=assistant -> still compressed.      Proves th, Every lossy-unmarked strategy is gated for tool role., Structured strategies are lossless/self-marking -> not gated, compressed kept., Word-count tokenizer stub — no model, deterministic, offline-safe. (+10 more)
 
 ### Community 973 - "Community 973"
-Cohesion: 0.16
-Nodes (9): _big_payload(), _function_response_content(), proxy(), Gemini functionResponse waste-signal visibility (issue #819).  Gemini ``function, TestFunctionResponseConversion, TestFunctionResponseWasteParsing, TestPipelineWasteMessages, tokenizer() (+1 more)
+Cohesion: 0.17
+Nodes (8): _big_payload(), _function_response_content(), proxy(), Gemini functionResponse waste-signal visibility (issue #819).  Gemini ``function, TestFunctionResponseConversion, TestFunctionResponseWasteParsing, TestPipelineWasteMessages, HeadroomProxy
 
 ### Community 974 - "Community 974"
 Cohesion: 0.09
 Nodes (12): Test _gemini_contents_to_messages returns correct preserved indices., Pure text content returns empty preserved_indices set., Single content with image preserves its index., Image at beginning of conversation preserves index 0., Image in middle of conversation preserves correct index., Image at end of conversation preserves correct index., Multiple contents with images preserve all their indices., Content with function call preserves its index. (+4 more)
 
 ### Community 975 - "Community 975"
-Cohesion: 0.13
-Nodes (8): Test importing from agent files into DB., Memories already in DB are not re-imported., Test full bidirectional sync., Running sync twice produces no duplicates., Second sync with no changes completes in < 10ms., TestBidirectionalSync, TestSyncImport, Path
+Cohesion: 0.16
+Nodes (15): Run migrations in 'offline' mode.      This configures the context with just a U, Run migrations in 'online' mode.      In this scenario we need to create an Engi, get_app_details(), get_app_or_404(), list_app_accessed_memories(), list_app_memories(), list_apps(), update_app_details() (+7 more)
 
 ### Community 976 - "Community 976"
 Cohesion: 0.04
-Nodes (33): Tests for provider model fallback and configuration., Tests for Anthropic config file/env var loading., Test loading config from JSON env var., Test loading config from file path in env var., Test loading from ~/.headroom/models.json., Test that env var takes precedence over config file., Tests for OpenAI provider model fallback., Test that known models work. (+25 more)
+Nodes (33): Tests for provider model fallback and configuration., Test pattern-based inference for sonnet models., Test pattern-based inference for haiku models., Test fallback for unknown Claude models., Test that unknown models don't raise exceptions., Test that explicit context_limits override defaults., Test pricing retrieval for known models., Test cost estimation works for new models. (+25 more)
 
 ### Community 977 - "Community 977"
 Cohesion: 0.17
@@ -6794,8 +6855,8 @@ Cohesion: 0.10
 Nodes (9): BaselineModel, Per-stratum baseline of unshaped output tokens (the synthetic control).      Bui, Return ``(mean, var, n)`` for *key* with hierarchical back-off.          Falls b, SavingsLedger, Tests for headroom.proxy.output_savings — the counterfactual estimator., TestBaselineModel, TestEstimateFromBaseline, TestEstimateFromHoldout (+1 more)
 
 ### Community 979 - "Community 979"
-Cohesion: 0.18
-Nodes (20): Regex, cmp(), dedupe_collapses_genuinely_repeated_warnings(), detects_cargo_format(), detects_generic_for_unrecognised_input(), detects_jest_format(), detects_make_format(), detects_npm_format() (+12 more)
+Cohesion: 0.15
+Nodes (22): Regex, cmp(), dedupe_collapses_genuinely_repeated_warnings(), detects_cargo_format(), detects_generic_for_unrecognised_input(), detects_jest_format(), detects_make_format(), detects_npm_format() (+14 more)
 
 ### Community 980 - "Community 980"
 Cohesion: 0.12
@@ -6846,8 +6907,8 @@ Cohesion: 0.05
 Nodes (21): Tests for OSS telemetry sampling.  Tests target _sampling_before_send and its wi, If a msg arrives without a properties key, we create it before annotating., Defensive: a msg with no event field is treated as a hot-path event (gets sample, Defensive: if PostHog ever passes us a non-dict, we drop the event., Verify the hook is wired into the OSS singleton but NOT client_telemetry., _get_oss_telemetry() should pass _sampling_before_send to AnonymousTelemetry., The module-level client_telemetry must NOT receive before_send.          client_, Verify the env var parsing helper. Must never raise. (+13 more)
 
 ### Community 993 - "Community 993"
-Cohesion: 0.10
-Nodes (19): Get pricing for a model from LiteLLM's database.          Args:             mode, estimate_cost(), get_litellm_model_cost(), get_model_pricing(), _inject_deepseek_pricing(), list_available_models(), LiteLLMModelPricing, LiteLLM-based pricing for model cost estimation.  Uses LiteLLM's community-maint (+11 more)
+Cohesion: 0.13
+Nodes (16): estimate_cost(), get_litellm_model_cost(), get_model_pricing(), _inject_deepseek_pricing(), list_available_models(), LiteLLMModelPricing, LiteLLM-based pricing for model cost estimation.  Uses LiteLLM's community-maint, Pricing information from LiteLLM's database.      All costs are in USD per 1 mil (+8 more)
 
 ### Community 994 - "Community 994"
 Cohesion: 0.10
@@ -6874,8 +6935,8 @@ Cohesion: 0.16
 Nodes (9): CopilotQuotaCategory, CopilotQuotaSnapshot, Full quota snapshot from one /copilot_internal/user response., Quota data for a single Copilot usage category., Unit tests for headroom.subscription.copilot_quota., Regression for the ``asyncio.shield(event.wait())`` pattern.          Matches th, TestCopilotQuotaCategory, TestCopilotQuotaPollLoopLeak (+1 more)
 
 ### Community 1000 - "Community 1000"
-Cohesion: 0.12
-Nodes (10): create_litellm_provider(), is_litellm_available(), Create a LiteLLM provider.      Returns:         Configured LiteLLMProvider., Check if LiteLLM is installed.      Returns:         True if litellm is availabl, Tests for LiteLLM provider., Test checking LiteLLM availability., Test creating LiteLLM provider., Test LiteLLM supports any model. (+2 more)
+Cohesion: 0.06
+Nodes (18): create_litellm_provider(), is_litellm_available(), LiteLLMProvider, Provider using LiteLLM for universal model support.      LiteLLM supports 100+ L, Initialize LiteLLM provider., Check if LiteLLM supports this model.          LiteLLM supports most models, so, Get context limit using LiteLLM's model info., Get recommended output buffer. (+10 more)
 
 ### Community 1001 - "Community 1001"
 Cohesion: 0.24
@@ -6886,8 +6947,8 @@ Cohesion: 0.09
 Nodes (25): MemoryInjectionBudget, ``MemoryInjectionBudget``: uniform token/entry cap on retrieved memory.  Pre-thi, Frozen budget applied at the injection boundary.      Three independent dials:, Bound a formatted injection block by ``max_tokens``.          Truncation prefers, Cap a list of ranked memory candidates by entry count + min similarity., Tests for :class:`headroom.proxy.memory_injection.MemoryInjectionBudget`.  Pre-P, Budget doesn't re-rank — the backend's order is preserved. (The     backend shou, Entries below ``min_similarity`` are dropped, regardless of     entry-count budg (+17 more)
 
 ### Community 1003 - "Community 1003"
-Cohesion: 0.06
-Nodes (31): default_config(), mock_openai_response(), openai_provider(), openai_tokenizer(), Large tool output for compression testing (100 items)., Tool output containing error items., System prompt containing dynamic date., Anthropic-style messages with content blocks. (+23 more)
+Cohesion: 0.10
+Nodes (19): default_config(), openai_provider(), openai_tokenizer(), Tool output containing error items., Anthropic-style messages with content blocks., Temporary SQLite database path., Temporary JSONL file path., OpenAI provider instance. (+11 more)
 
 ### Community 1004 - "Community 1004"
 Cohesion: 0.15
@@ -6938,8 +6999,8 @@ Cohesion: 0.12
 Nodes (16): main(), agent-evals CLI.  Phase 0 surfaces version + resolved config. The ``run`` comman, End-to-end accuracy A/B for Headroom (coding-agent benchmarks WITH vs WITHOUT co, Print the agent-evals version., Print the resolved settings (defaults + env) as JSON., show_config(), version(), agent-evals: end-to-end coding-agent accuracy A/B framework for Headroom. (+8 more)
 
 ### Community 1016 - "Community 1016"
-Cohesion: 0.11
-Nodes (10): Tests for CompressionEntry dataclass., CompressionEntry can be created with minimal required fields., Fresh entries are not expired., Entries are expired after TTL passes., record_access increments retrieval_count., record_access updates last_accessed timestamp., record_access tracks unique search queries., record_access keeps only last 10 queries. (+2 more)
+Cohesion: 0.13
+Nodes (15): OpenAIEmbedding, Get the embedding for the given text using OpenAI.          Args:             te, Embed multiple texts in a single OpenAI API call.          Automatically chunks, Matryoshka / truncated embeddings: dimensions sent only if user sets embedding_d, Verify encoding_format='float' is always passed to prevent base64 issues with pr, test_embed_batch_count_mismatch_raises(), test_embed_batch_returns_all_embeddings(), test_embed_custom_model() (+7 more)
 
 ### Community 1017 - "Community 1017"
 Cohesion: 0.15
@@ -6950,16 +7011,16 @@ Cohesion: 0.18
 Nodes (17): any_tool_has_cache_control(), byte_stable_across_runs(), does_not_alter_arrays_within_arrays(), handles_deeply_nested_schemas(), idempotent_resort_no_change(), idempotent_resort_schema(), preserves_array_order_in_oneof(), sort_alphabetic_by_name() (+9 more)
 
 ### Community 1019 - "Community 1019"
-Cohesion: 0.07
-Nodes (15): Tests for MemoryTracker singleton., Reset the tracker singleton before each test., Test that MemoryTracker is a singleton., Test singleton reset., Test registering a component., Test unregistering a component., Test getting stats for a specific component., Test getting stats for non-existent component. (+7 more)
+Cohesion: 0.14
+Nodes (12): Calculate Flesch Reading Ease score., Calculate Flesch-Kincaid Grade Level., Extracts text statistics features., Initialize with optional tokenizer for exact token counts.          Args:, Extract text statistics features.          Args:             text: Input text to, Calculate Yule's K statistic for vocabulary richness., Calculate compression ratio using gzip., Calculate Shannon entropy of text. (+4 more)
 
 ### Community 1020 - "Community 1020"
 Cohesion: 0.22
 Nodes (17): body_of(), compress_openai_responses_request(), e1_passes_through_when_oauth(), e1_sorts_tools_when_payg(), invalid_json_passthrough(), log_item_telemetry(), mode_off_short_circuits(), no_input_passthrough() (+9 more)
 
 ### Community 1021 - "Community 1021"
-Cohesion: 0.07
-Nodes (29): Cortex Code provider helpers., build_install_env(), Cortex Code install-time helpers., Render the Cortex Code setup instructions for the local proxy., Build the persistent install environment for Cortex Code., render_setup_lines(), build_launch_env(), default_api_url() (+21 more)
+Cohesion: 0.13
+Nodes (11): default_api_url(), Return the upstream Snowflake Cortex API URL.      Reads SNOWFLAKE_HOST first, t, build_install_target_envs(), Build per-target install environment values via provider slices., test_cortex_code_default_api_url_constructs_url_from_account_name(), test_cortex_code_default_api_url_falls_back_when_no_env(), test_cortex_code_default_api_url_host_takes_priority_over_account(), test_cortex_code_default_api_url_preserves_https_prefix() (+3 more)
 
 ### Community 1022 - "Community 1022"
 Cohesion: 0.14
@@ -6986,12 +7047,12 @@ Cohesion: 0.14
 Nodes (14): accepts_sse(), extract_request_service_tier(), handle_responses(), AppState, Bytes, ConnectInfo, HeaderMap, Method (+6 more)
 
 ### Community 1028 - "Community 1028"
-Cohesion: 0.13
-Nodes (14): adversarial(), probes(), Score retention of recorded compression events (offline, no LLM).      \b     Re, Measure compressor robustness against embedded adversarial payloads.      \b, probe_event(), Score one recorded compression event; None if it cannot be scored., Probe every event in every ``*.jsonl`` recording under a directory., run_probes() (+6 more)
+Cohesion: 0.17
+Nodes (9): probe_event(), Score one recorded compression event; None if it cannot be scored., Probe every event in every ``*.jsonl`` recording under a directory., run_probes(), Tests for deterministic retention probes over recorded compression events., _record(), TestProbeEvent, TestRunProbesAndReport (+1 more)
 
 ### Community 1029 - "Community 1029"
 Cohesion: 0.05
-Nodes (37): _deterministic_random(), generate_log_entries(), generate_metrics_data(), generate_search_results(), generate_user_records(), LangChain Integration Evals: Comprehensive evaluation of Headroom with LangChain, Generate time-series metrics with configurable anomaly rate., Generate search results with varying relevance. (+29 more)
+Nodes (39): _deterministic_random(), generate_log_entries(), generate_metrics_data(), generate_search_results(), generate_user_records(), LangChain Integration Evals: Comprehensive evaluation of Headroom with LangChain, Generate time-series metrics with configurable anomaly rate., Generate search results with varying relevance. (+31 more)
 
 ### Community 1030 - "Community 1030"
 Cohesion: 0.10
@@ -7006,8 +7067,8 @@ Cohesion: 0.11
 Nodes (14): _load_persisted_patterns_from_sqlite(), Best-effort lookup of the SQLite path used by the memory backend.      Returns N, Read traffic_learner rows from memory.db, dedupe, return patterns.      Uses a d, Merge persisted (memory.db) + in-memory patterns, deduped by content.          E, _resolve_backend_db_path(), The sqlite load path reads first_seen_at / last_seen_at correctly., When metadata has no timestamps, `created_at` is used., Two rows collapsing to the same hash keep the widest timestamp range. (+6 more)
 
 ### Community 1033 - "Community 1033"
-Cohesion: 0.06
-Nodes (27): HuggingFaceRerankerConfig, BaseReranker, Abstract base class for all rerankers., Rerank documents based on relevance to the query.                  Args:, CohereReranker, Cohere-based reranker implementation., Initialize Cohere reranker.                  Args:             config: CohereRer, Rerank documents using Cohere's rerank API.                  Args:             q (+19 more)
+Cohesion: 0.05
+Nodes (30): HuggingFaceRerankerConfig, BaseReranker, Abstract base class for all rerankers., Rerank documents based on relevance to the query.                  Args:, CohereReranker, Cohere-based reranker implementation., Initialize Cohere reranker.                  Args:             config: CohereRer, Rerank documents using Cohere's rerank API.                  Args:             q (+22 more)
 
 ### Community 1034 - "Community 1034"
 Cohesion: 0.12
@@ -7050,8 +7111,8 @@ Cohesion: 0.26
 Nodes (19): assert_byte_equal(), captured_body(), mount_chat_capture(), mount_responses_capture(), oauth_chat_completions_no_injection_byte_equal(), oauth_responses_no_injection_byte_equal(), parse_json(), payg_chat_completions_injects_prompt_cache_key() (+11 more)
 
 ### Community 1045 - "Community 1045"
-Cohesion: 0.17
-Nodes (19): _parse_all_stage_logs(), Unit 4: bounded pre-upstream concurrency for Anthropic replay storms.  Verifies, With concurrency=0 (sem disabled), two slow requests overlap., Invoke the proxy CLI, intercepting ``run_server`` to capture config.      We do, Hold one permit of a Semaphore(1) with a concurrent request, trigger     the ear, _run_cli_capture(), test_acquire_timeout_degrades_to_passthrough(), test_cli_env_sets_pre_upstream_timeouts() (+11 more)
+Cohesion: 0.04
+Nodes (42): _build_request(), _CacheHit, _CapturingHandler, _CostTrackerBlock, _DummyAnthropicHandler, _DummyMetrics, _Entry, _Err (+34 more)
 
 ### Community 1046 - "Community 1046"
 Cohesion: 0.18
@@ -7066,16 +7127,16 @@ Cohesion: 0.10
 Nodes (12): Tests for tree-sitter Parser thread safety (issue #562).  Verifies that code-awa, Verify that parsing works from ThreadPoolExecutor workers., A parser created and used on the same worker thread works., Multiple workers can parse concurrently without panics., The same worker can parse repeatedly (parser reuse works)., Verify that _get_parser returns thread-local instances., Calling _get_parser twice on the same thread returns the same object., Different languages get distinct parser instances. (+4 more)
 
 ### Community 1049 - "Community 1049"
-Cohesion: 0.10
-Nodes (12): Isolated HNSW tests - copy of relevant parts from test_hierarchical.py., Test that bounded index reports correct stats., Test that unbounded index doesn't evict., Test eviction order: lowest importance first, then oldest., Test that save/load preserves eviction settings., Create a temporary database path., Tests for HNSWVectorIndex., Create an HNSW vector index for testing. (+4 more)
+Cohesion: 0.13
+Nodes (15): ReadMaturationConfig, Any, _Activity, MaturationResult, MaturedRead, Mechanism B: hold-back Read maturation — compress before cache entry.  The prefi, Hold active Reads, mature quiet ones, replay matured markers.          Args:, One pass over assistant messages: read calls, per-file last         touch, and t (+7 more)
 
 ### Community 1050 - "Community 1050"
 Cohesion: 0.06
 Nodes (16): TestWeaviateDB, OutputData, Create a new collection with the specified schema.          Args:             ve, Insert vectors into a collection.          Args:             vectors (list): Lis, Search for similar vectors., Search for memories using BM25 keyword search.          Args:             query, Delete a vector by ID.          Args:             vector_id: ID of the vector to, Update a vector and its payload.          Args:             vector_id: ID of the (+8 more)
 
 ### Community 1051 - "Community 1051"
-Cohesion: 0.16
-Nodes (13): check_namespace_exists(), create_namespace(), list_namespaces(), Namespace Management Routes, Create a new namespace, List all MEMANTO namespaces, Check if namespace exists, NamespaceCreateRequest (+5 more)
+Cohesion: 0.10
+Nodes (16): analyze_metrics(), get_database_records(), get_large_logs(), math_operation(), quick_lookup(), Real-world integration tests for Strands HeadroomStrandsModel.  These tests use, Analyze system metrics. Returns detailed metrics data.      Args:         metric, Quick key-value lookup. Returns small response.      Args:         key: The key (+8 more)
 
 ### Community 1052 - "Community 1052"
 Cohesion: 0.10
@@ -7098,8 +7159,8 @@ Cohesion: 0.27
 Nodes (15): Child, e2e_anthropic_non_streaming(), e2e_anthropic_streaming(), e2e_enabled(), e2e_health_through_full_chain(), e2e_openai_non_streaming(), e2e_request_id_propagates(), load_dotenv() (+7 more)
 
 ### Community 1057 - "Community 1057"
-Cohesion: 0.19
-Nodes (15): assert_byte_equal_sha256(), compressible_tool_array_payload(), mount_capture(), n_greater_than_one_passthrough(), passthrough_no_compression_byte_equal(), sha256_hex(), stream_options_include_usage_preserved(), tool_choice_change_passthrough_no_mutation() (+7 more)
+Cohesion: 0.13
+Nodes (23): ChunkState, assert_byte_equal_sha256(), compressible_tool_array_payload(), mount_capture(), n_greater_than_one_passthrough(), passthrough_no_compression_byte_equal(), sha256_hex(), stream_options_include_usage_preserved() (+15 more)
 
 ### Community 1058 - "Community 1058"
 Cohesion: 0.11
@@ -7150,12 +7211,12 @@ Cohesion: 0.15
 Nodes (7): CodexRateLimitSnapshot, CodexRateLimitState, _fetch_and_store_usage(), Full rate-limit snapshot parsed from a single Codex API response., Thread-safe store for the latest Codex rate-limit snapshot.      Implements :cla, Update state from a ``GET /wham/usage`` JSON body.          Returns ``True`` whe, TestCodexRateLimitState
 
 ### Community 1070 - "Community 1070"
-Cohesion: 0.12
-Nodes (13): _build_frontmatter(), encode_claude_project_path(), get_claude_memory_dir(), Claude Code memory sync adapter.  Reads/writes Claude Code's native memory forma, Write memories as individual .md files with frontmatter.          Also updates M, Append new entries to MEMORY.md under a Headroom section., Get the Claude Code memory directory for a project.      Claude Code stores per-, Convert text to a safe filename slug. (+5 more)
+Cohesion: 0.10
+Nodes (11): REAL integration tests with actual Agno components.      These tests verify that, HeadroomAgnoModel must be a subclass of agno.models.base.Model., HeadroomAgnoModel must pass Agno's get_model() validation., Agno Agent must accept HeadroomAgnoModel as model parameter., HeadroomAgnoModel id should reflect the wrapped model., HeadroomAgnoModel must implement all required abstract methods., isinstance check with agno.models.base.Model must pass., Test with custom Headroom configuration. (+3 more)
 
 ### Community 1071 - "Community 1071"
-Cohesion: 0.15
-Nodes (9): ClaudeCodeAdapter, _parse_frontmatter(), Hash of all .md filenames + contents for change detection., Parse YAML frontmatter from a markdown file.      Returns (frontmatter_dict, bod, Sync adapter for Claude Code's native memory files., Read all .md memory files (except MEMORY.md index)., Test Claude Code adapter read/write., TestClaudeCodeAdapter (+1 more)
+Cohesion: 0.10
+Nodes (11): Get AnthropicProvider for Anthropic model., Extract model name from LangChain model., Fall back when model name not available., Tests for langchain_providers module., Detect OpenAI from ChatOpenAI class., Detect Anthropic from ChatAnthropic class., Detect Google from ChatGoogleGenerativeAI class., Fall back to OpenAI for unknown models. (+3 more)
 
 ### Community 1072 - "Community 1072"
 Cohesion: 0.04
@@ -7182,8 +7243,8 @@ Cohesion: 0.16
 Nodes (16): _declared_codex_header_names(), _fake_upstream(), _FakeHeaders, _load_schema(), Parity test: the committed Codex<->OpenAI contract schema vs the live code.  The, The test's fixture values must cover exactly the declared header set,     so a h, Every x-codex-* header the schema declares is actually parsed into the     snaps, A response with no recognized x-codex-* headers yields no snapshot,     matching (+8 more)
 
 ### Community 1078 - "Community 1078"
-Cohesion: 0.17
-Nodes (8): _call_claude_cli_streaming(), _parse_stream_event(), Strip optional markdown fences and parse JSON.      Handles both raw JSON and fe, Run claude-cli with stream-json output and an idle-timeout watchdog.      Each l, Parse one line of claude-cli stream-json output, returning None on junk., _strip_fenced_json(), TestParseStreamEvent, TestStripFencedJson
+Cohesion: 0.15
+Nodes (10): _call_claude_cli_streaming(), _call_llm(), _parse_stream_event(), Strip optional markdown fences and parse JSON.      Handles both raw JSON and fe, Run claude-cli with stream-json output and an idle-timeout watchdog.      Each l, Parse one line of claude-cli stream-json output, returning None on junk., Call LLM with the session digest and return parsed JSON.      Uses LiteLLM for p, _strip_fenced_json() (+2 more)
 
 ### Community 1079 - "Community 1079"
 Cohesion: 0.18
@@ -7214,8 +7275,8 @@ Cohesion: 0.16
 Nodes (10): Any, Count tokens in multi-part content.          Handles both Anthropic format ({"ty, Count tokens for a non-string content blob.          Small blobs are counted exa, Estimate tokens for an image using Anthropic's formula: (w*h)/750.          Trie, Count tokens in tool calls., Count tokens in legacy function call., Count tokens in a list of chat messages.          Args:             messages: Li, Count tokens in a text string. Must be implemented by subclasses. (+2 more)
 
 ### Community 1086 - "Community 1086"
-Cohesion: 0.20
-Nodes (19): exports, import, require, import, require, ./anthropic, ./gemini, ./openai (+11 more)
+Cohesion: 0.29
+Nodes (12): exports, require, require, ./anthropic, ./gemini, ./openai, ./vercel-ai, require (+4 more)
 
 ### Community 1087 - "Community 1087"
 Cohesion: 0.11
@@ -7250,8 +7311,8 @@ Cohesion: 0.20
 Nodes (15): anthropic_version_not_string_errors(), BedrockEnvelope, ensure_first_no_op_when_already_first(), ensure_first_reorders_when_not_first(), EnvelopeError, invalid_json_errors(), missing_anthropic_version_errors(), ModelPath (+7 more)
 
 ### Community 1095 - "Community 1095"
-Cohesion: 0.12
-Nodes (10): Tests for PostHog identity stitching: anon → email alias on MemoryClient init., Point the mem0 setup module at a tempdir for the duration of the test., Verify the real config flow: two consecutive _maybe_alias_anon_to_email     call, TestEndToEndIdempotency, TestMarkAliased, TestReadAnonIds, TestSetupConfigIdempotent, tmp_mem0_dir() (+2 more)
+Cohesion: 0.05
+Nodes (17): Tests for PostHog identity stitching: anon → email alias on MemoryClient init., Point the mem0 setup module at a tempdir for the duration of the test., $identify must bypass the 90% sampling drop., Test the alias helper in isolation by mocking out the config readers     and the, When client_telemetry.posthog is None (MEM0_TELEMETRY=false), do nothing —, Defensive: if the anon_id somehow already is the email, don't self-alias., If read_anon_ids itself raises (e.g. IO error), helper must swallow it., Verify the real config flow: two consecutive _maybe_alias_anon_to_email     call (+9 more)
 
 ### Community 1096 - "Community 1096"
 Cohesion: 0.11
@@ -7270,16 +7331,16 @@ Cohesion: 0.11
 Nodes (18): `agent activate` - Activate Agent, Agent Commands, `agent create` - Create and Activate New Agent, `agent deactivate` - Deactivate Current Agent, `agent delete` - Delete Agent, `agent list` - List All Agents, `answer` - RAG Question Answering, Command Reference (+10 more)
 
 ### Community 1100 - "Community 1100"
-Cohesion: 0.10
-Nodes (26): compute_answer_equivalence(), compute_bleu(), compute_exact_match(), compute_f1(), compute_information_recall(), compute_rouge_l(), compute_semantic_similarity(), normalize_text() (+18 more)
+Cohesion: 0.11
+Nodes (24): compute_answer_equivalence(), compute_bleu(), compute_exact_match(), compute_f1(), compute_information_recall(), compute_rouge_l(), normalize_text(), Evaluation metrics for comparing LLM outputs.  These metrics determine whether c (+16 more)
 
 ### Community 1101 - "Community 1101"
-Cohesion: 0.04
-Nodes (53): DeepSeekConfig, MockEmbeddings, Generate a mock embedding with dimension of 10., LLMRerankerConfig, AzureOpenAIConfig, Initialize Azure OpenAI configuration.          Args:             model: Azure O, Configuration class for Azure OpenAI-specific parameters.     Inherits from Base, Process the response based on whether tools are used or not.          Args: (+45 more)
+Cohesion: 0.07
+Nodes (41): BaseRerankerConfig, DeepSeekConfig, MockEmbeddings, Generate a mock embedding with dimension of 10., LLMRerankerConfig, AzureOpenAIConfig, Initialize Azure OpenAI configuration.          Args:             model: Azure O, Configuration class for Azure OpenAI-specific parameters.     Inherits from Base (+33 more)
 
 ### Community 1102 - "Community 1102"
 Cohesion: 0.09
-Nodes (26): format_add_result(), _format_date(), format_json(), format_json_envelope(), format_memories_table(), format_memories_text(), format_single_memory(), print_result_summary() (+18 more)
+Nodes (28): format_add_result(), _format_date(), format_json(), format_json_envelope(), format_memories_table(), format_memories_text(), format_single_memory(), print_result_summary() (+20 more)
 
 ### Community 1103 - "Community 1103"
 Cohesion: 0.11
@@ -7290,8 +7351,8 @@ Cohesion: 0.07
 Nodes (24): Return the captured preference content or ``None``.          Walks the input onc, Capture up to ``max_chars`` of content starting at the first         non-whitesp, Whitespace-split tokenizer.          Returns ``[(lower_token, start, end), …]``., Remove ``<system-reminder>…</system-reminder>`` blocks from text.          Uses, Accumulate a pattern, saving when evidence threshold is met., Background worker that persists patterns to memory backend., Atomically increment a persisted row's metadata.evidence_count., Extract tool_result blocks from Anthropic-format messages.          Useful for p (+16 more)
 
 ### Community 1105 - "Community 1105"
-Cohesion: 0.11
-Nodes (14): ContextTrackerConfig, Configuration for context tracking., Test context tracker configuration., Default config values., Custom config values., Cross-workspace leak prevention — the bug joce reported 2026-05-26., Within a single workspace, proactive expansion still functions normally., Workspace A's entry must NOT surface in Workspace B's analyze_query.          Th (+6 more)
+Cohesion: 0.14
+Nodes (13): _make_crusher(), Regression tests for SmartCrusher bugs.  Bug 1: _crush_number_array mixes types, Nesting deeper than _MAX_PROCESS_DEPTH should return value unchanged., Deeply nested lists should also be handled safely., `lossless_only` produces marker-free, byte-recoverable output.      Strict mode:, Build a SmartCrusher with deterministic small-K config for tests., _current_field_semantics must not leak between concurrent crushes.      Previous, Two concurrent crushes must not share field_semantics state. (+5 more)
 
 ### Community 1106 - "Community 1106"
 Cohesion: 0.04
@@ -7338,8 +7399,8 @@ Cohesion: 0.17
 Nodes (14): buffer(), CaptureWriter, mount_anthropic_capture(), volatile_timestamp_in_system_emits_warn_and_passes_through(), Arc, MakeWriter, MockServer, Mutex (+6 more)
 
 ### Community 1117 - "Community 1117"
-Cohesion: 0.16
-Nodes (11): MemoryValidationService, Memory Validation Service, Validate memory according to policy, Check how many times similar content has been seen, Check if memory type requires validation, Get validation requirements for memory type, Any, MemoryRecord (+3 more)
+Cohesion: 0.10
+Nodes (18): _fake_request(), Minimal Starlette/FastAPI-shaped request object for resolver tests., x-headroom-project-id is the highest-priority signal., x-headroom-cwd produces a stable per-cwd key + basename label., Two different cwds produce different workspace keys (cross-leak prevention)., No project-id, no cwd header, no system prompt → fail-closed signal., System prompt with `cwd:` line is the lowest-tier fallback., A request whose headers attribute can't be dict()-ed fails closed, not crashes. (+10 more)
 
 ### Community 1118 - "Community 1118"
 Cohesion: 0.16
@@ -7354,8 +7415,8 @@ Cohesion: 0.22
 Nodes (15): _FakeResponse, _load_plugin(), plugin(), Tests for the Hermes headroom_retrieve plugin (plugins/hermes/).  The plugin tar, Load the plugin file with a stubbed Hermes ``tools.registry``., test_handler_ignores_legacy_query(), test_handler_normalizes_marker_shapes_to_bare_hash(), test_handler_rejects_empty_hash() (+7 more)
 
 ### Community 1121 - "Community 1121"
-Cohesion: 0.14
-Nodes (12): DummyClient, DummyStorage, Regression for #942: --openai-api-url must reach the any-llm backend., test_call_client_transport_covers_openai_and_anthropic_paths(), test_call_client_transport_rejects_unknown_api_style(), test_create_proxy_backend_handles_missing_or_direct_backends(), test_create_proxy_backend_passes_openai_api_url_to_anyllm(), test_create_proxy_backend_uses_injected_backend_types() (+4 more)
+Cohesion: 0.16
+Nodes (10): DummyClient, DummyStorage, Regression for #942: --openai-api-url must reach the any-llm backend., test_call_client_transport_covers_openai_and_anthropic_paths(), test_call_client_transport_rejects_unknown_api_style(), test_create_proxy_backend_handles_missing_or_direct_backends(), test_create_proxy_backend_passes_openai_api_url_to_anyllm(), test_create_proxy_backend_uses_injected_backend_types() (+2 more)
 
 ### Community 1122 - "Community 1122"
 Cohesion: 0.22
@@ -7391,7 +7452,7 @@ Nodes (11): _check_embedding_available(), Relevance scorer benchmarks for Headro
 
 ### Community 1130 - "Community 1130"
 Cohesion: 0.03
-Nodes (69): Provider, Base provider protocol for Headroom SDK.  Providers are responsible for: - Token, Estimate API cost in USD.          Args:             input_tokens: Number of inp, Get recommended output buffer for a model.          Some models (like reasoning, Protocol for token counting implementations., Count tokens in a text string., Abstract base class for LLM providers.      Providers encapsulate all model-spec, Provider name (e.g., 'openai', 'anthropic'). (+61 more)
+Nodes (64): Provider, Base provider protocol for Headroom SDK.  Providers are responsible for: - Token, Estimate API cost in USD.          Args:             input_tokens: Number of inp, Get recommended output buffer for a model.          Some models (like reasoning, Protocol for token counting implementations., Count tokens in a text string., Count tokens in a single message dict., Count tokens in a list of messages. (+56 more)
 
 ### Community 1131 - "Community 1131"
 Cohesion: 0.05
@@ -7418,12 +7479,12 @@ Cohesion: 0.17
 Nodes (10): ExportResult, TestCursorWriter, MemoryEntry, Path, CursorMemoryWriter, Cursor memory writer — exports to .cursor/rules/*.mdc files.  Cursor's rules sys, Writes memories to Cursor's .cursor/rules/*.mdc format., Format as Cursor .mdc content (body only, no frontmatter).          Frontmatter (+2 more)
 
 ### Community 1137 - "Community 1137"
-Cohesion: 0.15
+Cohesion: 0.18
 Nodes (8): FigmaHTTPClient, Any, Response, Session, Единый HTTP-клиент для Figma REST API с retry, backoff и rate-limit обработкой., Обертка над requests.Session для работы с Figma API.      Особенности:       - ц, Замедляет последовательные запросы, чтобы не провоцировать burst detection., Выполняет запрос с throttle и ручным retry по 429/Retry-After.
 
 ### Community 1138 - "Community 1138"
-Cohesion: 0.06
-Nodes (64): classify_commit_bump(), commit_height_since(), CommitInfo, compute_release_version(), determine_bump_level(), find_latest_release_tag(), get_canonical_version(), list_release_commits() (+56 more)
+Cohesion: 0.21
+Nodes (15): commit_height_since(), get_canonical_version(), list_release_commits(), list_release_tags(), main(), Release version helpers for the GitHub Actions release workflow., Read the canonical project version from pyproject.toml., List release tags from the local Git checkout. (+7 more)
 
 ### Community 1139 - "Community 1139"
 Cohesion: 0.05
@@ -7470,12 +7531,12 @@ Cohesion: 0.20
 Nodes (16): anthropic_messages_payload(), free_port(), have_required_keys(), load_env_into_environ(), long_build_log(), main(), openai_chat_payload(), openai_responses_payload() (+8 more)
 
 ### Community 1150 - "Community 1150"
-Cohesion: 0.17
-Nodes (9): Test that _convert_messages_for_litellm converts Anthropic tool blocks to OpenAI, Anthropic tool_result blocks must become role=tool messages., tool_result with list content should be flattened to string., Assistant message with both text and tool_use blocks., Plain string messages pass through., Multiple tool_result blocks in one user message → multiple role=tool messages., Bedrock requires role=tool immediately after assistant tool_calls — no interveni, Text alongside tool_result should NOT produce a separate user message. (+1 more)
+Cohesion: 0.10
+Nodes (20): _outcome(), The ``client`` field is the proof point that the refactor pays     out across ha, Construct a RequestOutcome with sensible defaults; override fields per test., Mutability would let a handler patch the outcome after handing it     to the fun, Pre-refactor, 9 of 18 ``RequestLog`` sites hardcoded ``cache_hit=False``     eve, No reads + no writes is a no-cache request, not a 0%-hit cache request.     Retu, PERF log line consumed by ``headroom perf`` parses an integer here;     keep the, A request with 0 original tokens — e.g. an empty body — should not     raise Zer (+12 more)
 
 ### Community 1151 - "Community 1151"
-Cohesion: 0.09
-Nodes (18): _bedrock_region_prefix(), _build_bedrock_fallback_map(), Return the inference-profile region prefix for an AWS region.      AWS Bedrock c, Build a static Bedrock model map using the region prefix.      When ``_fetch_bed, FixtureFunction, autouse_apply_env(), importorskip_no_env_leak(), load_env_overrides() (+10 more)
+Cohesion: 0.08
+Nodes (19): _bedrock_region_prefix(), _build_bedrock_fallback_map(), _fetch_bedrock_inference_profiles(), Fetch available Bedrock inference profiles from AWS API.      Uses boto3 list_in, Return the inference-profile region prefix for an AWS region.      AWS Bedrock c, Build a static Bedrock model map using the region prefix.      When ``_fetch_bed, Tests for Bedrock region support and fallback model mapping.  Ensures that EU, A, Test dynamic fetch with fallback on failure. (+11 more)
 
 ### Community 1152 - "Community 1152"
 Cohesion: 0.16
@@ -7486,16 +7547,16 @@ Cohesion: 0.22
 Nodes (13): Verify that the /stats endpoint includes a 'throughput' key in the response., _reset_rtk_stats_cache(), _StatsStub, test_get_context_tool_stats_reads_lean_ctx_gain(), test_get_rtk_stats_can_read_project_scoped_gain(), test_get_rtk_stats_invalid_scope_defaults_to_global(), test_get_rtk_stats_memoizes_subprocess_calls(), test_proxy_throughput_in_stats_endpoint() (+5 more)
 
 ### Community 1154 - "Community 1154"
-Cohesion: 0.17
-Nodes (7): DummyTracker, PassiveTracker, test_quota_registry_singleton_reset(), test_quota_tracker_default_methods(), test_register_get_trackers_and_duplicate_keys(), test_start_all_stop_all_and_stats_filtering(), Exception
+Cohesion: 0.18
+Nodes (6): DummyTracker, PassiveTracker, test_quota_tracker_default_methods(), test_register_get_trackers_and_duplicate_keys(), test_start_all_stop_all_and_stats_filtering(), Exception
 
 ### Community 1155 - "Community 1155"
 Cohesion: 0.24
 Nodes (16): _make_snapshot(), Regression: the usage API reports ``resets_at`` with second-level jitter     wit, A real rollover advances ``resets_at`` by ~5 hours and still resets., Regression: the transcript scan must run off the event-loop thread, or a     mul, test_genuine_five_hour_rollover_resets_contribution(), test_maybe_poll_handles_inactive_and_none_snapshot(), test_maybe_poll_runs_transcript_scan_off_event_loop(), test_maybe_poll_success_updates_state_and_metrics() (+8 more)
 
 ### Community 1156 - "Community 1156"
-Cohesion: 0.12
-Nodes (5): Tests for anonymous telemetry warning feature.  Covers: - is_telemetry_warn_enab, New helpers must be exported from headroom.telemetry., Proxy CLI startup banner must include telemetry status., TestProxyCLITelemetryBanner, TestTelemetryModuleExports
+Cohesion: 0.07
+Nodes (13): format_telemetry_notice(), is_telemetry_warn_enabled(), Check if telemetry warnings are enabled (feature flag, on by default).      Set, Return a single-line telemetry notice suitable for CLI output.      Args:, Tests for anonymous telemetry warning feature.  Covers: - is_telemetry_warn_enab, New helpers must be exported from headroom.telemetry., Tests for the HEADROOM_TELEMETRY_WARN feature flag., Tests for format_telemetry_notice(). (+5 more)
 
 ### Community 1157 - "Community 1157"
 Cohesion: 0.16
@@ -7518,8 +7579,8 @@ Cohesion: 0.17
 Nodes (7): Any, SkillsConfig, config(), FakeSdkClient, Shared test fixtures: a fake SdkClient so tests need no network or API key., Records calls and returns canned responses, mimicking SdkClient.      ``agent_ex, sample_memories()
 
 ### Community 1162 - "Community 1162"
-Cohesion: 0.19
-Nodes (15): Initialize async resources., _additive_ca_context(), build_httpx_verify(), _clear_x509_strict(), _default_strict_relaxed_context(), SSL context builder for the Headroom upstream httpx client.  Respects the standa, Build an additive trust-store context from a CA bundle path., Default trust store, but with ``VERIFY_X509_STRICT`` cleared.      Used when no (+7 more)
+Cohesion: 0.11
+Nodes (7): get_backend(), Abstract backend interface and factory., Return the Platform backend., Abstract interface for mem0 backends., Any, Backend, Mem0Config
 
 ### Community 1163 - "Community 1163"
 Cohesion: 0.12
@@ -7538,16 +7599,16 @@ Cohesion: 0.10
 Nodes (15): LicenseInfo, License validation and usage reporting for managed/enterprise deployments.  Phon, Validate the license key against the cloud API.          On failure, falls back, Start the background reporting loop. Called during proxy startup., Background loop: report usage every N seconds., Collect aggregate stats from the proxy and send to cloud., Take a snapshot of current proxy metrics for delta computation., Save license info to local cache file. (+7 more)
 
 ### Community 1167 - "Community 1167"
-Cohesion: 0.04
-Nodes (33): AnthropicConfig, AzureOpenAIConfig, Get common parameters, avoiding sending both temperature and top_p together., Generate a response based on the given messages using Anthropic.          Args:, AzureOpenAILLM, Generate a response based on the given messages using Azure OpenAI.          Arg, Return a copy of ``messages`` with the word "assistant" replaced by "ai", Process the response based on whether tools are used or not.          Args: (+25 more)
+Cohesion: 0.06
+Nodes (22): LLMBase, Get parameters that are supported by the current model.         Filters out unsu, Initialize a base LLM class          :param config: LLM configuration option cla, Generate a response based on the given messages.          Args:             mess, Get common parameters that most providers use.          Returns:             Dic, Validate the configuration.         Override in subclasses to add provider-speci, Check if the model is a reasoning model or GPT-5 series that doesn't support cer, Check if the model expects ``max_completion_tokens`` instead of ``max_tokens``. (+14 more)
 
 ### Community 1168 - "Community 1168"
 Cohesion: 0.17
 Nodes (13): Claude-specific provider helpers., apply_provider_scope(), build_install_env(), Claude install-time helpers., Build the persistent install environment for Claude., Apply Claude provider-scope configuration when requested., Revert Claude provider-scope configuration., revert_provider_scope() (+5 more)
 
 ### Community 1169 - "Community 1169"
-Cohesion: 0.19
-Nodes (10): get_tokenizer(), _make_crusher(), Tool-name attribution on the ``smart_crush`` transform tag.  When `SmartCrusher`, Same tool crushed twice shows once in the tag., tool_calls / tool_use blocks missing id or name are skipped, other         block, Crushed tool with no resolvable name keeps legacy ``smart_crush:<n>`` shape., Tag shape is ``smart_crush:<count>:<name1,name2>`` for OpenAI format., Anthropic tool_use blocks feed the tool-name index. (+2 more)
+Cohesion: 0.21
+Nodes (9): get_tokenizer(), _make_crusher(), Tool-name attribution on the ``smart_crush`` transform tag.  When `SmartCrusher`, Same tool crushed twice shows once in the tag., tool_calls / tool_use blocks missing id or name are skipped, other         block, Crushed tool with no resolvable name keeps legacy ``smart_crush:<n>`` shape., Tag shape is ``smart_crush:<count>:<name1,name2>`` for OpenAI format., Anthropic tool_use blocks feed the tool-name index. (+1 more)
 
 ### Community 1170 - "Community 1170"
 Cohesion: 0.13
@@ -7566,20 +7627,20 @@ Cohesion: 0.12
 Nodes (15): Command surface, Configuration scopes, Docker-native relationship, Health and wrap behavior, Persistent Docker, Persistent service on the local machine, Persistent watchdog task, Presets (+7 more)
 
 ### Community 1174 - "Community 1174"
-Cohesion: 0.21
-Nodes (9): ExpansionRecommendation, Recommendation to expand compressed context., Test execution of expansion recommendations., Execute full expansion retrieval., Handle expansion of nonexistent hash gracefully., Test ExpansionRecommendation dataclass., Create an expansion recommendation (retrieval is always full)., TestExpansionExecution (+1 more)
+Cohesion: 0.22
+Nodes (17): main(), _backup(), _hook_command(), install_hooks(), _is_managed(), _load(), _managed_hooks(), Idempotent installer for the Claude Code lifecycle hooks.  Registers three hooks (+9 more)
 
 ### Community 1175 - "Community 1175"
 Cohesion: 0.05
 Nodes (42): Advanced Retrieval, Available MCP Tools, Best Practices, Configuration, Configuration, Create Webhook, Criteria Retrieval, Custom Categories (+34 more)
 
 ### Community 1176 - "Community 1176"
-Cohesion: 0.09
-Nodes (12): Tests for message format conversion., Convert SystemMessage to OpenAI format., Convert HumanMessage to OpenAI format., Convert AIMessage to OpenAI format., Convert AIMessage with tool_calls to OpenAI format., Convert ToolMessage to OpenAI format., Convert OpenAI system message back to LangChain., Convert OpenAI user message back to LangChain. (+4 more)
+Cohesion: 0.12
+Nodes (19): _h(), Build a plain-dict header set in one expression., _FunnelHarness, Pulls just enough of HeadroomProxy onto an object to exercise     ``_record_requ, The funnel must pass EVERY field that     ``PrometheusMetrics.record_request`` k, ``cost_tracker.record_tokens`` takes ``(model, tokens_saved,     optimized_token, When the proxy was started with ``--no-cost``, ``cost_tracker``     is None and, The RequestLog row needs cache_hit derived from cache_read>0, not     the hardco (+11 more)
 
 ### Community 1177 - "Community 1177"
-Cohesion: 0.13
-Nodes (13): get_default_embedding_dim(), get_default_embedding_model(), get_default_siglip_model(), get_default_spacy_model(), MLModelConfig, Central configuration for all ML models used in Headroom.  This is the SINGLE SO, Get total estimated memory if all configured models are loaded.          Returns, Get the default sentence transformer model name. (+5 more)
+Cohesion: 0.09
+Nodes (20): get_default_embedding_dim(), get_default_embedding_model(), get_default_siglip_model(), get_default_spacy_model(), MLModelConfig, Central configuration for all ML models used in Headroom.  This is the SINGLE SO, Get total estimated memory if all configured models are loaded.          Returns, Get the default sentence transformer model name. (+12 more)
 
 ### Community 1178 - "Community 1178"
 Cohesion: 0.17
@@ -7695,11 +7756,11 @@ Nodes (19): oneOf, $defs, CodexWindowDict, StreamingUpstreamResponseHeaders, WSR
 
 ### Community 1206 - "Community 1206"
 Cohesion: 0.10
-Nodes (24): Button, ButtonProps, buttonVariants, CodeBlock(), CodeBlockProps, CommunityStatsHeader(), LiveStats(), buildSvg() (+16 more)
+Nodes (25): Button, ButtonProps, buttonVariants, CodeBlock(), CodeBlockProps, CommunityCharts(), CommunityStatsHeader(), LiveStats() (+17 more)
 
 ### Community 1207 - "Community 1207"
-Cohesion: 0.14
-Nodes (8): CommunityCharts(), DATA, fmt(), fmtUsd(), Metric, MONTHS, StatsCards(), TimeRange
+Cohesion: 0.15
+Nodes (7): DATA, fmt(), fmtUsd(), Metric, MONTHS, StatsCards(), TimeRange
 
 ### Community 1208 - "Community 1208"
 Cohesion: 0.13
@@ -7726,12 +7787,12 @@ Cohesion: 0.12
 Nodes (15): _copilot_chat_header_defaults(), _copilot_token_exchange_headers(), CopilotAPIToken, CopilotTokenProvider, get_copilot_token_provider(), has_oauth_auth(), Return the shared Copilot token provider., Return a GitHub OAuth token for Copilot, if one is available. (+7 more)
 
 ### Community 1214 - "Community 1214"
-Cohesion: 0.08
-Nodes (21): Thread-safe LRU cache for hot memories in Headroom Memory.  Provides O(1) get/se, _check_hnswlib_available(), HNSW vector index for Headroom Memory using hnswlib.  Provides fast approximate, # NOTE: We don't import hnswlib at module level because it can crash with SIGILL, Check if hnswlib is available, using subprocess to avoid SIGILL crash.      Retu, # NOTE: Use len() directly, not self.size - Lock is not reentrant!, __getattr__(), Memory adapters for Headroom's hierarchical memory system.  This module provides (+13 more)
+Cohesion: 0.11
+Nodes (6): Tests for the newly exposed Rust compressor knobs.  Covers: - lossless_min_savin, Rust PyO3 default must equal the Python dataclass default., headroom.config.SmartCrusherConfig (the SDK-surface class) is         structural, TestContentRouterPlumbing, TestSearchGroupedOutput, TestSmartCrusherConfigExposure
 
 ### Community 1215 - "Community 1215"
-Cohesion: 0.31
-Nodes (10): apply_provider_scope(), _invoke_openclaw(), OpenClaw install-time helpers., Configure OpenClaw to route through the persistent proxy., Undo OpenClaw persistent proxy configuration., revert_provider_scope(), shutil_which(), test_openclaw_helper_wrappers_delegate_to_stdlib() (+2 more)
+Cohesion: 0.21
+Nodes (14): Resolve the most reliable command to invoke headroom., resolve_headroom_command(), apply_provider_scope(), _invoke_openclaw(), OpenClaw install-time helpers., Configure OpenClaw to route through the persistent proxy., Undo OpenClaw persistent proxy configuration., revert_provider_scope() (+6 more)
 
 ### Community 1216 - "Community 1216"
 Cohesion: 0.19
@@ -7766,12 +7827,12 @@ Cohesion: 0.15
 Nodes (3): ArrayType, classify_array(), Value
 
 ### Community 1224 - "Community 1224"
-Cohesion: 0.10
-Nodes (13): get_context_tracker(), Clear all tracked contexts., Get the process-wide context tracker (TEST-ONLY).      Production code holds the, Reset the global context tracker., reset_context_tracker(), Reset trackers before each test., Reset trackers before each test., Reset stores before each test. (+5 more)
+Cohesion: 0.34
+Nodes (11): DummyStorage, _metrics(), test_create_storage_builtin_entrypoint_and_fallback(), test_jsonl_storage_handles_missing_file_malformed_lines_and_defaults(), test_jsonl_storage_round_trip_query_count_and_summary(), test_sqlite_storage_get_conn_reuses_connection_and_create_storage_entrypoint(), test_sqlite_storage_round_trip_filters_summary_and_defaults(), test_storage_base_context_manager_calls_close() (+3 more)
 
 ### Community 1225 - "Community 1225"
 Cohesion: 0.13
-Nodes (9): make_entry(), delete() should remove the entry and return True., keys() should return all stored keys., get_stats() entry_count should match actual count., Backend should handle mixed concurrent operations safely., Create a test CompressionEntry., Backend should handle unicode content correctly., Backend should handle large content. (+1 more)
+Nodes (9): make_entry(), delete() should remove the entry and return True., count() should return the number of entries., get_stats() entry_count should match actual count., Backend should handle mixed concurrent operations safely., Create a test CompressionEntry., Backend should handle unicode content correctly., set() should overwrite existing entries with the same key. (+1 more)
 
 ### Community 1226 - "Community 1226"
 Cohesion: 0.27
@@ -7806,8 +7867,8 @@ Cohesion: 0.27
 Nodes (4): Tests for compression summary generation., TestSummarizeCompressedCode, Generate a summary of compressed code sections from AST data.      Language-agno, summarize_compressed_code()
 
 ### Community 1234 - "Community 1234"
-Cohesion: 0.25
-Nodes (5): Tests for the SIGKILL -> SIGTERM fallback in wrap.py., On Unix, signal.SIGKILL should exist and be used., When SIGKILL is not available (Windows), getattr falls back to SIGTERM., The actual getattr pattern in wrap.py works on this platform., TestKillSignalFallback
+Cohesion: 0.13
+Nodes (9): Tests for changes introduced in PR #208 (fix/npm-version-allow-same-version).  C, Validate that --allow-same-version is present on all npm version calls., npm version in CI should not create git tags (handled by the release job)., Tests for the SIGKILL -> SIGTERM fallback in wrap.py., On Unix, signal.SIGKILL should exist and be used., When SIGKILL is not available (Windows), getattr falls back to SIGTERM., The actual getattr pattern in wrap.py works on this platform., TestKillSignalFallback (+1 more)
 
 ### Community 1235 - "Community 1235"
 Cohesion: 0.20
@@ -7826,12 +7887,12 @@ Cohesion: 0.13
 Nodes (14): Available Utilities, Configuration, Content Type Detection, Content Types, Integration Pattern, LogCompressor, Performance, SearchCompressor (+6 more)
 
 ### Community 1239 - "Community 1239"
-Cohesion: 0.13
-Nodes (11): Cache-miss attribution (#1313): TTL lapse vs prefix change vs unknown., Simulate a turn that left `messages` cached., No prior cached prefix → cold start, is_miss False., A non-zero read on an expected-cached prefix is a hit, not a miss., Idle longer than the cache TTL → ttl_expiry., When idle past TTL AND prefix changed, TTL expiry wins (docstring)., Within TTL but the forwarded prefix differs → prefix_change., Within TTL, prefix unchanged, but still no read → unknown. (+3 more)
+Cohesion: 0.05
+Nodes (28): FreezeStats, Statistics from prefix freezing for metrics/dashboard., Tests for PrefixCacheTracker — cache-aware compression., Test SessionTrackerStore management., Should create a new tracker for unknown session., Should return the same tracker for the same session., Different sessions should get different trackers., Should track the number of active sessions. (+20 more)
 
 ### Community 1240 - "Community 1240"
-Cohesion: 0.05
-Nodes (41): geistMono, geistSans, inter, classify_and_attach_auth_mode(), empty_headers_classify_as_oauth_for_bedrock(), probe(), router(), sigv4_authorization_classifies_as_oauth() (+33 more)
+Cohesion: 0.10
+Nodes (13): geistMono, geistSans, inter, next, config, withMDX, next, nextConfig (+5 more)
 
 ### Community 1241 - "Community 1241"
 Cohesion: 0.14
@@ -7862,12 +7923,12 @@ Cohesion: 0.19
 Nodes (10): ExtractionBenchmarkResult, QAAccuracyResult, True if our F1 is within 0.02 of baseline., True if our F1 exceeds baseline., Result from QA accuracy preservation evaluation., Result from Scrapinghub article extraction benchmark., Tests for benchmark infrastructure without running full evals., Test result dataclasses work correctly. (+2 more)
 
 ### Community 1248 - "Community 1248"
-Cohesion: 0.16
-Nodes (22): PerfReport, _patch_report(), Tests for `headroom perf --format {text,json,csv}` (issue #595)., A small report with two models, cache numbers, and a transform., runner(), _sample_report(), test_build_perf_summary_by_model_and_transform(), test_build_perf_summary_empty_report_no_zero_division() (+14 more)
+Cohesion: 0.14
+Nodes (16): dashboard(), _get_env_bool(), _get_env_bool_optional(), _get_env_int_optional(), proxy(), Proxy server CLI commands., Open the Headroom savings dashboard in your browser.      Requires a running pro, Start the optimization proxy server.      \b     Examples:         headroom prox (+8 more)
 
 ### Community 1249 - "Community 1249"
-Cohesion: 0.16
-Nodes (16): AstGrepReadOutline, _build_outline(), _detect_lang_from_input(), _min_chars_to_rewrite(), _path_from_input(), ast-grep interceptor: replace verbose Read outputs with function-level outlines., Key by file_path so a second Read of the same file passes through., Run ast-grep against `source` and return the JSON match records.      Writes `so (+8 more)
+Cohesion: 0.20
+Nodes (14): AstGrepReadOutline, _build_outline(), _detect_lang_from_input(), _min_chars_to_rewrite(), _path_from_input(), ast-grep interceptor: replace verbose Read outputs with function-level outlines., Key by file_path so a second Read of the same file passes through., Run ast-grep against `source` and return the JSON match records.      Writes `so (+6 more)
 
 ### Community 1250 - "Community 1250"
 Cohesion: 0.18
@@ -7898,8 +7959,8 @@ Cohesion: 0.14
 Nodes (3): RustSearchResult, RustSearchStats, PySearchCompressionResult
 
 ### Community 1257 - "Community 1257"
-Cohesion: 0.15
-Nodes (9): hasHeadroomStatsShape(), isLocalProxyUrl(), LaunchSpec, parseProxyUrl(), ProxyProbeResult, waitForHeadroomProxy(), withDefaultPort(), proxyStatsBody (+1 more)
+Cohesion: 0.17
+Nodes (7): hasHeadroomStatsShape(), LaunchSpec, parseProxyUrl(), ProxyProbeResult, withDefaultPort(), proxyStatsBody, retrieveStatsBody
 
 ### Community 1258 - "Community 1258"
 Cohesion: 0.23
@@ -7922,8 +7983,8 @@ Cohesion: 0.14
 Nodes (8): Default ProxyConfig has min_evidence=5; learner inherits it., A custom min_evidence flows from ProxyConfig into TrafficLearner., Test that HeadroomProxy correctly initializes (or doesn't) the traffic learner., Default proxy has no traffic learner., --memory alone does NOT create traffic learner., --learn creates traffic learner., Traffic learner starts with no backend (wired lazily)., TestHeadroomProxyTrafficLearner
 
 ### Community 1263 - "Community 1263"
-Cohesion: 0.16
-Nodes (15): pytest_runtest_call(), Test fixtures for Headroom Memory., Wrap test execution to skip transient or offline external model failures.      T, test_external_model_skip_reason_handles_hf_local_cache_miss(), test_external_model_skip_reason_handles_httpx_timeout(), test_external_model_skip_reason_handles_transformers_offline_oserror(), test_external_model_skip_reason_ignores_unrelated_errors(), pytest_runtest_call() (+7 more)
+Cohesion: 0.21
+Nodes (12): test_external_model_skip_reason_handles_hf_local_cache_miss(), test_external_model_skip_reason_handles_httpx_timeout(), test_external_model_skip_reason_handles_transformers_offline_oserror(), test_external_model_skip_reason_ignores_unrelated_errors(), pytest_runtest_call(), Wrap test execution to skip transient or offline external model failures.      T, external_model_skip_reason(), _iter_exception_chain() (+4 more)
 
 ### Community 1264 - "Community 1264"
 Cohesion: 0.18
@@ -8005,10 +8066,6 @@ Nodes (8): Tests for SmartCrusher behavior with different content types.      NO
 Cohesion: 0.25
 Nodes (13): _capture_provider(), _default_vertex_app(), Turnkey Claude Code + Vertex compression wiring.  Covers the fixes that let `hea, _stub_proxy(), test_litellm_bedrock_not_aliased(), test_litellm_vertex_ai_unchanged(), test_litellm_vertex_aliases_to_vertex_ai(), test_vertex_rawpredict_anthropic_runs_compression_handler() (+5 more)
 
-### Community 1286 - "Community 1286"
-Cohesion: 0.23
-Nodes (5): is_summary_line(), is_word_boundary(), is_word_byte(), StackTraceDetector, TraceFlavor
-
 ### Community 1287 - "Community 1287"
 Cohesion: 0.20
 Nodes (7): Heuristic prior mapping signals → (level, confidence, rationale).      This is t, Behavioral signals aggregated across a project's sessions., recommend_level(), VerbositySignals, TestRecommendLevel, Path, VerbositySignals
@@ -8058,8 +8115,8 @@ Cohesion: 0.15
 Nodes (12): API, Configuration, CrewAI, Framework Examples, `get(key, full?)`, How It Works, `keys()` and `clear()`, LangGraph (+4 more)
 
 ### Community 1299 - "Community 1299"
-Cohesion: 0.13
-Nodes (8): InMemoryBackend, count() should return the number of entries., keys() should return empty list for empty backend., items() should return empty list for empty backend., Backend should handle concurrent set operations safely., InMemoryBackend should implement CompressionStoreBackend protocol., get() should return None for keys that don't exist., set() should overwrite existing entries with the same key.
+Cohesion: 0.15
+Nodes (6): ContractSpec, DecisionStep, FailureMode, AgentSpec, Parameter, Path
 
 ### Community 1300 - "Community 1300"
 Cohesion: 0.22
@@ -8078,8 +8135,8 @@ Cohesion: 0.11
 Nodes (12): _call_cli_llm(), Call a locally installed CLI tool as the LLM backend.      Enables keyless usage, Resolve a positive-integer timeout from *env_var* or fall back to *default*., _resolve_timeout_secs(), _fake_claude_popen(), Build a Popen mock factory for the streaming claude-cli path.      Returns a Mag, Coverage for less-traveled branches in the streaming claude-cli path., _result_event() (+4 more)
 
 ### Community 1304 - "Community 1304"
-Cohesion: 0.13
-Nodes (6): OSError, Test the alias helper in isolation by mocking out the config readers     and the, When client_telemetry.posthog is None (MEM0_TELEMETRY=false), do nothing —, Defensive: if the anon_id somehow already is the email, don't self-alias., If read_anon_ids itself raises (e.g. IO error), helper must swallow it., TestMaybeAliasAnonToEmail
+Cohesion: 0.12
+Nodes (13): MemantoMemoryProvider, Memanto-backed memory provider for Hermes., _save_memanto_config(), provider(), test_agent_id_env_override(), test_handle_tool_call_unconfigured_returns_error(), test_identity_template_default_profile(), test_identity_template_resolved() (+5 more)
 
 ### Community 1305 - "Community 1305"
 Cohesion: 0.15
@@ -8187,7 +8244,7 @@ Nodes (11): _patch_rtk_hook_absolute_path(), Rewrite bare ``rtk`` invocations in
 
 ### Community 1332 - "Community 1332"
 Cohesion: 0.05
-Nodes (50): config_backend(), config_show(), Display current configuration., Show or switch the active Moorcheh backend.      Switching to a backend that has, _cloud_setup(), _ensure_docker_available(), _ensure_moorcheh_client_installed(), _first_run_setup() (+42 more)
+Nodes (51): config_backend(), config_show(), Display current configuration., Show or switch the active Moorcheh backend.      Switching to a backend that has, _cloud_setup(), _ensure_docker_available(), _ensure_moorcheh_client_installed(), _first_run_setup() (+43 more)
 
 ### Community 1333 - "Community 1333"
 Cohesion: 0.17
@@ -8218,8 +8275,8 @@ Cohesion: 0.17
 Nodes (11): Configuration, Development, From a source checkout, Hermes + Memanto: Persistent Memory Agent, How it relates to the other integrations, Install, Prerequisites, Support (+3 more)
 
 ### Community 1341 - "Community 1341"
-Cohesion: 0.04
-Nodes (65): Run migrations in 'offline' mode.      This configures the context with just a U, Run migrations in 'online' mode.      In this scenario we need to create an Engi, create_default_app(), create_default_user(), AccessControl, after_memory_insert(), after_memory_update(), App (+57 more)
+Cohesion: 0.05
+Nodes (52): create_default_app(), create_default_user(), AccessControl, after_memory_insert(), after_memory_update(), App, ArchivePolicy, categorize_memory() (+44 more)
 
 ### Community 1342 - "Community 1342"
 Cohesion: 0.06
@@ -8230,16 +8287,16 @@ Cohesion: 0.10
 Nodes (35): _ping_key(), Validate api_key against /v1/ping/.      Returns False ONLY on a definitive "inv, _atomic_write_text(), Sync the active Mem0 API key into other ecosystem touchpoints.  Why this exists:, Write content to path atomically (temp + rename)., Propagate ``api_key`` into known ecosystem touchpoints.      Returns the list of, Update ``env.MEM0_API_KEY`` in path. Returns True if file was changed., Update an existing ``export MEM0_API_KEY=...`` line in path. (+27 more)
 
 ### Community 1344 - "Community 1344"
-Cohesion: 0.24
-Nodes (7): AlwaysHalf, CcrStore, CompressionContext, OffloadOutput, ReformatOutput, Result, TransformError
+Cohesion: 0.09
+Nodes (23): AlwaysHalf, AlwaysInternalError, CompressionPipeline, CompressionPipelineBuilder, PipelineResult, ReformatAccumulator, TestOffload, PipelineConfig (+15 more)
 
 ### Community 1345 - "Community 1345"
 Cohesion: 0.17
 Nodes (11): Architecture, Command model, Docs strategy, Goals, Persistent Deployments / Installs Design, Problem, Risks, Runtime adapters (+3 more)
 
 ### Community 1346 - "Community 1346"
-Cohesion: 0.24
-Nodes (4): get_deepseek_registry(), Create and return a DeepSeek pricing registry.      Returns:         PricingRegi, Tests for the DeepSeek pricing data module., TestDeepSeekPricingModule
+Cohesion: 0.21
+Nodes (5): get_deepseek_registry(), Create and return a DeepSeek pricing registry.      Returns:         PricingRegi, Tests for the DeepSeek pricing data module., TestDeepSeekPricingModule, PricingRegistry
 
 ### Community 1347 - "Community 1347"
 Cohesion: 0.17
@@ -8322,20 +8379,20 @@ Cohesion: 0.23
 Nodes (7): _rebuild_gemini_contents must re-insert preserved entries at their original posi, Simulate the full compression round-trip for a given contents list.          Mim, Text-only round-trip should produce identical contents., functionCall and functionResponse entries must survive and appear at correct pos, Preserved entry at idx=0 must not overwrite idx=0 of optimized_contents., Entry with both text and functionCall keeps the original (with functionCall inta, TestRebuildGeminiContents
 
 ### Community 1367 - "Community 1367"
-Cohesion: 0.17
-Nodes (5): Test that memories flow between agents via sync., Memory saved via Codex MCP appears in Claude's files after sync., Memory saved in Claude's files appears in Codex AGENTS.md after sync., Full round trip: Claude → DB → Codex, Codex → DB → Claude., TestCrossAgentInterop
+Cohesion: 0.25
+Nodes (5): MCPToolResult, Any, Path, MCP server for tools_read — file reading pipeline (linear)., ReadMCPServer
 
 ### Community 1368 - "Community 1368"
-Cohesion: 0.12
-Nodes (12): get_version(), Package version metadata., Return the repository root when imported from a git checkout., Return Headroom's runtime version., _source_root(), Regression tests for lightweight package bootstrap., `from headroom import compress_spreadsheet` stays eagerly exported, and the, test_compress_spreadsheet_public_import_survives_ort_pin() (+4 more)
+Cohesion: 0.20
+Nodes (6): Regression tests for lightweight package bootstrap., `from headroom import compress_spreadsheet` stays eagerly exported, and the, test_compress_spreadsheet_public_import_survives_ort_pin(), test_dynamic_detector_import_skips_optional_ml_dependencies(), test_version_prefers_source_tree_release_history(), Path
 
 ### Community 1369 - "Community 1369"
 Cohesion: 0.39
 Nodes (11): _event(), _load_module(), Tests for pr-governance.py., test_cli_body_file_override_uses_live_body(), test_validate_pull_request_accepts_crlf_test_output_code_block(), test_validate_pull_request_allows_draft_without_ready_checkboxes(), test_validate_pull_request_body_override_uses_live_body(), test_validate_pull_request_fails_on_missing_required_content() (+3 more)
 
 ### Community 1370 - "Community 1370"
-Cohesion: 0.23
-Nodes (10): _make_handle(), Unit tests for :class:`WebSocketSessionRegistry`.  These tests exercise the in-m, Once deregistered, the handle's ``relay_tasks`` list is cleared.      This keeps, test_attach_tasks_merges_and_tracks_active_count(), test_deregister_releases_task_references(), test_register_and_deregister_round_trip(), test_register_twice_same_session_does_not_double_count(), test_snapshot_age_seconds_is_non_negative() (+2 more)
+Cohesion: 0.11
+Nodes (10): Tests for OpenAI provider model fallback., Test that known models work., Test pattern-based inference for gpt-4o models., Test pattern-based inference for o1 models., Test pattern-based inference for o3 models., Test fallback for unknown models., Test that unknown models don't raise exceptions., Test that explicit context_limits override defaults. (+2 more)
 
 ### Community 1371 - "Community 1371"
 Cohesion: 0.35
@@ -8374,8 +8431,8 @@ Cohesion: 0.17
 Nodes (11): 1. Model Wrapping, 2. Hook Provider (Tool Output Compression), 3. Both Together, How It Works, Installation, Integration Patterns, Metrics, Quick Start (+3 more)
 
 ### Community 1381 - "Community 1381"
-Cohesion: 0.09
-Nodes (28): _alias_pair_marker(), _config_path(), get_or_create_user_id(), get_user_id(), is_aliased(), _load_config(), mark_aliased(), Return whether anon_id -> email has already been identified. (+20 more)
+Cohesion: 0.08
+Nodes (30): _maybe_alias_anon_to_email(), Fire $identify per prior anon ID so PostHog merges them into email.      Idempot, _alias_pair_marker(), _config_path(), get_or_create_user_id(), get_user_id(), is_aliased(), _load_config() (+22 more)
 
 ### Community 1382 - "Community 1382"
 Cohesion: 0.06
@@ -8410,8 +8467,8 @@ Cohesion: 0.18
 Nodes (11): 3. Use the Session, Activate Agent (Start Session), Agent Lifecycle, Answer (RAG), API Endpoints, Create Agent, Deactivate Agent (End Session), List Agents (+3 more)
 
 ### Community 1391 - "Community 1391"
-Cohesion: 0.20
-Nodes (9): create_ccr_mcp_server(), Create a Headroom MCP server instance.      Args:         proxy_url: URL of the, mcp_serve(), Start the MCP server (called by Claude Code).      \b     This command is typica, Test actual MCP server creation.      These tests require the MCP SDK to be inst, MCP server can be instantiated., MCP server accepts custom proxy URL., MCP server is configured for headroom_retrieve tool. (+1 more)
+Cohesion: 0.25
+Nodes (5): Test actual MCP server creation.      These tests require the MCP SDK to be inst, MCP server can be instantiated., MCP server accepts custom proxy URL., MCP server is configured for headroom_retrieve tool., TestMCPServerInitialization
 
 ### Community 1392 - "Community 1392"
 Cohesion: 0.18
@@ -8430,8 +8487,8 @@ Cohesion: 0.10
 Nodes (15): _normalize_bash_for_hash(), _normalize_hash_key(), _paths_related_as_typo(), PatternCategory, Live Traffic Pattern Learner — extracts memories from proxy traffic.  Hooks into, Build the string that feeds the content hash.      Error-recovery rows are colla, Load existing traffic_learner rows into _saved_hashes / _persisted_ids., Strip volatile suffixes and truncate at the first pipe/chain boundary. (+7 more)
 
 ### Community 1396 - "Community 1396"
-Cohesion: 0.21
-Nodes (7): probe_json(), Return a JSON payload from the URL when reachable., _Response, test_probe_json_returns_dict(), test_probe_json_returns_none_for_invalid_payloads(), test_probe_ready_accepts_ready_and_healthy(), Any
+Cohesion: 0.24
+Nodes (8): Ordering, Default, Self, LogCompressor, LogCompressorConfig, Vec, LevelClassifier, select_with_first_last_keeps_both_endpoints()
 
 ### Community 1397 - "Community 1397"
 Cohesion: 0.25
@@ -8479,7 +8536,7 @@ Nodes (10): above_threshold_compression_attempted(), below_threshold_no_compress
 
 ### Community 1408 - "Community 1408"
 Cohesion: 0.15
-Nodes (11): Tests for changes introduced in PR #208 (fix/npm-version-allow-same-version).  C, Tests for _setup_file_logging using the new _headroom_log_dir path., _setup_file_logging should not raise on OSError., Importing headroom.proxy.server must NOT attach a RotatingFileHandler         to, Tests for _get_log_path in wrap.py using headroom.paths., Tests for _headroom_log_dir using headroom.paths.log_dir., TestHeadroomLogDir, TestSetupFileLogging (+3 more)
+Nodes (13): _headroom_log_dir(), Add a RotatingFileHandler to the headroom root logger.      Writes to ~/.headroo, _setup_file_logging(), Tests for _setup_file_logging using the new _headroom_log_dir path., _setup_file_logging should not raise on OSError., Importing headroom.proxy.server must NOT attach a RotatingFileHandler         to, Tests for _get_log_path in wrap.py using headroom.paths., Tests for _headroom_log_dir using headroom.paths.log_dir. (+5 more)
 
 ### Community 1411 - "Community 1411"
 Cohesion: 0.53
@@ -8522,8 +8579,8 @@ Cohesion: 0.27
 Nodes (7): Aider-specific provider helpers., build_install_env(), Aider install-time helpers., Build the persistent install environment for Aider., build_launch_env(), Runtime helpers for Aider integrations., Build environment variables for Aider through the local proxy.      ``project``
 
 ### Community 1423 - "Community 1423"
-Cohesion: 0.10
-Nodes (11): Test pattern-based inference for sonnet models., Test pattern-based inference for haiku models., Test fallback for unknown Claude models., Test that unknown models don't raise exceptions., Test that explicit context_limits override defaults., Test pricing retrieval for known models., Test cost estimation works for new models., Tests for Anthropic provider model fallback. (+3 more)
+Cohesion: 0.12
+Nodes (10): upstash_instance(), upstash_instance_with_embeddings(), Delete a vector by ID.          Args:             vector_id (int): ID of the vec, Upstash Vector has namespaces instead of collections. A namespace is created whe, Lists all namespaces in the Upstash Vector index.         Returns:             L, Delete the namespace and all vectors in it., Return general information about the Upstash Vector index.          - Total numb, Reset the Upstash Vector index. (+2 more)
 
 ### Community 1424 - "Community 1424"
 Cohesion: 0.43
@@ -8570,12 +8627,12 @@ Cohesion: 0.15
 Nodes (11): get_message_content_text(), Extract text content from a message., Tests for get_message_content_text function., Extracts string content directly., Extracts text from list content (multimodal)., Returns empty string for None content., Handles list with both dict and string items., Returns empty string when content key is missing. (+3 more)
 
 ### Community 1435 - "Community 1435"
-Cohesion: 0.18
-Nodes (8): _conversation(), Over-compression attribution for reread waste (issue #899).  ``parse_messages(co, First serve at index 1, repeat at index 7 (gap 6 > REREAD_ADJACENT_GAP)., TestPipelineAttribution, TestRereadAttribution, TestWasteSignalsContract, tokenizer(), _uniform_rows()
+Cohesion: 0.20
+Nodes (7): _conversation(), Over-compression attribution for reread waste (issue #899).  ``parse_messages(co, First serve at index 1, repeat at index 7 (gap 6 > REREAD_ADJACENT_GAP)., TestPipelineAttribution, TestRereadAttribution, TestWasteSignalsContract, _uniform_rows()
 
 ### Community 1436 - "Community 1436"
-Cohesion: 0.09
-Nodes (32): build_serena_spec(), Construct the canonical Serena MCP server spec for an agent context.      ``--op, _FakeRegistrar, `--no-serena` must actively disable Serena, not merely skip adding it.  Serena i, Minimal registrar capturing unregister calls., runner(), test_disable_noop_when_agent_not_detected(), test_disable_noop_when_serena_absent() (+24 more)
+Cohesion: 0.21
+Nodes (14): _FakeRegistrar, `--no-serena` must actively disable Serena, not merely skip adding it.  Serena i, Minimal registrar capturing unregister calls., runner(), test_disable_noop_when_agent_not_detected(), test_disable_noop_when_serena_absent(), test_disable_preserves_user_managed_serena(), test_disable_removes_headroom_installed_serena() (+6 more)
 
 ### Community 1437 - "Community 1437"
 Cohesion: 0.08
@@ -8598,8 +8655,8 @@ Cohesion: 0.20
 Nodes (9): Compression Helper, Environment, headroom-opencode, Install, License, Models, Native OpenCode Plugin, Provider Config Helpers (+1 more)
 
 ### Community 1442 - "Community 1442"
-Cohesion: 0.17
-Nodes (7): Test dynamic fetch with fallback on failure., Clear the cache before each test., Should return static map when boto3 is not installed., Should return static map when list_inference_profiles raises., When API works, should use dynamic results (not fallback)., Second call for same region should return cached result., TestFetchBedrockInferenceProfiles
+Cohesion: 0.12
+Nodes (16): dependencies, class-variance-authority, clsx, dotted-map, fumadocs-core, fumadocs-mdx, fumadocs-twoslash, fumadocs-typescript (+8 more)
 
 ### Community 1443 - "Community 1443"
 Cohesion: 0.24
@@ -8649,6 +8706,10 @@ Nodes (9): Regression tests for the LocalEmbedder MPS serialization fix.  torch-
 Cohesion: 0.20
 Nodes (6): Prompt should include usage example., Tests for ENTITY_EXTRACTION_PROMPT constant., Prompt should be a non-empty string., Prompt should define common entity types., Prompt should explain how to handle self-references., TestEntityExtractionPrompt
 
+### Community 1455 - "Community 1455"
+Cohesion: 0.11
+Nodes (7): Custom hook implementations work correctly., Default (no-op) hooks don't modify anything., TestCompressContext, TestCompressEvent, TestCompressionHooksDefaults, TestCustomHooks, Tests for Compression Hooks interface.
+
 ### Community 1456 - "Community 1456"
 Cohesion: 0.20
 Nodes (9): Native (Rust) content-detector failures must degrade to the pure-Python detector, An ordinary exception from the native detector degrades to regex., A BaseException-derived panic (like pyo3's PanicException) is caught too., KeyboardInterrupt/SystemExit must not be swallowed by the fallback., asyncio.CancelledError must propagate, not be swallowed as a fallback., test_cancelled_error_propagates(), test_control_flow_exceptions_propagate(), test_falls_back_on_baseexception_panic() (+1 more)
@@ -8662,20 +8723,20 @@ Cohesion: 0.31
 Nodes (7): empty_recommendation_array_is_valid(), loads_valid_toml(), malformed_toml_logs_and_yields_empty(), missing_file_yields_empty_recommendations(), TempDir, Drop, Path
 
 ### Community 1460 - "Community 1460"
-Cohesion: 0.24
-Nodes (9): _build_request(), With ``optimize=True`` the first compression stage must still run., test_auto_computed_default_on_this_machine(), test_compression_is_not_bypassed_when_gated(), test_happy_path_single_request_negligible_wait(), test_unbounded_mode_no_semaphore_instance(), ProxyConfig, Request (+1 more)
+Cohesion: 0.14
+Nodes (7): FontCollector, Собирает шрифты из текстовых нод и мапит их на next/font/google., _to_camel_case(), _AsyncChunks, test_vertex_stream_passthrough_preserves_chunks_and_records_usage(), _VertexStreamClient, _VertexStreamPassthroughRequest
 
 ### Community 1461 - "Community 1461"
-Cohesion: 0.20
-Nodes (4): _CacheHit, _Entry, _Err, _SecurityBlock
+Cohesion: 0.25
+Nodes (5): Any, Path, MCP server for tools_search — code search pipeline (diamond)., SearchMCPServer, MCPServer
 
 ### Community 1462 - "Community 1462"
 Cohesion: 0.20
 Nodes (8): ProjectConfig, Configuration for project management operations., Initialize the synchronous project manager.          Args:             client: H, Initialize the project manager.          Args:             client: HTTP client i, Initialize the asynchronous project manager.          Args:             client:, Validate that both org_id and project_id are set.          Raises:             V, AsyncClient, Client
 
 ### Community 1463 - "Community 1463"
-Cohesion: 0.36
-Nodes (9): _assert_round_trip(), _fresh_store(), Issue #816: Rust search/diff/log CCR markers must be retrievable.  The Rust side, The hash the Rust side embeds in emitted markers., Entry must be retrievable under the marker's key, not SHA-256., _rust_marker_key(), test_diff_compressor_shim_stores_under_marker_key(), test_log_compressor_shim_stores_under_marker_key() (+1 more)
+Cohesion: 0.12
+Nodes (16): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-react-hooks, eslint-plugin-react-refresh, globals, postcss (+8 more)
 
 ### Community 1464 - "Community 1464"
 Cohesion: 0.06
@@ -8726,8 +8787,8 @@ Cohesion: 0.24
 Nodes (9): _make_proxy_client(), _ok_response(), Diagnostics for Anthropic compression-stage observability (issue #296).  These t, When pipeline.apply raises, the warning must include the     exception type — is, The handler must pass request_id into pipeline.apply so the     pipeline's log l, test_optimization_failure_logs_exception_type(), test_request_id_plumbed_to_pipeline_apply(), Response (+1 more)
 
 ### Community 1476 - "Community 1476"
-Cohesion: 0.20
-Nodes (6): Verify the response contains all expected fields., X-Headroom-Bypass header should skip compression., Bypass header should be case-insensitive., Test basic compress endpoint behavior., Empty messages list should return as-is with zero metrics., TestCompressEndpointBasic
+Cohesion: 0.06
+Nodes (22): client(), client_no_optimize(), Tests for the /v1/compress endpoint in the proxy server.  These tests verify tha, Verify the response contains all expected fields., X-Headroom-Bypass header should skip compression., Bypass header should be case-insensitive., Test that actual compression happens for large content., Large tool output content should result in tokens_saved > 0. (+14 more)
 
 ### Community 1477 - "Community 1477"
 Cohesion: 0.40
@@ -8802,8 +8863,8 @@ Cohesion: 0.22
 Nodes (8): Claude Code + Memanto Integration, Component architecture, Configuration, Features, Installation, Method 1: Lifecycle Hooks (Recommended), Method 2: Prompt Injection (Explicit), Usage
 
 ### Community 1495 - "Community 1495"
-Cohesion: 0.11
-Nodes (19): Traffic audit CLI commands., capture_group(), Network capture and differential report commands., Capture and compare network traffic for Headroom investigations., main(), Headroom - The Context Optimization Layer for LLM Applications.      Manage memo, output_savings(), CLI: show counterfactual output-token reduction. (+11 more)
+Cohesion: 0.09
+Nodes (25): Traffic audit CLI commands., capture_group(), Network capture and differential report commands., Capture and compare network traffic for Headroom investigations., _apply_help_aliases(), main(), Headroom - The Context Optimization Layer for LLM Applications.      Manage memo, Register all subcommand groups. (+17 more)
 
 ### Community 1496 - "Community 1496"
 Cohesion: 0.31
@@ -8898,8 +8959,8 @@ Cohesion: 0.06
 Nodes (17): Tests for HeadroomAgnoModel wrapper., Initialize with default config., Initialize with custom config., Auto-detect provider from wrapped model., Forward attribute access to wrapped model., Own properties should not be forwarded., Convert Agno messages to OpenAI format., Convert Agno Message objects to OpenAI format. (+9 more)
 
 ### Community 1519 - "Community 1519"
-Cohesion: 0.11
-Nodes (10): Tests for detect_waste_signals function., Detects HTML tags as waste., Detects HTML comments as waste., Detects base64 encoded content as waste., Detects excessive whitespace as waste., Detects large JSON blocks as bloat., Empty text returns zero waste signals., Multiple waste types are detected together. (+2 more)
+Cohesion: 0.10
+Nodes (17): Detected waste signals in a request., Total waste tokens detected., Convert to dictionary for storage., WasteSignals, detect_waste_signals(), Detect waste signals in text.      Args:         text: The text to analyze., Tests for detect_waste_signals function., Detects HTML tags as waste. (+9 more)
 
 ### Community 1520 - "Community 1520"
 Cohesion: 0.22
@@ -8942,12 +9003,12 @@ Cohesion: 0.42
 Nodes (8): _call(), _dbt_payload(), _get_sf_token_and_host(), main(), run_test(), _tables_payload(), _tokens(), _wait_for_proxy()
 
 ### Community 1531 - "Community 1531"
-Cohesion: 0.17
+Cohesion: 0.16
 Nodes (24): base_embedder_config(), AzureOpenAIStructuredLLM, Return a copy of ``messages`` with the word "assistant" replaced by "ai", Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using Azure OpenAI.          Arg, DummyAzureKwargs, DummyConfig, Reasoning models (o1/o3/GPT-5) reject temperature/max_tokens/top_p. (+16 more)
 
 ### Community 1532 - "Community 1532"
-Cohesion: 0.12
-Nodes (6): WebSocket session registry for Codex relay lifecycle tracking.  Unit 3 of the Co, Register a session. Idempotent by ``session_id``.          If the session id is, Attach relay tasks to an existing session (merge, not replace).          If ``se, JSON-serializable view of the registry (for ``/debug/ws-sessions``)., _TaskLike, Any
+Cohesion: 0.06
+Nodes (20): WebSocket session registry for Codex relay lifecycle tracking.  Unit 3 of the Co, In-memory registry of active Codex WS sessions.      Methods are safe to call fr, Register a session. Idempotent by ``session_id``.          If the session id is, Remove a session. Idempotent: returns ``None`` if unknown.          Also clears, Deregister and return (handle, released_task_count).          This is the prefer, Attach relay tasks to an existing session (merge, not replace).          If ``se, JSON-serializable view of the registry (for ``/debug/ws-sessions``)., _TaskLike (+12 more)
 
 ### Community 1533 - "Community 1533"
 Cohesion: 0.28
@@ -8982,8 +9043,8 @@ Cohesion: 0.22
 Nodes (5): MemoryEntry, Path, Format as Claude Code MEMORY.md section., Default: Claude Code project memory directory., Export high-importance memories to per-topic files.          Claude Code loads t
 
 ### Community 1542 - "Community 1542"
-Cohesion: 0.12
-Nodes (30): cleanEntityText(), cleanToken(), extractCompoundsRegex(), extractCompoundsWithNlp(), ExtractedEntity, extractEntities(), extractEntitiesBatch(), extractIdentifiers() (+22 more)
+Cohesion: 0.13
+Nodes (29): cleanEntityText(), cleanToken(), extractCompoundsRegex(), extractCompoundsWithNlp(), ExtractedEntity, extractEntities(), extractIdentifiers(), extractProper() (+21 more)
 
 ### Community 1543 - "Community 1543"
 Cohesion: 0.22
@@ -9010,8 +9071,8 @@ Cohesion: 0.25
 Nodes (5): Tests for 'headroom memory delete' command., Delete single memory with force., Delete multiple memories., Delete prompts for confirmation without --force., TestMemoryDelete
 
 ### Community 1549 - "Community 1549"
-Cohesion: 0.20
-Nodes (5): Auto-detect the best available device.          Returns:             Device stri, Load the sentence-transformers model lazily via MLModelRegistry., Initialize the OpenAI embedder.          Args:             api_key: OpenAI API k, Initialize the Ollama embedder.          Args:             model_name: Model to, Check that required dependencies are installed.
+Cohesion: 0.12
+Nodes (16): Remove all Headroom-managed blocks from opencode JSON text.      Preserves user, strip_opencode_headroom_blocks(), strip leaves user content untouched when no blocks are present., strip_opencode_headroom_blocks returns empty string for empty input., strip_opencode_headroom_blocks returns empty string for whitespace input., strip_opencode_headroom_blocks preserves JSONC comments not from Headroom., strip_opencode_headroom_blocks removes all provider blocks, not just the first., strip_opencode_headroom_blocks also strips MCP markers. (+8 more)
 
 ### Community 1550 - "Community 1550"
 Cohesion: 0.25
@@ -9106,8 +9167,8 @@ Cohesion: 0.06
 Nodes (30): Comparison with Alternatives, Conversation memory, Core Concept, Creation, Critical: cross-entity queries, Deletion, Extraction modes, How layering works in practice (+22 more)
 
 ### Community 1576 - "Community 1576"
-Cohesion: 0.33
-Nodes (4): Tests for CompressionStore storage backends.  These tests define the contract th, Test that InMemoryBackend implements the protocol correctly., Protocol should be runtime checkable., TestCompressionStoreBackendProtocol
+Cohesion: 0.25
+Nodes (5): Tests for CompressionStore storage backends.  These tests define the contract th, Test that InMemoryBackend implements the protocol correctly., InMemoryBackend should implement CompressionStoreBackend protocol., Protocol should be runtime checkable., TestCompressionStoreBackendProtocol
 
 ### Community 1577 - "Community 1577"
 Cohesion: 0.25
@@ -9140,6 +9201,10 @@ Nodes (7): _cortex_call(), _dbt_payload(), _get_sf_token_and_host(), main(), run
 ### Community 1585 - "Community 1585"
 Cohesion: 0.06
 Nodes (30): Comparison with Alternatives, Conversation memory, Core Concept, Creation, Critical: cross-entity queries, Deletion, Extraction modes, How layering works in practice (+22 more)
+
+### Community 1586 - "Community 1586"
+Cohesion: 0.21
+Nodes (14): _build_waste_histogram(), _generate_recommendations(), generate_report(), _get_jinja2_template(), _get_top_waste_requests(), HTML report generator for Headroom SDK., Lazily import jinja2 and create template., Generate HTML report from stored metrics.      Args:         store_url: Storage (+6 more)
 
 ### Community 1587 - "Community 1587"
 Cohesion: 0.25
@@ -9174,12 +9239,12 @@ Cohesion: 0.25
 Nodes (7): http(), isolated_dirs(), _live_moorcheh_api_key_configured(), End-to-end tests — real Moorcheh API, zero mocks.  API key is loaded automatical, E2E hits production Moorcheh; skip when key is missing or the unit-test placehol, Redirect agent/session storage to a temp dir for the whole E2E module., Fresh async HTTP client pointing at the real app (no mocks).
 
 ### Community 1596 - "Community 1596"
-Cohesion: 0.07
-Nodes (19): get_backend(), Abstract backend interface and factory., Return the Platform backend., Abstract interface for mem0 backends., APIError, AuthError, NotFoundError, Platform (SaaS) backend — communicates with api.mem0.ai. (+11 more)
+Cohesion: 0.11
+Nodes (16): APIError, AuthError, NotFoundError, Platform (SaaS) backend — communicates with api.mem0.ai., Build a filters dict for v3 API endpoints.          Entity IDs are ANDed (all pr, Backend that talks to the mem0 Platform API., Call the ping endpoint and return the raw response.          When *timeout* is g, Check connectivity using the ping endpoint. (+8 more)
 
 ### Community 1597 - "Community 1597"
 Cohesion: 0.12
-Nodes (14): A session where RTK truncation forces repeated re-fetches of one command.      T, rtk_refetch_loop_session(), _canonical_signature(), detect_loops(), Detect repeated tool-call patterns across sessions.      Calls are grouped by ca, Collapse a tool call to a signature stable across re-fetch variants.      For sh, _project(), Tests for loop detection and loop-weighting in Headroom Learn.  Covers the gap t (+6 more)
+Nodes (9): Tests for HierarchicalMemory.update()., Test updating memory content., Test updating importance score., Test updating entity references., Test that metadata updates are merged., Test updating non-existent memory returns None., Test that content update triggers re-embedding., Test update without re-embedding. (+1 more)
 
 ### Community 1598 - "Community 1598"
 Cohesion: 0.07
@@ -9238,8 +9303,8 @@ Cohesion: 0.29
 Nodes (4): Tests for 'headroom memory edit' command., Edit memory importance., Edit non-existent memory., TestMemoryEdit
 
 ### Community 1613 - "Community 1613"
-Cohesion: 0.13
-Nodes (13): CompressedContext, Track a compression event.          Args:             hash_key: The CCR hash for, Represents a piece of compressed context from the conversation.      The ``works, Tests for CCR context tracker.  These tests verify that: 1. Compression events a, Test LRU eviction at capacity., Oldest entries evicted when at capacity., Test CompressedContext dataclass., Create compressed context. (+5 more)
+Cohesion: 0.14
+Nodes (8): _FakeChoiceDeltaToolCall, _FakeDeltaToolCallFunction, Mimics openai.types...ChoiceDeltaToolCallFunction: attribute access,     no `.ge, Regression coverage for issue #1312: streaming integrations (Agno     over OpenA, Mimics the OpenAI SDK streaming tool-call object that the Agno     wrapper surfa, The original crash site: parsing an assistant message whose         tool_calls a, The second `.get()` site: find_tool_units must still pair an         SDK-object, TestStreamingToolCallObjects
 
 ### Community 1614 - "Community 1614"
 Cohesion: 0.52
@@ -9274,8 +9339,8 @@ Cohesion: 0.48
 Nodes (6): _default_hermes_home(), install(), main(), Install the Memanto plugin into a Hermes plugins directory.  Hermes discovers me, Write the ``memanto`` plugin into ``hermes_home/plugins`` and return its path., Path
 
 ### Community 1622 - "Community 1622"
-Cohesion: 0.20
-Nodes (6): Test the async client wrapper., Create a mock MCP client., Wrapper should automatically compress tool results., Wrapper should track compression metrics., Wrapper should track total tokens saved., TestMCPClientWrapper
+Cohesion: 0.14
+Nodes (10): HeadroomMCPClientWrapper, Wrapper for MCP clients that automatically compresses tool results.      This wr, Get compression metrics for all tool calls., Get total tokens saved across all tool calls., Test the async client wrapper., Create a mock MCP client., Wrapper should automatically compress tool results., Wrapper should track compression metrics. (+2 more)
 
 ### Community 1623 - "Community 1623"
 Cohesion: 0.29
@@ -9311,7 +9376,7 @@ Nodes (7): _jsonrpc(), Verify that user_id and client_name context variables are
 
 ### Community 1631 - "Community 1631"
 Cohesion: 0.05
-Nodes (35): _check_pricing_staleness(), _get_encoding(), _get_encoding_name_for_model(), _get_litellm_module(), _infer_model_family(), _load_custom_model_config(), OpenAIProvider, OpenAITokenCounter (+27 more)
+Nodes (36): _check_pricing_staleness(), _get_encoding(), _get_encoding_name_for_model(), _get_litellm_module(), _infer_model_family(), _load_custom_model_config(), OpenAIProvider, OpenAITokenCounter (+28 more)
 
 ### Community 1632 - "Community 1632"
 Cohesion: 0.29
@@ -9365,9 +9430,13 @@ Nodes (3): TestKnownHTMLTags, _is_html_tag(), Case-insensitive HTML5 tag check. 
 Cohesion: 0.33
 Nodes (6): fake_api_key(), _isolate_env(), Wipe env vars AND switch cwd so a developer's local ``.env`` cannot     bleed in, MonkeyPatch, Path, Shared fixtures for memanto-mcp tests.  These tests never hit the network: ``Sdk
 
+### Community 1647 - "Community 1647"
+Cohesion: 0.19
+Nodes (4): runTests(), demoAzureAISearch(), demoMemoryStore(), demoSupabase()
+
 ### Community 1648 - "Community 1648"
-Cohesion: 0.22
-Nodes (13): _HandlerHarness, Minimal subclass exposing just the deps the unit-extraction path     actually re, Codex's Responses payload uses `input=[...]` with no `messages` key.     The com, The Anthropic-style shape (messages=list, no input) must also     flow. This is, Re-entrant Codex websocket passes share one `request_id` but     process distinc, The gate must still reject malformed payloads — `input` and     `messages` both, _StubPipeline, test_codex_input_list_payload_reaches_router_without_skip() (+5 more)
+Cohesion: 0.12
+Nodes (16): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-react-hooks, eslint-plugin-react-refresh, globals, postcss (+8 more)
 
 ### Community 1649 - "Community 1649"
 Cohesion: 0.29
@@ -9382,8 +9451,8 @@ Cohesion: 0.29
 Nodes (6): extends, rules, body-max-line-length, footer-leading-blank, subject-case, type-enum
 
 ### Community 1654 - "Community 1654"
-Cohesion: 0.08
-Nodes (32): main(), _print_stats_panel(), Search the documentation for articles matching `query`. Returns up to 30 results, The actual Strands agent demo — looks like any other Strands app., run_agent_demo(), search_documentation(), _start_proxy(), _stop_proxy() (+24 more)
+Cohesion: 0.16
+Nodes (14): MCPClient, _client_for(), HeadroomBundle, _make_headroom_client(), _make_serena_client(), _make_tokensave_client(), HeadroomBundle — single-helper MCP wiring for a Strands Agent.  The cleanest pro, Single helper that hands a Strands Agent every Headroom integration.      Attrib (+6 more)
 
 ### Community 1655 - "Community 1655"
 Cohesion: 0.07
@@ -9418,8 +9487,8 @@ Cohesion: 0.33
 Nodes (6): OpenAICodexRateLimitHeaders, additionalProperties, allOf, description, title, type
 
 ### Community 1663 - "Community 1663"
-Cohesion: 0.15
-Nodes (8): ALWAYS_SEND_EVENTS, MEM0_TELEMETRY_SAMPLE_RATE, telemetry, TelemetryClient, TelemetryEventData, TelemetryInstance, TelemetryOptions, UnifiedTelemetry
+Cohesion: 0.19
+Nodes (14): compute_release_version(), find_latest_release_tag(), Return the latest release tag after normalizing legacy 4-part tags., Compute the next release version from the canonical version and existing tags., Tests for release version normalization and bumping., test_compute_minor_release_from_four_part_history(), test_compute_patch_release_from_canonical_without_tags(), test_compute_patch_release_from_four_part_history() (+6 more)
 
 ### Community 1664 - "Community 1664"
 Cohesion: 0.18
@@ -9459,7 +9528,7 @@ Nodes (5): Anything else, Environment, Error output (if any), Result, Token stor
 
 ### Community 1673 - "Community 1673"
 Cohesion: 0.15
-Nodes (12): GoogleGenAIEmbedding, Get the embedding for the given text using Google Generative AI.         Args:, test_config_initialization(), test_embed_batch_chunks_over_100_texts(), test_embed_batch_count_mismatch_raises(), test_embed_batch_empty_list(), test_embed_batch_single_call(), test_embed_batch_strips_newlines() (+4 more)
+Nodes (10): Memanto memory-agent provider for the Hermes agent.  Install the directory plugi, _clean_text_for_capture(), _is_trivial_message(), Memanto memory-agent provider for the Hermes agent.  Memanto (https://memanto.ai, Coerce to Memanto's id charset (letters, digits, ``-``, ``_``)., Best-effort Hermes home: ask the host, else ``$HERMES_HOME``, else ~/.hermes., register(), _resolve_hermes_home() (+2 more)
 
 ### Community 1676 - "Community 1676"
 Cohesion: 0.33
@@ -9489,13 +9558,17 @@ Nodes (25): BootstrapEnvelope, bootstrapViaBackend(), claimViaOtp(), isValidEnve
 Cohesion: 0.53
 Nodes (5): echo_upstream(), ws_client_close_propagates(), ws_text_and_binary_round_trip(), Sender, SocketAddr
 
+### Community 1686 - "Community 1686"
+Cohesion: 0.25
+Nodes (3): Any, MCP server for tools_web — web request pipeline (request-lifecycle)., WebMCPServer
+
 ### Community 1687 - "Community 1687"
-Cohesion: 0.08
-Nodes (23): _call(), _ensure_warning_acknowledged(), mem0 agent-rush — AGENTRUSH game commands.  Wraps the platform's /v1/agent-rush/, Block the first interactive add on the PII warning; pass-through for agents., run_agent_rush_add(), run_agent_rush_search(), agent_rush_add(), agent_rush_search() (+15 more)
+Cohesion: 0.10
+Nodes (17): mem0 whoami — print the active agent's default_user_id (AGENTRUSH identifier)., run_whoami(), Print your AGENTRUSH identifier (default_user_id).      Example:       mem0 whoa, whoami_cmd(), load_config(), Load config from file, applying env var overrides., capture_event(), _get_distinct_id() (+9 more)
 
 ### Community 1688 - "Community 1688"
-Cohesion: 0.07
-Nodes (27): devDependencies, autoprefixer, eslint, eslint-config-next, postcss, prettier, tailwindcss, @tailwindcss/typography (+19 more)
+Cohesion: 0.12
+Nodes (16): devDependencies, autoprefixer, eslint, eslint-config-next, postcss, prettier, tailwindcss, @tailwindcss/typography (+8 more)
 
 ### Community 1691 - "Community 1691"
 Cohesion: 0.47
@@ -9578,8 +9651,8 @@ Cohesion: 0.60
 Nodes (4): bench_classify(), build_headers(), Criterion, HeaderMap
 
 ### Community 1712 - "Community 1712"
-Cohesion: 0.07
-Nodes (27): devDependencies, postcss, tailwindcss, @types/lodash, @types/node, @types/react, @types/react-dom, typescript (+19 more)
+Cohesion: 0.11
+Nodes (17): devDependencies, postcss, tailwindcss, @types/lodash, @types/node, @types/react, @types/react-dom, typescript (+9 more)
 
 ### Community 1713 - "Community 1713"
 Cohesion: 0.20
@@ -9610,12 +9683,12 @@ Cohesion: 0.40
 Nodes (4): docs, Explore, Fumadocs MDX, Learn More
 
 ### Community 1720 - "Community 1720"
-Cohesion: 0.22
-Nodes (5): Put a memory in the cache.          If the memory already exists, updates the va, Put multiple memories in the cache.          Args:             memories: List of, Get a memory from the cache.          Moves the accessed item to the end (most r, Get multiple memories from the cache.          Moves all accessed items to the e, Memory
+Cohesion: 0.19
+Nodes (6): lemmatize_for_bm25(), BM25 lemmatization for consistent keyword matching.  Uses spaCy's lemmatizer for, Lemmatize text for BM25 matching.      Returns space-joined lemmas for full-text, _ensure_spacy(), Skip tests if spaCy model is not available., TestLemmatizeForBm25
 
 ### Community 1722 - "Community 1722"
-Cohesion: 0.39
-Nodes (8): ChunkState, done_sentinel_terminates_stream_status(), multiple_choices_keyed_by_index(), refusal_field_handled(), run(), tool_call_arguments_concatenated(), tool_call_id_and_name_only_first_chunk(), usage_in_final_chunk_when_include_usage_set()
+Cohesion: 0.22
+Nodes (13): classify_and_attach_auth_mode(), empty_headers_classify_as_oauth_for_bedrock(), probe(), router(), sigv4_authorization_classifies_as_oauth(), x_api_key_inbound_is_coerced_to_oauth_loudly(), Router, AuthMode (+5 more)
 
 ### Community 1723 - "Community 1723"
 Cohesion: 0.40
@@ -9714,8 +9787,8 @@ Cohesion: 0.83
 Nodes (3): build_rust_extension.sh script, fail(), log()
 
 ### Community 1757 - "Community 1757"
-Cohesion: 0.08
-Nodes (22): mock_connection_pool(), Create a mock connection pool., Test vector deletion., Test retrieving a vector by ID., Test listing collections., Test collection deletion., Test getting collection information., Test listing vectors. (+14 more)
+Cohesion: 0.07
+Nodes (26): mock_connection_pool(), Create a mock connection pool., Test vector deletion., Test retrieving a vector by ID., Test listing collections., Test collection deletion., Test getting collection information., Test listing vectors. (+18 more)
 
 ### Community 1760 - "Community 1760"
 Cohesion: 0.07
@@ -9742,12 +9815,12 @@ Cohesion: 0.12
 Nodes (9): Test model ID mapping for different regions., EU region should produce eu.anthropic.* model IDs., US region should produce us.anthropic.* model IDs., Unknown models in EU should get eu.anthropic.* fallback, not bare 'bedrock/claud, Unknown models in AP should get apac.anthropic.* fallback., Already-formatted Bedrock IDs should pass through unchanged., Raw Bedrock IDs like 'anthropic.claude-...-v1:0' should normalize and map., eu.anthropic.claude-...-v1:0' should normalize and map. (+1 more)
 
 ### Community 1771 - "Community 1771"
-Cohesion: 0.06
-Nodes (46): AccessLog(), AccessLogEntry, AccessLogProps, CreateMemoryDialog(), columns, FilterComponent(), MemoriesSection(), MemoryActions() (+38 more)
+Cohesion: 0.10
+Nodes (21): AccessLog(), AccessLogEntry, AccessLogProps, MemoriesSection(), MemoryActions(), MemoryActionsProps, MemoryDetails(), MemoryDetailsProps (+13 more)
 
 ### Community 1774 - "Community 1774"
-Cohesion: 0.50
-Nodes (3): _CapturingHandler, stage_log_capture(), LogRecord
+Cohesion: 0.19
+Nodes (10): _config_ref(), ProxyHandle, start_proxy(), Arc, Config, JoinHandle, Option, Sender (+2 more)
 
 ### Community 1776 - "Community 1776"
 Cohesion: 0.08
@@ -9790,24 +9863,28 @@ Cohesion: 0.22
 Nodes (5): Empty array should pass through unchanged., Single item should pass through unchanged., Non-JSON content should pass through unchanged., Malformed JSON should pass through unchanged., TestMCPEdgeCases
 
 ### Community 1788 - "Community 1788"
-Cohesion: 0.18
-Nodes (14): _build(), Tests for --protect-tool-results / HEADROOM_PROTECT_TOOL_RESULTS.  Three behavio, Bash must remain absent from DEFAULT_EXCLUDE_TOOLS; protect_tool_results     is, Bash added via protect_tool_results must appear in exclude_tools alongside     t, In token mode, protect_tool_results forces protect_recent_reads_fraction to 0.0, _parse_csv_tools parses a comma-separated value into both original-case     and, When Bash is in exclude_tools (via protect_tool_results), its tool_result     co, _router() (+6 more)
+Cohesion: 0.22
+Nodes (12): _build(), Tests for --protect-tool-results / HEADROOM_PROTECT_TOOL_RESULTS.  Three behavio, Bash must remain absent from DEFAULT_EXCLUDE_TOOLS; protect_tool_results     is, Bash added via protect_tool_results must appear in exclude_tools alongside     t, In token mode, protect_tool_results forces protect_recent_reads_fraction to 0.0, When Bash is in exclude_tools (via protect_tool_results), its tool_result     co, _router(), test_bash_not_in_default_exclude_tools() (+4 more)
 
 ### Community 1790 - "Community 1790"
 Cohesion: 0.15
 Nodes (7): AuthContext, AuthContextValue, AuthUser, refreshSession(), api, refreshAccessToken(), setAccessToken()
 
 ### Community 1798 - "Community 1798"
-Cohesion: 0.04
-Nodes (63): LocalBackendConfig, Local backend adapter for Headroom's hierarchical memory system.  Provides a ful, Initialize the local backend.          Args:             config: Configuration f, Configuration for local backend.      Attributes:         db_path: Path to the S, Mem0Config, Configuration for Mem0 backend.      Qdrant connection fields default to values, Mem0SystemAdapter, Adapter to make Mem0Backend compatible with MemorySystem's MemoryBackend protoco (+55 more)
+Cohesion: 0.24
+Nodes (11): Cortex Code provider helpers., build_install_env(), Cortex Code install-time helpers., Render the Cortex Code setup instructions for the local proxy., Build the persistent install environment for Cortex Code., render_setup_lines(), build_launch_env(), proxy_base_url() (+3 more)
 
 ### Community 1806 - "Community 1806"
 Cohesion: 0.08
 Nodes (12): Insert vectors into a collection., Search for similar vectors.          All implementations must return similarity, Delete a vector by ID., Update a vector and its payload., Retrieve a vector by ID., List all collections., Get information about a collection., Reset by delete the collection and recreate it. (+4 more)
 
+### Community 1809 - "Community 1809"
+Cohesion: 0.15
+Nodes (11): normalize_release_tag(), parse_release_tag(), Parse a release tag, preserving legacy fourth-component ordering., Collapse historic 4-part release tags into their base semantic version., Semantic version tuple with simple bump helpers., Parsed release tag metadata used for sorting and normalization., ReleaseTag, SemVer (+3 more)
+
 ### Community 1811 - "Community 1811"
-Cohesion: 0.12
-Nodes (25): Any, datetime, build_temporal_query(), get_last_n_days(), get_last_n_hours(), get_this_month_range(), get_this_week_range(), get_today_range() (+17 more)
+Cohesion: 0.06
+Nodes (37): Summary Visualization Service  Generates ASCII-art timeline and graph visualizat, Read all session summary MD files for the given agent/date and         extract s, Generates ASCII-art visualizations for daily summaries, Build a horizontal ASCII timeline showing memory events by hour.          Exampl, Build a horizontal bar chart of memory type counts.          Example:, Build a Markdown table summarizing confidence metrics., Parse session MD files for a given agent/date and return a         complete Mark, Generate visualizations and append them to an existing summary MD file. (+29 more)
 
 ### Community 1814 - "Community 1814"
 Cohesion: 0.08
@@ -9818,8 +9895,8 @@ Cohesion: 0.31
 Nodes (6): call_anthropic(), Live Anthropic API tests for the Claude Code (tool_result block) path.  Validate, A stale-Read marker (file edited after read) must be a valid         message bod, read_roundtrip(), TestGroupedSearchLive, TestLifecycleMarkerLive
 
 ### Community 1822 - "Community 1822"
-Cohesion: 0.12
-Nodes (15): BaseRerankerConfig, CohereRerankerConfig, Configuration class for Cohere reranker-specific parameters.     Inherits from B, HuggingFaceRerankerConfig, Configuration class for HuggingFace reranker-specific parameters.     Inherits f, _docs(), mock_cohere(), mock_zero_entropy() (+7 more)
+Cohesion: 0.15
+Nodes (12): CohereRerankerConfig, Configuration class for Cohere reranker-specific parameters.     Inherits from B, _docs(), mock_cohere(), mock_zero_entropy(), Regression tests for the reranker fallback path honoring ``config.top_k``.  When, Provide a fake ``cohere`` module so CohereReranker imports/constructs., Provide a fake ``zeroentropy`` module so ZeroEntropyReranker imports. (+4 more)
 
 ### Community 1823 - "Community 1823"
 Cohesion: 0.10
@@ -9830,8 +9907,8 @@ Cohesion: 0.22
 Nodes (8): Provider, testConfig, Provider, Provider, createMem0(), retrieveMemories(), Provider, Provider
 
 ### Community 1825 - "Community 1825"
-Cohesion: 0.05
-Nodes (28): EmbeddingBase, Get the embedding for the given text.          Args:             text (str): The, Embed multiple texts. Override in subclasses for native batch support., Initialized a base embedding class      :param config: Embedding configuration o, FastEmbedEmbedding, Convert the text to embeddings using FastEmbed running in the Onnx runtime, LangchainEmbedding, Get the embedding for the given text using Langchain.          Args: (+20 more)
+Cohesion: 0.06
+Nodes (25): EmbeddingBase, Get the embedding for the given text.          Args:             text (str): The, Embed multiple texts. Override in subclasses for native batch support., Initialized a base embedding class      :param config: Embedding configuration o, FastEmbedEmbedding, Convert the text to embeddings using FastEmbed running in the Onnx runtime, GoogleGenAIEmbedding, Get the embedding for the given text using Google Generative AI.         Args: (+17 more)
 
 ### Community 1826 - "Community 1826"
 Cohesion: 0.08
@@ -9874,8 +9951,8 @@ Cohesion: 0.16
 Nodes (13): AuthenticationError, ConfigurationError, createExceptionFromResponse(), HTTP_STATUS_TO_EXCEPTION, HTTP_SUGGESTIONS, MemoryError, MemoryErrorConstructor, MemoryErrorOptions (+5 more)
 
 ### Community 1837 - "Community 1837"
-Cohesion: 0.19
-Nodes (6): ClientOptions, condenseMem0MemoryIntoHumanMessage(), Mem0Memory, mem0MemoryContextToSystemPrompt(), Mem0MemoryInput, mem0MemoryToMessages()
+Cohesion: 0.10
+Nodes (14): ClientOptions, condenseMem0MemoryIntoHumanMessage(), Mem0Memory, mem0MemoryContextToSystemPrompt(), Mem0MemoryInput, mem0MemoryToMessages(), Messages, Stream response with Headroom optimization.          This is the main method req (+6 more)
 
 ### Community 1844 - "Community 1844"
 Cohesion: 0.12
@@ -9886,8 +9963,8 @@ Cohesion: 0.14
 Nodes (9): extract_recent_exchanges(), main(), Extract the last N user+assistant message pairs from the transcript JSONL., store_exchange(), tail_lines(), _msg(), Tests for auto_capture.py transcript parsing and exchange extraction., TestExtractRecentExchanges (+1 more)
 
 ### Community 1873 - "Community 1873"
-Cohesion: 0.36
-Nodes (7): addSampleMemories(), Cars, CarSchema, getMemoryString(), main(), mem0Config, run()
+Cohesion: 0.14
+Nodes (8): Tests for compress_documents method., Compress empty list returns empty list., Compress when documents fewer than max returns all., Compress when documents exceed max returns max_documents., Compressed documents are ordered by relevance., Documents below min_relevance are filtered out., Compression tracks relevance scores., TestHeadroomDocumentCompressorCompress
 
 ### Community 1874 - "Community 1874"
 Cohesion: 0.08
@@ -9898,15 +9975,15 @@ Cohesion: 0.08
 Nodes (12): _get_oss_telemetry() should return the same instance on repeated calls., Only one AnonymousTelemetry should be created even under concurrent access., atexit.register should be called exactly once for the singleton., capture_event() should not create a new AnonymousTelemetry per call., The core leak fix: Posthog() should only be called once no matter how         ma, _shutdown_oss_telemetry() should close and clear the singleton., Calling _shutdown_oss_telemetry() twice should not raise., _shutdown_oss_telemetry() should be a no-op when singleton was never created. (+4 more)
 
 ### Community 1876 - "Community 1876"
-Cohesion: 0.04
-Nodes (49): dependencies, ai, buffer, class-variance-authority, clsx, framer-motion, lucide-react, @mem0/vercel-ai-provider (+41 more)
+Cohesion: 0.09
+Nodes (23): dependencies, ai, buffer, class-variance-authority, clsx, framer-motion, lucide-react, @mem0/vercel-ai-provider (+15 more)
 
 ### Community 1877 - "Community 1877"
 Cohesion: 0.09
 Nodes (22): compilerOptions, allowImportingTsExtensions, baseUrl, isolatedModules, jsx, lib, module, moduleDetection (+14 more)
 
 ### Community 1878 - "Community 1878"
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (23): 1. Wrapped Model with generateText (Basic), 2. Wrapped Model with streamText (Streaming), 3. Standalone Utilities with OpenAI, 4. Standalone Utilities with Anthropic, 5. Structured Output with generateObject, 6. Multi-Provider Setup, 7. Next.js API Route Integration, 8. How Memory Processing Works Internally (+15 more)
 
 ### Community 1879 - "Community 1879"
@@ -9918,8 +9995,8 @@ Cohesion: 0.10
 Nodes (18): MockVectorMemory, Mock memory object for testing incomplete payloads., Test that search operations handle memory objects with missing 'data' key gracef, Test that get_all() handles nested list return from Chroma/Milvus.      Issue #3, Test that get_all() handles tuple return from Qdrant.      Qdrant returns: ([mem, Test that get_all() handles flat list return from PostgreSQL.      PostgreSQL re, attributed_to is written to the payload on add (and the extraction prompt marks, AsyncMemory get/get_all/search must surface attributed_to, same as the sync path (+10 more)
 
 ### Community 1881 - "Community 1881"
-Cohesion: 0.14
-Nodes (8): Test query analysis for relevance detection., Query analysis finds relevant compressed context., Query analysis returns empty for unrelated query., Query matches based on keyword overlap., No recommendations when proactive expansion disabled., Old contexts get lower relevance scores., Respects max proactive expansions limit., TestQueryAnalysis
+Cohesion: 0.25
+Nodes (3): Any, MCP server for tools_terminal — terminal I/O pipeline (session-stateful)., TerminalMCPServer
 
 ### Community 1882 - "Community 1882"
 Cohesion: 0.11
@@ -9930,16 +10007,20 @@ Cohesion: 0.09
 Nodes (12): Test deleting a specific vector., Test vector similarity search., Test resetting the collection., Test deleting the entire collection., Test listing collections., Test that invalid endpoint format raises ValueError., Test basic CRUD operations., Create Neptune Analytics vector store instance for testing. (+4 more)
 
 ### Community 1900 - "Community 1900"
-Cohesion: 0.46
-Nodes (5): buildEvent(), captureEvent(), distinctId(), isTelemetryEnabled(), PLUGIN_VERSION
+Cohesion: 0.15
+Nodes (8): format_backend_status(), Build the human-readable backend status string shown in CLI/server output., test_format_backend_status_uses_litellm_provider_metadata(), test_create_proxy_backend_handles_missing_litellm_backend(), test_format_backend_status_for_anthropic_direct(), test_format_backend_status_for_anyllm(), test_proxy_provider_runtime_routes_model_metadata_and_passthrough(), MonkeyPatch
+
+### Community 1902 - "Community 1902"
+Cohesion: 0.23
+Nodes (4): AgentCapability, ConversableAgent, Mem0Teachability, Memory
 
 ### Community 1910 - "Community 1910"
-Cohesion: 0.05
-Nodes (28): Index, Any, QueryResult, Regression test for #4207.      The Upstash client's `query_many` takes `namespa, test_get_vector(), test_list_vectors(), test_search_vectors(), test_search_vectors_empty_filters() (+20 more)
+Cohesion: 0.11
+Nodes (8): QueryResult, Regression test for #4207.      The Upstash client's `query_many` takes `namespa, test_get_vector(), test_list_vectors(), test_search_vectors(), test_search_vectors_empty_filters(), test_search_vectors_multi_query_namespace_at_top_level(), test_search_vectors_with_embeddings()
 
 ### Community 1911 - "Community 1911"
-Cohesion: 0.04
-Nodes (48): dependencies, ai, buffer, class-variance-authority, clsx, framer-motion, lucide-react, @mem0/vercel-ai-provider (+40 more)
+Cohesion: 0.09
+Nodes (23): dependencies, ai, buffer, class-variance-authority, clsx, framer-motion, lucide-react, @mem0/vercel-ai-provider (+15 more)
 
 ### Community 1912 - "Community 1912"
 Cohesion: 0.09
@@ -9958,8 +10039,8 @@ Cohesion: 0.09
 Nodes (21): allowImportingTsExtensions, declarationMap, forceConsistentCasingInFileNames, noEmit, noImplicitAny, verbatimModuleSyntax, compilerOptions, declaration (+13 more)
 
 ### Community 1916 - "Community 1916"
-Cohesion: 0.15
-Nodes (12): _format_conversation_history(), _format_new_messages(), _format_summary(), Pass through if already a string, otherwise JSON-serialize., Resolve current and observation dates, defaulting to today., Truncate text to limit characters, appending '...' when shortened., Extract summary text from a string or dict with a 'summary' key., Format message dicts into 'role: content' lines with truncation. (+4 more)
+Cohesion: 0.17
+Nodes (14): _format_conversation_history(), _format_new_messages(), _format_summary(), generate_additive_extraction_prompt(), Pass through if already a string, otherwise JSON-serialize., Resolve current and observation dates, defaulting to today., Build the user prompt for additive (ADD-only) extraction with linking.      Pair, Truncate text to limit characters, appending '...' when shortened. (+6 more)
 
 ### Community 1917 - "Community 1917"
 Cohesion: 0.09
@@ -9990,8 +10071,8 @@ Cohesion: 0.09
 Nodes (21): author, dependencies, mem0ai, description, devDependencies, @babel/core, babel-loader, @babel/preset-env (+13 more)
 
 ### Community 1924 - "Community 1924"
-Cohesion: 0.32
-Nodes (8): _estimate_compression_savings_usd(), _estimate_input_cost_usd(), _get_litellm_module(), Resolve model name to one LiteLLM recognizes., Estimate compression savings in USD from saved input tokens., Estimate input spend in USD for a request.      Uses provider cache pricing when, Import LiteLLM only when cost metadata is requested., _resolve_litellm_model()
+Cohesion: 0.26
+Nodes (6): AssetExtractor, _extract_box_size(), Any, Рекурсивно находит ассеты в сжатом дереве Figma., Определяет стратегию SVG: inline, next/image, img, icon component., SvgClassifier
 
 ### Community 1925 - "Community 1925"
 Cohesion: 0.18
@@ -10018,8 +10099,8 @@ Cohesion: 0.10
 Nodes (20): 1. Basic Text Generation with Memory Context, 2. Combining OpenAI Provider with Memory Utils, 3. Structured Message Format with Memory, 4. Streaming Responses with Memory Context, 5. Generate Responses with Tools Call, 6. Get Sources from Memory, 7. File Support with Memory Context, Best Practices (+12 more)
 
 ### Community 1931 - "Community 1931"
-Cohesion: 0.25
-Nodes (5): Test request validation for /v1/compress., Request without messages field should return 400., Request without model field should return 400., Request with invalid JSON should return 400., TestCompressEndpointValidation
+Cohesion: 0.22
+Nodes (13): classify_commit_bump(), CommitInfo, determine_bump_level(), _merge_summary(), Commit subject/body pair used for bump detection., Return the first meaningful body line for merge commits., Classify one commit using conventional commit semantics., Return the highest required bump across a commit range. (+5 more)
 
 ### Community 1932 - "Community 1932"
 Cohesion: 0.10
@@ -10032,6 +10113,10 @@ Nodes (19): *, author, description, engines, node, files, keywords, license (+11
 ### Community 1934 - "Community 1934"
 Cohesion: 0.18
 Nodes (20): _assert_utc_timestamp(), _build_memory_instance(), Reproduces issue #3720: created_at must be identical in search() and get_all()., After an update, created_at must stay the same and updated_at must change., After update, search and get_all must still return the same timestamps., actor_id must be preserved from the original memory even when the     updating c, Async variant: actor_id must be preserved from the original memory (issue #4490), test_async_create_memory_preserves_existing_created_at() (+12 more)
+
+### Community 1935 - "Community 1935"
+Cohesion: 0.21
+Nodes (7): _as_bool(), _detect_memory_type(), _memory_score(), Coalesce the score key Memanto uses across endpoints., tool_error(), test_detect_memory_type(), Any
 
 ### Community 1936 - "Community 1936"
 Cohesion: 0.13
@@ -10046,8 +10131,8 @@ Cohesion: 0.13
 Nodes (12): Parity tests for `mem0 init --agent` (Agent Mode bootstrap).  Mirror of ``cli/no, `mem0 init --agent --json` should produce a JSON envelope on success.      Witho, `mem0 --help` must list `init` so agents walking the top-level help     can disc, `mem0 init --help` must expose the Agent Mode flags., `--agent` on `init` must reach init_cmd, not be eaten by the global preprocessor, _run(), _strip_ansi(), TestArgvPreprocessing (+4 more)
 
 ### Community 1942 - "Community 1942"
-Cohesion: 0.05
-Nodes (39): PrometheusMetrics, _aggregate_mcp_events(), build_prefix_cache_stats(), build_session_summary(), _get_litellm_module(), merge_cost_stats(), Cost tracking and budget management for the Headroom proxy.  Contains the CostTr, Build provider-aware prefix cache statistics for the dashboard. (+31 more)
+Cohesion: 0.03
+Nodes (60): HeadroomOtelMetrics, PrometheusMetrics, build_prefix_cache_stats(), build_session_summary(), CostTracker, _get_litellm_module(), merge_cost_stats(), Cost tracking and budget management for the Headroom proxy.  Contains the CostTr (+52 more)
 
 ### Community 1943 - "Community 1943"
 Cohesion: 0.28
@@ -10064,6 +10149,10 @@ Nodes (9): initialState, LayoutActionConstants, layoutReducer(), LayoutState, to
 ### Community 1947 - "Community 1947"
 Cohesion: 0.26
 Nodes (9): PipelineStage, _assert_compressed_event_carries_originals(), _assert_stage_order(), _DummyTokenizer, INPUT_COMPRESSED must expose the pre-compression messages to extensions.      Th, _RecordingExtension, test_anthropic_messages_pipeline_events_cover_proxy_lifecycle(), test_openai_chat_pipeline_events_cover_proxy_lifecycle() (+1 more)
+
+### Community 1949 - "Community 1949"
+Cohesion: 0.28
+Nodes (3): ManangrMCPServer, Any, MCP server for tools_manangr — project management pipeline (analysis-planning).
 
 ### Community 1972 - "Community 1972"
 Cohesion: 0.12
@@ -10082,7 +10171,7 @@ Cohesion: 0.10
 Nodes (19): 3a. Near-duplicate pairs (merge candidates), 3b. Contradictions, 3c. Prune candidates, 5a. Contradictions, 5b. Final confirmation, Concurrency guard, Contradictions (resolved), Execution (+11 more)
 
 ### Community 1976 - "Community 1976"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (14): HuggingFaceEmbedding, Get the embedding for the given text using Hugging Face.          Args:, test_embed_batch_base_url(), test_embed_batch_count_mismatch_raises_base_url(), test_embed_batch_count_mismatch_raises_sentence_transformer(), test_embed_batch_empty_list_sentence_transformer(), test_embed_batch_sentence_transformer(), test_embed_custom_model() (+6 more)
 
 ### Community 1977 - "Community 1977"
@@ -10118,8 +10207,8 @@ Cohesion: 0.10
 Nodes (20): peerDependencies, @anthropic-ai/sdk, @azure/identity, @azure/search-documents, better-sqlite3, cloudflare, @cloudflare/workers-types, compromise (+12 more)
 
 ### Community 1985 - "Community 1985"
-Cohesion: 0.11
-Nodes (17): extract_json(), get_fact_retrieval_messages(), get_fact_retrieval_messages_legacy(), get_image_description(), normalize_facts(), parse_vision_messages(), Extracts JSON content from a string, removing enclosing triple backticks and opt, Get the description of the image (+9 more)
+Cohesion: 0.17
+Nodes (10): extract_json(), get_fact_retrieval_messages(), get_fact_retrieval_messages_legacy(), get_image_description(), parse_vision_messages(), Extracts JSON content from a string, removing enclosing triple backticks and opt, Get the description of the image, Get fact retrieval messages based on the memory type.          Args:         mes (+2 more)
 
 ### Community 1986 - "Community 1986"
 Cohesion: 0.12
@@ -10142,16 +10231,16 @@ Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
 ### Community 1991 - "Community 1991"
-Cohesion: 0.33
-Nodes (4): Test that actual compression happens for large content., Large tool output content should result in tokens_saved > 0., Small messages may not get compressed but should still work., TestCompressEndpointCompression
+Cohesion: 0.26
+Nodes (12): _aggregate_mcp_events(), Aggregate compression / retrieval events written by Headroom MCP     server inst, _mock_events(), Coverage for the MCP-events aggregator inside the proxy /stats summary.  ``headr, Return a patch target that makes _read_shared_events yield ``events``., If the shared-stats reader raises, the aggregator must not crash /stats., test_aggregates_compress_and_retrieve_events(), test_missing_token_fields_default_to_zero_without_raising() (+4 more)
 
 ### Community 1992 - "Community 1992"
 Cohesion: 0.11
 Nodes (18): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, moduleResolution (+10 more)
 
 ### Community 1993 - "Community 1993"
-Cohesion: 0.16
-Nodes (15): Action, ActionType, actionTypes, addToRemoveQueue(), dispatch(), genId(), listeners, memoryState (+7 more)
+Cohesion: 0.12
+Nodes (18): Providers(), MemoryTable(), Action, ActionType, actionTypes, addToRemoveQueue(), dispatch(), genId() (+10 more)
 
 ### Community 1994 - "Community 1994"
 Cohesion: 0.13
@@ -10164,6 +10253,10 @@ Nodes (18): Architecture Overview, BEAM, Benchmarks, Custom Model Configuration,
 ### Community 1996 - "Community 1996"
 Cohesion: 0.19
 Nodes (14): setup-mem0-nemoclaw.sh script, ask(), check_command(), die(), ensure_nvm(), ensure_path(), error(), info() (+6 more)
+
+### Community 1997 - "Community 1997"
+Cohesion: 0.21
+Nodes (3): isLocalProxyUrl(), ProxyManager, waitForHeadroomProxy()
 
 ### Community 1998 - "Community 1998"
 Cohesion: 0.11
@@ -10195,7 +10288,7 @@ Nodes (10): _load_app(), Boundary conditions and unusual inputs., Server should 
 
 ### Community 2026 - "Community 2026"
 Cohesion: 0.03
-Nodes (76): agent_namespace(), MemoryRecord, MEMANTO Core Architecture - Namespace Strategy & Memory Records, Set TTL and expiration, Map an agent_id to its Moorcheh namespace: memanto_agent_{agent_id}., Structured memory record with standardized format, Convert to Moorcheh document format with flat metadata fields.          Moorcheh, The Moorcheh namespace this memory belongs to. (+68 more)
+Nodes (90): agent_namespace(), MemoryRecord, MEMANTO Core Architecture - Namespace Strategy & Memory Records, Set TTL and expiration, Map an agent_id to its Moorcheh namespace: memanto_agent_{agent_id}., Structured memory record with standardized format, Convert to Moorcheh document format with flat metadata fields.          Moorcheh, The Moorcheh namespace this memory belongs to. (+82 more)
 
 ### Community 2027 - "Community 2027"
 Cohesion: 0.11
@@ -10234,16 +10327,16 @@ Cohesion: 0.11
 Nodes (18): 3.10 `config get`, 3.11 `config set`, 3.12 `entity list`, 3.13 `entity delete`, 3.14 `event list`, 3.15 `event status`, 3.16 `status`, 3.17 `help` (+10 more)
 
 ### Community 2121 - "Community 2121"
-Cohesion: 0.04
-Nodes (67): Content-addressed compression cache with LRU eviction.  Used in "token headroom, dashboard(), _get_env_bool(), _get_env_bool_optional(), _get_env_int_optional(), proxy(), Proxy server CLI commands., Open the Headroom savings dashboard in your browser.      Requires a running pro (+59 more)
+Cohesion: 0.05
+Nodes (53): Content-addressed compression cache with LRU eviction.  Used in "token headroom, Headroom Proxy Server.  A transparent proxy that sits between LLM clients (Claud, _agent_label(), _build_agent_usage_summary(), _check_rust_core(), _classify_agent_from_log(), create_app_from_env(), _get_env_bool() (+45 more)
 
 ### Community 2122 - "Community 2122"
 Cohesion: 0.14
 Nodes (9): captureClientEvent(), generateHash(), isTelemetryEnabled(), telemetry, TelemetryClient, TelemetryEventData, TelemetryInstance, TelemetryOptions (+1 more)
 
 ### Community 2123 - "Community 2123"
-Cohesion: 0.40
-Nodes (3): Count tokens in a single message dict., Count tokens in a list of messages., Any
+Cohesion: 0.15
+Nodes (11): fetch_user_data(), get_error_data(), get_small_status(), Real-world integration tests for Strands HeadroomHookProvider.  These tests use, Fetch detailed user data. Returns large JSON payload.      Args:         user_id, Simple calculator for basic operations.      Args:         a: First number, Search application logs. Returns JSON array of log entries.      Args:         q, Get a small status response that should NOT be compressed.      Returns: (+3 more)
 
 ### Community 2124 - "Community 2124"
 Cohesion: 0.14
@@ -10353,6 +10446,10 @@ Nodes (16): Best practices, Comparison operators, Configure it, Content recommen
 Cohesion: 0.12
 Nodes (16): Advanced examples, Available fields and operators, Best practices, Common filter patterns, Content fields, Content search, Entity fields, FAQ (+8 more)
 
+### Community 2152 - "Community 2152"
+Cohesion: 0.23
+Nodes (12): Tests for the --force-kompress-all / HEADROOM_FORCE_KOMPRESS_ALL flag.  force_ko, A Read tool_result. Read is in DEFAULT_EXCLUDE_TOOLS, so it is never compressed., Guards the carve-out's premise: Read ships in DEFAULT_EXCLUDE_TOOLS., force_kompress_all=True in config resolves the runtime flag on; default off., An explicit force_kompress kwarg still wins over the config default., The carve-out: with force_kompress_all on, Read output (an excluded tool)     is, _read_messages(), test_config_sets_runtime_force_kompress() (+4 more)
+
 ### Community 2153 - "Community 2153"
 Cohesion: 0.21
 Nodes (3): _detect_default_model(), Pick the best available model based on API keys, env config, or CLI tools., TestDetectDefaultModel
@@ -10386,8 +10483,8 @@ Cohesion: 0.17
 Nodes (9): Regression tests for issue #3952: multiple operators on the same key must be mer, Filters like created_at: {gte: X, lte: Y} must preserve both operators., Single operator filters must continue to work., Multiple keys each with multiple operators., AND with same key in separate conditions must merge operators (issue #4850)., AND with three conditions on the same key must merge all operators., AND with a mix of same-key and different-key conditions., AND with simple equality values on the same key — last value wins. (+1 more)
 
 ### Community 2161 - "Community 2161"
-Cohesion: 0.12
-Nodes (8): Unit tests for AgentService, Mock Moorcheh client so unit tests never call external API., Create temporary directory for test files, Create AgentService with temporary storage, Test namespace generation, Test getting agent info, Test updating agent statistics, TestAgentService
+Cohesion: 0.28
+Nodes (12): _build_sse(), _Parser, PR-A8 / P1-9: SSE delta arms for thinking, signature, citations.  The proxy used, Subclass that exposes the parser without the rest of the proxy., Render a list of event dicts as an SSE payload string., test_citations_delta_accumulated(), test_redacted_thinking_data_preserved(), test_response_to_sse_preserves_thinking_redacted_and_citations() (+4 more)
 
 ### Community 2162 - "Community 2162"
 Cohesion: 0.12
@@ -10396,6 +10493,10 @@ Nodes (16): Agent Skills, Basic Usage, Citation, CLI, Cloud Platform, 📚 Docum
 ### Community 2163 - "Community 2163"
 Cohesion: 0.14
 Nodes (9): OutputData, Context manager to get a cursor from the connection pool.         Auto-commits o, Insert vectors into the collection.          Args:             vectors (List[Lis, Search for similar vectors using cosine similarity.          Args:             q, Search for memories using MySQL FULLTEXT search via MATCH() AGAINST()., Delete a vector by ID.          Args:             vector_id (str): ID of the vec, Update a vector and its payload.          Args:             vector_id (str): ID, Retrieve a vector by ID.          Args:             vector_id (str): ID of the v (+1 more)
+
+### Community 2164 - "Community 2164"
+Cohesion: 0.19
+Nodes (6): OutputData, Search for similar vectors.          Args:             query (list): Query vecto, Perform keyword-based search using Upstash's BM25 sparse search.          Args:, Update a vector and its payload.          Args:             vector_id (int): ID, Retrieve a vector by ID.          Args:             vector_id (int): ID of the v, List all memories.         Args:             filters (Dict, optional): Filters t
 
 ### Community 2165 - "Community 2165"
 Cohesion: 0.12
@@ -10454,8 +10555,8 @@ Cohesion: 0.12
 Nodes (15): Acting on Recalled Memories, Before Recommending from Memory, Constructing Filters, Constructing Search Queries, Failure Patterns, Filter Syntax, Recalled Memories, The Process (+7 more)
 
 ### Community 2179 - "Community 2179"
-Cohesion: 0.50
-Nodes (3): detect_agent_caller(), Detect whether the CLI is being invoked from inside an AI-agent context.  Used b, Return a canonical agent name if any agent env var is set, else None.
+Cohesion: 0.24
+Nodes (9): columns, FilterComponent(), CategoriesResponse, useFiltersApi(), UseFiltersApiReturn, Category, filtersSlice, FiltersState (+1 more)
 
 ### Community 2180 - "Community 2180"
 Cohesion: 0.12
@@ -10470,8 +10571,8 @@ Cohesion: 0.12
 Nodes (3): A client that sends X-API-Key should not be penalized when auth is off., All endpoints should be freely accessible when ADMIN_API_KEY is empty., TestAuthDisabled
 
 ### Community 2183 - "Community 2183"
-Cohesion: 0.14
-Nodes (8): Any, Setup Azure authentication using DefaultAzureCredential., Setup MySQL connection pool., Create a new collection (table in MySQL).         Enables vector extension and c, List all collections (tables).          Returns:             List[str]: List of, Get information about the collection.          Returns:             Dict[str, An, Initialize the Azure MySQL vector store.          Args:             host (str):, _validate_identifier()
+Cohesion: 0.16
+Nodes (9): Any, AzureMySQL, Setup Azure authentication using DefaultAzureCredential., Setup MySQL connection pool., Generate SQL for cosine distance calculation., List all collections (tables).          Returns:             List[str]: List of, Get information about the collection.          Returns:             Dict[str, An, Close the connection pool when the object is deleted. (+1 more)
 
 ### Community 2184 - "Community 2184"
 Cohesion: 0.16
@@ -10484,6 +10585,10 @@ Nodes (9): Any, _escape_cypher(), OutputData, Search for similar vectors using e
 ### Community 2186 - "Community 2186"
 Cohesion: 0.50
 Nodes (3): list_requests(), RequestLogItem, Session
+
+### Community 2188 - "Community 2188"
+Cohesion: 0.17
+Nodes (11): name, packageManager, private, scripts, build, dev, format, lint (+3 more)
 
 ### Community 2189 - "Community 2189"
 Cohesion: 0.13
@@ -10502,8 +10607,8 @@ Cohesion: 0.13
 Nodes (14): Agent Tool, Commands, Confirmation Dialogs, Dream Consolidation, Dream Consolidation, Example Workflow, Installation, Memory Scopes (+6 more)
 
 ### Community 2193 - "Community 2193"
-Cohesion: 0.50
-Nodes (4): How to Release, Publishing Details, Releasing, Tag Prefixes
+Cohesion: 0.17
+Nodes (7): Tests for compression statistics., last_metrics is None before any compression., last_metrics is updated after compression., get_compression_stats returns empty dict before compression., get_compression_stats returns stats after compression., get_compression_stats calculates average relevance correctly., TestHeadroomDocumentCompressorStats
 
 ### Community 2194 - "Community 2194"
 Cohesion: 0.13
@@ -10542,8 +10647,12 @@ Cohesion: 0.13
 Nodes (14): Core APIs, Core Package Dependencies, Development Setup, Do NOT, Import Patterns, Initial Setup, Key Directories, Project Overview (+6 more)
 
 ### Community 2203 - "Community 2203"
-Cohesion: 0.18
-Nodes (11): 1. Open an Issue First, 2. Sign the Contributor License Agreement (CLA), Before You Start, Contributing to Mem0, Contributing to the Python SDK (`mem0/`), Contributing to the TypeScript SDK (`mem0-ts/`), Development Workflow, Good Contribution Practices (+3 more)
+Cohesion: 0.13
+Nodes (15): 1. Open an Issue First, 2. Sign the Contributor License Agreement (CLA), Before You Start, Contributing to Mem0, Contributing to the Python SDK (`mem0/`), Contributing to the TypeScript SDK (`mem0-ts/`), Development Workflow, Good Contribution Practices (+7 more)
+
+### Community 2204 - "Community 2204"
+Cohesion: 0.27
+Nodes (3): extract_provider(), Extract provider from model identifier., TestExtractProvider
 
 ### Community 2205 - "Community 2205"
 Cohesion: 0.17
@@ -10552,6 +10661,10 @@ Nodes (13): Toast, Action, ActionType, actionTypes, addToRemoveQueue(), dispatch
 ### Community 2206 - "Community 2206"
 Cohesion: 0.18
 Nodes (8): MemoryResult, Format a Python value into a safe SQL literal for Databricks., Insert vectors into the index.          Args:             vectors (List[List[flo, Search for similar vectors or text using the Databricks Vector Search index., Search for memories using full-text keyword search.          Only supported for, Update a vector and its payload in the Delta table.          Args:             v, Retrieve a vector by ID.          Args:             vector_id (str): ID of the v, List all recent created memories from the vector store.          Args:
+
+### Community 2208 - "Community 2208"
+Cohesion: 0.26
+Nodes (5): _make_console(), Tests for branding and output helpers., TestBranding, Console, StringIO
 
 ### Community 2209 - "Community 2209"
 Cohesion: 0.14
@@ -10572,6 +10685,10 @@ Nodes (13): 2a. Near-duplicate pairs (merge candidates), 2b. Contradictions, 2c.
 ### Community 2213 - "Community 2213"
 Cohesion: 0.19
 Nodes (8): LMStudioEmbedding, Get the embedding for the given text using LM Studio.         Args:, test_embed_batch_count_mismatch_raises(), test_embed_batch_empty_list(), test_embed_batch_single_call(), test_embed_batch_strips_newlines(), test_embed_text(), BaseEmbedderConfig
+
+### Community 2214 - "Community 2214"
+Cohesion: 0.27
+Nodes (3): Tests for OAuth Bearer token routing and auth detection., TestCatchAllRouting, TestModelsRouting
 
 ### Community 2215 - "Community 2215"
 Cohesion: 0.14
@@ -10598,8 +10715,8 @@ Cohesion: 0.18
 Nodes (8): Per the LLMBase contract, extra provider-specific kwargs must be accepted and, test_generate_response_forwards_extra_kwargs(), test_generate_response_with_tools(), test_generate_response_without_tools(), Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using TogetherAI.          Args:, TogetherLLM, BaseLlmConfig
 
 ### Community 2221 - "Community 2221"
-Cohesion: 0.13
-Nodes (11): capture_notice(), get_current_command(), Agent mode state — set by the root callback, read by commands and branding., Stash a Mem0 backend notice for end-of-command surfacing.      Called from the p, Return and clear the pending notice., set_agent_mode(), take_notice(), Enable agent mode before each test. (+3 more)
+Cohesion: 0.18
+Nodes (7): get_current_command(), Agent mode state — set by the root callback, read by commands and branding., set_agent_mode(), Enable agent mode before each test., Reset agent mode after each test., Ensure duplicate PENDING entries with the same event_id are collapsed., TestAddDeduplicatesPending
 
 ### Community 2222 - "Community 2222"
 Cohesion: 0.14
@@ -10641,6 +10758,10 @@ Nodes (13): compilerOptions, declaration, esModuleInterop, forceConsistentCasing
 Cohesion: 0.14
 Nodes (13): 1. Get an API key, 2. Install, 3. Configure, Architecture, Commands, Development, Features, License (+5 more)
 
+### Community 2232 - "Community 2232"
+Cohesion: 0.17
+Nodes (6): FakeClient, Stand-in for ``_MemantoClient`` — records calls, returns canned data., A transient activation failure must not poison the client forever., A delayed write must land in the client that scheduled it, even if     initializ, test_ensure_session_backs_off_then_allows_retry(), test_sync_turn_binds_client_at_schedule_time()
+
 ### Community 2233 - "Community 2233"
 Cohesion: 0.14
 Nodes (14): Agent mode, Development, Documentation, Environment variables, Global flags, Installation, License, mem0 CLI (Python) (+6 more)
@@ -10680,6 +10801,10 @@ Nodes (13): Add Response (v3), Endpoints, Filter Constraints, Filter System, Fil
 ### Community 2242 - "Community 2242"
 Cohesion: 0.14
 Nodes (12): Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem, CarouselNext, CarouselOptions (+4 more)
+
+### Community 2244 - "Community 2244"
+Cohesion: 0.17
+Nodes (7): Tests for proxy telemetry environment variable handling., Test HEADROOM_PERIODIC_TOIN_STATS handling for long-lived proxy workers., Periodic TOIN stats logging remains enabled unless explicitly disabled., HEADROOM_PERIODIC_TOIN_STATS=0/false/off/no disables periodic logging., Disabling periodic TOIN stats avoids scheduling the stats loop., Enabled periodic TOIN stats schedules the stats loop at startup., TestProxyPeriodicTOINStatsEnv
 
 ### Community 2245 - "Community 2245"
 Cohesion: 0.19
@@ -10721,12 +10846,16 @@ Nodes (12): Adding Memories, Complete Car Recommendation System, Configuration, 
 Cohesion: 0.15
 Nodes (12): 1: Initialize Mem0 with Custom Instructions, 2. Simulating User History, 3. Retrieving User Context from Memory, 4. Creating the Personalized Search Agent, 5. Run a Personalized Search, 6. Store New Interactions, Code Walkthrough, Conclusion (+4 more)
 
+### Community 2255 - "Community 2255"
+Cohesion: 0.22
+Nodes (6): AzureOpenAIConfig, AzureOpenAILLM, Generate a response based on the given messages using Azure OpenAI.          Arg, Return a copy of ``messages`` with the word "assistant" replaced by "ai", Process the response based on whether tools are used or not.          Args:, BaseLlmConfig
+
 ### Community 2256 - "Community 2256"
 Cohesion: 0.27
 Nodes (3): Project API response data to minimal relevant fields for agent consumption., sanitize_agent_data(), TestSanitizeAgentData
 
 ### Community 2257 - "Community 2257"
-Cohesion: 0.15
+Cohesion: 0.17
 Nodes (12): Claude.ai, Claude API (Skills API), CLI (Claude Code, OpenCode, OpenClaw, or any tool that supports skills), Installation, License, Links, Mem0 CLI Skill for Claude, Prerequisites (+4 more)
 
 ### Community 2258 - "Community 2258"
@@ -10774,12 +10903,16 @@ Cohesion: 0.15
 Nodes (12): Check 1: API key, Check 2: Identity resolution, Check 3: Connectivity, Check 4: Memory write capability, Display, Execution, Extended mode: Memory Quality Analysis, Health Check / Status (+4 more)
 
 ### Community 2269 - "Community 2269"
-Cohesion: 0.10
-Nodes (16): CategoriesResponse, UseFiltersApiReturn, Category, filtersSlice, FiltersState, initialState, initialState, profileSlice (+8 more)
+Cohesion: 0.11
+Nodes (15): Stats(), APIStatsResponse, SimpleMemory, UseMemoriesApiReturn, useStats(), initialState, profileSlice, ProfileState (+7 more)
 
 ### Community 2270 - "Community 2270"
 Cohesion: 0.19
 Nodes (6): configPath(), consumeFirstRun(), createMemory(), mockEmbedding, readConfig(), writeConfig()
+
+### Community 2272 - "Community 2272"
+Cohesion: 0.36
+Nodes (6): AgentSpec, ContractSpec, DecisionStep, FailureMode, Parameter, Any
 
 ### Community 2273 - "Community 2273"
 Cohesion: 0.15
@@ -10792,6 +10925,10 @@ Nodes (9): AddOptions, APIError, AuthError, Backend, DeleteOptions, EntityIds, L
 ### Community 2275 - "Community 2275"
 Cohesion: 0.15
 Nodes (10): Any, DatabricksConfig, Validate that either access_token or service principal credentials are provided., Configuration for Databricks Vector Search vector store., Config should reject the old documentation parameter names like index_name and s, Config should reject source_table_name which was in old docs., Config should accept all the correct parameter names., test_config_accepts_correct_params() (+2 more)
+
+### Community 2276 - "Community 2276"
+Cohesion: 0.29
+Nodes (10): main(), _print_stats_panel(), Search the documentation for articles matching `query`. Returns up to 30 results, The actual Strands agent demo — looks like any other Strands app., run_agent_demo(), search_documentation(), _start_proxy(), _stop_proxy() (+2 more)
 
 ### Community 2277 - "Community 2277"
 Cohesion: 0.15
@@ -10812,6 +10949,10 @@ Nodes (11): 10.1 Core Modules to Implement, 10.2 Behavioral Checklist, 10.3 Pack
 ### Community 2281 - "Community 2281"
 Cohesion: 0.17
 Nodes (12): index, integrations/langchain/index, tsup, clean, entry, format, minify, outDir (+4 more)
+
+### Community 2282 - "Community 2282"
+Cohesion: 0.24
+Nodes (7): MemoryExportService, Memory Export Service  Generates a structured memory.md file with all 13 memory, Generate and write memory.md to disk.          Args:             agent_id: Agent, Formats and writes a structured memory.md for an agent., Build the full Markdown string.          Args:             agent_id: Agent ident, Any, Path
 
 ### Community 2283 - "Community 2283"
 Cohesion: 0.17
@@ -10834,8 +10975,8 @@ Cohesion: 0.17
 Nodes (11): Add image messages from URLs, Best practices, Configure it, Document capture, Error handling, Feature anatomy, Restaurant menu memory, See it in action (+3 more)
 
 ### Community 2288 - "Community 2288"
-Cohesion: 0.15
-Nodes (16): FormView(), FormViewProps, JsonEditor(), JsonEditorProps, useConfig(), UseConfigApiReturn, configSlice, ConfigState (+8 more)
+Cohesion: 0.14
+Nodes (17): FormView(), FormViewProps, JsonEditor(), JsonEditorProps, Navbar(), useConfig(), UseConfigApiReturn, configSlice (+9 more)
 
 ### Community 2289 - "Community 2289"
 Cohesion: 0.17
@@ -10870,8 +11011,8 @@ Cohesion: 0.17
 Nodes (11): 1. Installation, 2. API Key Setup, 3. Client Features, 4. Memory Operations, 5. Error Handling, 6. Using with async/await, 7. Testing the Client, Cloud Offering (+3 more)
 
 ### Community 2298 - "Community 2298"
-Cohesion: 0.23
-Nodes (10): _build_arg_parser(), main(), Module entrypoint: ``python -m memanto_mcp``.  Equivalent to the ``memanto-mcp``, CLI entrypoint behavior — argument parsing and config-error paths., test_help_flag(), test_invalid_transport_rejected_by_argparse(), test_missing_api_key_exits_with_code_2(), test_version_flag() (+2 more)
+Cohesion: 0.22
+Nodes (10): get_quota_registry(), Base abstractions for pluggable AI-tool quota / rate-limit trackers.  Every prov, Return the process-global :class:`QuotaTrackerRegistry` singleton., Replace the global registry with a fresh empty instance.      Intended for use i, reset_quota_registry(), fresh_registry(), Reset the global registry before every test., test_get_quota_registry_returns_same_instance() (+2 more)
 
 ### Community 2299 - "Community 2299"
 Cohesion: 0.17
@@ -10929,6 +11070,10 @@ Nodes (11): Execution, Mem0 Stats, Step 1: Gather session stats, Step 2: Fetch l
 Cohesion: 0.17
 Nodes (11): _clean_project_map(), Remove project_map.json and clear MEM0_PROJECT_ID before each test., Create a temp dir with a git repo and HTTPS remote., Create a temp dir with a git repo and SSH remote., Temp dir with no git repo., _scripts_on_path(), tmp_git_repo(), tmp_git_repo_ssh() (+3 more)
 
+### Community 2313 - "Community 2313"
+Cohesion: 0.25
+Nodes (6): FakeLogEntry, FakeRequestLogger, test_agent_usage_totals_use_proxy_only_savings(), test_stats_preserves_default_smart_crusher_compaction_state(), test_stats_refreshes_recent_requests_when_cached(), MonkeyPatch
+
 ### Community 2314 - "Community 2314"
 Cohesion: 0.17
 Nodes (7): get_all() should reject agent_id as top-level kwarg., get_all() should reject app_id as top-level kwarg., get_all() should reject run_id as top-level kwarg., get_all() should pass show_expired to the API., Tests that top-level entity params are rejected in get_all()., get_all() should reject user_id as top-level kwarg., TestGetAllEntityParamRejection
@@ -10968,6 +11113,10 @@ Nodes (10): Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLa
 ### Community 2324 - "Community 2324"
 Cohesion: 0.17
 Nodes (12): dependencies, ai, @ai-sdk/anthropic, @ai-sdk/cohere, @ai-sdk/google, @ai-sdk/groq, @ai-sdk/openai, @ai-sdk/provider (+4 more)
+
+### Community 2325 - "Community 2325"
+Cohesion: 0.18
+Nodes (11): devDependencies, tsup, typescript, vitest, ai, @ai-sdk/anthropic, @ai-sdk/openai, @ai-sdk/provider (+3 more)
 
 ### Community 2326 - "Community 2326"
 Cohesion: 0.18
@@ -11081,6 +11230,10 @@ Nodes (10): build_posthog_payload(), detect_platform(), _distinct_id(), emit(), 
 Cohesion: 0.22
 Nodes (8): _capture_request_body(), _FakeResp, Regression tests for capture_session_summary.py request body construction.  Guar, Patch urlopen so store_summary posts nowhere; capture the request body., files_touched must be a real JSON array, encoded exactly once., No files touched -> no files_touched key (unchanged behaviour)., test_files_touched_is_json_array_not_double_encoded(), test_files_touched_omitted_when_no_files()
 
+### Community 2354 - "Community 2354"
+Cohesion: 0.22
+Nodes (5): AnthropicConfig, Get common parameters, avoiding sending both temperature and top_p together., Generate a response based on the given messages using Anthropic.          Args:, BaseLlmConfig, AnthropicLLM
+
 ### Community 2355 - "Community 2355"
 Cohesion: 0.18
 Nodes (11): Build, Lint, and Test Commands, Documentation (`docs/`), Evaluation / Benchmarking, Node CLI (`cli/node/`), OpenClaw Plugin (`integrations/openclaw/`), OpenMemory (`openmemory/`), Python CLI (`cli/python/`), Python SDK (`mem0/`) (+3 more)
@@ -11166,8 +11319,12 @@ Cohesion: 0.52
 Nodes (6): Entity, _iter_payloads(), list_entities(), _parse_timestamp(), Any, datetime
 
 ### Community 2377 - "Community 2377"
-Cohesion: 0.29
-Nodes (4): Execute expansion recommendations and return the expanded content.          Args, Format expansions as additional context for the LLM.          Args:, Get tracker statistics., Any
+Cohesion: 0.20
+Nodes (6): messages property returns empty list when no messages., messages returns uncompressed when below token threshold., messages applies compression when over token threshold., Compression tracks tokens saved., Tests for message access and compression., TestHeadroomChatMessageHistoryMessages
+
+### Community 2378 - "Community 2378"
+Cohesion: 0.20
+Nodes (6): Tests for add_message methods., add_message delegates to base history., add_user_message delegates to base history., add_ai_message delegates to base history., clear delegates to base history., TestHeadroomChatMessageHistoryAddMessage
 
 ### Community 2379 - "Community 2379"
 Cohesion: 0.20
@@ -11217,6 +11374,10 @@ Nodes (9): init(), _load(), main(), peek(), Return current stats as JSON without
 Cohesion: 0.20
 Nodes (9): Additional refinement, Broken behaviour, Cookbook Template, ✅ COPY THIS: Content Skeleton, ❌ DO NOT COPY: Guidance & Constraints, Happy-path example, Improved implementation, ✅ Publish Checklist (Keep Handy) (+1 more)
 
+### Community 2391 - "Community 2391"
+Cohesion: 0.24
+Nodes (5): Groq's compound agentic systems (e.g. ``groq/compound``, ``groq/compound-mini``), Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using Groq.          Args:, BaseLlmConfig, GroqLLM
+
 ### Community 2392 - "Community 2392"
 Cohesion: 0.50
 Nodes (7): get_current_config(), initialize_state(), _load_overrides(), _merge_config(), _save_overrides(), update_config(), Any
@@ -11230,8 +11391,12 @@ Cohesion: 0.20
 Nodes (6): Tests that AND/OR/NOT filter operators are passed through to the API., search() should pass AND filters to the API., search() should pass OR filters to the API., search() should pass NOT filters to the API., search() should pass complex nested AND/OR/NOT filters to the API., TestFilterOperatorPassthrough
 
 ### Community 2395 - "Community 2395"
-Cohesion: 0.20
-Nodes (6): Test basic context tracking functionality., Track a compression event., Track multiple compression events., Tracking disabled doesn't store contexts., Updating existing hash updates the context data., TestContextTrackerBasics
+Cohesion: 0.33
+Nodes (9): compute_repo_semver(), _current_branch(), main(), Sync plugin manifest versions to the repo's computed release semver.  Branch-awa, Return the npm-style semver for the repo's next release., Return the current git branch name, or None if git isn't usable., Decide whether to actually run the sync.      Release workflow opts in via ``HEA, _should_sync() (+1 more)
+
+### Community 2396 - "Community 2396"
+Cohesion: 0.29
+Nodes (4): discover_github_token(), Return the first GitHub token found from known environment variables., Returns ``True`` when a GitHub token is available in the environment., TestDiscoverGithubToken
 
 ### Community 2397 - "Community 2397"
 Cohesion: 0.24
@@ -11310,8 +11475,8 @@ Cohesion: 0.20
 Nodes (10): scripts, build, clean, dev, lint, prettier-check, test, test:edge (+2 more)
 
 ### Community 2416 - "Community 2416"
-Cohesion: 0.22
-Nodes (4): _FakeUpstream, Upstream that streams scripted events then optionally blocks.      ``hold_after_, If the client never sends its first frame after we connected, the     upstream W, test_ws_first_frame_timeout_after_connect_closes_upstream()
+Cohesion: 0.20
+Nodes (6): Test 'headroom mcp uninstall' command., Uninstall removes headroom from the legacy config file., Uninstall preserves other MCP servers., Uninstall with no config file exits cleanly., Uninstall when headroom not in config exits cleanly., TestMCPUninstallCommand
 
 ### Community 2417 - "Community 2417"
 Cohesion: 0.22
@@ -11349,6 +11514,10 @@ Nodes (8): Error Handling, Execution, Mem0 Export, Step 1: Resolve identity, Ste
 Cohesion: 0.22
 Nodes (8): Available Filters, Creating a Memory Export, Define Schema, Overview, Retrieve Export, Submit Export Job, Using Export ID, Using Filters
 
+### Community 2426 - "Community 2426"
+Cohesion: 0.20
+Nodes (3): Tests for DeepSeek model pricing and cost estimation., Tests that Anthropic provider's _get_pricing handles DeepSeek models., TestDeepSeekAnthropicProviderFallback
+
 ### Community 2427 - "Community 2427"
 Cohesion: 0.22
 Nodes (8): Mem0 Forget, Undo recent writes, Execution, Step 1: Parse input, Step 2: Find memories, Step 3: Confirm, Step 4: Delete, Step 5: Report
@@ -11378,8 +11547,12 @@ Cohesion: 0.25
 Nodes (5): Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using langchain_community., AIMessage, BaseLlmConfig, LangchainLLM
 
 ### Community 2434 - "Community 2434"
-Cohesion: 0.25
-Nodes (5): Process the response based on whether tools are used or not.          Args:, Generate a JSON response based on the given messages using OpenAI.          Args, OpenAIConfig, BaseLlmConfig, OpenAILLM
+Cohesion: 0.20
+Nodes (10): form-data@<4.0.6, glob@>=10.2.0 <10.5.0, immutable@>=5.0.0 <5.1.5, minimatch@>=9.0.0 <9.0.7, picomatch@<2.3.2, postcss@<8.5.10, yaml@>=2.0.0 <2.8.3, pnpm (+2 more)
+
+### Community 2435 - "Community 2435"
+Cohesion: 0.42
+Nodes (4): DeliveryReceipt, DeadLetterEntry, Subscriber, Message
 
 ### Community 2437 - "Community 2437"
 Cohesion: 0.22
@@ -11412,6 +11585,10 @@ Nodes (8): Contract, Decision Flow, Failure Modes, Mem0 Remember, Receives, Retu
 ### Community 2444 - "Community 2444"
 Cohesion: 0.22
 Nodes (8): Basic Email Memory System, Conclusion, Fetching Memories, Implementation, Installation, Key Features and Benefits, Overview, Setup
+
+### Community 2445 - "Community 2445"
+Cohesion: 0.33
+Nodes (8): main(), Spawn the proxy on the MCP default port., Round-trip through proxy /v1/compress to get a stored hash.      Returns the has, start_proxy(), stash_content_via_proxy(), stop_proxy(), wait_for_proxy(), Popen
 
 ### Community 2446 - "Community 2446"
 Cohesion: 0.33
@@ -11493,13 +11670,17 @@ Nodes (8): Async Client, cURL, Mem0 Platform Quickstart, Next Steps, Prerequisit
 Cohesion: 0.33
 Nodes (8): header_safe_transforms(), Strip enriched detail so each tag is safe in the comma-joined header.      ``x-h, `header_safe_transforms` keeps the comma-joined transforms header splittable.  `, test_joined_header_remains_unambiguous(), test_passes_through_legacy_and_unrelated_tags(), test_strips_read_lifecycle_path(), test_strips_read_lifecycle_path_with_comma(), test_strips_smart_crush_tool_names()
 
+### Community 2467 - "Community 2467"
+Cohesion: 0.31
+Nodes (8): get_version(), Package version metadata., Return the repository root when imported from a git checkout., Compute the version release automation would assign to this checkout., Return Headroom's runtime version., _source_root(), _source_tree_version(), Path
+
 ### Community 2469 - "Community 2469"
 Cohesion: 0.22
 Nodes (4): Payload-only updates should use patch_rows, not upsert_rows., Payload with an 'id' key must not overwrite the actual vector ID., Neither vector nor payload: should not call write., TestUpdate
 
 ### Community 2471 - "Community 2471"
-Cohesion: 0.25
-Nodes (5): AzureConfig, Initializes a configuration class instance for the Embeddings.          :param m, Initialize a base configuration class instance for the LLM.          Args:, Client, build_http_client()
+Cohesion: 0.18
+Nodes (7): AzureConfig, Initializes a configuration class instance for the Embeddings.          :param m, BaseLlmConfig, Initialize a base configuration class instance for the LLM.          Args:, Base configuration for LLMs with only common parameters.     Provider-specific c, Client, build_http_client()
 
 ### Community 2472 - "Community 2472"
 Cohesion: 0.25
@@ -11549,6 +11730,18 @@ Nodes (7): Forget, Execution, Step 1: Parse input, Step 2: Find memories, Step 3
 Cohesion: 0.25
 Nodes (7): Conclusion, Create Mastra Agent, Create Memory Tools, Initialize Mem0 Integration, Key Features, Overview, Setup and Configuration
 
+### Community 2485 - "Community 2485"
+Cohesion: 0.25
+Nodes (5): Property names that collide with DROP_KEYS must survive schema compaction., test_compute_answer_equivalence_uses_multiple_paths(), test_compute_semantic_similarity_and_zero_norm(), test_tool_schema_compaction_integrity(), MonkeyPatch
+
+### Community 2486 - "Community 2486"
+Cohesion: 0.25
+Nodes (7): Any, Tokenizer, TransformResult, Split messages into frozen (cached prefix) and mutable portions.      Args:, Apply the transform to messages.          Args:             messages: List of me, Check if this transform should be applied.          Default implementation alway, split_frozen()
+
+### Community 2487 - "Community 2487"
+Cohesion: 0.22
+Nodes (9): optional, optional, optional, optional, peerDependenciesMeta, ai, @ai-sdk/provider, @anthropic-ai/sdk (+1 more)
+
 ### Community 2489 - "Community 2489"
 Cohesion: 0.25
 Nodes (7): Execution, Mem0 Remember, Output formatting, Step 1: Extract the content, Step 2: Classify the memory, Step 3: Store, Step 4: Confirm
@@ -11581,6 +11774,10 @@ Nodes (7): Benefits, Config, Configuration Parameters, Environment Variables, Pr
 Cohesion: 0.25
 Nodes (8): @qdrant/js-client-rest, vite, @vitest/coverage-v8, devDependencies, tsup, @types/node, typescript, vitest
 
+### Community 2497 - "Community 2497"
+Cohesion: 0.25
+Nodes (5): Convert metrics with None end_time., Tests for StreamingMetrics dataclass., Create metrics with all fields., Convert metrics to dictionary., TestStreamingMetrics
+
 ### Community 2498 - "Community 2498"
 Cohesion: 0.25
 Nodes (7): Mem0 Pin, Step 2: Read current content, Step 3: Pin it, Step 4: Confirm, Execution, Step 1: Find the memory, Unpin
@@ -11605,13 +11802,17 @@ Nodes (6): atomicWriteText(), CLAUDE_SETTINGS, SHELL_RCS, syncApiKey(), updateCl
 Cohesion: 0.29
 Nodes (4): client(), _RaisingSession, Tests for the api-keys router.  revoke_key takes the key_id straight from the UR, Stands in for a SQLAlchemy session whose uuid column rejects bad input.      Pos
 
+### Community 2504 - "Community 2504"
+Cohesion: 0.29
+Nodes (4): Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using DeepSeek.          Args:, BaseLlmConfig, DeepSeekLLM
+
 ### Community 2505 - "Community 2505"
 Cohesion: 0.25
 Nodes (5): mock_memory_client(), Create a mock MemoryClient for testing entity param rejection., _validate_api_key should surface a clear ValueError on a non-JSON HTTP error., TestValidateApiKeyHttpError, Tests for MemoryClient entity parameter rejection.
 
 ### Community 2506 - "Community 2506"
-Cohesion: 0.33
-Nodes (5): FakeAnswer, FakeClient, test_extract_conversation_memories_normalizes_candidates(), test_extract_rejects_non_json_answers(), test_extract_requires_messages()
+Cohesion: 0.29
+Nodes (4): Process the response based on whether tools are used or not.          Args:, Generate a response based on the given messages using LM Studio.          Args:, BaseLlmConfig, LMStudioLLM
 
 ### Community 2507 - "Community 2507"
 Cohesion: 0.25
@@ -11638,8 +11839,8 @@ Cohesion: 0.25
 Nodes (8): Configuration Examples, Embedding Providers, Enterprise Setup, Graph Memory with Neo4j, LLM Providers, Local Setup with Ollama, OpenAI Configuration, Vector Store Providers
 
 ### Community 2513 - "Community 2513"
-Cohesion: 0.14
-Nodes (11): AzureMySQL, Generate SQL for cosine distance calculation., Delete the collection (table)., Reset the collection by deleting and recreating it., Close the connection pool when the object is deleted., azure_mysql_instance(), Test Azure DefaultAzureCredential authentication., Create an AzureMySQL instance with mocked connection pool. (+3 more)
+Cohesion: 0.25
+Nodes (4): Create a new collection (table in MySQL).         Enables vector extension and c, Delete the collection (table)., Reset the collection by deleting and recreating it., _validate_identifier()
 
 ### Community 2514 - "Community 2514"
 Cohesion: 0.25
@@ -11729,6 +11930,10 @@ Nodes (6): Breaking Changes, Linked Issue, Test Coverage, Checklist, Description
 Cohesion: 0.29
 Nodes (6): MemoryResponse, MessageContent, PromptMessage, useChat(), UseChatProps, UseChatReturn
 
+### Community 2536 - "Community 2536"
+Cohesion: 0.29
+Nodes (4): Generate a response based on the given messages using Ollama.          Args:, Process the response based on whether tools are used or not.          Args:, BaseLlmConfig, OllamaLLM
+
 ### Community 2537 - "Community 2537"
 Cohesion: 0.29
 Nodes (6): Available MCP Tools, Installation, Lifecycle Hooks, Prerequisites, Troubleshooting, What's Included
@@ -11761,6 +11966,10 @@ Nodes (5): _mock_parse(), Reasoning models reject `temperature`; structured outp
 Cohesion: 0.29
 Nodes (6): Execution, Mem0 Search, Output formatting, Step 1: Parse query, Step 2: Search, Step 3: Display
 
+### Community 2546 - "Community 2546"
+Cohesion: 0.32
+Nodes (7): apply_provider_scope_mutations(), Install-time provider registry helpers., Apply provider-scope mutations owned by provider slices., Revert a provider-scope mutation via the owning provider slice., revert_provider_scope_mutation(), DeploymentManifest, ManagedMutation
+
 ### Community 2547 - "Community 2547"
 Cohesion: 0.29
 Nodes (7): decay_usage_payload(), test_decay_usage_blunt_flag_disable_does_not_capture_or_consume(), test_decay_usage_cap_blocks_before_posthog_eval(), test_decay_usage_cap_ignores_old_entries(), test_decay_usage_delete_detection_stops_after_cap(), test_decay_usage_displayed_logs_and_captures_event(), test_decay_usage_holdout_is_silent_but_captures_event()
@@ -11784,6 +11993,10 @@ Nodes (6): Conclusion, Fetching Memories, Full Code Example, Key Points, Overvie
 ### Community 2553 - "Community 2553"
 Cohesion: 0.29
 Nodes (6): Conclusion, Full Code Example, Key Points, Overview, Setup, Usage
+
+### Community 2554 - "Community 2554"
+Cohesion: 0.29
+Nodes (6): _check_strands_available(), Strands SDK hook provider for Headroom tool output compression.  This module pro, Initialize the hook provider after dataclass construction., Raise ImportError if Strands is not installed., Check if Strands SDK is installed.      Returns:         True if strands-agents, strands_available()
 
 ### Community 2555 - "Community 2555"
 Cohesion: 0.29
@@ -11837,6 +12050,10 @@ Nodes (4): DialogContent, DialogDescription, DialogOverlay, DialogTitle
 Cohesion: 0.29
 Nodes (7): Configuration System, Embedding Providers (10 supported), Graph Store Providers (4 supported), LLM Providers (20 supported), MemoryConfig, Supported Providers, Vector Store Providers (19 supported)
 
+### Community 2568 - "Community 2568"
+Cohesion: 0.38
+Nodes (4): Index, Any, Initialize the UpstashVector vector store.          Args:             url (str,, UpstashVectorConfig
+
 ### Community 2569 - "Community 2569"
 Cohesion: 0.38
 Nodes (3): Any, PineconeConfig, Configuration for Pinecone vector database.
@@ -11874,8 +12091,8 @@ Cohesion: 0.29
 Nodes (6): compilerOptions, baseUrl, paths, files, @/*, references
 
 ### Community 2579 - "Community 2579"
-Cohesion: 0.04
-Nodes (30): BaseLlmConfig, AnthropicConfig, Initialize Anthropic configuration.          Args:             model: Anthropic, Configuration class for Anthropic-specific parameters.     Inherits from BaseLlm, DeepSeekConfig, Initialize DeepSeek configuration.          Args:             model: DeepSeek mo, Configuration class for DeepSeek-specific parameters.     Inherits from BaseLlmC, GeminiConfig (+22 more)
+Cohesion: 0.33
+Nodes (4): BaseLlmConfig, OllamaConfig, Initialize Ollama configuration.          Args:             model: Ollama model, Configuration class for Ollama-specific parameters.     Inherits from BaseLlmCon
 
 ### Community 2580 - "Community 2580"
 Cohesion: 0.33
@@ -11888,6 +12105,10 @@ Nodes (4): jsonErr(), jsonOut(), redactSecrets(), writeStdout()
 ### Community 2582 - "Community 2582"
 Cohesion: 0.33
 Nodes (3): camelToSnake(), OPAQUE_VALUE_KEYS, snakeToCamelKeys()
+
+### Community 2583 - "Community 2583"
+Cohesion: 0.29
+Nodes (4): Any, Return lightweight metadata for a category without materializing it., Return full tool descriptors for a category; loads the server if needed., Execute a single MCP tool, loading its server on demand.
 
 ### Community 2584 - "Community 2584"
 Cohesion: 0.33
@@ -11921,9 +12142,21 @@ Nodes (5): How to define configurations?, How to use configurations?, Master Lis
 Cohesion: 0.33
 Nodes (5): Adding Memories with Custom Timestamps, Benefits of Custom Timestamps, Overview, Timestamp Format, Using Custom Timestamps
 
+### Community 2592 - "Community 2592"
+Cohesion: 0.29
+Nodes (4): Update the embedding for an indexed memory.          Args:             memory_id, Generate an embedding for a single text.          Args:             text: The te, Generate embeddings for multiple texts.          Args:             texts: List o, ndarray
+
 ### Community 2593 - "Community 2593"
 Cohesion: 0.33
 Nodes (5): Camel AI integration, Configure credentials, Troubleshooting, Verify the integration, Wire Mem0 into a Camel agent
+
+### Community 2594 - "Community 2594"
+Cohesion: 0.29
+Nodes (7): _inject_key_into_json(), Merge ``value`` into ``data[key]`` idempotently., _inject_key_into_json merges nested dicts., _inject_key_into_json overwrites when existing value is not a dict., test_inject_key_merges_dicts(), test_inject_key_overwrites_non_dict(), Any
+
+### Community 2596 - "Community 2596"
+Cohesion: 0.29
+Nodes (4): x-api-key takes precedence for rate key., Bearer token used for rate key when no x-api-key., No auth headers → IP-only rate key., TestRateLimitKey
 
 ### Community 2597 - "Community 2597"
 Cohesion: 0.33
@@ -11940,6 +12173,10 @@ Nodes (5): Common fields, Endpoint, Request body, Required headers, Response
 ### Community 2600 - "Community 2600"
 Cohesion: 0.33
 Nodes (5): get_food_recommendation(), initialize_food_memory(), Simple Voice Agent with Memory: Personal Food Assistant. A food assistant that r, Get food recommendation with memory context, Initialize memory with food preferences
+
+### Community 2601 - "Community 2601"
+Cohesion: 0.48
+Nodes (7): import, import, import, default, types, import, import
 
 ### Community 2602 - "Community 2602"
 Cohesion: 0.33
@@ -11982,8 +12219,8 @@ Cohesion: 0.33
 Nodes (5): Execution, Search / Peek, Step 1: Parse query, Step 2: Search, Step 3: Display
 
 ### Community 2612 - "Community 2612"
-Cohesion: 0.14
-Nodes (12): getStatusCode(), NotFound(), NotFoundProps, AppDetailsPage(), MemoryCard(), MemoryCardProps, Categories(), Category (+4 more)
+Cohesion: 0.17
+Nodes (9): AppDetailsPage(), MemoryCard(), MemoryCardProps, Categories(), Category, getColor(), iconMap, AppDetailCardSkeleton() (+1 more)
 
 ### Community 2613 - "Community 2613"
 Cohesion: 0.40
@@ -12026,8 +12263,8 @@ Cohesion: 0.33
 Nodes (5): Browse Other Templates, ✅ COPY THIS: Content Skeleton, ❌ DO NOT COPY: Guidance & Constraints, ✅ Publish Checklist, Troubleshooting Playbook Template
 
 ### Community 2623 - "Community 2623"
-Cohesion: 0.40
-Nodes (3): Get store statistics.          Thread-safe: acquires lock before accessing conte, Count contexts by provider. Must be called with lock held., Any
+Cohesion: 0.60
+Nodes (3): Layout(), Layout(), baseOptions()
 
 ### Community 2624 - "Community 2624"
 Cohesion: 0.33
@@ -12073,6 +12310,14 @@ Nodes (6): 1. Personal AI Assistant, 2. Customer Support Bot, 3. Learning Assist
 Cohesion: 0.53
 Nodes (5): _capture_config(), Build an LLM via the factory and return the config it was constructed with., test_base_to_kwargs_provider_preserves_reasoning_fields(), test_base_to_openai_preserves_reasoning_fields(), test_base_to_provider_without_reasoning_fields_still_builds()
 
+### Community 2636 - "Community 2636"
+Cohesion: 0.33
+Nodes (5): _default_config(), _load_memanto_config(), test_load_and_save_config_round_trip(), test_save_config_preserves_identity_template(), test_save_config_sanitizes_concrete_agent_id()
+
+### Community 2637 - "Community 2637"
+Cohesion: 0.33
+Nodes (6): opencode_config_path(), Return the OpenCode config path.      Resolves ``~/.config/opencode/opencode.jso, opencode_config_paths(), Return ``(config_file, backup_file)`` for OpenCode., OPENCODE_CONFIG env var overrides the default path., test_opencode_config_paths_from_env()
+
 ### Community 2638 - "Community 2638"
 Cohesion: 0.60
 Nodes (4): run.sh script, create_compose_file(), install_vector_store_packages(), NEXT_PUBLIC_USER_ID
@@ -12113,6 +12358,30 @@ Nodes (4): Overview, Setup, Using the Agent With Memory, Using the Agent Without
 Cohesion: 0.40
 Nodes (4): Demo Video, Features, How It Works, Try It Out
 
+### Community 2648 - "Community 2648"
+Cohesion: 0.33
+Nodes (4): LMStudioConfig, Initialize LM Studio configuration.          Args:             model: LM Studio, Configuration class for LM Studio-specific parameters.     Inherits from BaseLlm, Any
+
+### Community 2649 - "Community 2649"
+Cohesion: 0.33
+Nodes (4): OpenAIConfig, Initialize OpenAI configuration.          Args:             model: OpenAI model, Configuration class for OpenAI and OpenRouter-specific parameters.     Inherits, Any
+
+### Community 2650 - "Community 2650"
+Cohesion: 0.33
+Nodes (5): name, packageManager, private, type, version
+
+### Community 2651 - "Community 2651"
+Cohesion: 0.33
+Nodes (3): _CollectingLogger, Minimal stand-in for ``RequestLogger``., Any
+
+### Community 2652 - "Community 2652"
+Cohesion: 0.33
+Nodes (5): name, packageManager, private, type, version
+
+### Community 2653 - "Community 2653"
+Cohesion: 0.40
+Nodes (4): _handle_headroom_retrieve(), Headroom CCR retrieve plugin.  The headroom proxy (127.0.0.1:8787) compresses la, Register the headroom_retrieve tool. Called by the plugin loader., register()
+
 ### Community 2654 - "Community 2654"
 Cohesion: 0.40
 Nodes (4): compat, __dirname, eslintConfig, __filename
@@ -12132,6 +12401,10 @@ Nodes (3): Simple Fitness Memory Tracker that tracks your fitness progress and k
 ### Community 2659 - "Community 2659"
 Cohesion: 0.40
 Nodes (4): Supported LangChain Providers, Config, Provider-Specific Configuration, Usage
+
+### Community 2660 - "Community 2660"
+Cohesion: 0.40
+Nodes (3): AnthropicConfig, Initialize Anthropic configuration.          Args:             model: Anthropic, Configuration class for Anthropic-specific parameters.     Inherits from BaseLlm
 
 ### Community 2661 - "Community 2661"
 Cohesion: 0.40
@@ -12154,8 +12427,8 @@ Cohesion: 0.50
 Nodes (4): BadgeVariant, EventBadge(), EventBadgeProps, getBadgeConfig()
 
 ### Community 2668 - "Community 2668"
-Cohesion: 0.43
-Nodes (7): body_with_payload(), ccr_marker_injected_when_store_wired(), large_json_array_payload(), no_marker_when_store_omitted(), store_only_populated_after_token_gate_admits(), String, Vec
+Cohesion: 0.40
+Nodes (3): DeepSeekConfig, Initialize DeepSeek configuration.          Args:             model: DeepSeek mo, Configuration class for DeepSeek-specific parameters.     Inherits from BaseLlmC
 
 ### Community 2669 - "Community 2669"
 Cohesion: 0.40
@@ -12185,6 +12458,10 @@ Nodes (5): Python - Hosted Platform, Python - Self-Hosted, Quick Start, TypeScri
 Cohesion: 0.40
 Nodes (3): Any, MongoDBConfig, Configuration for MongoDB vector database.
 
+### Community 2677 - "Community 2677"
+Cohesion: 0.40
+Nodes (3): GeminiConfig, Initialize Gemini configuration.          Args:             model: Gemini model, Configuration class for Google Gemini LLM.      Supports both the Gemini Develop
+
 ### Community 2679 - "Community 2679"
 Cohesion: 0.40
 Nodes (3): Any, # TODO: Upgrade to latest pydantic version, RedisDBConfig
@@ -12208,6 +12485,10 @@ Nodes (4): InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot
 ### Community 2689 - "Community 2689"
 Cohesion: 0.40
 Nodes (4): Common issues, Supported Vector Databases, Usage, Using Model with Different Dimensions
+
+### Community 2690 - "Community 2690"
+Cohesion: 0.40
+Nodes (3): MinimaxConfig, Initialize MiniMax configuration.          Args:             model: MiniMax mode, Configuration class for MiniMax-specific parameters.     Inherits from BaseLlmCo
 
 ### Community 2692 - "Community 2692"
 Cohesion: 0.50
@@ -12445,9 +12726,17 @@ Nodes (4): repository, directory, type, url
 Cohesion: 0.25
 Nodes (5): Test AnonymizedToolStats data model., to_dict serializes all fields., from_dict deserializes correctly., from_dict does not modify the input dictionary., TestAnonymizedToolStats
 
+### Community 2783 - "Community 2783"
+Cohesion: 0.40
+Nodes (3): Initialize vLLM configuration.          Args:             model: vLLM model to u, Configuration class for vLLM-specific parameters.     Inherits from BaseLlmConfi, VllmConfig
+
 ### Community 2795 - "Community 2795"
 Cohesion: 0.67
 Nodes (3): mem0ai, @sinclair/typebox, dependencies
+
+### Community 2801 - "Community 2801"
+Cohesion: 0.40
+Nodes (3): Initialize X.AI configuration.          Args:             model: X.AI / Grok mod, Configuration class for X.AI (Grok) provider parameters.     Inherits from BaseL, XAIConfig
 
 ### Community 2830 - "Community 2830"
 Cohesion: 0.67
@@ -12465,29 +12754,45 @@ Nodes (3): peerDependenciesMeta, zod, optional
 Cohesion: 0.38
 Nodes (4): _print_telemetry_notice(), Print a telemetry notice when anonymous telemetry is enabled.      Respects the, _print_telemetry_notice() is called from wrap commands., TestWrapCLITelemetryNotice
 
+### Community 2860 - "Community 2860"
+Cohesion: 0.40
+Nodes (5): scripts, build, dev, lint, preview
+
 ### Community 2866 - "Community 2866"
 Cohesion: 0.33
 Nodes (4): test_env_override_flat(), test_env_override_nested(), MonkeyPatch, Tests for the configuration surface (defaults + env overrides).
+
+### Community 2893 - "Community 2893"
+Cohesion: 0.40
+Nodes (5): scripts, build, test, test:watch, typecheck
 
 ### Community 2901 - "Community 2901"
 Cohesion: 0.33
 Nodes (6): additionalProperties, description, required, title, type, CodexRateLimitStatsOutput
 
 ### Community 2911 - "Community 2911"
-Cohesion: 0.12
-Nodes (12): Providers(), Navbar(), allTabs, clientTabs, colorGradientMap, Install(), Stats(), APIStatsResponse (+4 more)
+Cohesion: 0.33
+Nodes (4): allTabs, clientTabs, colorGradientMap, Install()
+
+### Community 2912 - "Community 2912"
+Cohesion: 0.40
+Nodes (5): peerDependencies, ai, @ai-sdk/provider, @anthropic-ai/sdk, openai
+
+### Community 3037 - "Community 3037"
+Cohesion: 0.40
+Nodes (5): scripts, build, dev, lint, preview
+
+### Community 3208 - "Community 3208"
+Cohesion: 0.50
+Nodes (3): pytest_runtest_call(), Test fixtures for Headroom Memory., Wrap test execution to skip transient or offline external model failures.      T
+
+### Community 3209 - "Community 3209"
+Cohesion: 0.33
+Nodes (4): snapshot creates a backup copy of the config file., snapshot is a no-op when the backup already exists., test_snapshot_creates_backup(), test_snapshot_skips_if_backup_exists()
 
 ### Community 3210 - "Community 3210"
 Cohesion: 0.33
 Nodes (4): Tests for langchain_available() helper., langchain_available returns boolean., Returns True when LangChain is installed., TestLangchainAvailable
-
-### Community 3211 - "Community 3211"
-Cohesion: 0.33
-Nodes (4): Test relevance score calculation., Keywords are extracted correctly., Exact substring matches get bonus score., TestRelevanceCalculation
-
-### Community 3212 - "Community 3212"
-Cohesion: 0.33
-Nodes (4): Test tracker statistics., Stats have expected structure., Stats include context details., TestContextTrackerStats
 
 ### Community 3214 - "Community 3214"
 Cohesion: 0.33
@@ -12497,24 +12802,20 @@ Nodes (4): Test FieldDistribution data model., to_dict serializes all fields., f
 Cohesion: 0.40
 Nodes (5): OpenAICodexWindowHeaders, additionalProperties, description, title, type
 
-### Community 3218 - "Community 3218"
-Cohesion: 0.40
-Nodes (3): Validate that --allow-same-version is present on all npm version calls., npm version in CI should not create git tags (handled by the release job)., TestReleaseWorkflowAllowSameVersion
-
 ## Knowledge Gaps
-- **9980 isolated node(s):** `fs`, `path`, `ROOT`, `AGENT_DIR`, `ALGORITHMIC_SECTIONS` (+9975 more)
+- **9981 isolated node(s):** `run_test_tiers.sh script`, `fs`, `path`, `ROOT`, `AGENT_DIR` (+9976 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **532 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **538 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Server` connect `Community 1798` to `Community 1553`, `Community 379`, `Community 821`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
-- **Why does `LocalBackend` connect `Community 379` to `MCP Web/Search/DB Servers`, `Community 388`, `Community 1798`, `Community 776`, `Community 1032`, `Community 652`, `Community 786`, `Community 2196`, `Community 406`, `Community 410`, `Community 419`, `Community 325`, `Community 848`, `Community 1104`, `Community 344`, `Community 348`, `Community 605`, `Community 478`, `Community 353`, `Community 483`, `Community 625`, `Community 1395`, `Community 500`, `Community 502`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `Server` connect `Community 379` to `Community 1553`, `Community 821`, `Community 353`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
+- **Why does `LocalBackend` connect `Community 379` to `MCP Web/Search/DB Servers`, `Community 353`, `Community 385`, `Community 419`, `Community 483`, `Community 388`, `Community 325`, `Community 776`, `Community 1032`, `Community 1104`, `Community 625`, `Community 1395`, `Community 2196`, `Community 500`, `Community 406`, `Community 502`, `Community 348`?**
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Why does `Headers` connect `Community 1553` to `Community 1158`, `Community 550`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Are the 375 inferred relationships involving `ValueError` (e.g. with `.__init__()` and `.__init__()`) actually correct?**
   _`ValueError` has 375 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 145 inferred relationships involving `ContentRouter` (e.g. with `EvalCase` and `EvalMode`) actually correct?**
