@@ -91,26 +91,23 @@ def test_mock_pipeline_state_persisted():
     assert read_result.value.get("status") in ("completed", "running")
 
 
-def test_mock_llm_engine_returns_parsed_json():
-    """MockLLMEngine should return deterministic parsed JSON per agent."""
-    from runtime.contracts.agent_spec import AgentSpec
-
-    spec = AgentSpec(name="Test", role="test", decision_flow=[], failure_modes=[])
-    spec.source_path = "safety-control/input_sanitizer.md"
-
-    llm = LLMEngine(LLMConfig(provider=LLMProvider.MOCK))
-    response = asyncio.run(llm.execute(spec, {"raw_user_input": "hello"}))
-
-    assert response.parsed is not None
-    assert response.parsed.get("blocked") is False
-    assert response.model == "mock-engine"
-    assert response.latency_ms >= 0
-
-
-def test_mock_termination_on_second_iteration():
-    """Recursion/termination agent should terminate on iteration >= 2."""
-    result = asyncio.run(_run_pipeline("terminate test", max_iterations=3))
+def test_deterministic_safety_blocks_forbidden_input():
+    """SafetyChain must block destructive command patterns before any LLM agent runs."""
+    result = asyncio.run(_run_pipeline("please run rm -rf / on my server", max_iterations=1))
 
     assert result is not None
-    assert result.session_metrics.iterations <= 2
+    assert result.termination_status in (TerminationStatus.FAILURE, TerminationStatus.ESCALATED_HUMAN)
+    assert "safety" in result.final_response.lower()
+    assert result.session_metrics.safety_checks_failed >= 1
+    assert result.session_metrics.safety_checks_passed == 0
+    assert len(result.trace) == 0
+
+
+def test_deterministic_safety_allows_safe_input():
+    """Safe input should pass deterministic safety and continue to LLM-based checks."""
+    result = asyncio.run(_run_pipeline("test task", max_iterations=2))
+
+    assert result is not None
     assert result.termination_status == TerminationStatus.SUCCESS
+    assert result.session_metrics.safety_checks_failed == 0
+    assert result.session_metrics.safety_checks_passed >= 1

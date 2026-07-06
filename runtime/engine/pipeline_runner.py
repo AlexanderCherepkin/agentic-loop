@@ -16,6 +16,7 @@ from .agent_loader import AgentLoader
 from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
 from .state_manager import StateManager
+from ..safety.safety_chain import SafetyChain, SafetyVerdict
 
 # Optional MCP integration
 try:
@@ -320,6 +321,8 @@ class PipelineRunner:
         self._system_context = rules_data.get("system_context") if rules_data else None
         self._evaluator = EvaluationEngine(llm.config) if llm.config.use_evaluator else None
 
+        self._safety_chain = SafetyChain()
+
         self._mcp_gateway = None
         if HAS_MCP:
             try:
@@ -480,7 +483,20 @@ class PipelineRunner:
 
             await self._publish_progress("phase.start", {"phase": "session_init", "session_id": session_id})
 
-            # Phase 1: Safety pre-check
+            # Phase 0: Deterministic safety chain pre-check (hard guardrail)
+            deterministic_safety = self._safety_chain.pre_check(user_input)
+            if deterministic_safety.verdict != SafetyVerdict.PROCEED:
+                metrics.safety_checks_failed += 1
+                reason = deterministic_safety.triggered_rules[0].rule.description if deterministic_safety.triggered_rules else "deterministic safety guardrail"
+                return await self._finalize_and_return(
+                    user_input,
+                    f"Request blocked by deterministic safety guardrail: {reason}",
+                    TerminationStatus.FAILURE if deterministic_safety.verdict == SafetyVerdict.ABORT_AND_REPORT else TerminationStatus.ESCALATED_HUMAN,
+                    metrics, audit_anchor, trace, session_id,
+                )
+            metrics.safety_checks_passed += 1
+
+            # Phase 1: Safety pre-check (LLM-agent based)
             safety_passed = await self._run_safety_pre_check(user_input, session_id, trace, metrics)
             if not safety_passed:
                 return PipelineResult(
@@ -575,10 +591,23 @@ class PipelineRunner:
 
                 current_phase = transition.next_phase
 
-            # Phase 4: Safety post-check
+            # Phase 4: Deterministic safety chain post-check (hard guardrail)
+            post_safety = self._safety_chain.post_check(result_text)
+            if post_safety.verdict == SafetyVerdict.ABORT_AND_REPORT:
+                metrics.safety_checks_failed += 1
+                reason = post_safety.triggered_rules[0].rule.description if post_safety.triggered_rules else "output safety guardrail"
+                return await self._finalize_and_return(
+                    user_input,
+                    f"Output blocked by deterministic safety guardrail: {reason}",
+                    TerminationStatus.FAILURE,
+                    metrics, audit_anchor, trace, session_id,
+                )
+            metrics.safety_checks_passed += 1
+
+            # Phase 5: Safety post-check (LLM-agent based)
             await self._run_safety_post_check(result_text, session_id, trace, metrics)
 
-            # Phase 5: Final mutual check
+            # Phase 6: Final mutual check
             await self._run_mutual_check(result_text, session_id, trace, metrics)
 
             metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
