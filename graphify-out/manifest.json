@@ -45,9 +45,9 @@
     "semantic_hash": "4349785a81401f4e6d94ee77c3495de3"
   },
   "mcp-config.json": {
-    "mtime": 1781183744.0,
-    "ast_hash": "baf184794947c3286643db46bdc7c678",
-    "semantic_hash": "baf184794947c3286643db46bdc7c678"
+    "mtime": 1783366326.7618475,
+    "ast_hash": "dfa054eb80bc4cd8b5bc46c6e45a27aa",
+    "semantic_hash": ""
   },
   "mcp_servers/__init__.py": {
     "mtime": 1781115020.0,
@@ -73,101 +73,6 @@
     "mtime": 1781115308.0,
     "ast_hash": "210594871d76be9c058a654b46a4ecee",
     "semantic_hash": "210594871d76be9c058a654b46a4ecee"
-  },
-  "mcp_servers/mcp-commander/package.json": {
-    "mtime": 1781157752.0,
-    "ast_hash": "db3e6e3126d2dcba39790e80594ccaa3",
-    "semantic_hash": "db3e6e3126d2dcba39790e80594ccaa3"
-  },
-  "mcp_servers/mcp-commander/src/index.ts": {
-    "mtime": 1781158052.0,
-    "ast_hash": "d213a0844f4249bf918cd15f26f0c390",
-    "semantic_hash": "d213a0844f4249bf918cd15f26f0c390"
-  },
-  "mcp_servers/mcp-commander/tsconfig.json": {
-    "mtime": 1781157764.0,
-    "ast_hash": "1339f91eff9c4d05193837797be41e56",
-    "semantic_hash": "1339f91eff9c4d05193837797be41e56"
-  },
-  "mcp_servers/mcp-database/package.json": {
-    "mtime": 1781158444.0,
-    "ast_hash": "b19721d85e39a2d4e2f9f2cff66aaa50",
-    "semantic_hash": "b19721d85e39a2d4e2f9f2cff66aaa50"
-  },
-  "mcp_servers/mcp-database/src/index.ts": {
-    "mtime": 1781158482.0,
-    "ast_hash": "99776cce1a7429d795184f2fdd3e38d7",
-    "semantic_hash": "99776cce1a7429d795184f2fdd3e38d7"
-  },
-  "mcp_servers/mcp-database/src/sqlite.d.ts": {
-    "mtime": 1781158458.0,
-    "ast_hash": "bfee746801b6a1239cc1794ffd52cf2b",
-    "semantic_hash": "bfee746801b6a1239cc1794ffd52cf2b"
-  },
-  "mcp_servers/mcp-database/tsconfig.json": {
-    "mtime": 1781158454.0,
-    "ast_hash": "1339f91eff9c4d05193837797be41e56",
-    "semantic_hash": "1339f91eff9c4d05193837797be41e56"
-  },
-  "mcp_servers/mcp-filesystem/package.json": {
-    "mtime": 1781157210.0,
-    "ast_hash": "1877c2dba3e6f2a6cb6e566f033199d3",
-    "semantic_hash": "1877c2dba3e6f2a6cb6e566f033199d3"
-  },
-  "mcp_servers/mcp-filesystem/src/index.ts": {
-    "mtime": 1781157436.0,
-    "ast_hash": "0708a32fa889f651a0b349588b4f8da8",
-    "semantic_hash": "0708a32fa889f651a0b349588b4f8da8"
-  },
-  "mcp_servers/mcp-filesystem/tsconfig.json": {
-    "mtime": 1781157262.0,
-    "ast_hash": "1339f91eff9c4d05193837797be41e56",
-    "semantic_hash": "1339f91eff9c4d05193837797be41e56"
-  },
-  "mcp_servers/mcp-github/package.json": {
-    "mtime": 1781160496.0,
-    "ast_hash": "0b3050b6456e82f6be619eae4888ec0c",
-    "semantic_hash": "0b3050b6456e82f6be619eae4888ec0c"
-  },
-  "mcp_servers/mcp-github/src/index.ts": {
-    "mtime": 1781160498.0,
-    "ast_hash": "3b9868d76af80f7e8798d433384265e5",
-    "semantic_hash": "3b9868d76af80f7e8798d433384265e5"
-  },
-  "mcp_servers/mcp-github/tsconfig.json": {
-    "mtime": 1781160496.0,
-    "ast_hash": "e6e3fcb77ad6cf205bfef76ccaa02283",
-    "semantic_hash": "e6e3fcb77ad6cf205bfef76ccaa02283"
-  },
-  "mcp_servers/mcp-replace/package.json": {
-    "mtime": 1781158344.0,
-    "ast_hash": "8c2c69a7486265fc2de9553b0ba1900a",
-    "semantic_hash": "8c2c69a7486265fc2de9553b0ba1900a"
-  },
-  "mcp_servers/mcp-replace/src/index.ts": {
-    "mtime": 1781158356.0,
-    "ast_hash": "65a6db2e96d66dcabf6b70b9fcae0bbb",
-    "semantic_hash": "65a6db2e96d66dcabf6b70b9fcae0bbb"
-  },
-  "mcp_servers/mcp-replace/tsconfig.json": {
-    "mtime": 1781158354.0,
-    "ast_hash": "1339f91eff9c4d05193837797be41e56",
-    "semantic_hash": "1339f91eff9c4d05193837797be41e56"
-  },
-  "mcp_servers/mcp-web/package.json": {
-    "mtime": 1781158374.0,
-    "ast_hash": "2417ec4e3aad6c3d545e09da66bcd3ae",
-    "semantic_hash": "2417ec4e3aad6c3d545e09da66bcd3ae"
-  },
-  "mcp_servers/mcp-web/src/index.ts": {
-    "mtime": 1781158426.0,
-    "ast_hash": "79aa264f729071fa6400524a110d7c2f",
-    "semantic_hash": "79aa264f729071fa6400524a110d7c2f"
-  },
-  "mcp_servers/mcp-web/tsconfig.json": {
-    "mtime": 1781158392.0,
-    "ast_hash": "1339f91eff9c4d05193837797be41e56",
-    "semantic_hash": "1339f91eff9c4d05193837797be41e56"
   },
   "mcp_servers/memory_server.py": {
     "mtime": 1781115454.0,
@@ -1414,11 +1319,6 @@
     "ast_hash": "9d1cffacd26ecde028da029fab909b82",
     "semantic_hash": ""
   },
-  "pnpm-workspace.yaml": {
-    "mtime": 1781158306.0,
-    "ast_hash": "fd2294bcfb05d0c7079445937572bbf8",
-    "semantic_hash": "fd2294bcfb05d0c7079445937572bbf8"
-  },
   "runtime/requirements.txt": {
     "mtime": 1781188004.0,
     "ast_hash": "d61a01ca1818008da7cc96af7c5b47a0",
@@ -2312,6 +2212,11 @@
   "tests/runtime/test_pipeline_mutual_check.py": {
     "mtime": 1783365677.6289077,
     "ast_hash": "056f37eccf46dcd8d9419574843d2196",
+    "semantic_hash": ""
+  },
+  ".tmp_graphify_help.txt": {
+    "mtime": 1783366777.2967913,
+    "ast_hash": "d139bd357ea979824cde9f3cce5f6c42",
     "semantic_hash": ""
   }
 }
