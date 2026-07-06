@@ -17,6 +17,7 @@ from .llm_engine import EvaluationEngine, LLMEngine, LLMResponse
 from .message_bus import MessageBus
 from .state_manager import StateManager
 from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
+from ..safety.network_guard import NetworkGuard, NetworkVerdict
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
 
 # Optional MCP integration
@@ -324,6 +325,7 @@ class PipelineRunner:
 
         self._safety_chain = SafetyChain()
         self._fs_guard = FileSystemGuard(workspace_root=self.workspace)
+        self._network_guard = NetworkGuard()
 
         self._mcp_gateway = None
         if HAS_MCP:
@@ -466,11 +468,21 @@ class PipelineRunner:
         "find_symbol": (FSOperation.READ, ("path", "file_path")),
     }
 
+    _NETWORK_MCP_TOOL_PATTERNS = {
+        "build_request": ("url",),
+        "check_network": ("url",),
+        "send_request": ("url",),
+        "handle_retry": ("url",),
+        "cache_response": ("url",),
+        "browser_navigate": ("url",),
+    }
+
     async def execute_mcp_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Execute a tool via MCP servers directly — bypasses LLM for actual I/O operations.
 
         Filesystem guard: any file path argument is validated before the tool runs.
         Write/delete/execute operations outside allowed directories are blocked deterministically.
+        Network guard: any URL argument is validated against the allow-list before egress.
         """
         if not self._mcp_gateway:
             return {"error": "MCP not available", "is_error": True}
@@ -478,6 +490,10 @@ class PipelineRunner:
         fs_check = self._check_fs_for_tool(tool_name, arguments)
         if fs_check:
             return fs_check
+
+        network_check = self._check_network_for_tool(tool_name, arguments)
+        if network_check:
+            return network_check
 
         result = await self._mcp_gateway.execute(tool_name, arguments)
         return {"tool": tool_name, "result": result, "mcp_executed": True}
@@ -499,6 +515,36 @@ class PipelineRunner:
             if result.verdict.value == "blocked":
                 return {
                     "error": f"Filesystem guard blocked {tool_name} on '{raw_path}': {result.reason}",
+                    "is_error": True,
+                    "guard_blocked": True,
+                    "guard_result": result.to_dict(),
+                }
+        return None
+
+    def _check_network_for_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any] | None:
+        """Return a guarded error dict if the tool would egress to a disallowed URL; otherwise None."""
+        keys = self._NETWORK_MCP_TOOL_PATTERNS.get(tool_name)
+        if not keys:
+            return None
+
+        for key in keys:
+            raw_url = arguments.get(key)
+            if not raw_url or not isinstance(raw_url, str):
+                continue
+            try:
+                result = self._network_guard.check_url(raw_url)
+            except Exception as e:
+                return {"error": f"Network guard error for {tool_name}: {e}", "is_error": True, "guard_blocked": True}
+            if result.verdict.value == "blocked":
+                return {
+                    "error": f"Network guard blocked {tool_name} on '{raw_url}': {result.reason}",
+                    "is_error": True,
+                    "guard_blocked": True,
+                    "guard_result": result.to_dict(),
+                }
+            if result.verdict.value == "escalate":
+                return {
+                    "error": f"Network guard escalated {tool_name} on '{raw_url}': {result.reason}",
                     "is_error": True,
                     "guard_blocked": True,
                     "guard_result": result.to_dict(),
