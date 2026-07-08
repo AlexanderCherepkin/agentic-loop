@@ -3,9 +3,9 @@
 ## 1. Общие сведения
 
 **Название системы:** Agentic Loop — многоагентная AI-система с иерархической архитектурой «безопасность прежде всего».  
-**Цель:** Создать расширяемую систему оркестрации из 202 специализированных агентов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
-**Язык реализации:** Markdown-спецификации (алгоритмические шаблоны агентов).  
-**Масштаб:** 202 агента, 6 слоёв, 12 категорий инструментов + Figma-to-code MCP сервер + Backend Spec Bridge MCP сервер.
+**Цель:** Создать расширяемую систему оркестрации из 248 специализированных агентов/файлов, реализующую цикл ReAct (Reasoning + Acting) с многоуровневой защитой, взаимной проверкой и самокоррекцией.  
+**Язык реализации:** Markdown-спецификации (алгоритмические шаблоны агентов) и вспомогательные runtime-модули Python/TypeScript для интеграции i18n, аналитики и cookie-согласия.  
+**Масштаб:** 253 агента/файла, 6 слоёв, 12 категорий инструментов + Figma-to-code MCP сервер + Backend Spec Bridge MCP сервер.
 
 ---
 
@@ -57,13 +57,13 @@
 - **scope_manager** — предотвращение scope creep; отслеживание авторизованных ресурсов/тем/инструментов.
 - **input_aggregation** — консолидация сигналов безопасности, политических решений и состояний ресурсов в единый control directive.
 
-### 2.6 Подагенты цикла ReAct (tooll_subagents) — 42 агента
+### 2.6 Подагенты цикла ReAct (tooll_subagents) — 90 агентов
 Цикл разбит на 6 фаз:
 1. **user** (4): request — парсинг и классификация; context — сбор контекста; limitations — каталог ограничений; design_intake — распознавание дизайн-проектов (Figma URL, node ID, локальный JSON, дизайн-бриф) и формирование `design_descriptor`.
-2. **planning** (16): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; figma_precise_mode_auditor — Builder.io-style readiness audit перед генерацией кода; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя; responsive_composer — генерация breakpoint-вариантов и constraint-классов Tailwind; component_registry — построение реестра Figma-компонентов (Component Sets, Variants, Instances) и генерация `src/components/ui/*.tsx`; component_mapper — сопоставление Component Sets с React-компонентами и запись mapper-файлов; asset_agent — обнаружение, классификация и планирование загрузки Figma-ассетов; image_enrichment_agent — поиск/загрузка fallback-изображений для card/hero placeholders.
-3. **execution** (4): tool_invocation — диспетчеризация; safety_guardrails — live runtime safety; human_approval — тактическое одобрение; action_logging — неизменяемый журнал выполнения.
-4. **observability** (12): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти; headroom_compressor/headroom_retriever — сжатие/восстановление больших артефактов; memanto_remember/recall/answer — семантическая память; mem0_remember/recall/list — гибридная долгосрочная память.
-5. **self_correction** (6): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку; goal_evaluator — fast-critic оценки прогресса по цели (/goal); ponytail_review — проверка over-engineering для сгенерированного/отрефакторенного кода.
+2. **planning** (41): task_decomposition — декомпозиция; cost_risk_assessment — оценка стоимости и риска; tool_plan_selection — выбор инструментов; internal_monologue — явное рассуждение; figma_design_analyst — анализ дизайна и генерация структуры/спецификации/кода через MCP; figma_precise_mode_auditor — Builder.io-style readiness audit перед генерацией кода; design_to_code_planner — принятие решения о выдаче технического задания или готового кода; backend_spec_bridge — сопоставление backend-спецификации с UI и генерация backend-слоя; responsive_composer — генерация breakpoint-вариантов и constraint-классов Tailwind; component_registry — построение реестра Figma-компонентов (Component Sets, Variants, Instances) и генерация `src/components/ui/*.tsx`; component_mapper — сопоставление Component Sets с React-компонентами и запись mapper-файлов; asset_agent — обнаружение, классификация и планирование загрузки Figma-ассетов; image_enrichment_agent — поиск/загрузка fallback-изображений для card/hero placeholders; i18n_requirements_analyst — извлечение требований мультиязычности; i18n_language_detector — определение языка Figma-текстов; i18n_key_extractor — преобразование текста в i18n-ключи; i18n_dictionary_generator — генерация словарей для целевых локалей; i18n_routing_planner — планирование Next.js i18n routing; i18n_component_rewriter — манифест замены литералов на `t()`; i18n_optimizer — оптимизация загрузки словарей; analytics_requirements_analyst — извлечение требований аналитики; analytics_provider_selector — выбор провайдеров аналитики; analytics_event_mapper — преобразование Figma-взаимодействий в события; analytics_script_injector — планирование безопасной вставки скриптов; analytics_optimizer — минимизация влияния аналитики; cookie_consent_jurisdiction_mapper — маппинг юрисдикций согласия; cookie_consent_policy_generator — генерация локализованной политики cookies; cookie_consent_banner_planner — проектирование UI баннера согласия; auth_requirements_analyst — извлечение требований идентификации/аутентификации; auth_provider_selector — выбор провайдера идентификации (Clerk/Auth0); cms_requirements_analyst — извлечение требований динамических секций (блог, портфолио, кейсы); cms_source_selector — выбор источника данных (local_markdown, Notion, Contentful, Strapi, Prisma, Airtable, Google Sheets, CMS API); accessibility_requirements_analyst — извлечение требований доступности по WCAG 2.1; accessibility_checker_planner — планирование статических и браузерных проверок доступности; pwa_requirements_analyst — извлечение требований PWA и performance budget; pwa_optimizer — выбор стратегии манифеста, service worker, offline-страницы и оптимизации ресурсов; design_token_docs_requirements_analyst — извлечение требований к документации токенов для клиента/команды; design_token_docs_format_selector — выбор форматов документации (markdown/json/html) и плана выдачи.
+3. **execution** (13): tool_invocation — диспетчеризация; safety_guardrails — live runtime safety; human_approval — тактическое одобрение; action_logging — неизменяемый журнал выполнения; i18n_runtime_integrator — материализация next-intl артефактов; i18n_fallback_resolver — разрешение недостающих переводов; analytics_runtime_integrator — материализация аналитики и баннера согласия; cookie_consent_blocker — блокировка скриптов до согласия; auth_runtime_integrator — материализация Clerk/Auth0 обёрток, middleware и env-шаблона; cms_runtime_integrator — материализация слоя данных Next.js App Router для динамических секций; accessibility_runtime_integrator — запуск статического WCAG-аудита через `runtime/accessibility/AccessibilityEngine`; pwa_runtime_integrator — материализация манифеста, service worker, offline-страницы и диагностики бюджетов через `runtime/pwa/PwaEngine`; design_token_docs_runtime_integrator — генерация markdown/json/html документации по токенам через `runtime/design_token_docs/DesignTokenDocsEngine`.
+4. **observability** (19): environment_result — снимок среды; runtime_output — парсинг stdout/stderr/exit codes; file_context — отслеживание мутаций файлов; memory_enrichment — обогащение долгосрочной памяти; headroom_compressor/headroom_retriever — сжатие/восстановление больших артефактов; memanto_remember/recall/answer — семантическая память; mem0_remember/recall/list — гибридная долгосрочная память; i18n_audit_agent — аудит мультиязычности; analytics_audit_agent — аудит аналитики и согласия; auth_audit_agent — аудит реализации идентификации/аутентификации; cms_audit_agent — аудит реализации динамических секций и fallback; accessibility_audit_agent — аудит реализации доступности и WCAG-соответствия; pwa_audit_agent — аудит реализации PWA, performance budget и offline-UX; design_token_docs_audit_agent — аудит документации токенов: полнота, корректность, соответствие аудитории.
+5. **self_correction** (14): result_validation — проверка результатов; plan_adjustment — коррекция плана; recursion_or_termination — решение продолжать/завершить; assistance_request — эскалация к человеку; goal_evaluator — fast-critic оценки прогресса по цели (/goal); ponytail_review — проверка over-engineering для сгенерированного/отрефакторенного кода; i18n_rtl_validator — проверка RTL-поддержки; i18n_missing_key_guard — проверка полноты ключей; analytics_privacy_validator — проверка приватности аналитики; auth_validator — проверка корректности обёрток идентификации/аутентификации; cms_validator — проверка корректности интеграции динамических секций; accessibility_validator — проверка результатов WCAG-аудита и формирование refinement_actions; pwa_validator — проверка результатов PWA/performance audit и формирование refinement_actions; design_token_docs_validator — проверка полноты документации токенов и формирование refinement_actions.
 6. **result** (4): solution — финальное решение; modified_files — инвентарь изменений; action_report — отчёт о действиях; summary_recommendations — рекомендации.
 
 ### 2.7 Инструментальные агенты (tools_*) — 123 агента
@@ -210,7 +210,7 @@ User Request
 ### 6.1 Внутренние связи
 - Каждый агент должен иметь минимум одну входящую ссылку от другого агента (нет изолированных агентов).
 - Ссылки между агентами должны быть валидны (не указывать на несуществующие файлы).
-- Валидатор: `scripts/validate_cross_references.js`.
+- Валидатор: `.agent_loop/scripts/validate_cross_references.js`.
 
 ### 6.2 Внешний API
 - Единая точка входа: `api_gateway.md`.
@@ -221,6 +221,41 @@ User Request
 - Долгосрочная память через `tools_memory/memory_store`.
 - Каждый факт/решение/урок извлекается `memory_enrichment` и индексируется `embedding_agent`.
 - Индекс: `MEMORY.md` в директории памяти.
+
+### 6.4 Auth/identity интеграция
+- Для SaaS landing pages и personal sites с личным кабинетом/dashboard система должна генерировать Clerk/Auth0 обёртки через `runtime/auth/AuthIntegrationEngine`.
+- Поддерживаемые провайдеры: `clerk` и `auth0`.
+- Генерируемые артефакты: `src/components/auth/AuthProvider.tsx`, `src/components/auth/SignInButton.tsx`, `src/components/auth/UserButton.tsx`, `src/components/auth/ProtectedRoute.tsx`, `src/app/sign-in/page.tsx`, `.env.local.example`, а также `middleware.ts` (только если отсутствует).
+- Планирование: `auth_requirements_analyst.md` извлекает требования, `auth_provider_selector.md` выбирает провайдера, `auth_runtime_integrator.md` материализует код, `auth_validator.md` проверяет результат, `auth_audit_agent.md` аудирует финальную реализацию.
+- Существующий `middleware.ts` не перезаписывается; в отчёт добавляется заметка.
+
+### 6.5 CMS/data queries интеграция
+- Для динамических секций (`blog`, `portfolio`, `cases`, `news`, `works`) система должна генерировать провайдерно-независимый слой данных Next.js App Router через `runtime/cms_queries/CmsQueriesEngine`.
+- Поддерживаемые источники: `local_markdown`, `notion`, `contentful`, `strapi`, `prisma`, `airtable`, `google_sheets`, `cms_api`.
+- Генерируемые артефакты: `src/lib/cms.ts` (тип `CmsItem`, `getEntries`, `getEntry`), `src/lib/cms/localMarkdown.ts` (загрузчик `.md` с frontmatter), `src/lib/cms/staticFallback.ts` (статический fallback), `src/components/cms/PostCard.tsx`, `src/components/cms/ProjectCard.tsx`, `src/components/cms/CaseStudyCard.tsx`, `src/app/{blog,portfolio,cases}/page.tsx` и `src/app/{blog,portfolio,cases}/[slug]/page.tsx`, `.env.local.example` с плейсхолдерами для выбранного источника.
+- Для внешних источников движок добавляет нужный npm-пакет в `package.json` (например, `@notionhq/client` для Notion, `contentful` для Contentful, `@prisma/client` для Prisma).
+- Существующий `src/lib/cms.ts` не перезаписывается; в отчёт добавляется заметка.
+- Планирование: `cms_requirements_analyst.md` извлекает требования, `cms_source_selector.md` выбирает источник, `cms_runtime_integrator.md` материализует код, `cms_validator.md` проверяет результат, `cms_audit_agent.md` аудирует финальную реализацию.
+
+### 6.6 Доступность / WCAG 2.1 интеграция
+- Для каждого сгенерированного фронтенда система должна выполнять детерминированный статический WCAG 2.1 аудит через `runtime/accessibility/AccessibilityEngine`.
+- Поддерживаемые проверки: `contrast` (контраст текста/фона), `focus_visible` (видимый фокус на интерактивах), `focus_order` (порядок табуляции), `aria` (роли и обязательные атрибуты ARIA, уникальные ID, корректные ссылки), `keyboard_trap` (клавиатурные ловушки на кастомных div), `heading_hierarchy` (иерархия заголовков), `alt_text` (alt у изображений), `form_label` (связка label/input).
+- Уровни WCAG: `WCAG21_A`, `WCAG21_AA` (по умолчанию), `WCAG21_AAA`.
+- Генерируемые артефакты: структурированный `accessibility_report` с `violations`, `score` и `files_audited`; `accessibility_validator.md` транслирует нарушения в `refinement_actions`; `accessibility_audit_agent.md` формирует итоговый compliance-отчёт.
+- Планирование: `accessibility_requirements_analyst.md` извлекает требования, `accessibility_checker_planner.md` строит план проверок; исполнение: `accessibility_runtime_integrator.md`; самокоррекция: `accessibility_validator.md`; аудит: `accessibility_audit_agent.md`.
+
+### 6.7 PWA + performance budget интеграция
+- Для каждого сгенерированного фронтенда система должна генерировать PWA-артефакты и диагностировать performance budget через `runtime/pwa/PwaEngine`.
+- Поддерживаемые артефакты: `manifest.json` (icons, theme, display), `sw.js` (cache-first/offline fallback), `offline.html`, `src/lib/pwa.ts` (регистрация service worker), `src/lib/pwa-meta.ts` (мета-теги/манифест линк), `src/components/PwaRegister.tsx` (React-обёртка регистрации).
+- Поддерживаемые бюджеты: JS/CSS bundles, изображения, шрифты, сторонние скрипты; для каждого вычисляется фактический размер и флаг `over_budget`; накопленные нарушения транслируются в `refinement_actions`.
+- Поддерживаемые оптимизации: `srcset`/`sizes` для изображений (mobile/tablet/desktop breakpoints), подсказки по font subsetting (`next/font/google` + `subsets`), патч `next.config.js` (`poweredByHeader: false`), idempotent повторный запуск.
+- Планирование: `pwa_requirements_analyst.md` извлекает требования, `pwa_optimizer.md` выбирает стратегию; исполнение: `pwa_runtime_integrator.md`; самокоррекция: `pwa_validator.md`; аудит: `pwa_audit_agent.md`.
+
+### 6.8 Документация токенов (design token docs) интеграция
+- Для каждого сгенерированного фронтенда система должна генерировать клиентскую/командную документацию по дизайн-токенам через `runtime/design_token_docs/DesignTokenDocsEngine`.
+- Источники: `design_tokens.json` (цвета, типографика, маппинги стилей/переменных) и опциональный `component_registry.json` (связь токенов с компонентами).
+- Генерируемые артефакты: `docs/DESIGN_TOKENS.md` (таблица цветов с превью, типографика, компоненты, маппинги), `docs/design_tokens.docs.json` (структурированный JSON для инструментов), и опционально `docs/design_tokens.html` (клиентская HTML-страница).
+- Планирование: `design_token_docs_requirements_analyst.md` извлекает требования (аудитория, форматы, секции); `design_token_docs_format_selector.md` выбирает форматы (markdown/json/html) и план выдачи; исполнение: `design_token_docs_runtime_integrator.md`; самокоррекция: `design_token_docs_validator.md`; аудит: `design_token_docs_audit_agent.md`.
 
 ---
 
@@ -267,38 +302,45 @@ User Request
 - `TECHNICAL_ASSIGNMENT.md` — настоящий документ (базовые требования).
 
 ### 9.2 Валидационные скрипты
-- `scripts/validate_cross_references.js` — автоматическая проверка целостности графа ссылок. Проверяет: отсутствие битых ссылок, отсутствие изолированных агентов, top referenced agents. Должен возвращать exit code 0 при чистоте.
-- `scripts/validate_consistency.js` — проверка консистентности системы. Проверяет: полноту Algorithmic template (Role, Contract, Decision Flow, Failure Modes), snake_case именование, структуру директорий, циклические ссылки (warning), safety-before-execution (warning). Должен возвращать exit code 0 при 0 errors.
+- `.agent_loop/scripts/validate_cross_references.js` — автоматическая проверка целостности графа ссылок. Проверяет: отсутствие битых ссылок, отсутствие изолированных агентов, top referenced agents. Должен возвращать exit code 0 при чистоте.
+- `.agent_loop/scripts/validate_consistency.js` — проверка консистентности системы. Проверяет: полноту Algorithmic template (Role, Contract, Decision Flow, Failure Modes), snake_case именование, структуру директорий, циклические ссылки (warning), safety-before-execution (warning). Должен возвращать exit code 0 при 0 errors.
 
 ---
 
 ## 10. Критерии приёмки
 
-- [ ] Все 202 агента реализованы по Algorithmic template.
-- [ ] 0 заглушек (stub'ов).
-- [ ] Все 202 агента связаны в единый граф ссылок (0 изолированных).
-- [ ] 0 битых ссылок (после фильтрации документационных целей).
-- [ ] Трёхконтурная безопасность соблюдена: safety-control → mutual_check → control.
-- [ ] ReAct цикл декомпозирован на 42 подагента в 6 фазах с условными переходами (Conditional Edges).
-- [ ] 12 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
-- [ ] Backend Spec Bridge интегрирован в Figma pipeline и MCP gateway.
-- [ ] Lighthouse hard-gate audit category (`tools_lighthouse/audit`) интегрирован в ReAct cycle и требует 100% по четырём столпам с convergence guard 8 итераций.
-- [ ] Скрипт валидации проходит без ошибок.
-- [ ] ARCHITECTURE.md и CLAUDE.md отражают текущее состояние системы.
-- [ ] Скрипт консистентности (`validate_consistency.js`) показывает 0 errors (warnings допустимы).
+- [x] Все 248 агентов/файлов реализованы по Algorithmic template.
+- [x] 0 заглушек (stub'ов).
+- [x] Все 248 агентов/файлов связаны в единый граф ссылок (0 изолированных).
+- [x] 0 битых ссылок (после фильтрации документационных целей).
+- [x] Трёхконтурная безопасность соблюдена: safety-control → mutual_check → control.
+- [x] ReAct цикл декомпозирован на 90 подагентов в 6 фазах с условными переходами (Conditional Edges).
+- [x] 12 категорий инструментов (tools_*) реализованы с pipeline-специфичной архитектурой и оптимизаторами.
+- [x] Backend Spec Bridge интегрирован в Figma pipeline и MCP gateway.
+- [x] Lighthouse hard-gate audit category (`tools_lighthouse/audit`) интегрирован в ReAct cycle и требует 100% по четырём столпам с convergence guard 8 итераций.
+- [x] Скрипт валидации проходит без ошибок.
+- [x] ARCHITECTURE.md, CLAUDE.md и TECHNICAL_ASSIGNMENT.md отражают текущее состояние системы.
+- [x] Скрипт консистентности (`validate_consistency.js`) показывает 0 errors, 0 warnings.
+- [x] i18n module (`runtime/i18n/`), analytics/cookie consent module (`runtime/analytics/`), auth/identity module (`runtime/auth/`) и CMS/data queries module (`runtime/cms_queries/`) интегрированы в планирование, исполнение, самокоррекцию и аудит ReAct cycle.
+- [x] Accessibility/WCAG 2.1 module (`runtime/accessibility/`) интегрирован в планирование, исполнение, самокоррекцию и аудит ReAct cycle; выполняет детерминированный статический аудит контраста, фокуса, ARIA, клавиатурных ловушек, иерархии заголовков, alt-текста и связок label/input.
+- [x] PWA + performance budget module (`runtime/pwa/`) интегрирован в планирование, исполнение, самокоррекцию и аудит ReAct cycle; генерирует manifest, service worker, offline-страницу, srcset/sizes, font-subsetting hints, performance-budget диагностику и патчит `next.config.js`.
+- [x] Design token documentation module (`runtime/design_token_docs/`) интегрирован в планирование, исполнение, самокоррекцию и аудит ReAct cycle; генерирует `docs/DESIGN_TOKENS.md`, `docs/design_tokens.docs.json` и опционально `docs/design_tokens.html` из `design_tokens.json` и `component_registry.json`, включая агентов планирования, исполнения, самокоррекции и аудита.
+- [x] Health check (`.agent_loop/scripts/health_check.py`) возвращает HEALTHY за < 10 секунд.
 
 ---
 
 ## 11. Статус реализации
 
-**Статус: ВЫПОЛНЕНО** (2026-06-29)
+**Статус: ВЫПОЛНЕНО** (2026-07-08)
 
-- 202/202 агента реализованы.
+- 253/253 агента/файла реализовано.
 - 0 stubs.
 - 0 изолированных агентов.
 - 0 битых ссылок (валидатор `validate_cross_references.js` пройден).
 - 0 ошибок консистентности (валидатор `validate_consistency.js` пройден: 0 errors, 0 warnings).
 - Все агенты следуют Algorithmic template (Role, Contract, Decision Flow, Failure Modes).
 - Добавлены `tools_browser/headless_automation` (Playwright), Conditional Edges (PhaseTransitionManager), `tools_lighthouse/audit` (Lighthouse 100% hard-gate pipeline), Ponytail/Headroom/Memanto/Mem0 protocols, `/goal` fast-critic, Asset Agent и Image Enrichment Agent.
+- Добавлены i18n module (`runtime/i18n/`) с агентами планирования, исполнения, самокоррекции и аудита; analytics/cookie consent module (`runtime/analytics/`) с поддержкой GA4, Яндекс.Метрики, Plausible, PostHog, Mixpanel и юрисдикциями GDPR/ePrivacy/152-ФЗ/PIPL/CCPA; auth/identity module (`runtime/auth/`) с обёртками Clerk/Auth0 для SaaS landing pages и personal sites; CMS/data queries module (`runtime/cms_queries/`) с провайдерно-независимым слоем данных Next.js App Router для динамических секций `blog`/`portfolio`/`cases`; accessibility/WCAG 2.1 module (`runtime/accessibility/`) с детерминированным статическим аудитом контраста, фокуса, ARIA, клавиатурных ловушек, иерархии заголовков, alt-текста и label/input; PWA + performance budget module (`runtime/pwa/`) с генерацией manifest, service worker, offline-страницы, srcset/sizes, font-subsetting hints, performance-budget диагностикой и патчем `next.config.js`; и design token documentation module (`runtime/design_token_docs/`) с генерацией `docs/DESIGN_TOKENS.md`, `docs/design_tokens.docs.json` и опционально `docs/design_tokens.html` из `design_tokens.json` и `component_registry.json`, включая агентов планирования, исполнения, самокоррекции и аудита.
+- Исправлены core-тесты i18n/analytics/accessibility/pwa: `DecisionFlow` предоставляет `.steps`, engine записывают относительные пути, ключи i18n без хеш-суффиксов, агенты явно упоминают `default-deny` и `CSP`.
 - Архитектурная документация актуальна.
 - Валидационные скрипты созданы и проверены.

@@ -10,6 +10,9 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 - `observation_artifacts`: outputs from `environment_result.md`, `runtime_output.md`, `file_context.md`
 - `memory_policy`: enum (`minimal`, `standard`, `comprehensive`) — controls retention depth
 - `memory_tags`: list of topical keywords for retrieval indexing
+- `i18n_audit_report`: optional structured report from `i18n_audit_agent.md`
+- `analytics_audit_report`: optional structured report from `analytics_audit_agent.md`
+- `design_token_docs_audit_report`: optional structured report from `design_token_docs_audit_agent.md`
 - `headroom_enabled`: boolean | None — explicit Headroom toggle; falls back to `HEADROOM_ENABLED` env, then `true`
 - `memanto_enabled`: boolean | None — explicit Memanto toggle; falls back to `MEMANTO_ENABLED` env, then `true`
 - `mem0_enabled`: boolean | None — explicit Mem0 toggle; falls back to `MEM0_ENABLED` env, then `true`
@@ -33,6 +36,8 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 1. **Classify observation types** — categorize artifacts into: facts (file paths, values), decisions (chosen tool, approved plan), constraints (policies, limitations), lessons (what worked, what failed), and user preferences (style, format, priority).
 2. **Filter by policy** — `minimal` retains only decisions and critical facts; `standard` adds constraints and lessons; `comprehensive` retains all categorized observations with context.
    - **Headroom pre-compression** — before summarizing, if `headroom_enabled=true` and the observation bundle exceeds `min(500, token_budget // 10)` tokens, invoke `headroom_compressor.md` (or `runtime/engine/headroom_client.py`) to produce a reversible compressed form. Store the returned `hash` as `headroom_hash` and include the compressed representation in the memory entry. If Headroom is unavailable or the bundle is below threshold, skip this step and store plaintext.
+   - **i18n and analytics audit facts** — if `i18n_audit_report` from `i18n_audit_agent.md` or `analytics_audit_report` from `analytics_audit_agent.md` present, extract locale coverage, provider list, compliance findings, and quality findings as durable project facts; route to `memanto_remember.md` and `mem0_remember.md` under `memory_type=project` with tags `i18n`, `analytics`, `compliance`.
+   - **Design token docs audit facts** — if `design_token_docs_audit_report` from `design_token_docs_audit_agent.md` present, extract generated doc paths, covered token categories, component registry coverage, missing token warnings, and quality findings as durable project facts; route to `memanto_remember.md` and `mem0_remember.md` under `memory_type=project` with tags `design-tokens`, `component-registry`, `docs`, `compliance`.
    - **Memanto long-term persistence** — if `memanto_enabled=true`, route durable facts (decisions, constraints, user preferences, project rules, failures/recoveries) to `memanto_remember.md` with appropriate `memory_type` and `tags`. Collect returned IDs as `memanto_ids`. Continue to also write to `tools_memory/memory_store/memory_writer.md` so short-term session memory stays available even if Memanto is down. If Memanto is unavailable, queue the records for later batch write and set `memanto_ids=[]`.
    - **Mem0 long-term persistence** — if `mem0_enabled=true`, route durable conversation turns and extracted facts to `mem0_remember.md` with `memory_type=semantic` and metadata tags. Collect returned IDs as `mem0_ids`. Continue to also write to `tools_memory/memory_store/memory_writer.md` so short-term session memory stays available even if Mem0 is down. If Mem0 is unavailable, queue the records for later batch write and set `mem0_ids=[]`.
 3. **Deduplicate** — check for semantically similar existing memory entries; update rather than duplicate if similarity > 0.9.
@@ -58,3 +63,6 @@ Session-memory augmentation agent that extracts key facts, decisions, constraint
 | Memanto unavailable | Batch durable records for later upload; continue with regular `memory_writer.md` |
 | Mem0 add fails | Keep in-memory queue; set `mem0_ids=[]`; log failure to `audit_logger.md`; continue enrichment |
 | Mem0 unavailable | Batch durable records for later upload; continue with regular `memory_writer.md` |
+| i18n or analytics audit report malformed | Store plaintext summary; log parsing failure to `audit_logger.md` |
+| Design token docs audit report malformed | Store plaintext summary; log parsing failure to `audit_logger.md` |
+| Audit findings indicate compliance failure | Escalate fact priority to `memory_type=feedback`; route to `mutual_check/compliance_checker.md` |

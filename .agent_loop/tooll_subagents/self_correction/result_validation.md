@@ -12,6 +12,15 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `visual_qa_report`: optional structured report from `tools_browser/headless_automation/visual_qa_agent.md` containing `status`, `diff_score`, `dom_assertions`, `layout_checks`, `bbox_comparison`, `font_metrics`, `image_metrics`, `discrepancies`, `metrics`
 - `lighthouse_audit_report`: optional structured report from `tools_lighthouse/audit/` pipeline containing `category_scores`, `passed`, `failure_summary`, `correction_prompt`, `target_files`, `iteration_count`
 - `ponytail_review_report`: optional structured report from `ponytail_review.md` containing `approved`, `findings`, `net_lines_removable`, `refinement_actions`
+- `i18n_rtl_report`: optional structured report from `i18n_rtl_validator.md` containing `status`, `rtl_locales`, `issues`, `refinement_actions`
+- `i18n_missing_key_report`: optional structured report from `i18n_missing_key_guard.md` containing `status`, `missing`, `orphan_keys`, `refinement_actions`
+- `analytics_privacy_report`: optional structured report from `analytics_privacy_validator.md` containing `status`, `violations`, `refinement_actions`
+- `accessibility_report`: optional structured report from `accessibility_runtime_integrator.md` containing `status`, `violations`, `score`, `files_audited`
+- `accessibility_validation_report`: optional structured report from `accessibility_validator.md` containing `status`, `violations`, `refinement_actions`
+- `pwa_report`: optional structured report from `pwa_runtime_integrator.md` containing `files_written`, `files_modified`, `budget_violations`, `errors`, `notes`
+- `pwa_validation_report`: optional structured report from `pwa_validator.md` containing `status`, `violations`, `refinement_actions`
+- `design_token_docs_report`: optional structured report from `design_token_docs_runtime_integrator.md` containing `files_written`, `files_modified`, `errors`, `notes`
+- `design_token_docs_validation_report`: optional structured report from `design_token_docs_validator.md` containing `status`, `violations`, `refinement_actions`
 - `iteration_count`: integer — current refinement iteration
 - `max_iterations`: integer (default 3)
 - `lighthouse_max_iterations`: integer (default 8) — hard limit for Lighthouse refinement loop
@@ -60,7 +69,29 @@ Post-execution verification agent that checks whether the observed outcomes matc
     - `approved=true` → contribute toward `complete`.
     - `approved=false` with `refinement_actions` → set `validation_status=needs_refinement`, append actions to `refinement_actions`, and set `retry_recommended=true` unless `iteration_count >= max_iterations`.
     - `approved=inconclusive` → keep current status and request more context on the next cycle.
-13. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA, Lighthouse, or Ponytail review still not passing, set `escalation_required=true` and `validation_status=needs_human`.
+12a. **i18n RTL verdict** — if `i18n_rtl_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`.
+    - `status=failed` or `needs_refinement` → append `refinement_actions` to the validation report, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains.
+12b. **i18n missing-key verdict** — if `i18n_missing_key_report` present:
+    - `status=passed` → contribute toward `complete`.
+    - `status=failed` or `needs_refinement` → append actions to `refinement_actions`, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; escalate to `human_approval.md` if missing keys remain after `max_iterations`.
+12c. **Analytics privacy verdict** — if `analytics_privacy_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`.
+    - `status=failed` → set `validation_status=failed` if PII leak or unmasked IP in regulated jurisdiction; `retry_recommended=false`; route to `safety-control/content_checker.md`.
+    - `status=needs_refinement` → append `refinement_actions` to the report, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains.
+12d. **Accessibility verdict** — if `accessibility_report` or `accessibility_validation_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`.
+    - `status=needs_refinement` → append `refinement_actions` to the report, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; route to `plan_adjustment.md` and `accessibility_runtime_integrator.md`.
+    - `status=failed` → set `validation_status=failed` if config errors or unreadable project; `retry_recommended=false`; route to `assistance_request.md`.
+12e. **PWA / performance verdict** — if `pwa_report` or `pwa_validation_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`.
+    - `status=needs_refinement` or non-empty `budget_violations` → append `pwa_report.budget_violations` and `pwa_validation_report.refinement_actions` to `refinement_actions`, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; route to `plan_adjustment.md` and `pwa_runtime_integrator.md`.
+    - `status=failed` → set `validation_status=failed` if config errors or unreadable project; `retry_recommended=false`; route to `assistance_request.md`.
+12f. **Design token docs verdict** — if `design_token_docs_report` or `design_token_docs_validation_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`.
+    - `status=needs_refinement` or non-empty errors → append `design_token_docs_report.errors` and `design_token_docs_validation_report.refinement_actions` to `refinement_actions`, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; route to `plan_adjustment.md` and `design_token_docs_runtime_integrator.md`.
+    - `status=failed` → set `validation_status=failed` if source files missing or unreadable; `retry_recommended=false`; route to `assistance_request.md`.
+13. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA, Lighthouse, Ponytail review, i18n RTL, i18n missing-key, analytics privacy, accessibility, PWA, or design token docs checks still not passing, set `escalation_required=true` and `validation_status=needs_human`.
 14. **Apply fast evaluator verdict** — if `goal_evaluation` is present:
     - If `verdict.pass=true` and `verdict.confidence >= 0.85`, upgrade `validation_status` toward `complete` unless there are unresolved critical failures.
     - If `verdict.pass=false` with a concrete reason, set `validation_status=needs_refinement`, append the reason to `gap_analysis`, and set `retry_recommended=true` when `iteration_count < max_iterations`.
@@ -90,5 +121,21 @@ Post-execution verification agent that checks whether the observed outcomes matc
 | Ponytail review rejects changes with budget remaining | `validation_status=needs_refinement`; append `refinement_actions` to `gap_analysis`; route to `plan_adjustment.md` and `ponytail_review.md` |
 | Ponytail review rejects changes after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` and `ponytail_review.md` |
 | Ponytail review report unavailable for coding task | Continue with other criteria; log to `audit_logger.md`; invoke `ponytail_review.md` if possible |
+| i18n RTL report fails with budget remaining | `validation_status=needs_refinement`; append actions to `refinement_actions`; route to `plan_adjustment.md` |
+| i18n RTL report fails after `max_iterations` | `validation_status=needs_human`; route to `assistance_request.md` |
+| i18n missing keys remain with budget remaining | `validation_status=needs_refinement`; route to `i18n_fallback_resolver.md` and `plan_adjustment.md` |
+| i18n missing keys remain after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
+| Analytics privacy validation fails with budget remaining | `validation_status=needs_refinement`; route to `plan_adjustment.md` and `analytics_runtime_integrator.md` |
+| Analytics privacy validation fails after `max_iterations` | `validation_status=needs_human`; route to `assistance_request.md` |
+| PII detected in analytics payload | `validation_status=failed`; `retry_recommended=false`; route to `safety-control/content_checker.md` |
+| Accessibility validation fails with budget remaining | `validation_status=needs_refinement`; append actions to `refinement_actions`; route to `plan_adjustment.md` and `accessibility_runtime_integrator.md` |
+| Accessibility validation fails after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
+| Accessibility engine unreadable project/config error | `validation_status=failed`; `retry_recommended=false`; route to `assistance_request.md` |
+| PWA validation fails with budget remaining | `validation_status=needs_refinement`; append `budget_violations` to `refinement_actions`; route to `plan_adjustment.md` and `pwa_runtime_integrator.md` |
+| PWA validation fails after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
+| PWA engine unreadable project/config error | `validation_status=failed`; `retry_recommended=false`; route to `assistance_request.md` |
+| Design token docs validation fails with budget remaining | `validation_status=needs_refinement`; append `refinement_actions` to `gap_analysis`; route to `plan_adjustment.md` and `design_token_docs_runtime_integrator.md` |
+| Design token docs validation fails after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
+| Design token docs engine unreadable source or missing `design_tokens.json` | `validation_status=failed`; `retry_recommended=false`; route to `assistance_request.md` |
 
 

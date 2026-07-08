@@ -33,7 +33,7 @@ AGENT_LOOP_DIR = PROJECT_ROOT / ".agent_loop"
 CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 
-EXPECTED_AGENTS = 202
+EXPECTED_AGENTS = 253
 EXPECTED_MCP_SERVERS = 16
 
 

@@ -3,7 +3,7 @@ const path = require('path');
 
 /**
  * Cross-Reference Integrity Validator for Agentic Loop
- * Usage: node scripts/validate_cross_references.js
+ * Usage: node .agent_loop/scripts/validate_cross_references.js
  * Returns: exit code 0 if clean, 1 if issues found
  */
 

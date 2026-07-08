@@ -9,6 +9,11 @@ Operational transparency agent that narrates the sequence of actions the agent t
 - `execution_trace`: from `execution/tool_invocation.md`
 - `planning_artifacts`: outputs from `planning/` agents (task graph, selected tools, cost/risk assessment)
 - `self_correction_history`: from `self_correction/` agents (validation results, plan adjustments, iteration count)
+- `i18n_audit_report`: optional structured report from `i18n_audit_agent.md`
+- `analytics_audit_report`: optional structured report from `analytics_audit_agent.md`
+- `accessibility_audit_report`: optional structured report from `accessibility_audit_agent.md`
+- `pwa_audit_report`: optional structured report from `pwa_audit_agent.md`
+- `design_token_docs_audit_report`: optional structured report from `design_token_docs_audit_agent.md`
 - `report_verbosity`: enum (`terse`, `standard`, `detailed`) — controls depth of narrative
 
 ### Returns
@@ -30,6 +35,7 @@ Operational transparency agent that narrates the sequence of actions the agent t
 5. **Summarize outcome** — what was ultimately delivered, what remains unaddressed, and what the user should verify or test.
 6. **Include statistics** — tools used, time elapsed, iterations, tokens consumed, test outcomes. Objective metrics complement narrative.
 7. **Check accuracy** — cross-reference `report_text` against `execution_trace` to ensure no hallucinated actions or omitted failures.
+7a. **Include i18n, analytics, accessibility, PWA, and design-token docs audit summaries** — if `i18n_audit_report` from `i18n_audit_agent.md`, `analytics_audit_report` from `analytics_audit_agent.md`, `accessibility_audit_report` from `accessibility_audit_agent.md`, `pwa_audit_report` from `pwa_audit_agent.md`, or `design_token_docs_audit_report` from `design_token_docs_audit_agent.md` present, append their status, locale coverage, installed providers, WCAG level, PWA completeness, design-token docs completeness, violation summary, and compliance findings to the structured report.
 8. **Format output** — match user preference for language, tone, and structure. Use markdown, numbered lists, and code blocks where appropriate.
 9. **Return** — emit report text, structured report, statistics, confidence.
 
@@ -42,3 +48,5 @@ Operational transparency agent that narrates the sequence of actions the agent t
 | Verbosity mismatch (user wants terse but much happened) | Produce terse summary + link to detailed `structured_report`; `confidence=0.9` |
 | Self-correction history too complex for clear narrative | Group related iterations into single "attempted and refined" paragraph; preserve key pivot points |
 | Report contains internal tool names meaningless to user | Map tool names to user-friendly descriptions (e.g., "searched codebase" instead of `semantic_searcher.md`) |
+| i18n, analytics, or accessibility audit report missing | Continue narrative without audit section; note omission in `confidence` reduction |
+| Audit report contradicts execution trace | Honor trace as primary source; flag contradiction to `audit_logger.md` |
