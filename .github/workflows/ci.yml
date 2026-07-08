@@ -32,14 +32,22 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install -r runtime/requirements.txt
-          pip install pytest pytest-asyncio
+          pip install -e .[dev]
 
       - name: Validate runtime
         run: node cli.js validate
 
-      - name: Run core test tier
-        run: pytest -m core -v
+      - name: Lint with ruff
+        run: ruff check runtime mcp_servers figma-agent-core
+
+      - name: Format check with black
+        run: black --check runtime mcp_servers figma-agent-core
+
+      - name: Type check with mypy
+        run: mypy runtime mcp_servers figma-agent-core
+
+      - name: Run core test tier with coverage
+        run: pytest -m core -v --cov --cov-report=term-missing
 
       - name: Run MCP smoke test tier
         run: pytest -m mcp -v
