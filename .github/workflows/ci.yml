@@ -38,6 +38,12 @@ jobs:
       - name: Validate runtime
         run: node cli.js validate
 
+      - name: Run core test tier
+        run: pytest -m core -v
+
+      - name: Run MCP smoke test tier
+        run: pytest -m mcp -v
+
       - name: Run integration tests (mock provider)
         run: pytest tests/integration/ -v
 

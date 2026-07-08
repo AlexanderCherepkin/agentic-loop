@@ -356,6 +356,7 @@ All 253 agents are wired into a single reference graph. Every agent is reachable
 - Broken links: 0 (6 known false positives filtered — `README.md`, `API.md`, `CHANGELOG.md`, `MEMORY.md`, `project_rules.md` are documentation targets, not agents)
 - Isolated agents: 0 (previously 2; fixed by adding `i18n_audit_agent.md` and `analytics_audit_agent.md` references into `action_report.md` and `memory_enrichment.md`; auth agents wired through `design_to_code_planner.md` and `tool_plan_selection.md`)
 - i18n and analytics/cookie-consent runtime tests pass after aligning `DecisionFlow`, engine paths, key namespace, and agent wording.
+- CI `.github/workflows/ci.yml` runs pytest by tiers: `core` (~296 tests, <45 s), `mcp` (~180 tests, <5 s), and `tests/integration/` (mock pipeline, <12 s). Figma tier (`~385 tests`) is excluded from mandatory CI because it requires `FIGMA_TOKEN`/`FIGMA_URL` and live network access; it can be run manually or in a scheduled job.
 - Script: `.agent_loop/scripts/validate_cross_references.js` — run with `node .agent_loop/scripts/validate_cross_references.js` to re-check after any edit
 
 **Top referenced agents:**

@@ -5,6 +5,7 @@ import json
 import time
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -68,7 +69,7 @@ class AuditLogger:
 
     def _read_last_hash(self) -> str:
         """Return the sha256 of the most recent committed entry, or genesis."""
-        today = time.strftime("%Y-%m-%d")
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         log_file = self.log_dir / f"audit_{today}.jsonl"
         if not log_file.exists():
             return self.GENESIS_HASH
@@ -184,7 +185,7 @@ class AuditLogger:
         """
         if not self._buffer:
             return
-        today = time.strftime("%Y-%m-%d")
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         log_file = self.log_dir / f"audit_{today}.jsonl"
         try:
             with open(log_file, "a", encoding="utf-8") as f:
@@ -217,7 +218,7 @@ class AuditLogger:
         (1-based line number of the first hash mismatch, or None).
         """
         if log_file is None:
-            today = time.strftime("%Y-%m-%d")
+            today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             log_file = self.log_dir / f"audit_{today}.jsonl"
         else:
             log_file = Path(log_file)
