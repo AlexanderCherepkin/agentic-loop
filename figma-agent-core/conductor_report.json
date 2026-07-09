@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-07-08T20:41:36.302195+00:00",
+  "started_at": "2026-07-09T08:34:53.413110+00:00",
   "stages": {
     "bootstrap": {
       "success": true
@@ -185,6 +185,6 @@
     "dry_run": true,
     "verbose": false
   },
-  "finished_at": "2026-07-08T20:41:36.306332+00:00",
-  "duration_seconds": 0.0
+  "finished_at": "2026-07-09T08:34:53.418110+00:00",
+  "duration_seconds": 0.01
 }

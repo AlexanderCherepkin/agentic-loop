@@ -24,7 +24,10 @@ class AgentLoader:
     def load_all_agents(self) -> dict[str, AgentSpec]:
         agents: dict[str, AgentSpec] = {}
         for md_file in self.root.rglob("*.md"):
-            if md_file.name == "ARCHITECTURE.md":
+            if md_file.name in ("ARCHITECTURE.md", "TECHNICAL_ASSIGNMENT.md"):
+                continue
+            content = md_file.read_text(encoding="utf-8")
+            if "## Role" not in content or "## Contract" not in content:
                 continue
             try:
                 spec = self.load_agent(str(md_file.relative_to(self.root)))

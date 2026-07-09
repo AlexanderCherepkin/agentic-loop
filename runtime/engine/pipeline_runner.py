@@ -21,6 +21,12 @@ from ..safety.audit_logger import AuditLogger, AuditEventType
 from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
 from ..safety.network_guard import NetworkGuard, NetworkVerdict
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
+from .agent_invocation_map import (
+    PHASE_AGENTS,
+    PLANNING_FLAG_GROUPS,
+    conditional_groups_for_flags,
+    phase_dispatch,
+)
 
 # Optional MCP integration
 try:
@@ -287,51 +293,29 @@ class PipelineResult:
 
 
 class PipelineRunner:
-    FLOW_SEQUENCE = [
-        "tooll_subagents/user/request.md",
-        "tooll_subagents/user/context.md",
-        "safety-control/input_sanitizer.md",
-        "safety-control/threat_detector.md",
-        "control/scope_manager.md",
-        "tooll_subagents/planning/task_decomposition.md",
-        "tooll_subagents/planning/tool_plan_selection.md",
-    ]
-
-    SAFETY_AGENTS = [
-        "safety-control/input_sanitizer.md",
-        "safety-control/threat_detector.md",
-        "safety-control/permission_checker.md",
-        "safety-control/command_guard.md",
-        "safety-control/data_leak_preventer.md",
-        "safety-control/output_reviewer.md",
-        "safety-control/bias_detector.md",
-        "safety-control/content_checker.md",
-        "safety-control/safety_assessor.md",
-        "control/scope_manager.md",
-        "control/policy_enforcer.md",
-    ]
-
-    MUTUAL_CHECK_AGENTS = [
-        "safety-control/mutual_check/consistency_checker.md",
-        "safety-control/mutual_check/result_validator.md",
-        "safety-control/mutual_check/quality_assessor.md",
-        "safety-control/mutual_check/action_verifier.md",
-        "safety-control/mutual_check/performance_monitor.md",
-        "safety-control/mutual_check/quota_manager.md",
-        "safety-control/mutual_check/anomaly_detector.md",
-        "safety-control/mutual_check/feedback_aggregator.md",
-        "safety-control/mutual_check/compliance_checker.md",
-        "safety-control/mutual_check/audit_logger.md",
-    ]
+    # Dispatch lists are maintained centrally in agent_invocation_map.py so that
+    # every loaded agent has a documented runtime invocation path.
+    FLOW_SEQUENCE = phase_dispatch("planning_core")
+    SAFETY_AGENTS = phase_dispatch("safety_pre_check")
+    MUTUAL_CHECK_AGENTS = phase_dispatch("mutual_check")
+    EXECUTION_CORE = phase_dispatch("execution_core")
+    OBSERVABILITY_CORE = phase_dispatch("observability")
+    VALIDATION_CORE = phase_dispatch("self_correction")
+    RESULT_AGENTS = phase_dispatch("result")
+    SAFETY_POST_CHECK_AGENTS = phase_dispatch("safety_post_check")
+    ORCHESTRATOR_AGENTS = phase_dispatch("orchestrator")
+    CONTROL_AGENTS = phase_dispatch("control")
 
     def __init__(self, loader: AgentLoader, llm: LLMEngine, bus: MessageBus, state: StateManager,
-                 workspace_root: str = ".", max_workers: int = 4, max_iterations: int = 5):
+                 workspace_root: str = ".", max_workers: int = 4, max_iterations: int = 5,
+                 coverage_mode: bool = False):
         self.loader = loader
         self.llm = llm
         self.bus = bus
         self.state = state
         self.workspace = workspace_root
         self._max_iterations = max_iterations
+        self._coverage_mode = coverage_mode
         self._agent_cache: dict[str, AgentSpec] = {}
         rules_data = self._load_project_rules()
         self._project_rules = {k: rules_data[k] for k in ("source", "content_hash", "sections")} if rules_data else None
@@ -660,6 +644,9 @@ class PipelineRunner:
 
             await self._publish_progress("phase.start", {"phase": "session_init", "session_id": session_id})
 
+            if self._coverage_mode:
+                await self._run_coverage_preflight(user_input, session_id, trace, metrics)
+
             # Phase 0: Deterministic safety chain pre-check (hard guardrail)
             deterministic_safety = self._safety_chain.pre_check(user_input)
             if deterministic_safety.verdict != SafetyVerdict.PROCEED:
@@ -786,6 +773,10 @@ class PipelineRunner:
                     result_text = state.get("result", state.get("observation", {}).get("result", transition.reason))
 
                 current_phase = transition.next_phase
+
+            # Result-layer formatting (lightweight; all result agents are reachable in coverage mode).
+            await self._run_result(state, trace, metrics)
+            result_text = state.get("result", result_text)
 
             # Phase 4: Deterministic safety chain post-check (hard guardrail)
             post_safety = self._safety_chain.post_check(result_text)
@@ -979,6 +970,29 @@ class PipelineRunner:
             summary += f"\nErrors:\n{result['stderr'][:1000]}"
         return summary
 
+    def _planning_flags(self, plan: dict[str, Any]) -> dict[str, bool]:
+        """Extract planner flags; in coverage mode all conditional groups run."""
+        if self._coverage_mode:
+            return {flag: True for flag in PLANNING_FLAG_GROUPS}
+        flags: dict[str, bool] = {}
+        for flag in PLANNING_FLAG_GROUPS:
+            value = plan.get(flag)
+            flags[flag] = bool(value) and value not in ("false", "no", "0")
+        return flags
+
+    async def _run_conditional_agents(self, groups: list[str], inputs: dict[str, Any],
+                                      trace: list[IterationTrace], metrics: SessionMetrics,
+                                      phase: str) -> None:
+        """Invoke all agents in the named phase groups, merging outputs into inputs."""
+        for group in groups:
+            for agent_path in phase_dispatch(group):
+                if agent_path in self.EXECUTION_CORE and phase == "execution":
+                    # Already handled in _run_execution core list.
+                    continue
+                result = await self._invoke_agent(agent_path, inputs, trace, phase, metrics)
+                if result and result.parsed:
+                    inputs.update(result.parsed)
+
     async def _run_planning(self, user_input: str, session_id: str,
                             trace: list[IterationTrace], metrics: SessionMetrics,
                             design_descriptor: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -993,6 +1007,15 @@ class PipelineRunner:
             result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)
             if result and result.parsed:
                 plan.update(result.parsed)
+
+        # Run general planning reviewers unconditionally.
+        await self._run_conditional_agents(["planning_general"], plan, trace, metrics, "planning")
+
+        # Run module-specific planners only when flagged by tool_plan_selection or in coverage mode.
+        flags = self._planning_flags(plan)
+        groups = conditional_groups_for_flags(flags)
+        if groups:
+            await self._run_conditional_agents(groups, plan, trace, metrics, "planning")
         return plan
 
 
@@ -1007,13 +1030,34 @@ class PipelineRunner:
             await self._run_validation(state, trace, metrics)
             await self._run_termination_decision(state, trace, metrics)
 
+    def _execution_agent_enabled(self, agent_path: str, flags: dict[str, bool]) -> bool:
+        """Decide whether a conditional execution agent should run."""
+        if self._coverage_mode:
+            return True
+        if agent_path in (
+            "tooll_subagents/execution/human_approval.md",
+            "tooll_subagents/execution/action_logging.md",
+        ):
+            return True
+        stem = Path(agent_path).stem
+        module_flags = {
+            "i18n": "needs_i18n",
+            "analytics": "needs_analytics",
+            "cookie_consent": "needs_analytics",
+            "auth": "needs_auth",
+            "cms": "needs_cms",
+            "accessibility": "needs_accessibility",
+            "pwa": "needs_pwa",
+            "design_token_docs": "needs_design_token_docs",
+        }
+        for prefix, flag in module_flags.items():
+            if stem.startswith(prefix) and flags.get(flag):
+                return True
+        return False
+
     async def _run_execution(self, state: dict[str, Any],
                              trace: list[IterationTrace],
                              metrics: SessionMetrics) -> None:
-        exec_agents = [
-            "tooll_subagents/execution/tool_invocation.md",
-            "tooll_subagents/execution/safety_guardrails.md",
-        ]
         result: dict[str, Any] = {
             "plan": state.get("plan"),
             "user_input": state.get("user_input"),
@@ -1021,7 +1065,15 @@ class PipelineRunner:
             "session_id": state.get("session_id"),
             "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
         }
-        for agent_path in exec_agents:
+        for agent_path in self.EXECUTION_CORE:
+            llm_result = await self._invoke_agent(agent_path, result, trace, "execution", metrics)
+            if llm_result and llm_result.parsed:
+                result.update(llm_result.parsed)
+
+        flags = self._planning_flags(state.get("plan", {}))
+        for agent_path in phase_dispatch("execution_conditional"):
+            if not self._execution_agent_enabled(agent_path, flags):
+                continue
             llm_result = await self._invoke_agent(agent_path, result, trace, "execution", metrics)
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
@@ -1055,13 +1107,9 @@ class PipelineRunner:
     async def _run_observation(self, state: dict[str, Any],
                                trace: list[IterationTrace],
                                metrics: SessionMetrics) -> None:
-        obs_agents = [
-            "tooll_subagents/observability/environment_result.md",
-            "tooll_subagents/observability/runtime_output.md",
-        ]
         exec_result = state.get("execution", {})
         result: dict[str, Any] = dict(exec_result)
-        for agent_path in obs_agents:
+        for agent_path in self.OBSERVABILITY_CORE:
             llm_result = await self._invoke_agent(agent_path, result, trace, "observation", metrics)
             if llm_result and llm_result.parsed:
                 result.update(llm_result.parsed)
@@ -1069,9 +1117,28 @@ class PipelineRunner:
         if "result" in result:
             state["result"] = result["result"]
 
+    async def _run_self_correction_review(self, state: dict[str, Any],
+                                          trace: list[IterationTrace],
+                                          metrics: SessionMetrics) -> dict[str, Any]:
+        """Run all self-correction validators except result_validation/recursion_or_termination."""
+        review: dict[str, Any] = dict(state.get("observation", {}))
+        for agent_path in self.VALIDATION_CORE:
+            if agent_path in (
+                "tooll_subagents/self_correction/result_validation.md",
+                "tooll_subagents/self_correction/recursion_or_termination.md",
+            ):
+                continue
+            result = await self._invoke_agent(agent_path, review, trace, "validation", metrics)
+            if result and result.parsed:
+                review.update(result.parsed)
+        return review
+
     async def _run_validation(self, state: dict[str, Any],
                               trace: list[IterationTrace], metrics: SessionMetrics) -> None:
         observation = state.get("observation", {})
+
+        # Run all structured validators so every self-correction agent is reachable.
+        review = await self._run_self_correction_review(state, trace, metrics)
 
         # Fast /goal evaluator: cheap critic checks whether the evidence satisfies the goal.
         goal_evaluation: dict[str, Any] | None = None
@@ -1100,6 +1167,7 @@ class PipelineRunner:
             "tooll_subagents/self_correction/result_validation.md",
             {
                 "observation": observation,
+                "self_correction_review": review,
                 "original_request": state.get("user_input"),
                 "goal_evaluation": goal_evaluation,
                 "iteration_count": state.get("iteration", 0),
@@ -1134,13 +1202,41 @@ class PipelineRunner:
             validation["decision"] = "terminate_success"
         state["validation"] = validation
 
+    async def _run_result(self, state: dict[str, Any],
+                          trace: list[IterationTrace],
+                          metrics: SessionMetrics) -> None:
+        """Invoke result-layer agents to format the final answer."""
+        result_input: dict[str, Any] = {
+            "result": state.get("result"),
+            "validation": state.get("validation"),
+            "user_input": state.get("user_input"),
+            "session_id": state.get("session_id"),
+        }
+        for agent_path in self.RESULT_AGENTS:
+            llm_result = await self._invoke_agent(agent_path, result_input, trace, "result", metrics)
+            if llm_result and llm_result.parsed:
+                result_input.update(llm_result.parsed)
+        if "result" in result_input:
+            state["result"] = result_input["result"]
+
+    async def _run_coverage_preflight(self, user_input: str, session_id: str,
+                                      trace: list[IterationTrace], metrics: SessionMetrics) -> None:
+        """Coverage-only path that exercises orchestrator/control/user agents not on the hot path."""
+        inputs = {
+            "user_input": user_input,
+            "session_id": session_id,
+            "project_rules": self._project_rules,
+        }
+        for agent_path in self.ORCHESTRATOR_AGENTS + self.CONTROL_AGENTS + phase_dispatch("user_intake"):
+            if agent_path in self.FLOW_SEQUENCE or agent_path in self.SAFETY_AGENTS:
+                continue
+            result = await self._invoke_agent(agent_path, inputs, trace, "session_init", metrics)
+            if result and result.parsed:
+                inputs.update(result.parsed)
+
     async def _run_safety_post_check(self, result_text: str, session_id: str,
                                      trace: list[IterationTrace], metrics: SessionMetrics):
-        for agent_path in [
-            "safety-control/output_reviewer.md",
-            "safety-control/data_leak_preventer.md",
-            "safety-control/content_checker.md",
-        ]:
+        for agent_path in self.SAFETY_POST_CHECK_AGENTS:
             await self._invoke_agent(agent_path, {"output": result_text}, trace, "safety_post_check", metrics)
 
     async def _run_mutual_check(self, result_text: str, session_id: str,

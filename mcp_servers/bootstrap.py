@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 from .registry import MCPRegistry, ServerInfo
+from runtime.engine.agent_invocation_map import MCP_CATEGORY_AGENT_PATHS
 from .read_server import ReadMCPServer
 from .search_server import SearchMCPServer
 from .replace_server import ReplaceMCPServer
@@ -154,6 +155,11 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
 
     for category, tool_names in CATEGORY_TOOLS.items():
         description = f"{category} pipeline — {len(tool_names)} tools"
+        category_metadata = {
+            "agent_count": len(tool_names),
+            "tools": tool_names,
+            "agent_paths": MCP_CATEGORY_AGENT_PATHS.get(category, []),
+        }
         if eager:
             server, tools = _build_server(category, root, eager=True)
             registry.register(ServerInfo(
@@ -162,6 +168,7 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
                 agent_count=len(tools),
                 server=server,
                 tools=[t["name"] for t in tools],
+                metadata=category_metadata,
             ))
         else:
             # Truly lazy: no server is constructed here. Metadata is built from
@@ -170,10 +177,7 @@ def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegist
                 category=category,
                 factory=lambda c=category, r=root: _build_server(c, r, eager=True)[0],
                 name=description,
-                metadata={
-                    "agent_count": len(tool_names),
-                    "tools": tool_names,
-                },
+                metadata=category_metadata,
             )
 
     return registry

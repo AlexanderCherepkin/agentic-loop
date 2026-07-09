@@ -32,6 +32,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 AGENT_LOOP_DIR = PROJECT_ROOT / ".agent_loop"
 CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
+COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
 
 EXPECTED_AGENTS = 253
 EXPECTED_MCP_SERVERS = 16
@@ -101,6 +102,25 @@ def check_validators() -> dict[str, Any]:
     }
 
 
+def check_runtime_coverage() -> dict[str, Any]:
+    start = time.perf_counter()
+    result = run([sys.executable, str(COVERAGE_SCRIPT)], timeout=30)
+    elapsed = time.perf_counter() - start
+
+    ok = result.returncode == 0 and "[OK]" in result.stdout
+    loaded_match = re.search(r"Loaded agents:\s+(\d+)", result.stdout)
+    loaded = int(loaded_match.group(1)) if loaded_match else 0
+
+    return {
+        "label": "Runtime coverage",
+        "ok": ok,
+        "value": f"{loaded} agents referenced",
+        "details": "coverage_validator" if ok else "unreachable agents detected",
+        "elapsed_sec": round(elapsed, 2),
+        "raw": {"stdout": result.stdout, "stderr": result.stderr, "returncode": result.returncode},
+    }
+
+
 def check_mcp_servers() -> dict[str, Any]:
     start = time.perf_counter()
     result = run([sys.executable, "-m", "mcp_servers.bootstrap", "--test"], timeout=60)
@@ -161,6 +181,10 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
     if validators and not validators["ok"]:
         recs.append("Run validators and fix reported template/naming/cycle/safety issues before continuing.")
 
+    coverage = next((c for c in checks if c["label"] == "Runtime coverage"), None)
+    if coverage and not coverage["ok"]:
+        recs.append("Run `python .agent_loop/scripts/validate_runtime_coverage.py` and add missing agents to runtime/engine/agent_invocation_map.py.")
+
     mcp = next((c for c in checks if c["label"] == "MCP servers"), None)
     if mcp and not mcp["ok"]:
         recs.append("MCP bootstrap failure. Run `python -m mcp_servers.bootstrap --test`, check optional dependencies and env vars.")
@@ -185,6 +209,7 @@ def main() -> int:
     checks = [
         check_agents(),
         check_validators(),
+        check_runtime_coverage(),
         check_mcp_servers(),
         check_pytest_core(),
     ]
