@@ -95,6 +95,10 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
         "planning_accessibility": [],
         "planning_pwa": [],
         "planning_design_token_docs": [],
+        "planning_multi_page": [],
+        "planning_storybook": [],
+        "planning_deploy": [],
+        "planning_preview": [],
         "planning_copywriting": [],
         "planning_estimation": [],
         "planning_starter": [],
@@ -180,6 +184,14 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
                 phase["planning_pwa"].append(a)
             elif name.startswith("design_token_docs"):
                 phase["planning_design_token_docs"].append(a)
+            elif name.startswith("multi_page"):
+                phase["planning_multi_page"].append(a)
+            elif name.startswith("storybook"):
+                phase["planning_storybook"].append(a)
+            elif name.startswith("deploy"):
+                phase["planning_deploy"].append(a)
+            elif name.startswith("preview"):
+                phase["planning_preview"].append(a)
             elif name == "copywriting_agent":
                 phase["planning_copywriting"].append(a)
             elif name == "estimation_proposal_agent":
@@ -277,6 +289,10 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {{
     "needs_accessibility": ["planning_accessibility"],
     "needs_pwa": ["planning_pwa"],
     "needs_design_token_docs": ["planning_design_token_docs"],
+    "needs_multi_page": ["planning_multi_page"],
+    "needs_storybook": ["planning_storybook"],
+    "needs_deploy": ["planning_deploy"],
+    "needs_preview": ["planning_preview"],
     "needs_copywriting": ["planning_copywriting"],
     "needs_estimation": ["planning_estimation"],
     "needs_starter": ["planning_starter"],

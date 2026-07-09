@@ -550,6 +550,9 @@ def stage_compose(
     site_name: Optional[str] = None,
     base_url: Optional[str] = None,
     components_mapper_file: str = "figma_component_map.json",
+    multi_page: bool = False,
+    routing_artifacts: bool = False,
+    output_dir: Optional[str] = None,
     dry_run: bool = False,
 ) -> bool:
     """Этап 3c: сборка Tailwind AST в Next.js page.tsx + layout.tsx."""
@@ -577,6 +580,12 @@ def stage_compose(
         command.extend(["--base-url", base_url])
     if Path(components_mapper_file).exists():
         command.extend(["--components-mapper", components_mapper_file])
+    if multi_page:
+        command.append("--multi-page")
+    if routing_artifacts:
+        command.append("--routing-artifacts")
+    if output_dir:
+        command.extend(["--output-dir", output_dir])
 
     if dry_run:
         logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
@@ -634,6 +643,72 @@ def stage_preview_workflow(
         return True
 
     result = _run_command(command, timeout=300)
+    return result.returncode == 0
+
+
+def stage_storybook(
+    target_dir: str = ".",
+    component_dirs: Optional[List[str]] = None,
+    stories_dir: str = "src/stories",
+    dry_run: bool = False,
+) -> bool:
+    """Этап 5b: генерация Storybook stories и конфигурации для UI-компонентов."""
+    logger.info("=== STAGE: storybook ===")
+    command = [
+        sys.executable,
+        "storybook_generator.py",
+        "--target-dir",
+        target_dir,
+        "--stories-dir",
+        stories_dir,
+    ]
+    if component_dirs:
+        command.extend(["--component-dirs", ",".join(component_dirs)])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=180)
+    return result.returncode == 0
+
+
+def stage_deploy(
+    target_dir: str = ".",
+    provider: str = "vercel",
+    live: bool = False,
+    build_command: str = "pnpm build",
+    dist_dir: str = "dist",
+    env: Optional[Dict[str, str]] = None,
+    timeout: int = 300,
+    dry_run: bool = False,
+) -> bool:
+    """Этап 5c: публикация сгенерированного сайта на Vercel/Netlify/generic."""
+    logger.info("=== STAGE: deploy ===")
+    command = [
+        sys.executable,
+        "deploy_executor.py",
+        "--target-dir",
+        target_dir,
+        "--provider",
+        provider,
+        "--build-command",
+        build_command,
+        "--dist-dir",
+        dist_dir,
+        "--timeout",
+        str(timeout),
+    ]
+    if live:
+        command.append("--live")
+    if env:
+        command.extend(["--env", json.dumps(env)])
+
+    if dry_run:
+        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        return True
+
+    result = _run_command(command, timeout=timeout + 30)
     return result.returncode == 0
 
 
@@ -1000,7 +1075,7 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
     node_id = config.get("node_id")
     skip_assets = config.get("skip_assets", False)
 
-    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets", "package_deployment", "preview_workflow"]
+    stages_to_run = ["bootstrap", "precise_mode_audit", "download_figma_reference", "component_registry", "data_model", "image_enrichment", "analyze", "spec", "tokens", "layout", "backend_bridge", "responsive", "generate_components", "extract", "interactive", "compose", "compliance", "visual_qa", "refinement", "components", "assets", "package_deployment", "preview_workflow", "storybook", "deploy"]
     if config.get("content_model"):
         stages_to_run = ["content_model" if s == "compose" else s for s in stages_to_run]
     if only:
@@ -1224,6 +1299,9 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                 site_name=config.get("site_name"),
                 base_url=config.get("base_url"),
                 components_mapper_file=config.get("component_mapper_output", "figma_component_map.json"),
+                multi_page=config.get("multi_page", False),
+                routing_artifacts=config.get("routing_artifacts", False),
+                output_dir=config.get("compose_output_dir"),
                 dry_run=dry_run,
             )
             report["stages"]["compose"] = {"success": ok}
@@ -1402,6 +1480,44 @@ def run_pipeline(config: Dict[str, Any]) -> Dict[str, Any]:
                     dry_run=dry_run,
                 )
                 report["stages"]["preview_workflow"] = {"success": ok}
+
+        elif stage == "storybook":
+            if not config.get("storybook"):
+                logger.info("Storybook generation disabled. Skipping.")
+                report["stages"]["storybook"] = {
+                    "success": True,
+                    "skipped": True,
+                    "reason": "disabled",
+                }
+            else:
+                ok = stage_storybook(
+                    target_dir=config.get("storybook_target_dir", "."),
+                    component_dirs=config.get("storybook_component_dirs"),
+                    stories_dir=config.get("storybook_stories_dir", "src/stories"),
+                    dry_run=dry_run,
+                )
+                report["stages"]["storybook"] = {"success": ok}
+
+        elif stage == "deploy":
+            if not config.get("deploy"):
+                logger.info("Deploy execution disabled. Skipping.")
+                report["stages"]["deploy"] = {
+                    "success": True,
+                    "skipped": True,
+                    "reason": "disabled",
+                }
+            else:
+                ok = stage_deploy(
+                    target_dir=config.get("deploy_cwd") or config.get("deploy_target_dir", "."),
+                    provider=config.get("deploy_target", "vercel"),
+                    live=config.get("deploy_live", False),
+                    build_command=config.get("deploy_build_command", "pnpm build"),
+                    dist_dir=config.get("deploy_dist_dir", "dist"),
+                    env=config.get("deploy_env"),
+                    timeout=config.get("deploy_timeout", 300),
+                    dry_run=dry_run,
+                )
+                report["stages"]["deploy"] = {"success": ok}
 
         else:
             logger.warning(f"Unknown stage: {stage}. Skipping.")
@@ -1693,6 +1809,48 @@ def main():
         default=None,
         help="Разрешённые внешние домены для preview screenshot через запятую.")
     parser.add_argument(
+        "--multi-page",
+        action="store_true",
+        help="Включить генерацию многостраничного Next.js App Router маршрутизации."
+    )
+    parser.add_argument(
+        "--routing-artifacts",
+        action="store_true",
+        help="Сгенерировать только артефакты маршрутизации (sitemap/robots/Navigation) без перезаписи страниц."
+    )
+    parser.add_argument(
+        "--storybook",
+        action="store_true",
+        help="Включить генерацию Storybook stories и конфигурации .storybook."
+    )
+    parser.add_argument(
+        "--deploy",
+        action="store_true",
+        help="Включить этап публикации (dry-run по умолчанию)."
+    )
+    parser.add_argument(
+        "--deploy-live",
+        action="store_true",
+        help="Отключить dry-run для deploy и запустить реальную публикацию."
+    )
+    parser.add_argument(
+        "--deploy-target",
+        default="vercel",
+        choices=["vercel", "netlify", "generic"],
+        help="Целевая платформа для deploy (по умолчанию vercel)."
+    )
+    parser.add_argument(
+        "--deploy-cwd",
+        default=None,
+        help="Рабочая директория для команды deploy (по умолчанию site_dir)."
+    )
+    parser.add_argument(
+        "--deploy-timeout",
+        type=int,
+        default=300,
+        help="Таймаут deploy команды в секундах (по умолчанию 300)."
+    )
+    parser.add_argument(
         "--components-output-dir",
         default="src/app/components",
         help="Директория для извлечённых React-компонентов."
@@ -1928,6 +2086,14 @@ def main():
         "preview_workflow_feedback_file": args.preview_workflow_feedback_file,
         "preview_workflow_viewport": args.preview_workflow_viewport,
         "preview_workflow_allowed_domains": args.preview_workflow_allowed_domains,
+        "multi_page": args.multi_page,
+        "routing_artifacts": args.routing_artifacts,
+        "storybook": args.storybook,
+        "deploy": args.deploy,
+        "deploy_live": args.deploy_live,
+        "deploy_target": args.deploy_target,
+        "deploy_cwd": args.deploy_cwd,
+        "deploy_timeout": args.deploy_timeout,
         "components_output_dir": args.components_output_dir,
         "page_ast_output": args.page_ast_output,
         "component_map_output": args.component_map_output,

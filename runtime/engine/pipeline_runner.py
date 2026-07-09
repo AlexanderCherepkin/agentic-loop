@@ -1120,6 +1120,10 @@ class PipelineRunner:
             "accessibility": "needs_accessibility",
             "pwa": "needs_pwa",
             "design_token_docs": "needs_design_token_docs",
+            "multi_page": "needs_multi_page",
+            "storybook": "needs_storybook",
+            "deploy": "needs_deploy",
+            "preview": "needs_preview",
         }
         for prefix, flag in module_flags.items():
             if stem.startswith(prefix) and flags.get(flag):

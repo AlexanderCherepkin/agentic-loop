@@ -2,8 +2,16 @@ import html
 import json
 import re
 import argparse
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# Allow imports from project root (runtime package) when run as a script.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from runtime.multi_page import MultiPageConfig, MultiPageEngine
 
 
 DEFAULT_OUTPUT = "src/app/page.tsx"
@@ -1156,6 +1164,11 @@ def main():
         action="store_true",
         help="Сгенерировать несколько страниц из дочерних PAGE-нод Figma.",
     )
+    parser.add_argument(
+        "--routing-artifacts",
+        action="store_true",
+        help="Для многостраничного режима также сгенерировать Navigation, sitemap.ts, robots.ts.",
+    )
     args = parser.parse_args()
 
     ast = json.loads(Path(args.ast).read_text(encoding="utf-8"))
@@ -1174,6 +1187,25 @@ def main():
         written = write_pages(pages, output_dir=output_dir)
         for slug, path in zip([p["slug"] for p in pages], written):
             print(f"[COMPOSE] Page '{slug}' written to {path}")
+        if args.routing_artifacts:
+            config = MultiPageConfig(
+                target_dir=Path(output_dir).parent.parent,
+                base_url=args.base_url,
+                pages=pages,
+                app_router_dir=output_dir,
+                components_dir=f"{Path(output_dir).parent}/app/components",
+                generate_navigation=True,
+                generate_sitemap=True,
+                generate_robots=True,
+                write_pages=False,
+                site_name=args.site_name or "Generated Site",
+            )
+            engine = MultiPageEngine(config.target_dir, config)
+            routing_result = engine.run()
+            for path in routing_result.files_written:
+                print(f"[COMPOSE] Routing artifact written to {path}")
+            for err in routing_result.errors:
+                print(f"[COMPOSE ERROR] {err['file']}: {err['reason']}")
     else:
         code = compose_page(ast, title=args.title, component_mapper=mapper)
         written_path = write_page(code, args.output)
