@@ -27,9 +27,12 @@ page_ast.json
 component_map.json
 figma_component_map.json
 .tmp/
+.tmp_*
 .audit/
+test_audit_debug*/
 src/app/page.tsx
 src/app/components/
 graphify-out/cache/
+graphify-out/2026-*/
 figma-agent-core/graphify-out/
 figma-agent-core/conductor_report.json
