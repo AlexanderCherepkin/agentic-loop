@@ -129,6 +129,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/planning/design_token_docs_format_selector.md",
         "tooll_subagents/planning/design_token_docs_requirements_analyst.md",
     ],
+    "planning_copywriting": [
+        "tooll_subagents/planning/copywriting_agent.md",
+    ],
     "planning_headroom": [
         "tooll_subagents/planning/headroom_injector.md",
     ],
@@ -408,6 +411,7 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {
     "needs_accessibility": ["planning_accessibility"],
     "needs_pwa": ["planning_pwa"],
     "needs_design_token_docs": ["planning_design_token_docs"],
+    "needs_copywriting": ["planning_copywriting"],
     "needs_headroom": ["planning_headroom"],
     "needs_memanto": ["planning_memanto"],
     "needs_mem0": ["planning_mem0"],

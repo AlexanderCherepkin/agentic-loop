@@ -1,16 +1,16 @@
 # Graph Report - Agentic_Loop_Graph  (2026-07-09)
 
 ## Corpus Check
-- 547 files · ~319,895 words
+- 551 files · ~322,519 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 6326 nodes · 10599 edges · 465 communities (441 shown, 24 thin omitted)
+- 6357 nodes · 10651 edges · 468 communities (443 shown, 25 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 502 edges (avg confidence: 0.52)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `54b462ef`
+- Built from commit: `da6e8153`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -461,6 +461,9 @@
 - 9. Требования к документации
 - TestObservabilityIntegration
 - agentic-loop
+- Proposed implementation
+- Client Brief Agent
+- TestObservabilityIntegration
 - Community 576
 - Community 614
 - Community 846
@@ -474,12 +477,12 @@
 - Community 2583
 
 ## God Nodes (most connected - your core abstractions)
-1. `PipelineRunner` - 71 edges
+1. `PipelineRunner` - 73 edges
 2. `MCPServer` - 61 edges
-3. `AgentLoader` - 57 edges
-4. `LLMEngine` - 52 edges
-5. `StateManager` - 52 edges
-6. `MessageBus` - 48 edges
+3. `AgentLoader` - 59 edges
+4. `LLMEngine` - 54 edges
+5. `StateManager` - 53 edges
+6. `MessageBus` - 49 edges
 7. `PhaseTransitionManager` - 48 edges
 8. `BrowserMCPServer` - 47 edges
 9. `MCPRegistry` - 46 edges
@@ -500,11 +503,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (465 total, 24 thin omitted)
+## Communities (468 total, 25 thin omitted)
 
 ### Community 0 - "MCP Web/Search/DB Servers"
-Cohesion: 0.09
-Nodes (27): Any, Enum, Path, str, Runtime watchdog for CPU, memory, and workspace disk usage.      The monitor is, Sample current resource usage and return a verdict., ResourceCheckResult, ResourceLevel (+19 more)
+Cohesion: 0.10
+Nodes (26): Any, Enum, Path, str, Runtime watchdog for CPU, memory, and workspace disk usage.      The monitor is, Sample current resource usage and return a verdict., ResourceCheckResult, ResourceLevel (+18 more)
 
 ### Community 1 - "Memory Store Pipeline"
 Cohesion: 0.10
@@ -567,8 +570,8 @@ Cohesion: 0.09
 Nodes (35): _load_page_composer(), _minimal_ast(), Any, Path, Unit tests for figma-agent-core/page_composer.py.  Loads the module via importli, test_compose_backdrop_filter_inline_style(), test_compose_component_reference(), test_compose_component_with_props() (+27 more)
 
 ### Community 16 - "Agent Loop Tools Database"
-Cohesion: 0.09
-Nodes (7): PhaseTransition, PhaseTransitionManager, Resolve a value from the state dict.          Tries the dotted path first, then, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Decide the next ReAct phase and optional safety override., Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
+Cohesion: 0.11
+Nodes (4): PhaseTransitionManager, Routes the ReAct loop between phases based on agent outputs.      Default sequen, Unit tests for the conditional ReAct phase routing logic., TestPhaseTransitionManager
 
 ### Community 17 - "Community 17"
 Cohesion: 0.09
@@ -631,8 +634,8 @@ Cohesion: 0.20
 Nodes (20): _build_preview_html(), _build_qr_svg(), _extract_refinement_hints(), _find_next_free_port(), _is_available(), _load_module(), main(), PreviewReport (+12 more)
 
 ### Community 33 - "MCP Servers Bootstrap"
-Cohesion: 0.11
-Nodes (9): Any, Path, Dispatch a job to a worker. Returns summary when done.          Backpressure: if, Main loop: pick jobs from queue, assign to free workers or spawn new ones., Run a job in a specific worker process., Spawn a new worker slot., Estimate how many tokens were kept OUT of the parent context., Pool of isolated worker processes for agent execution.      Each worker runs in (+1 more)
+Cohesion: 0.08
+Nodes (21): CircuitBreakerOpenError, CircuitState, Enum, Exception, str, TestMCPHealthCheck, TestWorkerJobPriority, TestWorkerPoolBackpressure (+13 more)
 
 ### Community 34 - "MCP Base Server"
 Cohesion: 0.15
@@ -659,8 +662,8 @@ Cohesion: 0.11
 Nodes (19): MemoryMCPServer, Any, Path, MCP server for tools_memory — memory store pipeline (store-lifecycle)., memory_server(), Path, pytest tests for the Memory MCP server.  These tests verify tool registration, m, test_check_consistency() (+11 more)
 
 ### Community 40 - "Memory Store Consistency"
-Cohesion: 0.05
-Nodes (54): conditional_groups_for_flags(), Resolve conditional planning/execution groups from planner flags., LLMConfig, LLMProvider, Enum, str, ConsistencyLevel, OperationStatus (+46 more)
+Cohesion: 0.07
+Nodes (40): conditional_groups_for_flags(), Resolve conditional planning/execution groups from planner flags., LLMConfig, LLMEngine, LLMProvider, Enum, str, LLM execution engine with circuit breaker and provider fallback.      Fallback c (+32 more)
 
 ### Community 41 - "MCP Replace Server"
 Cohesion: 0.27
@@ -707,8 +710,8 @@ Cohesion: 0.13
 Nodes (12): CompressionSummary, ContextCompressor, Any, Result of compressing a batch of traces., Call the LLM engine to generate a summary., Fallback summarization without LLM., Estimate tokens kept out of the parent context., Returns a synthetic trace entry representing the latest summary. (+4 more)
 
 ### Community 52 - "MCP Terminal Server"
-Cohesion: 0.16
-Nodes (8): ComponentRegistry, _normalize_prop_name(), _normalize_prop_value(), Any, Translate Figma instance variant properties to React props., Convert Figma variant property name to a React prop name (camelCase)., Normalize Figma variant value to a React prop string value., Return the merged mapper entry for a component, preferring per-component mapper
+Cohesion: 0.10
+Nodes (15): ComponentMapper, ComponentRegistry, _normalize_prop_name(), _normalize_prop_value(), Any, Path, Builds a Figma component key → React component + props mapper file., Read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`. (+7 more)
 
 ### Community 53 - "Memory Enrichment"
 Cohesion: 0.14
@@ -816,18 +819,18 @@ Nodes (5): _load_semantic_matcher(), Any, Path, Unit tests for semantic matching
 
 ### Community 79 - "Config Models"
 Cohesion: 0.22
-Nodes (5): HealthCheck, HealthStatus, Logger + metrics + health work together end-to-end., TestHealthCheck, TestObservabilityIntegration
+Nodes (3): HealthCheck, HealthStatus, TestHealthCheck
 
 ### Community 80 - "Community 80"
-Cohesion: 0.13
-Nodes (16): CircuitBreaker, CircuitBreakerConfig, CircuitBreakerOpenError, CircuitState, Any, Enum, Exception, str (+8 more)
+Cohesion: 0.10
+Nodes (20): MCPGateway, Any, Return registered category names without loading any server., Return lightweight metadata for a category without materializing it., Return full tool descriptors for a category; loads the server if needed., Execute a single MCP tool, loading its server on demand., Health-check one or all categories; loads servers as needed., Lazy gateway in front of MCPRegistry.      The gateway exposes category-level me (+12 more)
 
 ### Community 81 - "MCP Database S"
 Cohesion: 0.24
 Nodes (4): MetricsCollector, MetricsSnapshot, Thread-safe (in asyncio single-thread sense) metrics registry., TestMetricsCollector
 
 ### Community 82 - "Graphify Update Reference"
-Cohesion: 0.17
+Cohesion: 0.19
 Nodes (11): LogRecord, add_file_handler(), configure_log_level(), get_logger(), _JSONFormatter, Path, Set root log level by name ('DEBUG', 'INFO', etc.) or int., Add a rotating file handler emitting JSON lines. (+3 more)
 
 ### Community 83 - "MCP Web Auth Headers"
@@ -859,8 +862,8 @@ Cohesion: 0.14
 Nodes (20): Any, Path, MCP server for tools_replace — file editing pipeline (safety-gated)., ReplaceMCPServer, Path, pytest tests for the Replace MCP server.  These tests verify tool registration,, replace_server(), sample_file() (+12 more)
 
 ### Community 90 - "Community 90"
-Cohesion: 0.10
-Nodes (26): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Any, Compress a list of chat messages before sending them to an LLM., Runtime configuration for Headroom context compression.      Values are read fro, Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed. (+18 more)
+Cohesion: 0.11
+Nodes (24): HeadroomClient, HeadroomConfig, HeadroomUnavailable, Any, Compress a list of chat messages before sending them to an LLM., Runtime configuration for Headroom context compression.      Values are read fro, Retrieve original uncompressed content by hash from local CCR store., Return Headroom session statistics if the package is installed. (+16 more)
 
 ### Community 91 - "Community 91"
 Cohesion: 0.09
@@ -2023,8 +2026,8 @@ Cohesion: 0.67
 Nodes (3): _find_node_by_figma_id(), test_data_model_image_alt_binding(), test_data_models_annotate_binding()
 
 ### Community 409 - "test_pipeline_fs_guard.py"
-Cohesion: 0.33
-Nodes (10): _make_runner(), Path, Integration tests for Figma wiring inside PipelineRunner.  These tests verify th, test_design_intake_continues_planning_for_spec(), test_design_intake_short_circuits_for_full_code(), test_execute_mcp_figma_tool_dry_run(), test_extract_figma_file_key_and_node_id(), test_figma_available_when_configured() (+2 more)
+Cohesion: 0.28
+Nodes (12): _make_runner(), Path, Integration tests for Figma wiring inside PipelineRunner.  These tests verify th, test_client_brief_interview_short_circuits(), test_client_brief_proceeds_when_complete(), test_design_intake_continues_planning_for_spec(), test_design_intake_short_circuits_for_full_code(), test_execute_mcp_figma_tool_dry_run() (+4 more)
 
 ### Community 410 - "Auth Runtime Integrator"
 Cohesion: 0.22
@@ -2123,8 +2126,8 @@ Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Failure Modes, PWA Optimizer, Receives, Returns, Role, Side effects
 
 ### Community 434 - "Community 434"
-Cohesion: 0.06
-Nodes (35): MCPGateway, Any, Return registered category names without loading any server., Return lightweight metadata for a category without materializing it., Return full tool descriptors for a category; loads the server if needed., Execute a single MCP tool, loading its server on demand., Health-check one or all categories; loads servers as needed., Lazy gateway in front of MCPRegistry.      The gateway exposes category-level me (+27 more)
+Cohesion: 0.08
+Nodes (22): CircuitBreaker, CircuitBreakerConfig, Any, EvaluatorResponse, LLMResponse, MockLLMEngine, Any, Direct API call without AgentSpec wrapping. Returns raw text. (+14 more)
 
 ### Community 435 - "PWA Requirements Analyst"
 Cohesion: 0.22
@@ -2159,8 +2162,8 @@ Cohesion: 0.22
 Nodes (8): Contract, Decision Flow, Design Token Docs Validator, Failure Modes, Receives, Returns, Role, Side effects
 
 ### Community 443 - "test_pipeline_network_guard.py"
-Cohesion: 0.19
-Nodes (7): ComponentMapper, Path, Builds a Figma component key → React component + props mapper file., Read every `*.mapper.json` in `mapper_dir` and index by `figma_component_id`., Return a new aggregate mapper where per-component files override aggregate entri, Convert an absolute file path to a project import path., Load registry and overlay per-component `*.mapper.json` and manual overrides on
+Cohesion: 0.15
+Nodes (12): Any, StateManager, StateResult, _make_runner(), Path, Integration tests for FileSystemGuard wired into PipelineRunner MCP execution., test_mcp_apply_edit_blocked_for_dot_ssh(), test_mcp_non_filesystem_tool_skips_guard() (+4 more)
 
 ### Community 444 - "Техническое задание: Agentic Loop"
 Cohesion: 0.25
@@ -2194,6 +2197,14 @@ Nodes (3): 9.1 Архитектурная документация, 9.2 Вали
 Cohesion: 0.20
 Nodes (9): 1. Executive Summary, 2.1 Runtime module (`runtime/design_token_docs/`), 2.2 ReAct agents (`tooll_subagents/`), 2.3 Wiring updates, 2. Deliverables, 3. Verification, 4. Notes / Risks, 5. Conclusion (+1 more)
 
+### Community 453 - "Proposed implementation"
+Cohesion: 0.12
+Nodes (15): 1. New agent spec: `tooll_subagents/user/client_brief_agent.md`, 2. Integrate into `main_loop.md` and `runtime/engine/pipeline_runner.py`, 3. Memory persistence, 4. Update `tooll_subagents/user/design_intake.md`, 5. Update `tooll_subagents/planning/tool_plan_selection.md`, 6. Runtime wiring, 7. Update `ARCHITECTURE.md`, 8. Validation and commit (+7 more)
+
+### Community 454 - "Client Brief Agent"
+Cohesion: 0.22
+Nodes (8): Client Brief Agent, Contract, Decision Flow, Failure Modes, Receives, Returns, Role, Side effects
+
 ### Community 576 - "Community 576"
 Cohesion: 0.13
 Nodes (7): MCPServer, MCPTool, MCPToolResult, Any, Base MCP server implementing JSON-RPC protocol over stdio., Run server over stdio (JSON-RPC)., Health check: return True if server is responsive.          Servers that registe
@@ -2211,8 +2222,8 @@ Cohesion: 0.16
 Nodes (6): PonytailMetrics, PonytailOptimizer, Any, Prepend Ponytail protocol to a base system prompt when applicable.          If t, Compute line-count delta between an original and a generated snippet., Cross-cutting Ponytail policy injector and metrics helper.      Loads mode from
 
 ### Community 1299 - "Community 1299"
-Cohesion: 0.08
-Nodes (29): Panel, DeliveryGuarantee, DeliveryReceipt, Message, MessageStatus, MessageType, Enum, str (+21 more)
+Cohesion: 0.07
+Nodes (34): Panel, DeliveryGuarantee, DeliveryReceipt, Message, MessageStatus, MessageType, Enum, str (+26 more)
 
 ### Community 1367 - "Community 1367"
 Cohesion: 0.13
@@ -2232,22 +2243,22 @@ Nodes (17): Any, MCP server for tools_terminal — terminal I/O pipeline (sessio
 
 ### Community 2583 - "Community 2583"
 Cohesion: 0.08
-Nodes (27): phase_dispatch(), Agents directly invoked by a named runtime phase., IterationTrace, PipelineRunner, Any, Execute one ReAct phase and store results in the shared state., Decide whether a conditional execution agent should run., Return True if tool_name is registered with an available MCP server. (+19 more)
+Nodes (28): phase_dispatch(), Agents directly invoked by a named runtime phase., IterationTrace, PipelineRunner, Any, Extract planner flags; in coverage mode all conditional groups run., Invoke all agents in the named phase groups, merging outputs into inputs., Execute one ReAct phase and store results in the shared state. (+20 more)
 
 ## Knowledge Gaps
-- **1705 isolated node(s):** `run_test_tiers.sh script`, `fs`, `path`, `ROOT`, `fs` (+1700 more)
+- **1724 isolated node(s):** `run_test_tiers.sh script`, `fs`, `path`, `ROOT`, `fs` (+1719 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **25 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `MemoryMCPServer` connect `Graphify Query Reference` to `Community 576`, `_build_server`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `Counter` connect `Community 260` to `Community 256`, `Community 258`, `Graphify Query Reference`, `Memory FTS Index`, `Config Models`, `MCP Database S`, `Graphify Update Reference`?**
+- **Why does `AgentSpec` connect `Agent Loop Tools Manangr` to `Memory Store Consistency`, `Community 80`, `Community 434`, `Community 1299`, `MCP Web Auth Headers`, `Community 2583`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `AgentSpec` connect `Agent Loop Tools Manangr` to `Memory Store Consistency`, `Community 434`, `MCP Web Auth Headers`, `Community 1299`, `Community 2583`?**
+- **Why does `MemoryMCPServer` connect `Graphify Query Reference` to `Community 576`, `_build_server`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `MCPRegistry` connect `Community 91` to `Community 576`, `MCP Servers Bootstrap`, `_build_server`, `Agent Loop Tools Database`, `Community 80`, `Community 434`, `Community 2583`?**
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 8 inferred relationships involving `PipelineRunner` (e.g. with `MCPGateway` and `MCPRegistry`) actually correct?**
   _`PipelineRunner` has 8 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 22 inferred relationships involving `MCPServer` (e.g. with `BackendMCPServer` and `BrowserMCPServer`) actually correct?**

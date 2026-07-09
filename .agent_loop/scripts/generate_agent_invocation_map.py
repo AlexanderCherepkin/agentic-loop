@@ -95,6 +95,7 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
         "planning_accessibility": [],
         "planning_pwa": [],
         "planning_design_token_docs": [],
+        "planning_copywriting": [],
         "planning_headroom": [],
         "planning_memanto": [],
         "planning_mem0": [],
@@ -177,6 +178,8 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
                 phase["planning_pwa"].append(a)
             elif name.startswith("design_token_docs"):
                 phase["planning_design_token_docs"].append(a)
+            elif name == "copywriting_agent":
+                phase["planning_copywriting"].append(a)
             elif name.startswith("headroom"):
                 phase["planning_headroom"].append(a)
             elif name.startswith("ponytail"):
@@ -268,6 +271,7 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {{
     "needs_accessibility": ["planning_accessibility"],
     "needs_pwa": ["planning_pwa"],
     "needs_design_token_docs": ["planning_design_token_docs"],
+    "needs_copywriting": ["planning_copywriting"],
     "needs_headroom": ["planning_headroom"],
     "needs_memanto": ["planning_memanto"],
     "needs_mem0": ["planning_mem0"],

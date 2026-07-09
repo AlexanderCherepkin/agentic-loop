@@ -225,8 +225,8 @@
     "semantic_hash": "83df5b60533928bd4a6ccd2226879868"
   },
   "runtime/engine/llm_engine.py": {
-    "mtime": 1783581251.0523124,
-    "ast_hash": "5e348bea05f8da12d87914e25d3eb199",
+    "mtime": 1783587811.5741878,
+    "ast_hash": "f795b7c5112c8b5dc6cde4ef90ae3dd2",
     "semantic_hash": ""
   },
   "runtime/engine/message_bus.py": {
@@ -235,8 +235,8 @@
     "semantic_hash": "8ff346b27aecd99c3a9ed90229cec47b"
   },
   "runtime/engine/pipeline_runner.py": {
-    "mtime": 1783585836.4044712,
-    "ast_hash": "0fea8b4284d746a54aeb7ef507eab2f9",
+    "mtime": 1783587903.288805,
+    "ast_hash": "98c675274c7f713f6518a6282b88af20",
     "semantic_hash": ""
   },
   "runtime/engine/state_manager.py": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/ARCHITECTURE.md": {
-    "mtime": 1783545893.7937815,
-    "ast_hash": "ef016299da653c5e3c76207e28c8bcab",
+    "mtime": 1783587764.0354269,
+    "ast_hash": "2e5b5e3e998742931cf9da3b9f55f6f9",
     "semantic_hash": ""
   },
   ".agent_loop/TECHNICAL_ASSIGNMENT.md": {
@@ -440,8 +440,8 @@
     "semantic_hash": "dc0bfac22eacc5162176f5561b2aa889"
   },
   ".agent_loop/main_loop.md": {
-    "mtime": 1783352560.615871,
-    "ast_hash": "3543d9a55eca375d0529c06ee472a494",
+    "mtime": 1783587658.4107046,
+    "ast_hash": "11c8cedabb89d8e58d32417d96e668ba",
     "semantic_hash": ""
   },
   ".agent_loop/orchestrator/api_gateway.md": {
@@ -1475,8 +1475,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/user/design_intake.md": {
-    "mtime": 1782037041.6941562,
-    "ast_hash": "2b7c4205e0013e31f90f24daeeff06d3",
+    "mtime": 1783587651.5783236,
+    "ast_hash": "72152d13d5ea4716a5079861939ac286",
     "semantic_hash": ""
   },
   "figma-agent-core/README.md": {
@@ -1605,8 +1605,8 @@
     "semantic_hash": ""
   },
   "tests/runtime/test_pipeline_figma.py": {
-    "mtime": 1782039226.4392226,
-    "ast_hash": "d8b4eb3b93b75c1d4007fdac92d9d04e",
+    "mtime": 1783587800.4000616,
+    "ast_hash": "e7a8d752b5814fb06c1ca25cbdf06cb6",
     "semantic_hash": ""
   },
   ".agent_loop/tools_browser/headless_automation/visual_qa_agent.md": {
@@ -1770,7 +1770,7 @@
     "semantic_hash": ""
   },
   "figma_component_mappings.json": {
-    "mtime": 1783586071.5915685,
+    "mtime": 1783588011.5878005,
     "ast_hash": "b0a44c8ae4a36a4f3323711528c0bfb1",
     "semantic_hash": ""
   },
@@ -1810,7 +1810,7 @@
     "semantic_hash": ""
   },
   "content_model.json": {
-    "mtime": 1783586071.7366965,
+    "mtime": 1783588011.6474242,
     "ast_hash": "5c69349dbe325daf3dd1c40ceb5aeedd",
     "semantic_hash": ""
   },
@@ -1875,7 +1875,7 @@
     "semantic_hash": ""
   },
   "src/components/icons/LogoIcon.tsx": {
-    "mtime": 1783586071.0152752,
+    "mtime": 1783588011.221658,
     "ast_hash": "9dc30acfdeed40a8e0c4c23b8963d104",
     "semantic_hash": ""
   },
@@ -2760,8 +2760,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/scripts/validate_runtime_coverage.py": {
-    "mtime": 1783585901.8884299,
-    "ast_hash": "def9c808a5fa1c494e614f9926230f0e",
+    "mtime": 1783587998.6524827,
+    "ast_hash": "09d5d266b65308016a6bbf8e5b356010",
     "semantic_hash": ""
   },
   "pyproject.toml": {
@@ -2770,8 +2770,8 @@
     "semantic_hash": ""
   },
   "runtime/engine/agent_invocation_map.py": {
-    "mtime": 1783585648.5492594,
-    "ast_hash": "dbad691873660d486a7c6dbf34767587",
+    "mtime": 1783587712.8455472,
+    "ast_hash": "83955fda156b3d198a02ba4cbb6fb84b",
     "semantic_hash": ""
   },
   "tests/runtime/test_runtime_coverage.py": {
@@ -2792,6 +2792,26 @@
   "DESIGN_TOKEN_DOCS_COMPLETION_REPORT.md": {
     "mtime": 1783543392.0440981,
     "ast_hash": "d0358c1727980f3e9158366bfde42e9d",
+    "semantic_hash": ""
+  },
+  "debug_brief.py": {
+    "mtime": 1783587877.9310122,
+    "ast_hash": "9fcfc8e0240a1912a2974b28696efebf",
+    "semantic_hash": ""
+  },
+  "debug_brief2.py": {
+    "mtime": 1783587889.4386022,
+    "ast_hash": "7eb7013cabe4231c0eaf61cc3280c235",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/user/client_brief_agent.md": {
+    "mtime": 1783587632.6921475,
+    "ast_hash": "a010c455137113e21c6217c50a179199",
+    "semantic_hash": ""
+  },
+  ".claude/plans/client_onboarding_brief_agent.md": {
+    "mtime": 1783587329.1831315,
+    "ast_hash": "95d00d10b81951e3861d6b372979a5be",
     "semantic_hash": ""
   }
 }

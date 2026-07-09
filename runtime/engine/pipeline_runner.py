@@ -1058,12 +1058,19 @@ class PipelineRunner:
     async def _run_planning(self, user_input: str, session_id: str,
                             trace: list[IterationTrace], metrics: SessionMetrics,
                             design_descriptor: dict[str, Any] | None = None) -> dict[str, Any]:
+        client_brief = None
+        if design_descriptor:
+            metadata = design_descriptor.get("metadata") or {}
+            client_brief = metadata.get("client_brief")
+
         plan = {
             "user_input": user_input,
             "session_id": session_id,
             "project_rules": self._project_rules,
             "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
             "design_descriptor": design_descriptor,
+            "client_brief": client_brief,
+            "needs_copywriting": bool(client_brief),
         }
         for agent_path in self.FLOW_SEQUENCE:
             result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)

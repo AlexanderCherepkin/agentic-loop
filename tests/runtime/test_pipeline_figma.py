@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import AsyncMock, patch
 
 # Ensure project root is on PYTHONPATH
@@ -20,7 +21,7 @@ import pytest
 from runtime.engine.agent_loader import AgentLoader
 from runtime.engine.llm_engine import LLMConfig, LLMEngine, LLMProvider
 from runtime.engine.message_bus import MessageBus
-from runtime.engine.pipeline_runner import PipelineRunner
+from runtime.engine.pipeline_runner import IterationTrace, PipelineResult, PipelineRunner, SessionMetrics
 from runtime.engine.state_manager import StateManager
 
 
@@ -147,9 +148,9 @@ def test_client_brief_proceeds_when_complete() -> None:
     async def _run():
         original_execute = runner.llm.execute
 
-        async def _mock_execute(spec, inputs):
-            response = await original_execute(spec, inputs)
-            agent_path = getattr(spec, "source_path", "")
+        async def _mock_execute(spec, inputs, extra_context=None):
+            response = await original_execute(spec, inputs, extra_context=extra_context)
+            agent_path = str(getattr(spec, "source_path", "")).replace("\\", "/")
             if agent_path.endswith("user/client_brief_agent.md"):
                 response.parsed["client_brief"]["next_action"] = "proceed"
                 response.parsed["client_brief"]["missing_fields"] = []
@@ -163,3 +164,57 @@ def test_client_brief_proceeds_when_complete() -> None:
 
     result = asyncio.run(_run())
     assert result.termination_status.value in ("success", "partial")
+
+
+def test_copywriting_agent_runs_when_client_brief_present() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    design_descriptor = {
+        "design_source": "design_brief",
+        "source_value": "mock brief",
+        "output_mode": "both",
+        "target_stack": "react_next_tailwind",
+        "target_scope": "whole_page",
+        "backend_spec": None,
+        "metadata": {
+            "title": "Client Brief",
+            "detected_language": "ru",
+            "client_brief": {
+                "business_goal": "продажа подписок",
+                "target_audience": {"personas": ["малый бизнес"]},
+                "ctas": [{"label": "Оформить подписку", "priority": "primary"}],
+                "output_mode": "both",
+                "next_action": "proceed",
+                "missing_fields": [],
+                "questions": [],
+                "brief_confidence": 0.9,
+            },
+        },
+    }
+
+    async def _run():
+        original_execute = runner.llm.execute
+
+        async def _mock_execute(spec, inputs, extra_context=None):
+            response = await original_execute(spec, inputs, extra_context=extra_context)
+            agent_path = str(getattr(spec, "source_path", "")).replace("\\", "/")
+            if agent_path.endswith("planning/tool_plan_selection.md"):
+                response.parsed["needs_copywriting"] = True
+            return response
+
+        with patch.object(runner.llm, "execute", new=_mock_execute):
+            return await runner._run_planning(
+                "сделай лендинг",
+                "test-session",
+                [],
+                SessionMetrics(session_id="test-session"),
+                design_descriptor=design_descriptor,
+            )
+
+    plan = asyncio.run(_run())
+    assert plan.get("needs_copywriting") is True
+    copy_package = plan.get("copy_package")
+    assert copy_package is not None, "copy_package missing from plan"
+    assert copy_package.get("headline") == "Mock Headline"
+    assert copy_package.get("cta_primary", {}).get("label") == "Get Started"
+    assert copy_package.get("confidence", 0) >= 0.5
