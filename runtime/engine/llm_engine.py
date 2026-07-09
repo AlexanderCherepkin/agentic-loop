@@ -85,17 +85,24 @@ class MockLLMEngine:
         "execution/safety_guardrails.md": {"safe": True, "checks": []},
         "observability/environment_result.md": {"status": "ok", "outputs": {"result": "mock observation"}},
         "observability/runtime_output.md": {"output": "mock runtime output", "status": "ok"},
-        "self_correction/error_handler.md": {"error_type": "none", "recovery_action": "continue"},
-        "self_correction/adjustment_planner.md": {"adjusted_plan": [{"step": 1, "agent": "tools_read/read_file.md"}]},
+        "self_correction/assistance_request.md": {"request_status": "dispatched", "request_id": "mock-req", "fallback_action": "best_effort"},
+        "self_correction/plan_adjustment.md": {
+            "adjusted_plan": [{"step": 1, "agent": "tools_read/read_file.md"}],
+            "change_summary": ["mock adjustment"],
+            "risk_delta": 0.0,
+            "approval_needed": False,
+            "remaining_attempts": 2,
+        },
         "self_correction/goal_evaluator.md": {
             "verdict": {"pass": False, "reason": "mock evaluator waiting for real evidence", "confidence": 0.5},
             "criteria_checklist": [],
         },
         "self_correction/result_validation.md": {"valid": True, "score": 0.95},
         "self_correction/recursion_or_termination.md": {"decision": "recurse", "reason": "mock"},
-        "result_formatter.md": {"formatted": "mock formatted result", "status": "ok"},
-        "result_presenter.md": {"presentation": "mock presentation", "status": "ok"},
-        "termination_decision.md": {"decision": "recurse", "reason": "mock"},
+        "result/solution.md": {"solution_payload": "mock solution", "solution_format": "markdown", "completeness_score": 0.9},
+        "result/modified_files.md": {"file_manifest": [], "diff_summary": "mock diff summary", "highlights": [], "rollback_plan": []},
+        "result/action_report.md": {"report_text": "mock report", "structured_report": {}, "statistics": {}, "confidence": 0.9},
+        "result/summary_recommendations.md": {"recommendations": [], "next_steps": [], "preventive_measures": [], "future_enhancements": [], "risk_warnings": []},
         "mutual_check/result_validator.md": {"valid": True, "score": 0.95},
         "mutual_check/consistency_checker.md": {"consistent": True, "notes": []},
         "mutual_check/quality_assessor.md": {"quality_score": 0.92},
@@ -132,7 +139,7 @@ class MockLLMEngine:
             response_data = {"mock": True, "agent": agent_str}
 
         # Special handling for termination: succeed on second invocation
-        if agent_str.endswith("termination_decision.md") or agent_str.endswith("recursion_or_termination.md"):
+        if agent_str.endswith("recursion_or_termination.md"):
             iteration = inputs.get("iteration", 1)
             if iteration >= 2:
                 response_data = {"decision": "terminate_success", "reason": "mock completion"}

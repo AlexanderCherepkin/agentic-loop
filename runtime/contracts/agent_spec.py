@@ -49,6 +49,31 @@ class DecisionStep:
     description: str
 
 
+class DecisionFlow:
+    """Container for parsed decision steps. Exposes .steps as human-readable strings while remaining iterable over DecisionStep objects."""
+
+    def __init__(self, steps: list[DecisionStep] | None = None):
+        self._steps = steps or []
+
+    @property
+    def steps(self) -> list[str]:
+        return [
+            f"{s.number}. **{s.title}** — {s.description}" for s in self._steps
+        ]
+
+    def __iter__(self):
+        return iter(self._steps)
+
+    def __len__(self) -> int:
+        return len(self._steps)
+
+    def __bool__(self) -> bool:
+        return bool(self._steps)
+
+    def __getitem__(self, index: int) -> DecisionStep:
+        return self._steps[index]
+
+
 @dataclass
 class FailureMode:
     condition: str
@@ -60,9 +85,15 @@ class AgentSpec:
     name: str
     role: str
     contract: ContractSpec = field(default_factory=ContractSpec)
-    decision_flow: list[DecisionStep] = field(default_factory=list)
+    decision_flow: DecisionFlow = field(default_factory=DecisionFlow)
     failure_modes: list[FailureMode] = field(default_factory=list)
     source_path: Path | None = None
+
+    def __post_init__(self) -> None:
+        if isinstance(self.decision_flow, list):
+            self.decision_flow = DecisionFlow(self.decision_flow)
+        if self.contract is None:
+            self.contract = ContractSpec()
 
     def to_system_prompt(self) -> str:
         parts: list[str] = []

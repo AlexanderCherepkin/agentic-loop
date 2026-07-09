@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from ..contracts.agent_spec import AgentSpec, ContractSpec, DecisionStep, FailureMode, Parameter
+from ..contracts.agent_spec import AgentSpec, ContractSpec, DecisionFlow, DecisionStep, FailureMode, Parameter
 
 
 class AgentLoader:
@@ -99,7 +99,7 @@ class AgentLoader:
         m = re.search(pattern, block, re.MULTILINE | re.DOTALL)
         return m.group(1).strip() if m else ""
 
-    def _parse_decision_flow(self, content: str) -> list[DecisionStep]:
+    def _parse_decision_flow(self, content: str) -> DecisionFlow:
         steps: list[DecisionStep] = []
         section = self._extract_section(content, "Decision Flow")
         if not section:
@@ -148,7 +148,7 @@ class AgentLoader:
                 continue
             i += 1
 
-        return steps
+        return DecisionFlow(steps)
 
     def _parse_failure_modes(self, content: str) -> list[FailureMode]:
         modes: list[FailureMode] = []
