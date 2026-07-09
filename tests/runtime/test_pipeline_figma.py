@@ -218,3 +218,59 @@ def test_copywriting_agent_runs_when_client_brief_present() -> None:
     assert copy_package.get("headline") == "Mock Headline"
     assert copy_package.get("cta_primary", {}).get("label") == "Get Started"
     assert copy_package.get("confidence", 0) >= 0.5
+
+
+def test_estimation_agent_runs_when_client_brief_has_limits() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    design_descriptor = {
+        "design_source": "design_brief",
+        "source_value": "mock brief",
+        "output_mode": "both",
+        "target_stack": "react_next_tailwind",
+        "target_scope": "whole_page",
+        "backend_spec": None,
+        "metadata": {
+            "title": "Client Brief",
+            "detected_language": "ru",
+            "client_brief": {
+                "business_goal": "продажа подписок",
+                "target_audience": {"personas": ["малый бизнес"]},
+                "ctas": [{"label": "Оформить подписку", "priority": "primary"}],
+                "limits": {"budget": "$5000", "deadline": "2 недели"},
+                "output_mode": "both",
+                "next_action": "proceed",
+                "missing_fields": [],
+                "questions": [],
+                "brief_confidence": 0.9,
+            },
+        },
+    }
+
+    async def _run():
+        original_execute = runner.llm.execute
+
+        async def _mock_execute(spec, inputs, extra_context=None):
+            response = await original_execute(spec, inputs, extra_context=extra_context)
+            agent_path = str(getattr(spec, "source_path", "")).replace("\\", "/")
+            if agent_path.endswith("planning/tool_plan_selection.md"):
+                response.parsed["needs_copywriting"] = True
+                response.parsed["needs_estimation"] = True
+            return response
+
+        with patch.object(runner.llm, "execute", new=_mock_execute):
+            return await runner._run_planning(
+                "сделай лендинг",
+                "test-session",
+                [],
+                SessionMetrics(session_id="test-session"),
+                design_descriptor=design_descriptor,
+            )
+
+    plan = asyncio.run(_run())
+    assert plan.get("needs_estimation") is True
+    proposal_package = plan.get("proposal_package")
+    assert proposal_package is not None, "proposal_package missing from plan"
+    assert proposal_package.get("estimate", {}).get("hourly_rate") == 80
+    assert proposal_package.get("proposal_markdown", "")
+    assert proposal_package.get("confidence", 0) >= 0.5

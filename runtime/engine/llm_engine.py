@@ -128,6 +128,30 @@ class MockLLMEngine:
                 "next_phase_hint": "planning",
             }
         },
+        "planning/estimation_proposal_agent.md": {
+            "proposal_package": {
+                "estimate": {"min_hours": 40, "max_hours": 80, "min_price": 3200, "max_price": 6400, "currency": "USD", "hourly_rate": 80, "confidence": 0.85},
+                "timeline": [
+                    {"phase": "Discovery", "min_days": 1, "max_days": 2, "depends_on": [], "deliverables": ["Brief validation", "Scope confirmation"]},
+                    {"phase": "Design/code", "min_days": 5, "max_days": 10, "depends_on": ["Discovery"], "deliverables": ["Figma-to-code components", "Page layout"]},
+                    {"phase": "Integration/QA", "min_days": 2, "max_days": 4, "depends_on": ["Design/code"], "deliverables": ["Analytics/auth/CMS wiring", "Lighthouse 100% pass"]},
+                    {"phase": "Delivery", "min_days": 1, "max_days": 2, "depends_on": ["Integration/QA"], "deliverables": ["Repository handoff", "SOW"]},
+                ],
+                "deliverables": ["Figma audit report", "Next.js + Tailwind code", "Component registry", "Responsive variants", "Asset registry", "Lighthouse report"],
+                "assumptions": ["Client provides Figma access or design brief", "Hosting/account credentials provided by client", "Copy uses generated package unless client supplies final text"],
+                "exclusions": ["Custom illustration or photography", "Ongoing hosting/SLA", "Third-party subscription costs", "Copywriting beyond generated package"],
+                "risks": [{"risk": "Scope creep from undefined sections", "impact": "medium", "mitigation": "Lock sections in discovery", "cost_adjustment": "+10-20%"}],
+                "options": [
+                    {"name": "Base", "scope": "MVP landing page", "price": 3200, "timeline_days": 9, "notes": "Core sections only"},
+                    {"name": "Recommended", "scope": "Full landing page + copy + analytics", "price": 4800, "timeline_days": 14, "notes": "Best fit for most clients"},
+                    {"name": "Premium", "scope": "Full build + CMS/auth/PWA + priority", "price": 6400, "timeline_days": 18, "notes": "Includes advanced integrations"},
+                ],
+                "proposal_markdown": "# Statement of Work\n\n## Scope\nMock scope.\n\n## Investment\n$3,200 – $6,400 USD.\n\n## Timeline\n9–18 business days.\n\n## Next Steps\nApprove option and provide Figma access.",
+                "next_phase_hint": "result",
+                "missing_inputs": [],
+                "confidence": 0.85,
+            }
+        },
         "execution/tool_invocation.md": {"tool_call": {"name": "read_file", "arguments": {"path": "README.md"}}, "result": "mock file content", "success": True},
         "execution/safety_guardrails.md": {"safe": True, "checks": []},
         "observability/environment_result.md": {"status": "ok", "outputs": {"result": "mock observation"}},

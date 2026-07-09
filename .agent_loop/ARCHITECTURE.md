@@ -55,7 +55,7 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── limitations.md                #     Known limitations
 │   │   ├── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
 │   │   └── client_brief_agent.md         #     PM-style structured client intake and brief builder
-│   ├── planning/                         #   Planning layer (42 agents)
+│   ├── planning/                         #   Planning layer (43 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
@@ -96,7 +96,9 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── pwa_requirements_analyst.md           # Extract PWA and performance-budget requirements
 │   │   ├── pwa_optimizer.md                      # Select manifest/service-worker/offline strategy and resource optimizations
 │   │   ├── design_token_docs_requirements_analyst.md # Extract design-token documentation requirements for client/team handoff
-│   │   └── design_token_docs_format_selector.md      # Select docs formats (markdown/json/html) and output plan
+│   │   ├── design_token_docs_format_selector.md      # Select docs formats (markdown/json/html) and output plan
+│   │   ├── copywriting_agent.md          #     Generate landing-page copy from client brief
+│   │   └── estimation_proposal_agent.md  #     Estimate timeline/cost and produce SOW/proposal from client brief
 │   ├── execution/                        #   Execution layer (13 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
@@ -230,9 +232,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 97 |
+| tooll_subagents | 98 |
 | tools_* | 123 |
-| **Total** | **253** |
+| **Total** | **254** |
 
 ## Naming Convention
 - snake_case filenames
