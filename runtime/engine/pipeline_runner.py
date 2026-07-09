@@ -1072,6 +1072,7 @@ class PipelineRunner:
             "client_brief": client_brief,
             "needs_copywriting": bool(client_brief),
             "needs_estimation": bool(client_brief),
+            "needs_starter": bool(client_brief),
         }
         for agent_path in self.FLOW_SEQUENCE:
             result = await self._invoke_agent(agent_path, plan, trace, "planning", metrics)

@@ -135,6 +135,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
     "planning_estimation": [
         "tooll_subagents/planning/estimation_proposal_agent.md",
     ],
+    "planning_starter": [
+        "tooll_subagents/planning/project_starter_agent.md",
+    ],
     "planning_headroom": [
         "tooll_subagents/planning/headroom_injector.md",
     ],
@@ -416,6 +419,7 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {
     "needs_design_token_docs": ["planning_design_token_docs"],
     "needs_copywriting": ["planning_copywriting"],
     "needs_estimation": ["planning_estimation"],
+    "needs_starter": ["planning_starter"],
     "needs_headroom": ["planning_headroom"],
     "needs_memanto": ["planning_memanto"],
     "needs_mem0": ["planning_mem0"],
