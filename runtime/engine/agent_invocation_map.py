@@ -208,6 +208,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/self_correction/plan_adjustment.md",
         "tooll_subagents/self_correction/ponytail_review.md",
         "tooll_subagents/self_correction/pwa_validator.md",
+        "tooll_subagents/self_correction/regression_guard.md",
     ],
     "result": [
         "tooll_subagents/result/action_report.md",

@@ -8,6 +8,7 @@ executed through the pipeline runner.
 from __future__ import annotations
 
 import asyncio
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -331,3 +332,113 @@ def test_starter_agent_runs_when_client_order_present() -> None:
     assert len(starter_package.get("files", [])) > 0
     assert starter_package.get("readme", "")
     assert starter_package.get("confidence", 0) >= 0.5
+
+
+def test_regression_guard_agent_in_validation_core() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+    assert "tooll_subagents/self_correction/regression_guard.md" in runner.VALIDATION_CORE
+
+
+def test_regression_guard_passes_previous_validation_to_review() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    async def _run():
+        state = {
+            "observation": {
+                "visual_qa_report": {
+                    "status": "passed",
+                    "screenshot_path": "/tmp/current.png",
+                    "diff_score": 0.02,
+                    "layout_checks": [],
+                    "bbox_comparison": {"failed": 0},
+                },
+                "lighthouse_audit_report": {
+                    "passed": True,
+                    "category_scores": {"performance": 1.0, "accessibility": 1.0, "best_practices": 1.0, "seo": 1.0},
+                },
+                "file_context": {"file_changes": [{"path": "app/page.tsx", "change_type": "modified"}], "integrity_check": "passed"},
+            },
+            "validation": {
+                "visual_qa_report": {
+                    "status": "passed",
+                    "screenshot_path": "/tmp/baseline.png",
+                    "diff_score": 0.01,
+                    "layout_checks": [],
+                    "bbox_comparison": {"failed": 0},
+                },
+                "lighthouse_audit_report": {
+                    "passed": True,
+                    "category_scores": {"performance": 1.0, "accessibility": 1.0, "best_practices": 1.0, "seo": 1.0},
+                },
+                "file_context": {"file_changes": [], "integrity_check": "passed"},
+            },
+            "iteration": 2,
+        }
+        trace: list[IterationTrace] = []
+        return await runner._run_self_correction_review(state, trace, SessionMetrics(session_id="test-regression"))
+
+    review = asyncio.run(_run())
+    assert "previous_validation" in review
+    assert review["iteration_count"] == 2
+    assert review["regression_report"] is not None
+    assert review["regression_report"]["verdict"] == "pass"
+
+
+def test_regression_guard_reports_regression_on_diff_jump() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    async def _run():
+        original_execute = runner.llm.execute
+
+        async def _mock_execute(spec, inputs, extra_context=None):
+            response = await original_execute(spec, inputs, extra_context=extra_context)
+            agent_path = str(getattr(spec, "source_path", "")).replace("\\", "/")
+            if agent_path.endswith("self_correction/regression_guard.md"):
+                response.parsed = {
+                    "regression_report": {
+                        "status": "regressed",
+                        "screenshot_delta": {"diff_score_delta": 0.12, "baseline_path": "/tmp/baseline.png", "current_path": "/tmp/current.png", "threshold": 0.05},
+                        "layout_delta": {"new_overflows": 1, "new_overlaps": 0, "new_clipped_text": 0, "bbox_regressions": 0},
+                        "console_delta": {"new_errors": 0, "new_warnings": 0},
+                        "lighthouse_delta": {"score_changes": {}},
+                        "file_delta": {"files_added": 0, "files_removed": 0, "files_modified": 1},
+                        "regressions": [{"severity": "high", "message": "Screenshot diff jumped above threshold", "evidence": "diff_score_delta=0.12"}],
+                        "verdict": "fail",
+                        "refinement_actions": [{"target": "visual_qa_agent", "action": "re-run layout checks and reduce diff"}],
+                    }
+                }
+                response.content = json.dumps(response.parsed, ensure_ascii=False)
+            return response
+
+        state = {
+            "observation": {
+                "visual_qa_report": {
+                    "status": "failed",
+                    "screenshot_path": "/tmp/current.png",
+                    "diff_score": 0.15,
+                    "layout_checks": [{"type": "overflow", "passed": False}],
+                    "bbox_comparison": {"failed": 1},
+                },
+            },
+            "validation": {
+                "visual_qa_report": {
+                    "status": "passed",
+                    "screenshot_path": "/tmp/baseline.png",
+                    "diff_score": 0.03,
+                    "layout_checks": [],
+                    "bbox_comparison": {"failed": 0},
+                },
+            },
+            "iteration": 2,
+        }
+        with patch.object(runner.llm, "execute", new=_mock_execute):
+            trace: list[IterationTrace] = []
+            review = await runner._run_self_correction_review(state, trace, SessionMetrics(session_id="test-regression"))
+        return review
+
+    review = asyncio.run(_run())
+    report = review["regression_report"]
+    assert report["status"] == "regressed"
+    assert report["verdict"] == "fail"
+    assert any(r["severity"] == "high" for r in report["regressions"])
+    assert len(report["refinement_actions"]) > 0

@@ -21,6 +21,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `pwa_validation_report`: optional structured report from `pwa_validator.md` containing `status`, `violations`, `refinement_actions`
 - `design_token_docs_report`: optional structured report from `design_token_docs_runtime_integrator.md` containing `files_written`, `files_modified`, `errors`, `notes`
 - `design_token_docs_validation_report`: optional structured report from `design_token_docs_validator.md` containing `status`, `violations`, `refinement_actions`
+- `regression_report`: optional structured report from `self_correction/regression_guard.md` containing `status`, `screenshot_delta`, `layout_delta`, `console_delta`, `lighthouse_delta`, `file_delta`, `regressions`, `verdict`, `refinement_actions`
 - `iteration_count`: integer — current refinement iteration
 - `max_iterations`: integer (default 3)
 - `lighthouse_max_iterations`: integer (default 8) — hard limit for Lighthouse refinement loop
@@ -91,7 +92,11 @@ Post-execution verification agent that checks whether the observed outcomes matc
     - `status=passed` or `not_applicable` → contribute toward `complete`.
     - `status=needs_refinement` or non-empty errors → append `design_token_docs_report.errors` and `design_token_docs_validation_report.refinement_actions` to `refinement_actions`, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; route to `plan_adjustment.md` and `design_token_docs_runtime_integrator.md`.
     - `status=failed` → set `validation_status=failed` if source files missing or unreadable; `retry_recommended=false`; route to `assistance_request.md`.
-13. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA, Lighthouse, Ponytail review, i18n RTL, i18n missing-key, analytics privacy, accessibility, PWA, or design token docs checks still not passing, set `escalation_required=true` and `validation_status=needs_human`.
+12g. **Regression guard verdict** — if `regression_report` present:
+    - `status=passed` or `not_applicable` → contribute toward `complete`; record baseline snapshot in session memory.
+    - `status=regressed` or `warn` → append `regression_report.refinement_actions` to `refinement_actions`, set `validation_status=needs_refinement`, and `retry_recommended=true` when budget remains; route to `plan_adjustment.md` and the relevant runtime integrator (e.g., `tools_browser/headless_automation/visual_qa_agent.md` for layout regressions, `tools_lighthouse/audit/` for Lighthouse regressions).
+    - `status=failed` or `blocked` → set `validation_status=needs_refinement` if `iteration_count < max_iterations`; otherwise set `validation_status=needs_human` and `escalation_required=true`.
+13. **Check iteration budget** — if `iteration_count >= max_iterations` and visual QA, Lighthouse, Ponytail review, i18n RTL, i18n missing-key, analytics privacy, accessibility, PWA, design token docs, or regression guard checks still not passing, set `escalation_required=true` and `validation_status=needs_human`.
 14. **Apply fast evaluator verdict** — if `goal_evaluation` is present:
     - If `verdict.pass=true` and `verdict.confidence >= 0.85`, upgrade `validation_status` toward `complete` unless there are unresolved critical failures.
     - If `verdict.pass=false` with a concrete reason, set `validation_status=needs_refinement`, append the reason to `gap_analysis`, and set `retry_recommended=true` when `iteration_count < max_iterations`.
@@ -137,5 +142,9 @@ Post-execution verification agent that checks whether the observed outcomes matc
 | Design token docs validation fails with budget remaining | `validation_status=needs_refinement`; append `refinement_actions` to `gap_analysis`; route to `plan_adjustment.md` and `design_token_docs_runtime_integrator.md` |
 | Design token docs validation fails after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
 | Design token docs engine unreadable source or missing `design_tokens.json` | `validation_status=failed`; `retry_recommended=false`; route to `assistance_request.md` |
+| Regression guard detects new high-severity degradation with budget remaining | `validation_status=needs_refinement`; append `regression_report.refinement_actions` to `refinement_actions`; route to `plan_adjustment.md` |
+| Regression guard detects regression after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
+| Regression guard blocked (missing baseline) and iteration budget remains | Keep current `validation_status`; log missing baseline to `audit_logger.md` |
+| Regression guard blocked after `max_iterations` | `validation_status=needs_human`; include baseline-missing diagnostic in `gap_analysis` |
 
 

@@ -34,7 +34,7 @@ CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
 
-EXPECTED_AGENTS = 255
+EXPECTED_AGENTS = 256
 EXPECTED_MCP_SERVERS = 16
 
 

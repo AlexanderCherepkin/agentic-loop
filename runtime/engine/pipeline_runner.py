@@ -1193,6 +1193,10 @@ class PipelineRunner:
                                           metrics: SessionMetrics) -> dict[str, Any]:
         """Run all self-correction validators except result_validation/recursion_or_termination."""
         review: dict[str, Any] = dict(state.get("observation", {}))
+        # Provide the previous validation snapshot so cross-iteration guards (e.g. regression_guard)
+        # can compare current artifacts against the prior ReAct cycle baseline.
+        review["previous_validation"] = state.get("validation", {})
+        review["iteration_count"] = state.get("iteration", 0)
         for agent_path in self.VALIDATION_CORE:
             if agent_path in (
                 "tooll_subagents/self_correction/result_validation.md",

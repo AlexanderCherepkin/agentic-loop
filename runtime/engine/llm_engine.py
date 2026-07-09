@@ -191,6 +191,19 @@ class MockLLMEngine:
             "criteria_checklist": [],
         },
         "self_correction/result_validation.md": {"valid": True, "score": 0.95},
+        "self_correction/regression_guard.md": {
+            "regression_report": {
+                "status": "passed",
+                "screenshot_delta": {"diff_score_delta": 0.0, "baseline_path": None, "current_path": None, "threshold": 0.05},
+                "layout_delta": {"new_overflows": 0, "new_overlaps": 0, "new_clipped_text": 0, "bbox_regressions": 0},
+                "console_delta": {"new_errors": 0, "new_warnings": 0},
+                "lighthouse_delta": {"score_changes": {}},
+                "file_delta": {"files_added": 0, "files_removed": 0, "files_modified": 0},
+                "regressions": [],
+                "verdict": "pass",
+                "refinement_actions": [],
+            }
+        },
         "self_correction/recursion_or_termination.md": {"decision": "recurse", "reason": "mock"},
         "result/solution.md": {"solution_payload": "mock solution", "solution_format": "markdown", "completeness_score": 0.9},
         "result/modified_files.md": {"file_manifest": [], "diff_summary": "mock diff summary", "highlights": [], "rollback_plan": []},
