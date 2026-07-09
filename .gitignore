@@ -30,3 +30,6 @@ figma_component_map.json
 .audit/
 src/app/page.tsx
 src/app/components/
+graphify-out/cache/
+figma-agent-core/graphify-out/
+figma-agent-core/conductor_report.json
