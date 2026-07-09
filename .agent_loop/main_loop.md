@@ -38,7 +38,8 @@ Top-level orchestration agent that drives the entire ReAct (Reasoning + Acting) 
 2. **Ingest user input** — pass `raw_user_input` to `tooll_subagents/user/request.md` for parsing, `context.md` for enrichment, and `limitations.md` for capability gap analysis.
 3. **Safety pre-check** — route parsed request through `safety-control/` (input_sanitizer, threat_detector, bias_detector) and `control/` (scope_manager, policy_enforcer). If blocked, halt with `termination_status=escalated_human` or `failure`.
 4. **Design-intake branch (conditional)** — pass parsed request to `tooll_subagents/user/design_intake.md`:
-   - If `request_type != design_project`, continue to Plan phase unchanged.
+   - If `request_type` is `client_order`, invoke `tooll_subagents/user/client_brief_agent.md` to conduct a structured PM-style intake. If the brief agent returns `next_action=ask_user`, short-circuit to Result synthesis with the clarifying questions and `termination_status=success`. If it returns `next_action=proceed`, continue to the Figma/design pipeline with the enriched `design_descriptor` and `client_brief` attached.
+   - If `request_type != design_project` and not `client_order`, continue to Plan phase unchanged.
    - If `request_type == design_project`:
      - **Runtime fast path (default)** — when the runtime has MCP enabled and `figma_run_pipeline` is available, invoke the full pipeline directly via MCP with the `design_descriptor` (Figma source, backend spec, target scope). For `output_mode == full_code` or `both`, short-circuit to Result synthesis (step 6) with generated files and `next_phase_hint=deliver`. For `output_mode == technical_assignment`, attach the returned `design_blueprint` to the Plan phase.
      - **Blueprint path** — if the runtime fast path is unavailable or explicitly disabled:

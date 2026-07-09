@@ -49,11 +49,12 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   └── input_aggregation.md              #   Aggregate control inputs
 │
 ├── tooll_subagents/                      # ReAct cycle decomposition
-│   ├── user/                             #   Input layer (4 agents)
+│   ├── user/                             #   Input layer (5 agents)
 │   │   ├── request.md                    #     User request
 │   │   ├── context.md                    #     Execution context
 │   │   ├── limitations.md                #     Known limitations
-│   │   └── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
+│   │   ├── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
+│   │   └── client_brief_agent.md         #     PM-style structured client intake and brief builder
 │   ├── planning/                         #   Planning layer (41 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
@@ -229,9 +230,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 95 |
+| tooll_subagents | 96 |
 | tools_* | 123 |
-| **Total** | **253** |
+| **Total** | **252** |
 
 ## Naming Convention
 - snake_case filenames
@@ -270,13 +271,13 @@ User Request
 
 ## Implementation Status
 
-All 253 agents/files are fully implemented following the Algorithmic template:
-- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, and Headroom context-compaction integration
+All 252 agents/files are fully implemented following the Algorithmic template:
+- `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, Headroom context-compaction integration, and the client-order brief branch
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (95) — Full ReAct cycle across 6 phases: user (4 with `design_intake.md`), planning (41 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, `i18n_requirements_analyst.md`, `i18n_language_detector.md`, `i18n_key_extractor.md`, `i18n_dictionary_generator.md`, `i18n_routing_planner.md`, `i18n_component_rewriter.md`, `i18n_optimizer.md`, `analytics_requirements_analyst.md`, `analytics_provider_selector.md`, `analytics_event_mapper.md`, `analytics_script_injector.md`, `analytics_optimizer.md`, `cookie_consent_jurisdiction_mapper.md`, `cookie_consent_policy_generator.md`, `cookie_consent_banner_planner.md`, `auth_requirements_analyst.md`, `auth_provider_selector.md`, `cms_requirements_analyst.md`, `cms_source_selector.md`, `accessibility_requirements_analyst.md`, `accessibility_checker_planner.md`, `pwa_requirements_analyst.md`, `pwa_optimizer.md`, `design_token_docs_requirements_analyst.md`, and `design_token_docs_format_selector.md`), execution (13 with `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, and `design_token_docs_runtime_integrator.md`), observability (19 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, and `design_token_docs_audit_agent.md`), self_correction (14 with `goal_evaluator.md`, `ponytail_review.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, and `design_token_docs_validator.md`), result (4)
+- `tooll_subagents/` (96) — Full ReAct cycle across 6 phases: user (5 with `design_intake.md` and `client_brief_agent.md`), planning (41 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, `i18n_requirements_analyst.md`, `i18n_language_detector.md`, `i18n_key_extractor.md`, `i18n_dictionary_generator.md`, `i18n_routing_planner.md`, `i18n_component_rewriter.md`, `i18n_optimizer.md`, `analytics_requirements_analyst.md`, `analytics_provider_selector.md`, `analytics_event_mapper.md`, `analytics_script_injector.md`, `analytics_optimizer.md`, `cookie_consent_jurisdiction_mapper.md`, `cookie_consent_policy_generator.md`, `cookie_consent_banner_planner.md`, `auth_requirements_analyst.md`, `auth_provider_selector.md`, `cms_requirements_analyst.md`, `cms_source_selector.md`, `accessibility_requirements_analyst.md`, `accessibility_checker_planner.md`, `pwa_requirements_analyst.md`, `pwa_optimizer.md`, `design_token_docs_requirements_analyst.md`, and `design_token_docs_format_selector.md`), execution (13 with `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, and `design_token_docs_runtime_integrator.md`), observability (19 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, and `design_token_docs_audit_agent.md`), self_correction (14 with `goal_evaluator.md`, `ponytail_review.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, and `design_token_docs_validator.md`), result (4)
 - `tools_*` (123) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `runtime/accessibility/` — deterministic static WCAG 2.1 audit engine (`AccessibilityEngine`) with `AccessibilityConfig`/`AccessibilityResult`, Tailwind/CSS color parsing, contrast calculation, focus/ARIA/keyboard/heading/alt/form-label checks, and optional async browser hook
 - `runtime/pwa/` — deterministic PWA + performance-budget engine (`PwaEngine`) with `PwaConfig`/`PwaResult`, manifest/service worker/offline-page generation, `srcset`/`sizes` image hints, font-subsetting guidance, JS/CSS/image/font/third-party budget diagnostics, and `next.config.js` patching
@@ -286,7 +287,7 @@ All 253 agents/files are fully implemented following the Algorithmic template:
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
 - `mcp_servers/mem0_server.py` — lazy MCP wrapper around `runtime/engine/mem0_client.py` exposing `mem0_add`, `mem0_search`, `mem0_get_all`, and `mem0_delete`; degrades to in-memory fallback when `mem0ai` is not installed or the API is unreachable
 
-Zero remaining stubs. All 253 agent specs include Role, Contract, Decision Flow, and Failure Modes.
+Zero remaining stubs. All 252 agent specs include Role, Contract, Decision Flow, and Failure Modes.
 
 ## Runtime / MCP
 

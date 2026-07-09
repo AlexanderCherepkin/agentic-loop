@@ -78,6 +78,36 @@ class MockLLMEngine:
             "parsed_request": None,
             "confidence": 0.95,
         },
+        "user/client_brief_agent.md": {
+            "request_type": "client_order",
+            "client_brief": {
+                "business_goal": "mock goal",
+                "target_audience": {"personas": [], "demographics": "", "pain_points": [], "jobs_to_be_done": []},
+                "key_messages": [],
+                "ctas": [],
+                "references": [],
+                "visual_style": {"tone": "", "color_direction": "", "typography_notes": "", "motion_level": "subtle", "accessibility_notes": ""},
+                "technical_stack": {"preferred_framework": "react_next_tailwind", "hosting": "", "integrations": [], "constraints": []},
+                "content": {"existing_assets": [], "needed_copy": [], "languages": [], "seo_keywords": []},
+                "limits": {"budget": "", "deadline": "", "must_have": [], "must_avoid": [], "approval_process": ""},
+                "design_source": "design_brief",
+                "source_value": "mock brief",
+                "output_mode": "both",
+                "brief_confidence": 0.5,
+                "missing_fields": ["business_goal"],
+                "next_action": "ask_user",
+                "questions": ["What is the primary business goal?", "Who is the target audience?"],
+            },
+            "design_descriptor": {
+                "design_source": "design_brief",
+                "source_value": "mock brief",
+                "output_mode": "both",
+                "target_stack": "react_next_tailwind",
+                "target_scope": "whole_page",
+                "backend_spec": None,
+                "metadata": {"title": "Mock Brief", "detected_language": "en", "has_assets": False, "has_components": False, "has_backend_spec": False},
+            },
+        },
         "user/context.md": {"context_summary": "mock context", "relevant": True},
         "planning/task_decomposition.md": {"tasks": [{"id": 1, "agent": "tools_read/read_file.md", "description": "Read file"}]},
         "planning/tool_plan_selection.md": {"plan": [{"step": 1, "agent": "tools_read/read_file.md", "inputs": {"path": "."}}]},
@@ -144,11 +174,27 @@ class MockLLMEngine:
             if iteration >= 2:
                 response_data = {"decision": "terminate_success", "reason": "mock completion"}
 
-        # Special handling for design intake: only classify as design project when signals present
+        # Special handling for design intake: classify design vs client-order vs general
         if agent_str.endswith("user/design_intake.md"):
             raw_request = str(inputs.get("raw_request", "")).lower()
             design_signals = ["figma", "макет", "дизайн", "design", "верстай", "сверстай", "react по макету"]
-            if not any(signal in raw_request for signal in design_signals):
+            client_signals = ["заказать", "лендинг", "landing", "saas", "саас", "бизнес", "business", "mvp", "продукт", "product", "клиент", "client"]
+            if any(signal in raw_request for signal in client_signals) and not any(signal in raw_request for signal in design_signals):
+                response_data = {
+                    "request_type": "client_order",
+                    "design_descriptor": {
+                        "design_source": "design_brief",
+                        "source_value": inputs.get("raw_request", ""),
+                        "output_mode": "both",
+                        "target_stack": "react_next_tailwind",
+                        "target_scope": "whole_page",
+                        "backend_spec": None,
+                        "metadata": {"title": "Client Brief", "detected_language": "ru", "has_assets": False, "has_components": False, "has_backend_spec": False},
+                    },
+                    "parsed_request": {"intent": "client_order"},
+                    "confidence": 0.85,
+                }
+            elif not any(signal in raw_request for signal in design_signals):
                 response_data = {
                     "request_type": "general",
                     "design_descriptor": None,

@@ -127,3 +127,39 @@ def test_extract_figma_file_key_and_node_id() -> None:
     assert runner._extract_figma_node_id("https://www.figma.com/design/abc123/Sample?node-id=1-2") == "1:2"
     assert runner._extract_figma_file_key("not a url") == ""
     assert runner._extract_figma_node_id("no node") == ""
+
+
+def test_client_brief_interview_short_circuits() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    async def _run():
+        result = await runner.run("заказать лендинг для SaaS продукта")
+        return result
+
+    result = asyncio.run(_run())
+    assert result.termination_status.value == "success"
+    assert "business goal" in result.final_response.lower() or "target audience" in result.final_response.lower()
+
+
+def test_client_brief_proceeds_when_complete() -> None:
+    runner = _make_runner(Path.cwd(), mcp_enabled=False)
+
+    async def _run():
+        original_execute = runner.llm.execute
+
+        async def _mock_execute(spec, inputs):
+            response = await original_execute(spec, inputs)
+            agent_path = getattr(spec, "source_path", "")
+            if agent_path.endswith("user/client_brief_agent.md"):
+                response.parsed["client_brief"]["next_action"] = "proceed"
+                response.parsed["client_brief"]["missing_fields"] = []
+                response.parsed["client_brief"]["questions"] = []
+                response.parsed["client_brief"]["brief_confidence"] = 0.9
+            return response
+
+        with patch.object(runner.llm, "execute", new=_mock_execute):
+            result = await runner.run("сделай лендинг с целью продажи подписок, аудитория — малый бизнес, CTA — 'Оформить подписку'")
+        return result
+
+    result = asyncio.run(_run())
+    assert result.termination_status.value in ("success", "partial")

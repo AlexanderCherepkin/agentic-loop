@@ -674,10 +674,34 @@ class PipelineRunner:
 
             # Phase 2: Design intake & optional full-pipeline short-circuit
             await self._publish_progress("phase.start", {"phase": "design_intake", "session_id": session_id})
-            design_descriptor = await self._run_design_intake(user_input, session_id, trace, metrics)
+            intake_result = await self._run_design_intake(user_input, session_id, trace, metrics)
             await self._publish_progress("phase.end", {"phase": "design_intake", "session_id": session_id})
 
-            if design_descriptor:
+            design_descriptor: dict[str, Any] | None = None
+            if intake_result:
+                design_descriptor = intake_result.get("design_descriptor")
+                request_type = intake_result.get("request_type")
+
+                # Client-order branch: run PM-style brief agent and possibly interview the user.
+                if request_type == "client_order":
+                    brief_result = await self._run_client_brief(
+                        user_input, session_id, trace, metrics, design_descriptor,
+                    )
+                    design_descriptor = brief_result.get("design_descriptor")
+                    if brief_result.get("short_circuit"):
+                        final_response = brief_result.get("response") or "Please provide more details so I can prepare the brief."
+                        metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+                        self.state.update(f"session:{session_id}", {
+                            "status": PipelineStatus.COMPLETED.value,
+                            "completed_at": time.time(),
+                            "client_brief_pending": True,
+                        }, scope="session")
+                        return await self._finalize_and_return(
+                            user_input, final_response, TerminationStatus.SUCCESS,
+                            metrics, audit_anchor, trace, session_id,
+                        )
+
+            if design_descriptor and self.mcp_enabled and self.figma_available:
                 output_mode = design_descriptor.get("output_mode", "both")
                 if output_mode in ("full_code", "both"):
                     pipeline_result = await self._run_design_pipeline(design_descriptor, session_id)
@@ -882,9 +906,7 @@ class PipelineRunner:
 
     async def _run_design_intake(self, user_input: str, session_id: str,
                                  trace: list[IterationTrace], metrics: SessionMetrics) -> dict[str, Any] | None:
-        """Classify request via design_intake.md and return design_descriptor if design project."""
-        if not self.mcp_enabled or not self.figma_available:
-            return None
+        """Classify request via design_intake.md and return intake result if design/client request."""
         result = await self._invoke_agent(
             "tooll_subagents/user/design_intake.md",
             {
@@ -898,9 +920,49 @@ class PipelineRunner:
         )
         if not result or not result.parsed:
             return None
-        if result.parsed.get("request_type") != "design_project":
+        request_type = result.parsed.get("request_type")
+        if request_type not in ("design_project", "client_order"):
             return None
-        return result.parsed.get("design_descriptor")
+        design_descriptor = result.parsed.get("design_descriptor")
+        return {
+            "request_type": request_type,
+            "design_descriptor": design_descriptor,
+        }
+
+    async def _run_client_brief(self, user_input: str, session_id: str,
+                                trace: list[IterationTrace], metrics: SessionMetrics,
+                                design_descriptor: dict[str, Any] | None) -> dict[str, Any]:
+        """Run PM-style client brief intake and return enriched descriptor + control flags."""
+        result = await self._invoke_agent(
+            "tooll_subagents/user/client_brief_agent.md",
+            {
+                "raw_request": user_input,
+                "source_channel": "cli",
+                "session_id": session_id,
+                "project_rules": self._project_rules,
+                "design_descriptor": design_descriptor,
+            },
+            trace, "design_intake", metrics,
+        )
+        if not result or not result.parsed:
+            return {"design_descriptor": design_descriptor, "short_circuit": False}
+        parsed = result.parsed
+        client_brief = parsed.get("client_brief")
+        next_action = (client_brief or {}).get("next_action") or parsed.get("next_action")
+        questions = (client_brief or {}).get("questions", []) or parsed.get("questions", [])
+        design_descriptor = parsed.get("design_descriptor") or design_descriptor
+        if client_brief and design_descriptor:
+            metadata = design_descriptor.get("metadata") or {}
+            metadata["client_brief"] = client_brief
+            design_descriptor["metadata"] = metadata
+        return {
+            "design_descriptor": design_descriptor,
+            "client_brief": client_brief,
+            "next_action": next_action,
+            "questions": questions,
+            "short_circuit": next_action == "ask_user",
+            "response": "\n".join(questions) if next_action == "ask_user" else "",
+        }
 
     async def _run_design_pipeline(self, design_descriptor: dict[str, Any],
                                    session_id: str) -> dict[str, Any]:

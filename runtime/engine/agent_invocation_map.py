@@ -28,6 +28,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "control/scope_manager.md",
     ],
     "user_intake": [
+        "tooll_subagents/user/client_brief_agent.md",
         "tooll_subagents/user/context.md",
         "tooll_subagents/user/design_intake.md",
         "tooll_subagents/user/limitations.md",
