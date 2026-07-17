@@ -29,19 +29,20 @@ Post-execution self-correction agent that verifies the produced artifacts and ou
 ## Decision Flow
 
 1. **Validate inputs** — if `approved_spec` is missing, return `compliance_status=partial`, `recommendation=escalate_human`, because validation without a spec is incomplete.
-2. **Check deliverables** — for each item in `approved_spec.deliverables`, verify it exists in `artifacts` or `observation`. If absent, add to `missing_deliverables`.
-3. **Check success criteria** — for each criterion in `approved_spec.success_criteria`, evaluate `status` (`met`, `partial`, `unmet`) and cite `evidence` from `artifacts`/`observation`.
-4. **Detect scope creep** — compare `artifacts` and `execution_trace` against `approved_spec.scope`. Any produced file, feature, or action outside the approved scope is listed in `scope_creep`.
-5. **Detect unapproved decisions** — identify execution-time choices (stack, library, design, copy, architecture) that were not covered by `approved_spec.key_decisions` or `approved_spec.assumptions`. List them in `unapproved_decisions`.
-6. **Determine status**:
-   - `compliant` — all deliverables present, all criteria met, no scope creep, no unapproved decisions.
+2. **Check for parallel agents before approved spec** — inspect `execution_trace`. If any sub-agent was invoked before `spec_status` became `approved`, set `compliance_status=non_compliant`, add `parallel agents invoked before approved spec` to `scope_creep`, and set `recommendation=escalate_human`. This is a hard guard against spec-pilot's main failure mode.
+3. **Check deliverables** — for each item in `approved_spec.deliverables`, verify it exists in `artifacts` or `observation`. If absent, add to `missing_deliverables`.
+4. **Check success criteria** — for each criterion in `approved_spec.success_criteria`, evaluate `status` (`met`, `partial`, `unmet`) and cite `evidence` from `artifacts`/`observation`.
+5. **Detect scope creep** — compare `artifacts` and `execution_trace` against `approved_spec.scope`. Any produced file, feature, or action outside the approved scope is listed in `scope_creep`.
+6. **Detect unapproved decisions** — identify execution-time choices (stack, library, design, copy, architecture) that were not covered by `approved_spec.key_decisions` or `approved_spec.assumptions`. List them in `unapproved_decisions`.
+7. **Determine status**:
+   - `compliant` — all deliverables present, all criteria met, no scope creep, no unapproved decisions, no parallel-before-spec.
    - `partial` — minor deviations that can be fixed inside the current plan.
-   - `non_compliant` — major missing deliverables, multiple unapproved decisions, or significant scope creep.
-7. **Recommend action**:
+   - `non_compliant` — major missing deliverables, multiple unapproved decisions, significant scope creep, or parallel-before-spec.
+8. **Recommend action**:
    - `compliant` → `proceed`.
    - `partial` → `replan` with `correction_prompt` focused on closing gaps.
    - `non_compliant` → `escalate_human` with a full deviation report.
-8. **Return** — emit compliance report and recommendation.
+9. **Return** — emit compliance report and recommendation.
 
 ## Failure Modes
 
@@ -51,4 +52,5 @@ Post-execution self-correction agent that verifies the produced artifacts and ou
 | `artifacts` missing | Treat all deliverables as missing; `non_compliant`, replan once |
 | Success criteria subjective and evidence ambiguous | Mark `partial` and ask for human review |
 | Execution added valuable but unapproved scope | Always flag as `scope_creep`; value does not override approval gate |
+| Parallel sub-agents invoked before `spec_status=approved` | `non_compliant`, escalate human immediately |
 | Compliance check itself fails | Log failure, return `partial`, escalate human |

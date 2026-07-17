@@ -29,19 +29,20 @@ First planning-layer gate that classifies the incoming task by **size and uncert
 
 ## Decision Flow
 
-1. **Collect signals** — inspect `parsed_request.request_type`, `parsed_request.confidence`, the number of distinct subsystems or decisions implied by the request, and whether a `client_brief` or `design_descriptor` is present.
+1. **Collect signals** — inspect `parsed_request.request_type`, `parsed_request.confidence`, the number of distinct subsystems or decisions implied by the request, and whether a `client_brief` or `design_descriptor` is present. Also check for `automate this` / `автоматизируй` signals.
 2. **Detect trivial tasks** — classify as `trivial` when ALL of the following hold:
    - The request maps to a single concrete action (rename, fix typo, adjust spacing, add one button, change one value).
    - No new subsystem, dependency, or public-facing behavior is introduced.
    - `client_brief` is absent or empty and `design_descriptor` is absent.
    - `parsed_request.confidence` > 0.8 and intent is unambiguous.
-   For trivial tasks, set `scope_size=trivial`, `interview_depth=none`, `needs_spec=false`, `needs_sub_agents=false`, return immediately.
-3. **Detect medium tasks** — classify as `medium` when the request is a single feature or cohesive change with 2–4 non-obvious decisions (e.g., add a form with unknown fields, add one page with routing, configure a new integration). Set `scope_size=medium`, `interview_depth=short` (≤ 3 questions), `needs_spec=true`, `needs_sub_agents=true`.
-4. **Detect large tasks** — classify as `large` when the request spans multiple subsystems, involves client deliverables (landing/SaaS/e-commerce site, design system, multi-page app), or has high ambiguity. Set `scope_size=large`, `interview_depth=full`, `needs_spec=true`, `needs_sub_agents=true`.
-5. **Prefer higher scope when in doubt** — if the task sits on the boundary, choose the larger scope. The user can explicitly downgrade with "это мелочь, не гоняй порядок".
-6. **Infer uncertainty** — `uncertainty_level=high` if the request contains vague phrases such as "лучше", "как-нибудь", "подумай", "премиум", "красиво" without concrete criteria; otherwise derive from the number of unresolved decisions.
-7. **Emit assumptions** — for every missing but inferable decision, state the default that will be used unless the user overrides it.
-8. **Return** — emit scope verdict, rationale, and session state updates.
+   For trivial tasks, set `scope_size=trivial`, `interview_depth=none`, `needs_spec=false`, `needs_sub_agents=false`, `max_questions=0`, return immediately.
+3. **Detect medium tasks** — classify as `medium` when the request is a single feature or cohesive change with 2–4 non-obvious decisions (e.g., add a form with unknown fields, add one page with routing, configure a new integration). Set `scope_size=medium`, `interview_depth=short`, `needs_spec=true`, `needs_sub_agents=true`, `max_questions=3`.
+4. **Detect large tasks** — classify as `large` when the request spans multiple subsystems, involves client deliverables (landing/SaaS/e-commerce site, design system, multi-page app), or has high ambiguity. Set `scope_size=large`, `interview_depth=full`, `needs_spec=true`, `needs_sub_agents=true`, `max_questions=8`.
+5. **Prefer higher scope when in doubt** — if the task sits on the boundary, choose the larger scope. The user can explicitly downgrade with phrases such as "это мелочь, не гоняй порядок" or "тривиально". Without such explicit downgrade, never lower the scope.
+6. **Handle `automate this` / `автоматизируй`** — if the raw request contains "автоматизируй", "automate this", "сделай автоматизацию", or "make it automatic": bump `scope_size` one level (medium→large, large stays large), set `needs_spec=true`, set `human_in_the_loop_required=true`, and add to `assumptions`: "Автоматизация затрагивает действия, где требуется человеческое подтверждение; финальное решение о полной автоматизации принимается пользователем."
+7. **Infer uncertainty** — `uncertainty_level=high` if the request contains vague phrases such as "лучше", "как-нибудь", "подумай", "премиум", "красиво" without concrete criteria; otherwise derive from the number of unresolved decisions.
+8. **Emit assumptions** — for every missing but inferable decision, state the default that will be used unless the user overrides it.
+9. **Return** — emit scope verdict, `max_questions`, rationale, and session state updates.
 
 ## Failure Modes
 
@@ -52,3 +53,5 @@ First planning-layer gate that classifies the incoming task by **size and uncert
 | `client_brief` present but empty | Treat as `medium` and ask 1–3 clarification questions |
 | Conflicting prior memory about scope | Prefer current request; log conflict to `internal_monologue.md` |
 | Ambiguous scope after classification | Bump to the next higher size; never silently downgrade |
+| `automate this` / `автоматизируй` requested | Bump one scope level, require spec, set `human_in_the_loop_required=true` |
+| User says "стоп, сначала спека" or equivalent during classification | Immediately halt delegation, return `needs_spec=true` and route to `spec_approval_gate.md` |

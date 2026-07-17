@@ -192,9 +192,29 @@ Browser automation, local hosting, preview, and deployment are permitted **only*
 No parallel or sequential sub-agent execution may start until the user has explicitly approved a written specification. The mandatory flow is:
 
 1. `tooll_subagents/planning/task_scoping_agent.md` classifies the task as `trivial`, `medium`, or `large`.
-2. For `medium` and `large` tasks, `tooll_subagents/planning/spec_approval_gate.md` conducts an interview, writes a spec, and requires explicit approval.
+2. For `medium` and `large` tasks, `tooll_subagents/planning/spec_approval_gate.md` conducts an interview, writes a spec, and requires explicit approval. Interview length is capped: trivial = 0 questions, medium ≤ 3 questions, large ≤ 8 questions.
 3. `control/spec_lock.md` is a runtime hard gate: if `spec_status != approved`, execution is blocked and the pipeline returns to the spec approval gate.
-4. During validation, `tooll_subagents/self_correction/spec_compliance_validator.md` verifies that produced artifacts match the approved spec.
+4. During validation, `tooll_subagents/self_correction/spec_compliance_validator.md` verifies that produced artifacts match the approved spec and that no sub-agent ran before the spec was approved.
 5. After completion, `tooll_subagents/observability/gotcha_extractor.md` captures reusable pitfalls and may propose a skill.
 
 Trivial tasks (single concrete action, no ambiguity, no client brief) are exempt from the spec approval gate but are still logged.
+
+### Approval markers
+
+Explicit approval words: `да`, `ok`, `yes`, `продолжай`, `собирай`, `согласен`, `давай`, `+`. Anything else — including silence, "сделай как лучше", "на твоё усмотрение", "выглядит ок", "вроде норм", "давай попробуем", or out-of-context "ок" — is NOT approval.
+
+### Stop-phrase
+
+If the user says "стоп, сначала спека", "стоп, спека", "сначала спека", "не запускай агентов", "stop, spec first", or equivalent, immediately halt any sub-agent dispatch and return to the spec drafting/approval step.
+
+### Human zones
+
+The following stay in the human loop and are never auto-executed: payment, sending money, data deletion, database migrations, bulk emails, deploy/publish, `git push --force`, `rm -rf`, production API keys/secrets, production webhooks. When in doubt, treat the action as irreversible and ask the user.
+
+### Verify-before-handoff rule
+
+Before claiming a result is ready, describe the verification plan and run it — tests, linter, browser, or script. Hand off only after verified output, except for human-zone items.
+
+### Token-limit honesty
+
+Sub-agents consume the same shared token budget as normal chat. Interview → spec → parallel saves tokens by removing guesswork and rework, but does not make the budget infinite. If full parallel is unavailable or hits the rate/window limit, proceed sequentially against the same approved spec.

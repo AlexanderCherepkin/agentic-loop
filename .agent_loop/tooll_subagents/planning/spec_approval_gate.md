@@ -38,19 +38,20 @@ Structured specification author and approval checkpoint. Gathers the minimum nec
 ## Decision Flow
 
 1. **Load prior context** — if `prior_spec` exists and matches the current goal, pre-fill the draft and highlight changes. If memory is unavailable, start fresh.
-2. **Determine interview length** — from `task_scope.interview_depth`:
+2. **Determine interview length** — from `task_scope.interview_depth` and `task_scope.max_questions`:
    - `none` → skip to a minimal one-line spec (trivial path; this agent usually not invoked).
    - `short` → ask ≤ 3 focused questions targeting the highest-impact ambiguities.
-   - `full` → conduct a structured PM-style interview covering goal, audience, CTAs, references, stack, limits, and success criteria.
-3. **Ask questions** — when `interview_depth` is not `none`, emit `questions` and set `spec_status=draft`, `next_action=ask_user`. Stop here and wait for answers.
-4. **Synthesize spec** — once answers are available (or if `interview_depth=none`), build the `approved_spec` object. Include `scope` (in/out), `key_decisions`, `deliverables`, `success_criteria`, `human_zones`, and `assumptions`.
-5. **Show spec for approval** — set `spec_status=pending_approval`, `next_action=ask_user`, and present the spec in `response` with a clear prompt: "Спека ок? Запускаю сборку? (да/нет/изменить)".
-6. **Evaluate user reply**:
-   - Explicit approval (`да`, `ok`, `yes`, `продолжай`, `собирай`) → set `spec_status=approved`, generate `approval_token`, `next_action=proceed`, attach `approved_spec`.
+   - `full` → conduct a structured PM-style interview covering goal, audience, CTAs, references, stack, limits, and success criteria; cap at 8 questions.
+3. **Stop-phrase check** — if the user says "стоп, сначала спека", "стоп, спека", "сначала спека", "не запускай агентов", "stop, spec first", or equivalent, immediately set `spec_status=draft`, `next_action=ask_user`, and return to Step 2/4 without invoking any sub-agent.
+4. **Ask questions** — when `interview_depth` is not `none`, emit `questions` (respecting `max_questions`) and set `spec_status=draft`, `next_action=ask_user`. Stop here and wait for answers.
+5. **Synthesize spec** — once answers are available (or if `interview_depth=none`), build the `approved_spec` object. Include `scope` (in/out), `key_decisions`, `deliverables`, `success_criteria`, `human_zones`, and `assumptions`.
+6. **Show spec for approval** — set `spec_status=pending_approval`, `next_action=ask_user`, and present the spec in `response` with a clear prompt: "Спека ок? Запускаю сборку? (да/нет/изменить)".
+7. **Evaluate user reply**:
+   - Explicit approval (`да`, `ok`, `yes`, `продолжай`, `собирай`, `согласен`, `давай`, `+`) → set `spec_status=approved`, generate `approval_token`, `next_action=proceed`, attach `approved_spec`.
    - Rejection or request to change (`нет`, `изменить`, `не так`, `переделай`) → set `spec_status=rejected`, keep draft, ask what to change, `next_action=ask_user`. Do NOT proceed.
-   - Silence, evasion, or vague "сделай как лучше" → treat as NOT approved. Repeat the approval prompt once; if still vague, set `next_action=escalate_human`.
-7. **Persist approved spec** — on approval, write `approved_spec` to session state and to memory. On rejection, log the rejection reason and stay in draft.
-8. **Return** — emit current `spec_status`, `approved_spec`, `questions`, `next_action`, and `response`.
+   - Silence, evasion, or vague replies such as "сделай как лучше", "на твоё усмотрение", "выглядит ок", "вроде норм", "давай попробуем", "ок" without context → treat as NOT approved. Repeat the approval prompt once; if still vague, set `next_action=escalate_human`.
+8. **Persist approved spec** — on approval, write `approved_spec` to session state and to memory. On rejection, log the rejection reason and stay in draft.
+9. **Return** — emit current `spec_status`, `approved_spec`, `questions`, `next_action`, and `response`.
 
 ## Failure Modes
 
@@ -62,3 +63,4 @@ Structured specification author and approval checkpoint. Gathers the minimum nec
 | Approval given but critical `human_zones` remain unconfirmed | Keep `spec_status=approved` but attach a warning; human zones are still enforced by `control/human_approval.md` |
 | Memory write fails | Continue in-session; log failure to `audit_logger.md`; do not block on memory |
 | User repeatedly rejects spec without stating why | Set `next_action=escalate_human` after 3 rejection cycles |
+| User says stop-phrase "стоп, сначала спека" or equivalent | Immediately return to drafting/approval; do not invoke sub-agents |

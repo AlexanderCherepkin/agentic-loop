@@ -51,11 +51,11 @@ Observability agent that watches successful and partially-successful project exe
    - `cause`: why it happens
    - `fix`: what resolved it
    - `prevention`: how to avoid it next time
-5. **Build skill candidate** — if ≥ 2 gotchas share a common domain (e.g., Figma asset pipeline, Next.js auth, cookie consent), propose a skill fragment with a trigger and gotcha section.
+5. **Build skill candidate** — if ≥ 2 gotchas share a common domain (e.g., Figma asset pipeline, Next.js auth, cookie consent), propose a skill fragment with a trigger and gotcha section. If the same gotcha pattern has been observed in ≥ 2 different sessions and has a clear, repeatable trigger, propose packaging it as a `.claude/skills/` skill with a dedicated `gotchas` section.
 6. **Decide recommendation**:
    - `ignore` — no useful gotchas found.
    - `store_only` — useful but not reusable enough for a skill; persist to memory.
-   - `propose_skill` — reusable pattern; propose to the user and create a skill only if approved.
+   - `propose_skill` — reusable pattern observed ≥ 2 times; propose to the user and create a skill only if explicitly approved. Do not write the skill file without approval.
 7. **Return** — emit gotchas, candidate, memories, and recommendation.
 
 ## Failure Modes
@@ -66,4 +66,5 @@ Observability agent that watches successful and partially-successful project exe
 | Validation passed on first iteration with no corrections | Likely `recommendation=ignore`; still scan for subtle assumptions |
 | User feedback is negative but no technical cause is identifiable | Store a low-severity note; do not invent a cause |
 | Skill proposal duplicates an existing skill | Check `.claude/skills/` by name; if duplicate, downgrade to `store_only` |
+| Recurring gotcha observed in ≥ 2 sessions with clear trigger | Set `recommendation=propose_skill` and prepare skill fragment; do not write without approval |
 | Memory write fails | Log gotchas to `audit_logger.md` and continue |
