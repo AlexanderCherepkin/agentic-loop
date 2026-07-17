@@ -173,7 +173,16 @@ Rules:
 - For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost). Run it after any significant change (new agents, renamed files, or ≥10 modified files).
+
+### Graphify guards
+
+- **Don't build for tiny projects.** If the repository has fewer than ~100 source files, prefer `grep`/`rg` over Graphify; the graph adds no value and still costs setup time.
+- **Avoid the PreToolUse hook.** Do NOT run `graphify claude install`. It injects a hook that breaks on fresh Claude Code builds and can block file reads. Use the safe post-commit hook `graphify hook install` only if auto-update is required.
+- **Avoid `--mode deep` unless justified.** Default to `graphify .` (free AST-only). Use `--mode deep` only when the project has significant PDF/documentation content that must be embedded.
+- **Correct package name.** The PyPI package is `graphifyy` (two `y`s). `pip install graphify` installs the wrong package.
+- **PowerShell syntax.** In PowerShell run `graphify .` without a leading slash; `/` is interpreted as a path prefix.
+- **When the graph is broken/corrupt** (phantom nodes after refactor, clusters too large, utility hubs dominating), rebuild with `graphify extract . --force` or tune with `--cluster-only --resolution 1.5` / `--exclude-hubs 99`.
 
 ## Internal Agent / Framework Exposure Restriction
 
