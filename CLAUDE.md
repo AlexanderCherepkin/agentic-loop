@@ -183,6 +183,7 @@ Rules:
 - **Correct package name.** The PyPI package is `graphifyy` (two `y`s). `pip install graphify` installs the wrong package.
 - **PowerShell syntax.** In PowerShell run `graphify .` without a leading slash; `/` is interpreted as a path prefix.
 - **When the graph is broken/corrupt** (phantom nodes after refactor, clusters too large, utility hubs dominating), rebuild with `graphify extract . --force` or tune with `--cluster-only --resolution 1.5` / `--exclude-hubs 99`.
+- **Restart after skill changes.** After installing or updating any `.claude/skills/` content (including `graph-pilot`), restart Claude Code (close and reopen the app, or exit and relaunch the CLI session) before relying on the skill. Skills added to a fresh `.claude/skills/` directory are often invisible until restart.
 
 ## Internal Agent / Framework Exposure Restriction
 
