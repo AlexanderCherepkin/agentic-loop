@@ -209,6 +209,37 @@ class MockLLMEngine:
             }
         },
         "self_correction/recursion_or_termination.md": {"decision": "recurse", "reason": "mock"},
+        "planning/task_scoping_agent.md": {
+            "scope_size": "trivial",
+            "uncertainty_level": "low",
+            "interview_depth": "none",
+            "needs_spec": False,
+            "needs_sub_agents": False,
+            "rationale": "mock: simple request with a single concrete action",
+            "assumptions": [],
+        },
+        "planning/spec_approval_gate.md": {
+            "spec_status": "approved",
+            "approved_spec": {
+                "goal": "mock approved spec",
+                "scope": ["mock scope"],
+                "key_decisions": [],
+                "deliverables": ["mock deliverable"],
+                "success_criteria": ["mock criterion"],
+                "human_zones": [],
+                "assumptions": [],
+                "approval_token": "mock-token-" + "0" * 52,
+            },
+            "questions": [],
+            "next_action": "proceed",
+            "response": "Mock spec approved. Proceeding.",
+        },
+        "control/spec_lock.md": {
+            "lock_status": "open",
+            "reason": "mock: spec approved or task trivial",
+            "missing_requirements": None,
+            "next_action": "proceed",
+        },
         "planning/multi_page_planner.md": {"needs_multi_page": True, "pages": [], "routing_plan": "mock"},
         "planning/storybook_planner.md": {"needs_storybook": True, "stories_plan": "mock"},
         "planning/deploy_planner.md": {"needs_deploy": True, "deploy_plan": "mock"},
@@ -296,6 +327,64 @@ class MockLLMEngine:
                     "design_descriptor": None,
                     "parsed_request": {"intent": "general"},
                     "confidence": 0.8,
+                }
+
+        # Special handling for task scoping: trivial for simple requests, large for design/client work
+        if agent_str.endswith("planning/task_scoping_agent.md"):
+            parsed_request = inputs.get("parsed_request") or {}
+            raw_request = str(inputs.get("raw_request", "")).lower()
+            client_brief = inputs.get("client_brief")
+            design_descriptor = inputs.get("design_descriptor")
+            if client_brief or design_descriptor:
+                response_data = {
+                    "scope_size": "large",
+                    "uncertainty_level": "medium",
+                    "interview_depth": "full",
+                    "needs_spec": True,
+                    "needs_sub_agents": True,
+                    "rationale": "mock: design or client deliverable requires approved spec",
+                    "assumptions": ["mock assumption for client/design task"],
+                }
+            elif any(signal in raw_request for signal in ["figma", "макет", "дизайн", "design", "верстай", "сверстай"]):
+                response_data = {
+                    "scope_size": "large",
+                    "uncertainty_level": "medium",
+                    "interview_depth": "full",
+                    "needs_spec": True,
+                    "needs_sub_agents": True,
+                    "rationale": "mock: design-related request requires approved spec",
+                    "assumptions": [],
+                }
+            elif any(signal in raw_request for signal in ["заказать", "лендинг", "landing", "saas", "саас", "бизнес", "business", "mvp", "продукт", "product", "клиент", "client"]):
+                response_data = {
+                    "scope_size": "medium",
+                    "uncertainty_level": "medium",
+                    "interview_depth": "short",
+                    "needs_spec": True,
+                    "needs_sub_agents": True,
+                    "rationale": "mock: client-facing deliverable requires approved spec",
+                    "assumptions": [],
+                }
+            elif parsed_request.get("request_type") in ("question", "debug", "test") or parsed_request.get("confidence", 0.0) < 0.7:
+                response_data = {
+                    "scope_size": "medium",
+                    "uncertainty_level": "low",
+                    "interview_depth": "short",
+                    "needs_spec": False,
+                    "needs_sub_agents": False,
+                    "rationale": "mock: question/debug/test handled inline",
+                    "assumptions": [],
+                }
+
+        # Special handling for spec lock: trivial tasks bypass the lock
+        if agent_str.endswith("control/spec_lock.md"):
+            task_scope = inputs.get("task_scope") or {}
+            if task_scope.get("scope_size") == "trivial" or task_scope.get("needs_spec") is False:
+                response_data = {
+                    "lock_status": "open",
+                    "reason": "mock: trivial task exempt from spec lock",
+                    "missing_requirements": None,
+                    "next_action": "proceed",
                 }
 
         content = json.dumps(response_data, ensure_ascii=False)

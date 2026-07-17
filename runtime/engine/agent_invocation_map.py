@@ -26,6 +26,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "control/policy_enforcer.md",
         "control/resource_monitor.md",
         "control/scope_manager.md",
+        "control/spec_lock.md",
     ],
     "user_intake": [
         "tooll_subagents/user/client_brief_agent.md",
@@ -70,6 +71,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "safety-control/input_sanitizer.md",
         "safety-control/threat_detector.md",
         "control/scope_manager.md",
+        "tooll_subagents/planning/task_scoping_agent.md",
+        "tooll_subagents/planning/spec_approval_gate.md",
+        "control/spec_lock.md",
         "tooll_subagents/planning/task_decomposition.md",
         "tooll_subagents/planning/tool_plan_selection.md",
     ],
@@ -208,6 +212,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/observability/deploy_audit_agent.md",
         "tooll_subagents/observability/design_token_docs_audit_agent.md",
         "tooll_subagents/observability/file_context.md",
+        "tooll_subagents/observability/gotcha_extractor.md",
         "tooll_subagents/observability/headroom_compressor.md",
         "tooll_subagents/observability/headroom_retriever.md",
         "tooll_subagents/observability/i18n_audit_agent.md",
@@ -248,6 +253,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/self_correction/quality_evaluator_agent.md",
         "tooll_subagents/self_correction/regression_guard.md",
         "tooll_subagents/self_correction/security_scan_validator.md",
+        "tooll_subagents/self_correction/spec_compliance_validator.md",
         "tooll_subagents/self_correction/storybook_validator.md",
     ],
     "result": [
@@ -268,6 +274,12 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tools_lighthouse/audit/navigation_engine.md",
         "tools_lighthouse/audit/report_parser.md",
         "tools_lighthouse/audit/session_manager.md",
+    ],
+    "spec_compliance": [
+        "tooll_subagents/self_correction/spec_compliance_validator.md",
+    ],
+    "gotcha_extraction": [
+        "tooll_subagents/observability/gotcha_extractor.md",
     ],
 }
 

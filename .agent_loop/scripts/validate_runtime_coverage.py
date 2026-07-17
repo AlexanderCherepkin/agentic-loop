@@ -23,7 +23,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from runtime.engine.agent_invocation_map import all_referenced_paths  # noqa: E402
 from runtime.engine.agent_loader import AgentLoader  # noqa: E402
 
-EXPECTED_AGENT_COUNT = 289
+EXPECTED_AGENT_COUNT = 294
 
 
 def main() -> int:

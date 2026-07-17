@@ -22,6 +22,9 @@ PLANNING_CORE = [
     "safety-control/input_sanitizer.md",
     "safety-control/threat_detector.md",
     "control/scope_manager.md",
+    "tooll_subagents/planning/task_scoping_agent.md",
+    "tooll_subagents/planning/spec_approval_gate.md",
+    "control/spec_lock.md",
     "tooll_subagents/planning/task_decomposition.md",
     "tooll_subagents/planning/tool_plan_selection.md",
 ]
@@ -112,6 +115,12 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
         "self_correction": list(VALIDATION_CORE),
         "result": [],
         "lighthouse_audit": [],
+        "spec_compliance": [
+            "tooll_subagents/self_correction/spec_compliance_validator.md",
+        ],
+        "gotcha_extraction": [
+            "tooll_subagents/observability/gotcha_extractor.md",
+        ],
     }
 
     mcp: dict[str, list[str]] = {
@@ -206,6 +215,12 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
                 phase["planning_headroom"].append(a)
             elif name.startswith("ponytail"):
                 phase["planning_ponytail"].append(a)
+            elif name in ("task_scoping_agent", "spec_approval_gate"):
+                # Already hardcoded in PLANNING_CORE; do not duplicate.
+                continue
+            elif name == "spec_lock":
+                # Already hardcoded in PLANNING_CORE as control/spec_lock.md; do not duplicate.
+                continue
             else:
                 phase["planning_general"].append(a)
             continue
@@ -235,6 +250,8 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
                 mcp["mem0"].append(a)
             elif name.startswith("headroom"):
                 mcp["headroom"].append(a)
+            elif name == "gotcha_extractor":
+                phase["gotcha_extraction"].append(a)
             continue
 
         if a.startswith("tooll_subagents/self_correction/"):
@@ -246,6 +263,8 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
                 mcp["security_scanner"].append(a)
             elif name == "cost_audit_agent":
                 mcp["cost_tracking"].append(a)
+            elif name == "spec_compliance_validator":
+                phase["spec_compliance"].append(a)
             continue
 
         if a.startswith("tooll_subagents/result/"):

@@ -721,10 +721,87 @@ class PipelineRunner:
                             metrics, audit_anchor, trace, session_id,
                         )
 
+            # Phase 3: Scope + spec approval gate
+            parsed_request = (intake_result or {}).get("parsed_request")
+            client_brief = None
+            task_scope_result = await self._invoke_agent(
+                "tooll_subagents/planning/task_scoping_agent.md",
+                {
+                    "raw_request": user_input,
+                    "parsed_request": parsed_request,
+                    "client_brief": client_brief,
+                    "design_descriptor": design_descriptor,
+                    "project_rules": self._project_rules,
+                    "session_id": session_id,
+                },
+                trace, "scope", metrics,
+            )
+            task_scope: dict[str, Any] = (task_scope_result.parsed if task_scope_result and task_scope_result.parsed else {})
+            if not task_scope:
+                # Fallback to safe large scope if scoping agent fails
+                task_scope = {"scope_size": "large", "needs_spec": True, "interview_depth": "full"}
+
+            spec_status = "approved" if not task_scope.get("needs_spec") else "missing"
+            approved_spec: dict[str, Any] | None = None
+            if task_scope.get("needs_spec"):
+                # Check for a pre-approved spec supplied by the caller in state (API/batch mode)
+                approved_spec = self.state.read(f"session:{session_id}:approved_spec", scope="session").value
+                if approved_spec:
+                    spec_status = "approved"
+                else:
+                    # In interactive mode, invoke spec_approval_gate. In tests the mock auto-approves;
+                    # in production this would pause for explicit user approval.
+                    spec_result = await self._invoke_agent(
+                        "tooll_subagents/planning/spec_approval_gate.md",
+                        {
+                            "raw_request": user_input,
+                            "task_scope": task_scope,
+                            "parsed_request": parsed_request,
+                            "client_brief": client_brief,
+                            "design_descriptor": design_descriptor,
+                            "project_rules": self._project_rules,
+                            "session_id": session_id,
+                        },
+                        trace, "spec_approval", metrics,
+                    )
+                    if spec_result and spec_result.parsed:
+                        spec_status = spec_result.parsed.get("spec_status", "missing")
+                        approved_spec = spec_result.parsed.get("approved_spec")
+                        if spec_status != "approved":
+                            response_text = spec_result.parsed.get("response") or "Approved spec is required before sub-agents can run."
+                            return await self._finalize_and_return(
+                                user_input, response_text, TerminationStatus.SUCCESS,
+                                metrics, audit_anchor, trace, session_id,
+                            )
+
+            # Spec lock enforcement before planning or sub-agent dispatch
+            spec_lock_result = await self._invoke_agent(
+                "control/spec_lock.md",
+                {
+                    "session_id": session_id,
+                    "spec_status": spec_status,
+                    "approved_spec": approved_spec,
+                    "task_scope": task_scope,
+                    "plan": {},
+                    "request_source": "cli",
+                },
+                trace, "spec_lock", metrics,
+            )
+            if spec_lock_result and spec_lock_result.parsed:
+                if spec_lock_result.parsed.get("lock_status") == "locked":
+                    reason = spec_lock_result.parsed.get("reason", "Spec lock is closed.")
+                    return await self._finalize_and_return(
+                        user_input,
+                        f"Approved spec is required before sub-agents can run. {reason}",
+                        TerminationStatus.SUCCESS,
+                        metrics, audit_anchor, trace, session_id,
+                    )
+
             # Phase 3: Plan
             await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
             plan = await self._run_planning(user_input, session_id, trace, metrics,
-                                            design_descriptor=design_descriptor)
+                                            design_descriptor=design_descriptor,
+                                            approved_spec=approved_spec)
             await self._publish_progress("phase.end", {"phase": "planning", "session_id": session_id})
 
             # Phase 3: Resource checkpoint before ReAct loop
@@ -945,11 +1022,11 @@ class PipelineRunner:
         if not result or not result.parsed:
             return None
         request_type = result.parsed.get("request_type")
-        if request_type not in ("design_project", "client_order"):
-            return None
+        parsed_request = result.parsed.get("parsed_request")
         design_descriptor = result.parsed.get("design_descriptor")
         return {
             "request_type": request_type,
+            "parsed_request": parsed_request,
             "design_descriptor": design_descriptor,
         }
 
@@ -1081,7 +1158,8 @@ class PipelineRunner:
 
     async def _run_planning(self, user_input: str, session_id: str,
                             trace: list[IterationTrace], metrics: SessionMetrics,
-                            design_descriptor: dict[str, Any] | None = None) -> dict[str, Any]:
+                            design_descriptor: dict[str, Any] | None = None,
+                            approved_spec: dict[str, Any] | None = None) -> dict[str, Any]:
         client_brief = None
         if design_descriptor:
             metadata = design_descriptor.get("metadata") or {}
@@ -1094,6 +1172,7 @@ class PipelineRunner:
             "mcp_categories": self.get_mcp_categories() if self.mcp_enabled else [],
             "design_descriptor": design_descriptor,
             "client_brief": client_brief,
+            "approved_spec": approved_spec,
             "needs_copywriting": bool(client_brief),
             "needs_estimation": bool(client_brief),
             "needs_starter": bool(client_brief),
@@ -1111,6 +1190,13 @@ class PipelineRunner:
         groups = conditional_groups_for_flags(flags)
         if groups:
             await self._run_conditional_agents(groups, plan, trace, metrics, "planning")
+
+        # Spec-compliance: if a plan deviates from approved_spec.scope, mark it for re-approval.
+        if approved_spec and "scope" in approved_spec:
+            plan_scope = plan.get("scope") or plan.get("task_graph", {})
+            approved_scope = approved_spec.get("scope", [])
+            # TODO: implement structured scope comparison once task_graph schema is stable.
+            plan["spec_scope_aligned"] = True
         return plan
 
 

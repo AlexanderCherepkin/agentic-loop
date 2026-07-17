@@ -34,7 +34,7 @@ CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
 
-EXPECTED_AGENTS = 289
+EXPECTED_AGENTS = 294
 EXPECTED_MCP_SERVERS = 25
 
 
@@ -170,7 +170,7 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
 
     agents = next((c for c in checks if c["label"] == "Agents"), None)
     if agents and not agents["ok"]:
-        if EXPECTED_AGENTS not in agents["value"]:
+        if str(EXPECTED_AGENTS) not in agents["value"]:
             recs.append(f"Agent count mismatch: expected {EXPECTED_AGENTS}. Review newly added or deleted agent specs.")
         if "broken_links" in agents["details"] and "broken_links=0" not in agents["details"]:
             recs.append("Run `node .agent_loop/scripts/validate_cross_references.js` and fix broken agent references.")

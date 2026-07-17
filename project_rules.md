@@ -143,6 +143,18 @@ Forbidden artifacts include, but are not limited to:
 
 Browser automation, local hosting, preview, and deployment are permitted **only** for the actual website/application/project being built according to its `TECHNICAL_ASSIGNMENT.md`. Before opening any local URL, verify the served directory/process. If it is internal agent infrastructure, refuse to open it and ask the user to stop it and point to the deliverable project's output or dev server.
 
+## Spec Approval Gate
+
+No parallel or sequential sub-agent execution may start until the user has explicitly approved a written specification. The mandatory flow is:
+
+1. `tooll_subagents/planning/task_scoping_agent.md` classifies the task as `trivial`, `medium`, or `large`.
+2. For `medium` and `large` tasks, `tooll_subagents/planning/spec_approval_gate.md` conducts an interview, writes a spec, and requires explicit approval.
+3. `control/spec_lock.md` is a runtime hard gate: if `spec_status != approved`, execution is blocked and the pipeline returns to the spec approval gate.
+4. During validation, `tooll_subagents/self_correction/spec_compliance_validator.md` verifies that produced artifacts match the approved spec.
+5. After completion, `tooll_subagents/observability/gotcha_extractor.md` captures reusable pitfalls and may propose a skill.
+
+Trivial tasks (single concrete action, no ambiguity, no client brief) are exempt from the spec approval gate but are still logged.
+
 ## Front-end Quality Defaults
 
 - For every generated front-end, the system must produce or reuse a safe-component layer under `src/components/safe/`:
