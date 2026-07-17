@@ -1,0 +1,10 @@
+<div class="d-flex align-items-center gap-2">
+  <span>Hello, {{ user.username }}!</span>
+  <button
+    class="btn btn-sm btn-outline-secondary"
+    hx-post="{% url 'htmx_logout' %}"
+    hx-target="#auth-menu"
+  >
+    Logout
+  </button>
+</div>

@@ -1,0 +1,4 @@
+django>=5.0.0
+python-dotenv>=1.0.0
+htmx-everywhere  # placeholder; HTMX loaded via CDN in templates
+django-allauth>=0.60.0

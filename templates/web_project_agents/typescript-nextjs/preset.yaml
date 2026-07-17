@@ -1,0 +1,23 @@
+id: typescript-nextjs
+name: TypeScript Next.js
+base_category: Веб-сервис
+language: typescript
+description: |
+  Full-stack starter на Next.js 14 (App Router), TypeScript, Prisma ORM,
+  NextAuth аутентификацией и Tailwind CSS.
+tags:
+  - typescript
+  - nextjs
+  - react
+  - prisma
+  - tailwind
+  - nextauth
+stack:
+  framework: Next.js 14 (App Router)
+  language: TypeScript 5
+  orm: Prisma 5
+  db: PostgreSQL / SQLite
+  auth: NextAuth.js
+  styling: Tailwind CSS
+variables:
+  port: 3000

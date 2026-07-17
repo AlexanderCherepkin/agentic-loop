@@ -1,0 +1,6 @@
+# Optional dependencies for Docker/WSL2 sandbox execution.
+#
+# The sandbox engine primarily uses stdlib + subprocess to call Docker or WSL.
+# Playwright is only needed when sandbox_screenshot is invoked.
+
+playwright>=1.40.0

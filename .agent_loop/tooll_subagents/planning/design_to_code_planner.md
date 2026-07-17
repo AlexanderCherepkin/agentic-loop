@@ -7,9 +7,13 @@ Handoff agent that decides what the Figma design analyst's output should become:
 
 ### Receives
 - `design_blueprint`: from `tooll_subagents/planning/figma_design_analyst.md`
+- `architecture_blueprint`: optional structured output from visual_to_architecture_planner.md`tooll_subagents/planning/visual_to_architecture_planner.md`
 - `original_request`: parsed task descriptor from `user/request.md` or `user/design_intake.md`
 - `project_rules`: from `user/context.md`
 - `autonomy_level`: enum (`full_auto`, `spec_only`, `confirm_each`) — default `full_auto`
+- `premium_design_proposal`: optional confirmed proposal from `tooll_subagents/planning/premium_design_analyst.md` when `mode=premium`
+- `design_system_package`: optional output from `tooll_subagents/planning/premium_design_system_generator.md` when `mode=premium`
+- `anti_slop_report`: optional output from `tooll_subagents/self_correction/anti_slop_validator.md` when `mode=premium`
 
 ### Returns
 - `handoff_package`: structured object:
@@ -28,6 +32,12 @@ Handoff agent that decides what the Figma design analyst's output should become:
 ## Decision Flow
 
 1. **Evaluate blueprint status** — if `design_blueprint.status=failed`, set `handoff_type=technical_assignment` with a diagnostic assignment and route to `planning` for replanning.
+1a. **Premium design gate** — if `original_request.mode` is `premium` or `original_request.design_descriptor.premium_design=true`:
+   - First invoke `tooll_subagents/planning/premium_design_analyst.md` to propose a direction and font system; await user confirmation.
+   - Then invoke `tooll_subagents/planning/premium_design_system_generator.md` to produce `DESIGN.md` and `design_tokens.json`.
+   - Then invoke `tooll_subagents/self_correction/anti_slop_validator.md` as a hard gate.
+   - If `anti_slop_validator.md` returns `verdict=fail` and `blocked=true`, route to `tooll_subagents/self_correction/plan_adjustment.md` and do not proceed to code generation.
+   - If `verdict=pass`, continue and pass `DESIGN.md` + `design_tokens.json` as the primary handoff artifacts; all downstream code generation must respect them as the single source of truth.
 2. **Runtime fast path already executed** — if the runtime invoked `figma_run_pipeline` directly, use its output as the `design_blueprint` and proceed to packaging. Do not re-run per-stage agents unless the blueprint is incomplete.
 3. **Run Backend Spec Bridge when present** — if `original_request.design_descriptor.backend_spec` exists and the fast path did not already produce backend artifacts, invoke `tooll_subagents/planning/backend_spec_bridge.md` with the spec and `design_blueprint`; merge `backend_blueprint` into the handoff package.
 4. **Respect explicit output mode** — from `original_request.design_descriptor.output_mode`:
@@ -67,6 +77,9 @@ Handoff agent that decides what the Figma design analyst's output should become:
 | Blueprint is empty or null | Return `handoff_type=technical_assignment` with apology/diagnostic; route to `planning` |
 | Both spec and code are missing | Return `handoff_type=technical_assignment` with placeholder assignment; flag `assistance_request.md` |
 | Generated code file path outside workspace | Sanitize path to workspace-relative location; log to `audit_logger.md` |
+| Premium mode but DESIGN.md missing | Halt code generation; route to `premium_design_system_generator.md` |
+| Anti-Slop validator returns fail | Block handoff; route to `plan_adjustment.md` with refinement actions |
+| Premium proposal rejected by user | Return `technical_assignment` and await new direction |
 | Execution plan cannot be built for target stack | Return `technical_assignment` without plan; let `tool_plan_selection.md` replan |
 | Autonomy level conflicts with policy | Honor `project_rules`; default to `full_auto` if policy silent |
 | Safe-component layer generation fails | Continue with standard tags but flag `needs_refinement` for Lighthouse a11y/best-practices guards |

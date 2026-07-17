@@ -18,6 +18,7 @@ from .message_bus import MessageBus
 from .state_manager import StateManager
 from ..observability.resource_monitor import ResourceLevel, ResourceMonitor
 from ..safety.audit_logger import AuditLogger, AuditEventType
+from tools_terminal.tui_dashboard import render_dashboard
 from ..safety.file_system_guard import FSOperation, FileSystemGuard, FileSystemGuardError
 from ..safety.network_guard import NetworkGuard, NetworkVerdict
 from ..safety.safety_chain import SafetyChain, SafetyVerdict
@@ -326,6 +327,7 @@ class PipelineRunner:
         self._fs_guard = FileSystemGuard(workspace_root=self.workspace)
         self._network_guard = NetworkGuard()
         self._resource_monitor = ResourceMonitor(workspace_root=self.workspace)
+        self._last_resource_state: dict[str, Any] | None = None
         self._audit_logger = AuditLogger(log_dir=Path(self.workspace) / ".audit", buffer_size=1)
         self._current_audit_anchor: str | None = None
 
@@ -727,6 +729,17 @@ class PipelineRunner:
 
             # Phase 3: Resource checkpoint before ReAct loop
             resource_check = self._resource_monitor.check()
+            self._last_resource_state = {
+                "level": resource_check.level.value,
+                "reason": resource_check.reason,
+                "snapshot": {
+                    "cpu_percent": resource_check.snapshot.cpu_percent,
+                    "memory_percent": resource_check.snapshot.memory_percent,
+                    "disk_percent": resource_check.snapshot.disk_percent,
+                    "timestamp": resource_check.snapshot.timestamp,
+                },
+                "thresholds": resource_check.thresholds,
+            }
             if resource_check.level == ResourceLevel.CRITICAL:
                 return await self._finalize_and_return(
                     user_input,
@@ -763,6 +776,17 @@ class PipelineRunner:
 
                     # Per-iteration resource guard: abort before heavy work if resources are critical
                     resource_check = self._resource_monitor.check()
+                    self._last_resource_state = {
+                        "level": resource_check.level.value,
+                        "reason": resource_check.reason,
+                        "snapshot": {
+                            "cpu_percent": resource_check.snapshot.cpu_percent,
+                            "memory_percent": resource_check.snapshot.memory_percent,
+                            "disk_percent": resource_check.snapshot.disk_percent,
+                            "timestamp": resource_check.snapshot.timestamp,
+                        },
+                        "thresholds": resource_check.thresholds,
+                    }
                     if resource_check.level == ResourceLevel.CRITICAL:
                         return await self._finalize_and_return(
                             user_input,
@@ -1359,6 +1383,7 @@ class PipelineRunner:
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,
                 "session_id": session_id, "latency_ms": round(latency, 2), "success": True,
             })
+            self._update_tui_from_trace(trace)
             return result
         except Exception as e:
             latency = (time.perf_counter() - t0) * 1000
@@ -1378,6 +1403,7 @@ class PipelineRunner:
                 "iteration": iteration, "phase": phase, "agent_path": agent_path,
                 "session_id": session_id, "latency_ms": round(latency, 2), "success": False,
             })
+            self._update_tui_from_trace(trace)
             return None
 
     async def _publish_progress(self, event_type: str, payload: dict[str, Any]):
@@ -1392,3 +1418,93 @@ class PipelineRunner:
             await self.bus.publish(msg)
         except Exception:
             pass
+
+        # Emit a TUI dashboard frame on every phase boundary.
+        if event_type in ("phase.start", "phase.end"):
+            session_id = payload.get("session_id", "unknown")
+            phase = payload.get("phase", "unknown")
+            iteration = payload.get("iteration", 0)
+            status = "running" if event_type == "phase.start" else "completed"
+            dashboard_text = self._render_tui_dashboard(session_id, phase, iteration, status)
+            try:
+                await self.bus.publish(Message(
+                    message_type=MessageType.EVENT,
+                    topic="tui_dashboard.frame",
+                    payload={
+                        "session_id": session_id,
+                        "phase": phase,
+                        "iteration": iteration,
+                        "status": status,
+                        "dashboard_text": dashboard_text,
+                    },
+                    sender="pipeline_runner",
+                ))
+            except Exception:
+                pass
+
+    def _render_tui_dashboard(self, session_id: str, current_phase: str, iteration: int,
+                              status: str = "running") -> str:
+        """Render a live TUI dashboard frame from current pipeline state.
+
+        Uses the most recent explicit resource checkpoint so rendering does not
+        trigger additional resource sampling between guard points.
+        """
+        resource = self._last_resource_state or {
+            "level": "unknown",
+            "reason": "Resource checkpoint not reached yet",
+            "snapshot": {},
+        }
+        agents: list[dict[str, Any]] = []
+        for trace_item in getattr(self, "_last_trace_snapshot", []):
+            agents.append({
+                "name": Path(trace_item.agent_path).name.replace(".md", ""),
+                "category": Path(trace_item.agent_path).parent.name if "/" in trace_item.agent_path else "",
+                "duration_ms": round(trace_item.latency_ms, 1),
+                "outcome": "pass" if trace_item.success else "fail",
+            })
+
+        safety_state = {
+            "verdicts": [],
+            "check_count": 0,
+            "active_blocks": 0,
+            "human_escalations": 0,
+        }
+        if self._safety_chain:
+            for triggered in self._safety_chain.triggered_rules:
+                verdict_str = "block" if triggered.severity == "aborted" else "warn"
+                safety_state["verdicts"].append({
+                    "verdict": verdict_str,
+                    "rule": getattr(triggered.rule, "description", str(triggered.rule)) or "",
+                })
+            safety_state["check_count"] = len(safety_state["verdicts"])
+            safety_state["active_blocks"] = sum(
+                1 for v in safety_state["verdicts"] if v["verdict"] == "block"
+            )
+
+        pipeline_state = {
+            "phase": current_phase,
+            "iteration": iteration,
+            "status": status,
+            "agents": agents,
+        }
+        resource_state = {
+            "cpu_level": resource.get("level", "normal"),
+            "memory_level": resource.get("level", "normal"),
+            "cpu_percent": resource.get("snapshot", {}).get("cpu_percent", 0.0) or 0.0,
+            "memory_percent": resource.get("snapshot", {}).get("memory_percent", 0.0) or 0.0,
+        }
+        result = render_dashboard(
+            session_id=session_id,
+            pipeline_state=pipeline_state,
+            resource_state=resource_state,
+            safety_state=safety_state,
+            start_time=getattr(self, "_t_start", 0.0),
+            use_ansi=True,
+        )
+        return result.dashboard_text
+
+    def _snapshot_trace(self, trace: list[IterationTrace]) -> None:
+        self._last_trace_snapshot = list(trace[-10:])
+
+    def _update_tui_from_trace(self, trace: list[IterationTrace]) -> None:
+        self._snapshot_trace(trace)

@@ -42,7 +42,7 @@ class RuncomMCPServer(MCPServer):
                        self._s({"pid": "int"}), self.capture_output)
         self.register("handle_timeout", "Handle command timeout with graceful shutdown",
                        self._s({"pid": "int", "graceful_ms?": "int"}), self.handle_timeout)
-        self.register("analyze_error", "Analyze command error output for known patterns",
+        self.register("runcom_analyze_error", "Analyze command error output for known patterns",
                        self._s({"command": "string", "stderr": "string", "exit_code": "int"}),
                        self.analyze_error)
         self.register("get_history", "Get command execution history",

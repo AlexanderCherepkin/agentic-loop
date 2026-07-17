@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: {{project_id}}
+    runtime: docker
+    env: docker
+    plan: free
+    branch: main
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 3000
+    healthCheckPath: /health

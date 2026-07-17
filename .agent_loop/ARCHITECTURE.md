@@ -55,7 +55,7 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── limitations.md                #     Known limitations
 │   │   ├── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
 │   │   └── client_brief_agent.md         #     PM-style structured client intake and brief builder
-│   ├── planning/                         #   Planning layer (44 agents)
+│   ├── planning/                         #   Planning layer (50 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
@@ -63,6 +63,9 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── figma_design_analyst.md       #     Run Figma pipeline and produce a design_blueprint
 │   │   ├── figma_precise_mode_auditor.md #     Builder.io-style readiness audit before Figma-to-code generation
 │   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
+│   │   ├── premium_design_analyst.md     #     Propose distinctive premium direction and font system; await user confirmation
+│   │   ├── design_reference_extractor.md #     Parse competitor/brand DESIGN.md or URL into DTCG-compatible brief
+│   │   ├── premium_design_system_generator.md # Generate DESIGN.md and design_tokens.json before code
 │   │   ├── backend_spec_bridge.md        #     Map backend specs to UI and generate backend layer
 │   │   ├── responsive_composer.md        #     Generate breakpoint variants and constraint classes for Tailwind AST
 │   │   ├── component_registry.md         #     Build Figma Component Registry and generate src/components/ui/*.tsx
@@ -99,8 +102,11 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── design_token_docs_format_selector.md      # Select docs formats (markdown/json/html) and output plan
 │   │   ├── copywriting_agent.md          #     Generate landing-page copy from client brief
 │   │   ├── estimation_proposal_agent.md  #     Estimate timeline/cost and produce SOW/proposal from client brief
-│   │   └── project_starter_agent.md      #     Select and materialize landing/SaaS/portfolio/e-commerce starter
-│   ├── execution/                        #   Execution layer (13 agents)
+│   │   ├── project_classifier.md         #     Classify a technical brief into project type, stack, and language
+│   │   ├── project_architect.md          #     Produce an architecture manifest from classification
+│   │   ├── project_starter_agent.md      #     Select and materialize landing/SaaS/portfolio/e-commerce starter
+│   │   └── git_publish_planner.md        #     Plan repository publication to GitHub/GitLab
+│   ├── execution/                        #   Execution layer (16 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
 │   │   ├── human_approval.md             #     Tactical human approval gate
@@ -113,7 +119,10 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── cms_runtime_integrator.md     #     Materialize CMS data layer, listing/detail pages, card components
 │   │   ├── accessibility_runtime_integrator.md # Run static WCAG audit via runtime/accessibility/AccessibilityEngine
 │   │   ├── pwa_runtime_integrator.md     #     Materialize PWA manifest/service worker/offline page and performance-budget diagnostics via runtime/pwa/PwaEngine
-│   │   └── design_token_docs_runtime_integrator.md # Generate markdown/json/html design-token handoff docs via runtime/design_token_docs/DesignTokenDocsEngine
+│   │   ├── design_token_docs_runtime_integrator.md # Generate markdown/json/html design-token handoff docs via runtime/design_token_docs/DesignTokenDocsEngine
+│   │   ├── project_developer.md          #     Generate project code from architecture manifest
+│   │   ├── git_publish_runtime_integrator.md # Publish generated codebase to GitHub/GitLab
+│   │   └── notification_runtime_integrator.md # Dispatch pipeline completion notifications
 │   ├── observability/                    #   Observation layer (19 agents)
 │   │   ├── environment_result.md         #     Capture environment state
 │   │   ├── runtime_output.md             #     Capture runtime output
@@ -134,13 +143,14 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── accessibility_audit_agent.md  #     Audit accessibility/WCAG 2.1 implementation
 │   │   ├── pwa_audit_agent.md            #     Audit PWA manifest, service worker, offline UX, and performance budgets
 │   │   └── design_token_docs_audit_agent.md # Audit design-token documentation completeness and audience fit
-│   ├── self_correction/                  #   Self-correction layer (15 agents)
+│   ├── self_correction/                  #   Self-correction layer (21 agents)
 │   │   ├── result_validation.md          #     Validate results
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
 │   │   ├── recursion_or_termination.md   #     Decide: loop or finish
 │   │   ├── assistance_request.md         #     Request human help
 │   │   ├── goal_evaluator.md             #     Evaluate progress against a stated goal (/goal fast-critic)
 │   │   ├── ponytail_review.md            #     Over-engineering review for generated/refactored code
+│   │   ├── anti_slop_validator.md        #     Hard-gate premium design system against anti-slop rules
 │   │   ├── i18n_rtl_validator.md         #     Verify RTL layout support
 │   │   ├── i18n_missing_key_guard.md     #     Ensure all keys exist in every locale dictionary
 │   │   ├── analytics_privacy_validator.md #  Verify analytics privacy/compliance
@@ -149,7 +159,12 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── accessibility_validator.md    #     Verify WCAG audit results and emit refinement actions
 │   │   ├── pwa_validator.md              #     Verify PWA/performance-budget audit results and emit refinement actions
 │   │   ├── design_token_docs_validator.md # Verify design-token docs completeness and emit refinement actions
-│   │   └── regression_guard.md           #     Cross-iteration regression detector (screenshot, layout, Lighthouse, files)
+│   │   ├── regression_guard.md           #     Cross-iteration regression detector (screenshot, layout, Lighthouse, files)
+│   │   ├── code_review_validator.md      #     Review generated code against brief/manifest and emit fixes
+│   │   ├── diff_patch_applier.md         #     Apply surgical text patches from code review
+│   │   ├── security_scan_validator.md    #     Verify security scan results and emit fixes
+│   │   ├── quality_evaluator_agent.md    #     Score manifest/codebase quality 1–10
+│   │   └── cost_audit_agent.md           #     Verify LLM cost budget compliance
 │   └── result/                           #   Output layer (4 agents)
 │       ├── solution.md                   #     Final solution
 │       ├── modified_files.md             #     List modified files
@@ -192,6 +207,71 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
         ├── correction_prompt_builder.md  #     Build compact correction prompt
         ├── loop_terminator.md            #     Convergence guard (8 iterations max)
         └── lighthouse_optimizer.md       #     Pipeline strategist and log rotation
+
+runtime/premium_design/                 #   Premium design engine (config + engine + DTCG + Tailwind adapter)
+    ├── config.py                           #     PremiumDesignConfig, forbidden/allowed font defaults, anti-slop rules
+    ├── engine.py                           #     PremiumDesignEngine writes DESIGN.md + design_tokens.json, runs hard gate
+    ├── dtcg_engine.py                      #     DtcgTokenEngine generates W3C DTCG tokens from brief + variance/density/motion knobs
+    ├── refactoring_ui_rules.py             #     Deterministic Refactoring UI checks (scale contrast, palette, shadows, spacing, type, states)
+    ├── tailwind_adapter.py                 #     TailwindConfigAdapter converts DTCG tokens into tailwind.config.ts + globals.css
+    └── __init__.py                         #     Public exports
+
+runtime/web_project_agents/             #   Web Project Agents integration (classification + architecture + development)
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     WebProjectAgentsConfig, ProjectClassifierConfig, ProjectArchitectConfig, ProjectDeveloperConfig
+    ├── prompts.py                        #     PromptManifest loader for classifier/architect/developer
+    ├── classifier.py                     #     ProjectClassifier + ClassificationCache
+    ├── architect.py                      #     ProjectArchitect
+    └── developer.py                      #     ProjectDeveloper
+
+runtime/project_starter/                #   Starter template engine
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     ProjectStarterConfig, TemplatePreset
+    ├── engine.py                         #     ProjectStarterEngine + ProjectStarterResult
+    └── template_manager.py               #     TemplateManager for preset discovery and materialization
+
+runtime/code_review/                    #   Code review engine
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     CodeReviewConfig
+    ├── engine.py                         #     CodeReviewer + ReviewResult
+    └── diff_engine.py                    #     Patch and PatchApplier for surgical text replacements
+
+runtime/security_scanner/               #   Security scanner engine
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     SecurityScannerConfig
+    └── engine.py                         #     SecurityScanner with regex secret/injection/credential checks
+
+runtime/quality_evaluation/             #   Quality evaluation engine
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     QualityEvaluationConfig
+    └── engine.py                         #     QualityEvaluator scoring manifests and codebases 1–10
+
+runtime/deploy/providers/               #   Image/container deploy providers (Render, Railway, Fly.io)
+    ├── __init__.py                       #     Provider factory
+    ├── base.py                           #     DeployProvider + ProviderDeployResult
+    ├── render.py                         #     RenderDeployer
+    ├── railway.py                        #     RailwayDeployer
+    └── flyio.py                          #     FlyioDeployer
+
+runtime/git_publisher/                  #   GitHub/GitLab repository publisher
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     GitPublisherConfig
+    └── engine.py                         #     GitPublisherEngine + GitPublishResult
+
+runtime/cost_tracking/                  #   LLM cost estimation and budget tracking
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     CostTrackingConfig + default cost table
+    └── engine.py                         #     CostTrackingEngine + SQLiteCostBackend + CostEstimate
+
+runtime/notifications/                  #   Pipeline notification dispatcher
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     NotificationsConfig
+    ├── engine.py                         #     NotificationsEngine + NotificationPayload + DispatchResult
+    └── channels/                         #     Email, Telegram, Slack notifiers
+        ├── base.py
+        ├── email.py
+        ├── telegram.py
+        └── slack.py
 ```
 
 ## Flow
@@ -205,7 +285,7 @@ User Request
           → control/ (scope, policy, resource enforcement)
             → orchestrator/dispatcher.md
               → tooll_subagents/user/ (user context + project_rules.md + design_intake)
-              → tooll_subagents/planning/ (task decomposition + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
+              → tooll_subagents/planning/ (task decomposition + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates premium_design_analyst, premium_design_system_generator, anti_slop_validator in premium mode, i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
               → tooll_subagents/execution/ (tool invocation [i18n_runtime_integrator, i18n_fallback_resolver, analytics_runtime_integrator, cookie_consent_blocker, auth_runtime_integrator, cms_runtime_integrator, accessibility_runtime_integrator, pwa_runtime_integrator, design_token_docs_runtime_integrator, multi_page_runtime_integrator, storybook_runtime_integrator, deploy_runtime_integrator, preview_runtime_integrator])
                 → tools_*/ (specialized tool agents)
                 → tools_browser/headless_automation (Playwright dynamic pages + visual_qa_agent)
@@ -223,7 +303,7 @@ User Request
                 → mcp_servers/memanto_server.py (optional Memanto semantic-memory tools)
                 → mcp_servers/mem0_server.py (optional Mem0 long-term memory tools)
               → tooll_subagents/observability/ (result capture + memanto_remember + mem0_remember + i18n_audit_agent + analytics_audit_agent + auth_audit_agent + cms_audit_agent + accessibility_audit_agent + pwa_audit_agent + design_token_docs_audit_agent + multi_page_audit_agent + storybook_audit_agent + deploy_audit_agent + preview_audit_agent)
-              → tooll_subagents/self_correction/ (validate [result_validation + goal_evaluator + visual_qa_agent + regression_guard + i18n_rtl_validator + i18n_missing_key_guard + analytics_privacy_validator + auth_validator + cms_validator + accessibility_validator + pwa_validator + design_token_docs_validator + multi_page_validator + storybook_validator + deploy_validator + preview_validator] → adjust → loop or finish)
+              → tooll_subagents/self_correction/ (validate [result_validation + goal_evaluator + visual_qa_agent + regression_guard + anti_slop_validator + i18n_rtl_validator + i18n_missing_key_guard + analytics_privacy_validator + auth_validator + cms_validator + accessibility_validator + pwa_validator + design_token_docs_validator + multi_page_validator + storybook_validator + deploy_validator + preview_validator] → adjust → loop or finish)
                 → PhaseTransitionManager (runtime conditional phase routing)
               → tooll_subagents/result/ (final output + memanto_answer + mem0_recall + action_report with audit summaries)
   → User Response
@@ -238,9 +318,9 @@ User Request
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
 | control | 7 |
-| tooll_subagents | 116 |
-| tools_* | 123 |
-| **Total** | **272** |
+| tooll_subagents | 132 |
+| tools_* | 124 |
+| **Total** | **289** |
 
 ## Naming Convention
 - snake_case filenames
@@ -279,27 +359,38 @@ User Request
 
 ## Implementation Status
 
-All 272 agents/files are fully implemented following the Algorithmic template:
+All 289 agents/files are fully implemented following the Algorithmic template:
 - `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, Headroom context-compaction integration, and the client-order brief branch
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (116) — Full ReAct cycle across 6 phases: user (5 with `design_intake.md` and `client_brief_agent.md`), planning (48 with `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `copywriting_agent.md`, `estimation_proposal_agent.md`, `project_starter_agent.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, `i18n_requirements_analyst.md`, `i18n_language_detector.md`, `i18n_key_extractor.md`, `i18n_dictionary_generator.md`, `i18n_routing_planner.md`, `i18n_component_rewriter.md`, `i18n_optimizer.md`, `analytics_requirements_analyst.md`, `analytics_provider_selector.md`, `analytics_event_mapper.md`, `analytics_script_injector.md`, `analytics_optimizer.md`, `cookie_consent_jurisdiction_mapper.md`, `cookie_consent_policy_generator.md`, `cookie_consent_banner_planner.md`, `auth_requirements_analyst.md`, `auth_provider_selector.md`, `cms_requirements_analyst.md`, `cms_source_selector.md`, `accessibility_requirements_analyst.md`, `accessibility_checker_planner.md`, `pwa_requirements_analyst.md`, `pwa_optimizer.md`, `design_token_docs_requirements_analyst.md`, `design_token_docs_format_selector.md`, `multi_page_planner.md`, `storybook_planner.md`, `deploy_planner.md`, and `preview_planner.md`), execution (17 with `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, `design_token_docs_runtime_integrator.md`, `multi_page_runtime_integrator.md`, `storybook_runtime_integrator.md`, `deploy_runtime_integrator.md`, and `preview_runtime_integrator.md`), observability (23 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, `design_token_docs_audit_agent.md`, `multi_page_audit_agent.md`, `storybook_audit_agent.md`, `deploy_audit_agent.md`, and `preview_audit_agent.md`), self_correction (19 with `goal_evaluator.md`, `ponytail_review.md`, `regression_guard.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, `design_token_docs_validator.md`, `multi_page_validator.md`, `storybook_validator.md`, `deploy_validator.md`, and `preview_validator.md`), result (4)
+- `tooll_subagents/` (132) — Full ReAct cycle across 6 phases: user (5 with `design_intake.md` and `client_brief_agent.md`), planning (55 with `project_classifier.md`, `project_architect.md`, `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `premium_design_analyst.md`, `premium_design_system_generator.md`, `anti_slop_validator.md`, `copywriting_agent.md`, `estimation_proposal_agent.md`, `project_starter_agent.md`, `git_publish_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, and the i18n/analytics/auth/CMS/accessibility/PWA/design-token-docs/multi-page/storybook/deploy/preview planners), execution (20 with `project_developer.md`, `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, `design_token_docs_runtime_integrator.md`, `multi_page_runtime_integrator.md`, `storybook_runtime_integrator.md`, `deploy_runtime_integrator.md`, `git_publish_runtime_integrator.md`, `notification_runtime_integrator.md`, and `preview_runtime_integrator.md`), observability (23 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, `design_token_docs_audit_agent.md`, `multi_page_audit_agent.md`, `storybook_audit_agent.md`, `deploy_audit_agent.md`, and `preview_audit_agent.md`), self_correction (25 with `goal_evaluator.md`, `ponytail_review.md`, `regression_guard.md`, `anti_slop_validator.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, `design_token_docs_validator.md`, `multi_page_validator.md`, `storybook_validator.md`, `deploy_validator.md`, `preview_validator.md`, `code_review_validator.md`, `diff_patch_applier.md`, `security_scan_validator.md`, `quality_evaluator_agent.md`, and `cost_audit_agent.md`), result (4)
 - `tools_*` (123) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `runtime/accessibility/` — deterministic static WCAG 2.1 audit engine (`AccessibilityEngine`) with `AccessibilityConfig`/`AccessibilityResult`, Tailwind/CSS color parsing, contrast calculation, focus/ARIA/keyboard/heading/alt/form-label checks, and optional async browser hook
 - `runtime/pwa/` — deterministic PWA + performance-budget engine (`PwaEngine`) with `PwaConfig`/`PwaResult`, manifest/service worker/offline-page generation, `srcset`/`sizes` image hints, font-subsetting guidance, JS/CSS/image/font/third-party budget diagnostics, and `next.config.js` patching
 - `runtime/design_token_docs/` — deterministic design-token documentation engine (`DesignTokenDocsEngine`) with `DesignTokenDocsConfig`/`DesignTokenDocsResult`; generates `docs/DESIGN_TOKENS.md`, `docs/design_tokens.docs.json`, and optional `docs/design_tokens.html` from `design_tokens.json` and `component_registry.json`
+- `runtime/premium_design/` — deterministic premium design engine (`PremiumDesignEngine`) with `PremiumDesignConfig`/`PremiumDesignResult`; writes `DESIGN.md` and W3C DTCG `design_tokens.json` via `DtcgTokenEngine`, runs anti-slop hard gate and Refactoring UI checks before code handoff; `refactoring_ui_rules.py` encodes scale contrast, semantic palette, elevation shadows, rhythmic spacing, type pairing, and state completeness
+- `templates/DESIGN.md` — handoff template for franchise/brand design contracts following Refactoring UI methodology
 - `runtime/multi_page/` — deterministic multi-page routing engine (`MultiPageEngine`) with `MultiPageConfig`/`MultiPageResult`; generates Next.js App Router pages, `Navigation.tsx`, `sitemap.ts`, and `robots.ts`
 - `runtime/storybook/` — deterministic Storybook integration engine (`StorybookEngine`) with `StorybookConfig`/`StorybookResult`; scans UI components and emits `.stories.tsx`, `.storybook/main.ts`, `.storybook/preview.ts`, and patches `package.json` scripts
 - `runtime/deploy/` — deterministic deploy execution engine (`DeployEngine`) with `DeployConfig`/`DeployResult`; wraps Vercel/Netlify/generic deploy CLI with dry-run default and deploy-URL extraction
 - `runtime/preview/` — deterministic preview/approval engine (`PreviewEngine`) with `PreviewConfig`/`PreviewResult`; wraps `figma-agent-core/preview_workflow.py` for dev-server screenshot, QR, client feedback, and refinement hints
+- `runtime/web_project_agents/` — Web Project Agents integration with `ProjectClassifier`, `ProjectArchitect`, and `ProjectDeveloper`; classifies technical briefs, produces architecture manifests, and generates code across Python/TypeScript/Go/Rust stacks
+- `runtime/project_starter/` — deterministic starter template engine (`ProjectStarterEngine` + `TemplateManager`) that discovers and materializes presets from `templates/web_project_agents/`
+- `runtime/code_review/` — deterministic code review engine (`CodeReviewer`) with issue severity scoring and surgical patch application via `PatchApplier`
+- `runtime/security_scanner/` — deterministic security scanner (`SecurityScanner`) detecting secrets, SQLi, XSS, and hardcoded credentials with regex/heuristic checks
+- `runtime/quality_evaluation/` — deterministic quality evaluator (`QualityEvaluator`) scoring manifests and generated codebases 1–10
+- `runtime/deploy/providers/` — image/container deploy providers `RenderDeployer`, `RailwayDeployer`, and `FlyioDeployer` exposed through `DeployEngine` for `render`/`railway`/`flyio` providers
+- `runtime/git_publisher/` — GitHub/GitLab publisher (`GitPublisherEngine`) that creates repos and commits generated files; optional PyGithub/python-gitlab dependencies
+- `runtime/cost_tracking/` — LLM cost estimation and budget tracking (`CostTrackingEngine` + `SQLiteCostBackend`) with per-scope budgets and integration into `runtime/engine/llm_engine.py`
+- `runtime/notifications/` — pipeline notification dispatcher (`NotificationsEngine`) with email/Telegram/Slack channels
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
 - `mcp_servers/mem0_server.py` — lazy MCP wrapper around `runtime/engine/mem0_client.py` exposing `mem0_add`, `mem0_search`, `mem0_get_all`, and `mem0_delete`; degrades to in-memory fallback when `mem0ai` is not installed or the API is unreachable
 
-Zero remaining stubs. All 272 agent specs include Role, Contract, Decision Flow, and Failure Modes.
+Zero remaining stubs. All 289 agent specs include Role, Contract, Decision Flow, and Failure Modes.
 
 ## Runtime / MCP
 
@@ -336,7 +427,7 @@ Zero remaining stubs. All 272 agent specs include Role, Contract, Decision Flow,
 
 ### MCP Servers
 
-All 16 MCP servers are registered in `mcp_servers/bootstrap.py` and discovered through `mcp_servers/registry.py`. Default mode is **lazy**: `mcp_servers/gateway.py` exposes category metadata and materializes a server only when one of its tools is actually invoked. Use `python -m mcp_servers.bootstrap --test` to run self-tests on all 16 servers; the test accepts `degraded` status for optional servers when their external dependency is missing.
+All 25 MCP servers are registered in `mcp_servers/bootstrap.py` and discovered through `mcp_servers/registry.py`. Default mode is **lazy**: `mcp_servers/gateway.py` exposes category metadata and materializes a server only when one of its tools is actually invoked. Use `python -m mcp_servers.bootstrap --test` to run self-tests on all 25 servers; the test accepts `degraded` status for optional servers when their external dependency is missing.
 
 | Category | Server file | Exposed tools | Required / Optional | Dependencies / Env | Degraded behavior |
 |---|---|---|---|---|---|
@@ -356,6 +447,15 @@ All 16 MCP servers are registered in `mcp_servers/bootstrap.py` and discovered t
 | `headroom` | `mcp_servers/headroom_server.py` | 3 | Optional | `headroom-ai>=0.1.0` (`runtime/requirements-headroom.txt`); env `HEADROOM_ENABLED`, `HEADROOM_MODEL`, `HEADROOM_SESSION_TTL` | Reports `status: degraded`; `runtime/engine/headroom_client.py` falls back to plaintext passthrough |
 | `memanto` | `mcp_servers/memanto_server.py` | 4 | Optional | `memanto>=0.1.0`, `moorcheh-sdk>=1.3.7` (`runtime/requirements-memanto.txt`); running Memanto server; env `MEMANTO_ENABLED`, `MEMANTO_BASE_URL`, `MEMANTO_API_KEY`, `MEMANTO_AGENT_ID` | Reports `status: degraded`; `runtime/engine/memanto_client.py` falls back to in-memory store |
 | `mem0` | `mcp_servers/mem0_server.py` | 4 | Optional | `mem0ai>=0.2.0`, `openai>=1.90.0`, `chromadb>=0.4.24` (or `qdrant-client`) (`runtime/requirements-mem0.txt`); env `MEM0_ENABLED`, `MEM0_API_KEY`, `MEM0_HOST`, `MEM0_VECTOR_STORE`, `MEM0_VECTOR_STORE_PATH`, optional `MEM0_USER_ID`/`MEM0_AGENT_ID`/`MEM0_APP_ID`/`MEM0_RUN_ID` | Reports `status: degraded`; `runtime/engine/mem0_client.py` falls back to in-memory store |
+| `brand_compliance` | `mcp_servers/brand_compliance_server.py` | 3 | Optional | `DESIGN.md`, `design_tokens.json` (anti-slop policy checks) | Reports `status: degraded` if policy files are missing; otherwise audits PRs and tokens |
+| `components_21st` | `mcp_servers/twenty_first_server.py` | 4 | Optional | Public 21st.dev API or curated offline catalog | Reports `status: degraded` if remote catalog is unavailable; falls back to offline snapshot |
+| `open_pencil` | `mcp_servers/openpencil_server.py` | 4 | Optional | `npx open-pencil` runner (`runtime/requirements-openpencil.txt`) | Reports `status: degraded` if runner is not installed; audits generated output for slop |
+| `design_to_code` | `mcp_servers/design_to_code_server.py` | 6 | Optional | `figma-agent-core/design_to_code_bridge.py` and siblings | Reports `status: degraded` if bridge is missing; otherwise runs in-process token/layout/component-tree extraction 
+| `sandbox` | `mcp_servers/sandbox_server.py` | 5 | Optional | Docker Desktop + WSL2 (`runtime/requirements-sandbox.txt`) | Reports `status: degraded` if neither Docker nor WSL2 is available; executes commands/dev servers/screenshots in isolation |
+| `security_scanner` | `mcp_servers/security_scanner_server.py` | 1 | Optional | Core requirements + `runtime/security_scanner/SecurityScanner` | Scans a codebase dict for secrets, SQLi, XSS, and hardcoded credentials |
+| `git_publisher` | `mcp_servers/git_publisher_server.py` | 2 | Optional | `PyGithub` / `python-gitlab` + env `GITHUB_TOKEN` / `GITLAB_TOKEN` | Reports configuration status without token; publishes repos when token is set |
+| `cost_tracking` | `mcp_servers/cost_tracking_server.py` | 4 | Optional | Core requirements + `runtime/cost_tracking/CostTrackingEngine` | Estimates and records LLM call costs, checks budgets, writes to `data/cost_tracking.db` |
+| `notifications` | `mcp_servers/notification_server.py` | 1 | Optional | `aiosmtplib` + env `SMTP_HOST`/`SMTP_USER`; `TELEGRAM_BOT_TOKEN`; `SLACK_WEBHOOK_URL` | Dispatches only when channels/recipients configured; skipped silently otherwise |
 
 Optional servers still register their tools in lazy mode, so the planner sees them as available categories. When invoked, they return a structured `degraded` response rather than throwing, letting the ReAct loop fall back or continue without external dependencies. `tools_lighthouse/audit` is intentionally **not** an MCP server; it is a headless-browser agent pipeline invoked by `tooll_subagents/self_correction/result_validation.md` and consumes the same Playwright dependency as `tools_browser`.
 
@@ -363,7 +463,7 @@ Optional servers still register their tools in lazy mode, so the planner sees th
 
 ### Cross-Reference Integrity
 
-All 272 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
+All 289 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
 
 **Test results (2026-07-08):**
 - Broken links: 0 (6 known false positives filtered — `README.md`, `API.md`, `CHANGELOG.md`, `MEMORY.md`, `project_rules.md` are documentation targets, not agents)
@@ -371,6 +471,9 @@ All 272 agents are wired into a single reference graph. Every agent is reachable
 - i18n and analytics/cookie-consent runtime tests pass after aligning `DecisionFlow`, engine paths, key namespace, and agent wording.
 - CI `.github/workflows/ci.yml` runs pytest by tiers: `core` (~296 tests, <45 s), `mcp` (~180 tests, <5 s), and `tests/integration/` (mock pipeline, <12 s). Figma tier (`~385 tests`) is excluded from mandatory CI because it requires `FIGMA_TOKEN`/`FIGMA_URL` and live network access; it can be run manually or in a scheduled job. CI also runs `ruff check`, `black --check`, `mypy`, and `pytest --cov` with a 60% coverage gate configured in `pyproject.toml`. A `.pre-commit-config.yaml` is provided for local lint/format/type-check hooks.
 - Script: `.agent_loop/scripts/validate_cross_references.js` — run with `node .agent_loop/scripts/validate_cross_references.js` to re-check after any edit
+- Script: `scripts/generate_tailwind_config.py` — run with `python scripts/generate_tailwind_config.py --input design_tokens.json --output tailwind.config.ts --css-output src/app/globals.css` to bridge DTCG tokens into Tailwind CSS variables and config
+- Integration: `claude.json` — workspace config that wires `premium-design-anti-slop` into Claude Design `/design-sync` pre/post hooks
+- Integration: `open-design-integrator.mjs` — Node.js adapter that registers the same Anti-Slop skill with a local Open Design (nexu-io) BYOK desktop instance on port 8123
 
 **Top referenced agents:**
 - `audit_logger.md` — referenced by 23 agents (central logging backbone)

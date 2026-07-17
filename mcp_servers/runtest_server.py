@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -103,9 +104,9 @@ class RuntestMCPServer(MCPServer):
         t0 = time.perf_counter()
 
         if framework == "pytest":
-            cmd = ["python", "-m", "pytest", str(filepath), "-v"]
+            cmd = [sys.executable, "-m", "pytest", str(filepath), "-v"]
             if test_name:
-                cmd.append(f"-k {test_name}")
+                cmd.extend(["-k", test_name])
         elif framework == "jest":
             cmd = ["npx", "jest", str(filepath)]
             if test_name:

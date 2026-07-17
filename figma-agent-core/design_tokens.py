@@ -189,6 +189,8 @@ class TokenRegistry:
     text_color_by_hex: Dict[str, str] = field(default_factory=dict)
     style_token_map: Dict[str, str] = field(default_factory=dict)
     variable_token_map: Dict[str, str] = field(default_factory=dict)
+    semantic_token_map: Dict[str, str] = field(default_factory=dict)
+    semantic_match_scores: Dict[str, float] = field(default_factory=dict)
     exact_token_paths: List[str] = field(default_factory=list)
 
     def to_config_map(self) -> Dict[str, Any]:

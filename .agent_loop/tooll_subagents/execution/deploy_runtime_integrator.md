@@ -23,6 +23,8 @@ Execution agent that runs the deployment for a generated Next.js site using `run
   - `returncode`: int | None
   - `errors`: list[dict[str, Any]]
   - `notes`: list[str]
+  - `service_id`: str | None — populated by image providers
+  - `service_url`: str | None — populated by image providers
   - `next_phase_hint`: enum (`observability`, `execution`, `result`)
 }
 
@@ -33,12 +35,13 @@ Execution agent that runs the deployment for a generated Next.js site using `run
 
 ## Decision Flow
 
-1. **Validate target directory** — ensure `target_dir` contains deploy artifacts (`package.json`, `vercel.json` or `netlify.toml`, or `dist/` for generic); abort if not.
+1. **Validate target directory** — ensure `target_dir` contains deploy artifacts (`package.json`, `vercel.json` or `netlify.toml`, or `dist/` for generic); for image providers (`render`, `railway`, `flyio`), require `image_tag` and `project_id` instead.
 2. **Check human approval** — if `dry_run=false` but no explicit `human_approval.approved=true`, downgrade to dry-run and log warning.
-3. **Build config** — create `DeployConfig` from `deploy_requirements`.
-4. **Run DeployEngine** — invoke `runtime/deploy/DeployEngine(target_dir, config).run()`.
-5. **Capture result** — record command, exit code, stdout, stderr, and any captured deploy URL.
-6. **Return integration report** with hint `observability` after live deploy or dry-run, `result` if skipped.
+3. **Build config** — create `DeployConfig` from `deploy_requirements`, passing `image_tag`, `project_id`, `service_name`, `app_name`, `region`, `owner_id`, `plan`, `org_slug` when applicable.
+4. **Run DeployEngine** — invoke `runtime/deploy/DeployEngine(target_dir, config).run()`. For image providers, the engine dispatches to the provider's REST API.
+5. **Capture result** — record command/status, exit code or API status, stdout/logs, deploy/service URL, and `service_id` for image providers.
+6. **Coordinate handoff** — if a git publish plan is present, route to `git_publish_runtime_integrator.md` after deploy; otherwise if notifications are configured, route to `notification_runtime_integrator.md`.
+7. **Return integration report** with hint `observability` after live deploy or dry-run, `result` if skipped.
 
 ## Failure Modes
 

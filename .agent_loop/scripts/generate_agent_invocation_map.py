@@ -132,6 +132,10 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
         "headroom": [],
         "memanto": [],
         "mem0": [],
+        "security_scanner": [],
+        "git_publisher": [],
+        "cost_tracking": [],
+        "notifications": [],
     }
 
     for a in agents:
@@ -210,6 +214,11 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
             if a in EXECUTION_CORE:
                 continue
             phase["execution_conditional"].append(a)
+            name = Path(a).stem
+            if name == "git_publish_runtime_integrator":
+                mcp["git_publisher"].append(a)
+            elif name == "notification_runtime_integrator":
+                mcp["notifications"].append(a)
             continue
 
         if a.startswith("tooll_subagents/observability/"):
@@ -232,6 +241,11 @@ def classify(agents: list[str]) -> dict[str, list[str]]:
             if a in VALIDATION_CORE:
                 continue
             phase["self_correction"].append(a)
+            name = Path(a).stem
+            if name == "security_scan_validator":
+                mcp["security_scanner"].append(a)
+            elif name == "cost_audit_agent":
+                mcp["cost_tracking"].append(a)
             continue
 
         if a.startswith("tooll_subagents/result/"):

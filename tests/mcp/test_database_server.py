@@ -31,7 +31,7 @@ def test_database_server_initializes(db_server: DatabaseMCPServer) -> None:
     expected = {
         "open_connection", "analyze_schema", "build_query", "execute_query",
         "begin_transaction", "commit_transaction", "rollback_transaction",
-        "map_result", "cache_query", "analyze_error", "suggest_migration",
+        "map_result", "cache_query", "db_analyze_error", "suggest_migration",
         "close_connection",
     }
     assert names == expected

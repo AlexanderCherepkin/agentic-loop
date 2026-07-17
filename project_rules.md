@@ -131,6 +131,18 @@ The following actions still require explicit human approval:
 All other actions — including destructive filesystem operations within the workspace, network egress to configured allow-list destinations, browser automation on trusted domains, CAPTCHA handling, and privilege changes requested by the autonomous bot — are auto-approved inside the autonomous run.
 - Any operation explicitly flagged as critical by `control/human_oversight.md`.
 
+## Internal Agent / Framework Exposure Restriction
+
+All agents, subagents, runtime modules, MCP servers, orchestrators, safety controllers, planning/execution/observability/self-correction agents, and any other internal component that lives inside `Agentic_Loop_Graph` are **strictly internal tooling**. They must perform their agentic roles, but **they must never be served, opened, or exposed as a website** in the browser or via any local/remote server.
+
+Forbidden artifacts include, but are not limited to:
+- `.agent_loop/` agent specs and orchestrators (`main_loop.md`, `orchestrator/`, `safety-control/`, `mutual_check/`, `control/`, `tooll_subagents/`).
+- Runtime engines and modules (`runtime/`, `figma-agent-core/`).
+- MCP servers (`mcp_servers/`).
+- Any dashboard, docs site, `website/dist`, TUI, or preview that represents the agent framework itself rather than a deliverable project.
+
+Browser automation, local hosting, preview, and deployment are permitted **only** for the actual website/application/project being built according to its `TECHNICAL_ASSIGNMENT.md`. Before opening any local URL, verify the served directory/process. If it is internal agent infrastructure, refuse to open it and ask the user to stop it and point to the deliverable project's output or dev server.
+
 ## Front-end Quality Defaults
 
 - For every generated front-end, the system must produce or reuse a safe-component layer under `src/components/safe/`:

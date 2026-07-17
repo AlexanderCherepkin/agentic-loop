@@ -1,0 +1,22 @@
+id: fastapi-react
+name: FastAPI + React
+base_category: Веб-сервис
+language: python
+description: |
+  Полнофункциональный скелет веб-приложения: Python/FastAPI backend с JWT-аутентификацией
+  и SQLAlchemy, React/Vite frontend с React Router и базовыми страницами.
+tags:
+  - fastapi
+  - react
+  - spa
+  - jwt
+  - sqlalchemy
+stack:
+  backend: FastAPI 0.110+
+  frontend: React 18 + Vite
+  orm: SQLAlchemy 2.0
+  db: PostgreSQL / SQLite
+  auth: JWT (python-jose)
+variables:
+  backend_port: 8000
+  frontend_port: 5173

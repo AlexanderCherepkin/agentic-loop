@@ -1,0 +1,20 @@
+image: python:3.12
+
+stages:
+  - lint
+  - test
+
+before_script:
+  - pip install -r requirements.txt
+  - pip install ruff pyright pytest
+
+lint:
+  stage: lint
+  script:
+    - ruff check .
+    - pyright
+
+test:
+  stage: test
+  script:
+    - pytest

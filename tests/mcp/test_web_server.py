@@ -35,8 +35,8 @@ def test_web_server_initializes(web_server: WebMCPServer) -> None:
     names = {t["name"] for t in tools}
     expected = {
         "build_request", "add_auth", "check_network", "check_rate_limit",
-        "send_request", "parse_response", "extract_content", "cache_response",
-        "handle_retry", "analyze_error",
+        "send_request", "parse_response", "web_extract_content", "cache_response",
+        "handle_retry", "web_analyze_error",
     }
     assert names == expected
 

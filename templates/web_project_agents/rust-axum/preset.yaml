@@ -1,0 +1,20 @@
+id: rust-axum
+name: Rust + Axum
+base_category: Веб-сервис
+language: rust
+description: |
+  Backend-стarter на Rust с Axum, Tokio, SQLx, bcrypt и простым HTML/HTMX фронтендом.
+tags:
+  - rust
+  - axum
+  - tokio
+  - sqlx
+  - htmx
+stack:
+  backend: Rust 1.75 + Axum 0.7
+  orm: SQLx
+  db: PostgreSQL / SQLite
+  auth: JWT (jsonwebtoken)
+  frontend: HTML + HTMX
+variables:
+  backend_port: 3000

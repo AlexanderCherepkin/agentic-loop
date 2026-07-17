@@ -331,7 +331,7 @@ def test_style_name_does_not_alias_to_heuristic_semantic_token() -> None:
     assert "primary" in registry.colors
     # But the style ID must map to its exact path, not silently alias to "primary".
     assert registry.style_token_map["s-primary-blue"] == "colors.primary.blue"
-    assert not hasattr(registry, "semantic_token_map")
+    assert registry.semantic_token_map == {}
 
 
 def test_variable_name_does_not_alias_to_heuristic_semantic_token() -> None:
@@ -360,7 +360,7 @@ def test_variable_name_does_not_alias_to_heuristic_semantic_token() -> None:
     registry = design_tokens.FigmaTokenExtractor(fixture).extract()
     assert "primary" in registry.colors
     assert registry.variable_token_map["v-primary"] == "theme.colors.primary.500"
-    assert not hasattr(registry, "semantic_token_map")
+    assert registry.semantic_token_map == {}
 
 
 def test_exact_style_and_variable_names_take_precedence_over_heuristics() -> None:

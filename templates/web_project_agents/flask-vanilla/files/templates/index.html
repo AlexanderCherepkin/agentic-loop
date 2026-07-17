@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Flask + Vanilla JS Starter</h1>
+
+{% if current_user.is_authenticated %}
+  <p>Welcome, {{ current_user.username }}!</p>
+{% else %}
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.username.label }} <br />
+      {{ form.username() }}
+    </p>
+    <p>
+      {{ form.password.label }} <br />
+      {{ form.password() }}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </form>
+{% endif %}
+{% endblock %}

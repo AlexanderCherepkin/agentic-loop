@@ -41,6 +41,7 @@ Planning agent that transforms a design descriptor into a structured code bluepr
 ## Decision Flow
 
 0. **Runtime fast path** — if `mcp_gateway` reports that `figma_run_pipeline` was already executed by the runtime for this descriptor, accept the returned pipeline output as the `design_blueprint`, verify artifact paths, and return immediately unless validation fails.
+0a. **Visual-to-architecture fast path** — if `architecture_blueprint` from `tooll_subagents/planning/visual_to_architecture_planner.md` is present, merge its `tokens`, `layout`, and `component_tree` into the blueprint metadata and skip the per-stage extraction below for those artifacts.
 1. **Validate design descriptor** — ensure `source_value` and `design_source` are present; if invalid, return failed blueprint.
 2. **Resolve source** —
    - `figma_url` / `figma_node_id`: call `figma_bootstrap` via MCP to fetch/refresh `figma_node.json`.

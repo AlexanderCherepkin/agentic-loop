@@ -75,8 +75,15 @@ PHASE_AGENTS: dict[str, list[str]] = {
     ],
     "planning_general": [
         "tooll_subagents/planning/cost_risk_assessment.md",
+        "tooll_subagents/planning/design_reference_extractor.md",
         "tooll_subagents/planning/design_to_code_planner.md",
+        "tooll_subagents/planning/git_publish_planner.md",
         "tooll_subagents/planning/internal_monologue.md",
+        "tooll_subagents/planning/premium_design_analyst.md",
+        "tooll_subagents/planning/premium_design_system_generator.md",
+        "tooll_subagents/planning/project_architect.md",
+        "tooll_subagents/planning/project_classifier.md",
+        "tooll_subagents/planning/visual_to_architecture_planner.md",
     ],
     "planning_figma": [
         "tooll_subagents/planning/asset_agent.md",
@@ -180,11 +187,14 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/execution/cookie_consent_blocker.md",
         "tooll_subagents/execution/deploy_runtime_integrator.md",
         "tooll_subagents/execution/design_token_docs_runtime_integrator.md",
+        "tooll_subagents/execution/git_publish_runtime_integrator.md",
         "tooll_subagents/execution/human_approval.md",
         "tooll_subagents/execution/i18n_fallback_resolver.md",
         "tooll_subagents/execution/i18n_runtime_integrator.md",
         "tooll_subagents/execution/multi_page_runtime_integrator.md",
+        "tooll_subagents/execution/notification_runtime_integrator.md",
         "tooll_subagents/execution/preview_runtime_integrator.md",
+        "tooll_subagents/execution/project_developer.md",
         "tooll_subagents/execution/pwa_runtime_integrator.md",
         "tooll_subagents/execution/storybook_runtime_integrator.md",
     ],
@@ -218,11 +228,15 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/self_correction/recursion_or_termination.md",
         "tooll_subagents/self_correction/accessibility_validator.md",
         "tooll_subagents/self_correction/analytics_privacy_validator.md",
+        "tooll_subagents/self_correction/anti_slop_validator.md",
         "tooll_subagents/self_correction/assistance_request.md",
         "tooll_subagents/self_correction/auth_validator.md",
         "tooll_subagents/self_correction/cms_validator.md",
+        "tooll_subagents/self_correction/code_review_validator.md",
+        "tooll_subagents/self_correction/cost_audit_agent.md",
         "tooll_subagents/self_correction/deploy_validator.md",
         "tooll_subagents/self_correction/design_token_docs_validator.md",
+        "tooll_subagents/self_correction/diff_patch_applier.md",
         "tooll_subagents/self_correction/goal_evaluator.md",
         "tooll_subagents/self_correction/i18n_missing_key_guard.md",
         "tooll_subagents/self_correction/i18n_rtl_validator.md",
@@ -231,7 +245,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/self_correction/ponytail_review.md",
         "tooll_subagents/self_correction/preview_validator.md",
         "tooll_subagents/self_correction/pwa_validator.md",
+        "tooll_subagents/self_correction/quality_evaluator_agent.md",
         "tooll_subagents/self_correction/regression_guard.md",
+        "tooll_subagents/self_correction/security_scan_validator.md",
         "tooll_subagents/self_correction/storybook_validator.md",
     ],
     "result": [
@@ -327,6 +343,7 @@ MCP_CATEGORY_AGENT_PATHS: dict[str, list[str]] = {
         "tools_terminal/terminal_io/stream_writer.md",
         "tools_terminal/terminal_io/terminal_optimizer.md",
         "tools_terminal/terminal_io/terminal_state.md",
+        "tools_terminal/terminal_io/tui_dashboard.md",
     ],
     "tools_manangr": [
         "tools_manangr/project_manager/build_manager.md",
@@ -428,6 +445,18 @@ MCP_CATEGORY_AGENT_PATHS: dict[str, list[str]] = {
         "tooll_subagents/observability/mem0_list.md",
         "tooll_subagents/observability/mem0_recall.md",
         "tooll_subagents/observability/mem0_remember.md",
+    ],
+    "security_scanner": [
+        "tooll_subagents/self_correction/security_scan_validator.md",
+    ],
+    "git_publisher": [
+        "tooll_subagents/execution/git_publish_runtime_integrator.md",
+    ],
+    "cost_tracking": [
+        "tooll_subagents/self_correction/cost_audit_agent.md",
+    ],
+    "notifications": [
+        "tooll_subagents/execution/notification_runtime_integrator.md",
     ],
 }
 

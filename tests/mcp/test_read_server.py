@@ -38,7 +38,7 @@ def test_read_server_initializes(read_server: ReadMCPServer) -> None:
     names = {t["name"] for t in tools}
     expected = {
         "read_file", "detect_encoding", "get_file_info", "read_chunk",
-        "extract_content", "validate_integrity", "format_output",
+        "read_extract_content", "validate_integrity", "format_output",
         "list_directory", "clear_cache",
     }
     assert names == expected

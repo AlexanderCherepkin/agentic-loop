@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import time
 from dataclasses import dataclass, field
@@ -9,9 +10,12 @@ from enum import Enum
 from typing import Any
 
 from ..contracts.agent_spec import AgentSpec
+from ..cost_tracking import CostTrackingEngine
 
 from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig
 from .headroom_client import HeadroomClient, HeadroomConfig
+
+logger = logging.getLogger(__name__)
 
 
 class LLMProvider(str, Enum):
@@ -326,6 +330,7 @@ class LLMEngine:
             config=CircuitBreakerConfig(failure_threshold=3, recovery_timeout=30.0),
         )
         self._fallback_chain: list[LLMConfig] = self._build_fallback_chain()
+        self._cost_tracker = CostTrackingEngine()
 
     def _resolve_api_key(self):
         if self.config.api_key:
@@ -371,7 +376,9 @@ class LLMEngine:
 
     async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
         if self.config.provider == LLMProvider.MOCK:
-            return await MockLLMEngine().execute(spec, inputs, extra_context=extra_context)
+            response = await MockLLMEngine().execute(spec, inputs, extra_context=extra_context)
+            self._track_cost(spec, "", "", response)
+            return response
 
         system_prompt = spec.to_system_prompt()
         if extra_context:
@@ -380,7 +387,9 @@ class LLMEngine:
 
         # Primary provider with circuit breaker
         try:
-            return await self._breaker.call(self._execute_with_retries, system_prompt, user_message)
+            response = await self._breaker.call(self._execute_with_retries, system_prompt, user_message)
+            self._track_cost(spec, system_prompt, user_message, response)
+            return response
         except Exception:
             pass
 
@@ -388,11 +397,33 @@ class LLMEngine:
         for fallback in self._fallback_chain:
             try:
                 fb_engine = LLMEngine(config=fallback)
-                return await fb_engine._execute_with_retries(system_prompt, user_message)
+                response = await fb_engine._execute_with_retries(system_prompt, user_message)
+                self._track_cost(spec, system_prompt, user_message, response)
+                return response
             except Exception:
                 continue
 
         raise RuntimeError("All LLM providers failed (circuit breaker open or API errors)")
+
+    def _track_cost(
+        self,
+        spec: AgentSpec | None,
+        system_prompt: str,
+        user_message: str,
+        response: LLMResponse,
+    ) -> None:
+        try:
+            agent_name = os.path.basename(getattr(spec, "source_path", "") or "raw")
+            self._cost_tracker.record_llm_response(
+                scope=os.getenv("COST_SCOPE", "default"),
+                model=response.model or self.config.model,
+                system_prompt=system_prompt,
+                user_message=user_message,
+                response_text=response.content,
+                agent=agent_name or "raw",
+            )
+        except Exception:
+            logger.exception("Failed to record LLM call cost")
 
     async def _execute_with_retries(self, system_prompt: str, user_message: str) -> LLMResponse:
         for attempt in range(1, self.config.max_retries + 1):
@@ -470,6 +501,7 @@ class LLMEngine:
             self.config.max_tokens = max_tokens or saved_max
             self.config.temperature = temperature
             response = await self._call_api(system, user)
+            self._track_cost(None, system, user, response)
             return response.content
         finally:
             self.config.max_tokens = saved_max

@@ -34,8 +34,8 @@ CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
 
-EXPECTED_AGENTS = 272
-EXPECTED_MCP_SERVERS = 16
+EXPECTED_AGENTS = 289
+EXPECTED_MCP_SERVERS = 25
 
 
 def run(cmd: list[str], timeout: int = 60, **kwargs: Any) -> subprocess.CompletedProcess:
@@ -144,7 +144,7 @@ def check_mcp_servers() -> dict[str, Any]:
 def check_pytest_core() -> dict[str, Any]:
     start = time.perf_counter()
     # Use default verbosity so pytest prints the final "N passed, M deselected" line.
-    result = run([sys.executable, "-m", "pytest", "-m", "core"], timeout=120)
+    result = run([sys.executable, "-m", "pytest", "-m", "core"], timeout=600)
     elapsed = time.perf_counter() - start
 
     summary_match = re.search(r"(\d+)\s+passed(?:,\s+(\d+)\s+failed)?", result.stdout)

@@ -31,7 +31,7 @@ def test_runcom_server_initializes(runcom_server: RuncomMCPServer) -> None:
     expected = {
         "build_command", "optimize_command", "setup_environment",
         "execute_command", "sandbox_check", "capture_output", "handle_timeout",
-        "analyze_error", "get_history",
+        "runcom_analyze_error", "get_history",
     }
     assert names == expected
 

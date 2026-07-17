@@ -38,6 +38,9 @@ class DeployEngine:
                 self.result.errors.append({"file": "", "reason": err})
             return self.result
 
+        if self.config.is_image_provider:
+            return self._run_image_provider()
+
         command = self._build_command()
         self.result.command = command
 
@@ -75,6 +78,59 @@ class DeployEngine:
             self.result.stderr = exc.stderr or ""
         except Exception as exc:
             self.result.errors.append({"file": "", "reason": str(exc)})
+
+        return self.result
+
+    def _run_image_provider(self) -> DeployResult:
+        from .providers import DeployProviderFactory
+
+        provider = DeployProviderFactory.get(self.config.provider)
+        self.result.command = f"{self.config.provider} image deploy: {self.config.image_tag}"
+
+        if self.config.dry_run:
+            self.result.success = True
+            self.result.notes.append(
+                f"Dry-run mode: would deploy image {self.config.image_tag} to {self.config.provider}"
+            )
+            self.result.notes.append(
+                f"Provider configured: {provider.is_configured()}"
+            )
+            return self.result
+
+        if not provider.is_configured():
+            self.result.errors.append({
+                "file": "",
+                "reason": f"{self.config.provider} provider is not configured (API key missing)",
+            })
+            return self.result
+
+        project: dict[str, Any] = {
+            "project_id": self.config.project_id,
+            "language": self.config.language,
+        }
+        provider_config: dict[str, Any] = {
+            "service_name": self.config.service_name,
+            "app_name": self.config.app_name,
+            "region": self.config.region,
+            "owner_id": self.config.owner_id,
+            "plan": self.config.plan,
+        }
+        provider_config = {k: v for k, v in provider_config.items() if v is not None}
+
+        provider_result = provider.deploy(
+            image_tag=self.config.image_tag or "",
+            project=project,
+            config=provider_config or None,
+        )
+
+        self.result.deploy_url = provider_result.service_url
+        self.result.stdout = "\n".join(provider_result.logs)
+        self.result.notes.extend(provider_result.logs)
+        if provider_result.error:
+            self.result.errors.append({"file": "", "reason": provider_result.error})
+        else:
+            self.result.success = bool(provider_result.service_id or provider_result.service_url)
+            self.result.notes.append(f"Status: {provider_result.status}")
 
         return self.result
 

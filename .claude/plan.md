@@ -1,165 +1,208 @@
-# План: Закрытие модуля клиентских сайтов (multi-page, Storybook, deploy, preview)
+# План интеграции Web Project Agents (`F:\Agents-komponents`) в Agentic Loop
+
+> **Примечание:** в `F:\Agentic_Loop_Graph\.claude\plan.md` обнаружен устаревший план (модуль клиентских сайтов: multi-page, Storybook, deploy, preview). Он перезаписывается планом текущей интеграции, поскольку мы находимся в plan mode для задачи интеграции `F:\Agents-komponents`.
 
 ## Цель
-Реализовать оставшиеся пробелы для клиентских сайтов, выявленные при валидации предположений:
-1. **Multi-page routing** — Next.js App Router, навигация, sitemap, robots.txt.
-2. **Storybook integration** — генерация `.stories.tsx` из UI-компонентов.
-3. **Deploy execution** — фактический запуск deploy на Vercel/Netlify/generic.
-4. **Preview/approval workflow** — dev-сервер, скриншот, QR, фидбек, refinement hints.
+Добавить в Agentic Loop недостающие возможности из Web Project Agents: классификацию ТЗ, генерацию архитектурного манифеста, мультиязыковые стартовые шаблоны (Python/TypeScript/Go/Rust), code review, security scanning, качественную оценку результатов, расширенные провайдеры деплоя (Render/Railway/Fly.io), публикацию в GitHub/GitLab, отслеживание стоимости LLM и уведомления.
 
-## Архитектурные решения
-- Каждый модуль оформляем по существующему шаблону: **runtime engine** (`runtime/<module>/engine.py`) + ReAct-агенты (planning → execution → validator → audit).
-- Figma-специфичная часть дополняет `figma-agent-core/conductor.py` и `figma-agent-core/page_composer.py`, чтобы пайплайн Figma-to-Code мог сразу генерировать многостраничные сайты, Storybook, деплой и preview.
-- Runtime-агенты используют те же `Config`/`Result`/`run()` движки, что `PwaEngine`, `CmsQueriesEngine` и т.д.
-- Новые флаги планирования (`needs_multi_page`, `needs_storybook`, `needs_deploy`, `needs_preview`) добавляются в `PLANNING_FLAG_GROUPS` и автоматически подхватываются `PipelineRunner`.
-- Agent count: 256 → 272 (+16 агентов: 4 planning, 4 execution, 4 self_correction, 4 observability/audit по одному на модуль).
+## Принципы интеграции
+1. **Не заменяем архитектуру Agentic Loop** — адаптируем исходные модули под существующие паттерны (markdown-агенты по Algorithmic template + runtime-движки + MCP-обёртки).
+2. **Не дублируем функционал** — уже есть safety-control, memory, deploy (Vercel/Netlify), human_approval, observability — эти части исходного бота не переносим.
+3. **Интегрируем только то, чего нет** — новые агенты, runtime-модули, шаблоны и MCP-серверы.
+4. **Сохраняем соглашения** — snake_case, Algorithmic template, pipeline-архитектура, cross-cutting optimizer.
+5. **Регенерируем агентную карту** — после добавления агентов обновить `runtime/engine/agent_invocation_map.py` через `generate_agent_invocation_map.py`.
+6. **Добавляем тесты** — под каждый новый runtime-модуль тест в `tests/runtime/`, под MCP-сервер — в `tests/mcp/`.
 
-## Модуль 1 — Multi-page routing
+## Что НЕ интегрируем
+| Компонент исходного бота | Причина |
+|---|---|
+| `main.py` (FastAPI сервис) | У нас `runtime/main.py` + `orchestrator/api_gateway.md` |
+| `config.py` (pydantic-settings) | Своя конфигурация в `runtime/engine/llm_engine.py` и env |
+| `cache.py` (SQLite cache классификаций) | Есть `tools_memory/memory_store` и `runtime/memory/` |
+| `project_store.py` | Есть `runtime/engine/state_manager.md` и `audit_logger` |
+| `metrics.py` Prometheus | Есть `runtime/observability/metrics.py` |
+| `llm_router.py` | Есть `runtime/engine/llm_engine.py`; можно позже добавить multi-model fallback |
+| `health.py`, `shutdown.py`, `logging_config.py`, `startup_validation.py`, `db_maintenance.py` | Инфраструктура уже покрыта |
+| `tasks.py` (Celery) | У нас `runtime/workers/` и `pipeline_runner.py` |
+| `approvals.py` | Есть `tooll_subagents/execution/human_approval.md` |
+| `static/index.html`, `admin.html` | Web-UI не входит в текущий scope |
+| `cli.py` | Есть `cli.js` |
+| `plugin_manager.py`, `tenants.py` | Можно добавить позже, не критично для core |
 
-### Runtime engine
-- `runtime/multi_page/__init__.py`
-- `runtime/multi_page/config.py` — `MultiPageConfig` (target_dir, base_url, pages[], default_locale, generate_sitemap, generate_robots).
-- `runtime/multi_page/engine.py` — `MultiPageEngine`:
-  - Принимает список страниц (`slug`, `title`, `code`, `metadata`).
-  - Пишет `app/[slug]/page.tsx` и `app/page.tsx` для `home`.
-  - Генерирует `app/components/Navigation.tsx` на основе pages[] с активным пунктом.
-  - Генерирует `app/sitemap.ts` (Next.js Metadata Route) с `alternates`/`priority`/`lastModified`.
-  - Генерирует `app/robots.ts` с `allow: "/"` и `sitemap` URL.
-  - Возвращает `MultiPageResult` со списком written files.
+## Что интегрируем (по этапам)
 
-### ReAct-агенты
-- `.agent_loop/tooll_subagents/planning/multi_page_planner.md` — определяет `needs_multi_page`, структуру страниц, slug-маппинг, флаги sitemap/robots.
-- `.agent_loop/tooll_subagents/execution/multi_page_runtime_integrator.md` — вызывает `MultiPageEngine.run()` и возвращает `multi_page_report`.
-- `.agent_loop/tooll_subagents/self_correction/multi_page_validator.md` — проверяет, что все slug-директории созданы, sitemap содержит все страницы, robots корректен.
-- `.agent_loop/tooll_subagents/observability/multi_page_audit_agent.md` — финальный аудит модуля.
+### Этап 1 — Web Project Agents: classifier / architect / developer
+**Агенты (Algorithmic template):**
+- `.agent_loop/tooll_subagents/planning/project_classifier.md` — классификация ТЗ по взвешенным триггерам, 17 категорий проектов.
+- `.agent_loop/tooll_subagents/planning/project_architect.md` — генерация архитектурного манифеста на основе классификации.
+- `.agent_loop/tooll_subagents/execution/project_developer.md` — генерация стартового codebase с учётом языка и шаблона.
 
-### Figma-интеграция
-- Расширить `page_composer.py`:
-  - `compose_navigation(pages) -> str` — React-навигация.
-  - `compose_sitemap_ts(pages, base_url) -> str` — `app/sitemap.ts`.
-  - `compose_robots_ts(base_url) -> str` — `app/robots.ts`.
-- Добавить в `conductor.py`:
-  - Флаг `--multi-page` в CLI и `config["multi_page"]`.
-  - `stage_compose` вызывает `page_composer.py --multi-page` и пишет `app/[slug]/page.tsx`.
-  - Новый `stage_multi_page` (после compose) генерирует Navigation/Sitemap/Robots.
+**Runtime:**
+- `runtime/web_project_agents/__init__.py`
+- `runtime/web_project_agents/config.py` — `ProjectClassifierConfig`, `ProjectArchitectConfig`, `ProjectDeveloperConfig`
+- `runtime/web_project_agents/classifier.py` — адаптация `AgentClassifier` + `LLMClient`
+- `runtime/web_project_agents/architect.py` — адаптация `AgentArchitect`
+- `runtime/web_project_agents/developer.py` — адаптация `AgentDeveloper`
+- `runtime/web_project_agents/prompts.py` — программный доступ к prompt_manifest.yaml
 
-### Тесты
-- `tests/runtime/test_multi_page_engine.py`
-- `tests/figma/test_multi_page_composer.py`
+**MCP (опционально, lazy):**
+- `mcp_servers/web_project_agents_server.py` — экспозиция `classify`, `architect`, `develop`.
 
-## Модуль 2 — Storybook
+**Тесты:**
+- `tests/runtime/test_web_project_agents.py`
+- `tests/mcp/test_web_project_agents_server.py`
 
-### Runtime engine
-- `runtime/storybook/__init__.py`
-- `runtime/storybook/config.py` — `StorybookConfig` (target_dir, components_dirs, output_dir).
-- `runtime/storybook/engine.py` — `StorybookEngine`:
-  - Сканирует `src/components/ui/*.tsx` и `src/app/components/*.tsx`.
-  - Для каждого компонента генерирует `.stories.tsx` с базовым default story и аргументами из `variant_props` (если есть).
-  - Обновляет `package.json` — добавляет `@storybook/nextjs`, `storybook`, `build-storybook` script.
-  - Пишет `.storybook/main.ts` и `.storybook/preview.ts`.
-  - Возвращает `StorybookResult`.
+### Этап 2 — Мультиязыковые шаблоны проектов
+**Файлы:**
+- Копировать/адаптировать `templates/` из `F:\Agents-komponents` в `templates/web_project_agents/`:
+  - `fastapi-react/`, `django-htmx/`, `flask-vanilla/`, `go-fiber/`, `rust-axum/`, `typescript-nextjs/`, `ci/`, `deploy/`.
+- `runtime/project_starter/__init__.py`
+- `runtime/project_starter/config.py` — `ProjectStarterConfig`, `TemplatePreset`
+- `runtime/project_starter/template_manager.py` — адаптация `TemplateManager`
+- `runtime/project_starter/engine.py` — `ProjectStarterEngine`, интегрирующий шаблоны с `project_starter_agent.md`
 
-### ReAct-агенты
-- `.agent_loop/tooll_subagents/planning/storybook_planner.md` — `needs_storybook`, выбор компонентов, исключение Next.js-only файлов.
-- `.agent_loop/tooll_subagents/execution/storybook_runtime_integrator.md` — вызов движка.
-- `.agent_loop/tooll_subagents/self_correction/storybook_validator.md` — проверка, что у каждого UI-компонента есть `.stories.tsx` и `storybook` script в package.json.
-- `.agent_loop/tooll_subagents/observability/storybook_audit_agent.md`.
+**Агенты:**
+- Обновить `.agent_loop/tooll_subagents/planning/project_starter_agent.md` — добавить `template_id` из мультиязыкового набора.
+- (Опционально) `.agent_loop/tooll_subagents/planning/template_selector.md` — явный выбор preset'а.
 
-### Figma-интеграция
-- Новый `figma-agent-core/storybook_generator.py` — CLI-обёртка над `StorybookEngine`.
-- `conductor.py` получает stage `storybook` (опциональный, включается `--storybook`).
+**Тесты:**
+- `tests/runtime/test_project_starter.py`
 
-### Тесты
-- `tests/runtime/test_storybook_engine.py`
-- `tests/figma/test_storybook_generator.py`
+### Этап 3 — Code Review & Diff Patch Applier
+**Агенты:**
+- `.agent_loop/tooll_subagents/self_correction/code_review_validator.md` — code review сгенерированного codebase.
+- `.agent_loop/tooll_subagents/self_correction/diff_patch_applier.md` — применение хирургических патчей.
 
-## Модуль 3 — Deploy execution
+**Runtime:**
+- `runtime/code_review/__init__.py`
+- `runtime/code_review/config.py` — `CodeReviewConfig`
+- `runtime/code_review/engine.py` — адаптация `CodeReviewer`
+- `runtime/code_review/diff_engine.py` — адаптация `PatchApplier`
+- `runtime/code_review/linter_runner.py` — адаптация `LinterRunner` (опционально, lazy)
 
-### Runtime engine
-- `runtime/deploy/__init__.py`
-- `runtime/deploy/config.py` — `DeployConfig` (target_dir, provider: vercel|netlify|generic, dry_run, env).
-- `runtime/deploy/engine.py` — `DeployEngine`:
-  - Проверяет наличие `package.json`, `vercel.json`/`netlify.toml`, `deploy.sh`.
-  - В `dry_run` режиме возвращает команду без выполнения.
-  - В реальном режиме запускает subprocess с таймаутом и возвращает stdout/stderr/deploy URL.
-  - Поддерживает Vercel (`npx vercel --prod --yes`), Netlify (`npx netlify deploy --prod --dir=dist`), generic (`pnpm build && echo done`).
+**Тесты:**
+- `tests/runtime/test_code_review.py`
+- `tests/runtime/test_diff_patch_applier.py`
 
-### ReAct-агенты
-- `.agent_loop/tooll_subagents/planning/deploy_planner.md` — `needs_deploy`, выбор провайдера, dry_run, env-переменные.
-- `.agent_loop/tooll_subagents/execution/deploy_runtime_integrator.md` — вызов движка.
-- `.agent_loop/tooll_subagents/self_correction/deploy_validator.md` — проверка exit code, наличия URL в stdout, наличия deploy-артефактов.
-- `.agent_loop/tooll_subagents/observability/deploy_audit_agent.md`.
+### Этап 4 — Security Scanner
+**Агент:**
+- `.agent_loop/tooll_subagents/self_correction/security_scan_validator.md` — проверка сгенерированного кода на секреты, SQLi, XSS, hardcoded creds.
 
-### Figma-интеграция
-- Новый `figma-agent-core/deploy_executor.py` — CLI-обёртка над `DeployEngine`.
-- `conductor.py` получает stage `deploy` после `package_deployment` (опциональный, `--deploy`, dry_run по умолчанию для безопасности).
+**Runtime:**
+- `runtime/security_scanner/__init__.py`
+- `runtime/security_scanner/config.py` — `SecurityScannerConfig`
+- `runtime/security_scanner/engine.py` — адаптация `SecurityScanner`
 
-### Тесты
-- `tests/runtime/test_deploy_engine.py`
-- `tests/figma/test_deploy_executor.py`
+**Тесты:**
+- `tests/runtime/test_security_scanner.py`
 
-## Модуль 4 — Preview/approval workflow
+### Этап 5 — Quality Evaluator
+**Агент:**
+- `.agent_loop/tooll_subagents/self_correction/quality_evaluator_agent.md` — оценка manifest/codebase 1–10 по критериям.
 
-### Runtime engine
-- `runtime/preview/__init__.py`
-- `runtime/preview/config.py` — `PreviewConfig` (site_dir, port, output_dir, feedback_file, auto_approve_after_timeout, allowed_domains).
-- `runtime/preview/engine.py` — `PreviewEngine`:
-  - Обёртывает `figma-agent-core/preview_workflow.py`.
-  - Возвращает структурированный `PreviewResult`.
+**Runtime:**
+- `runtime/quality_evaluation/__init__.py`
+- `runtime/quality_evaluation/config.py`
+- `runtime/quality_evaluation/engine.py` — адаптация `QualityEvaluator`
 
-### ReAct-агенты
-- `.agent_loop/tooll_subagents/planning/preview_planner.md` — `needs_preview`, viewport, feedback timeout, allowed domains.
-- `.agent_loop/tooll_subagents/execution/preview_runtime_integrator.md` — вызов движка.
-- `.agent_loop/tooll_subagents/self_correction/preview_validator.md` — проверка, что preview report создан, screenshot на месте, статус approved/rejected/awaiting корректен.
-- `.agent_loop/tooll_subagents/observability/preview_audit_agent.md`.
+**Тесты:**
+- `tests/runtime/test_quality_evaluation.py`
 
-### Figma-интеграция
-- Уже есть `preview_workflow.py` и `stage_preview_workflow` в `conductor.py`.
-- Дополнить: preview workflow автоматически включается при `--all` и `package_deployment`, если не указано `--no-preview`.
+### Этап 6 — Deploy-провайдеры: Render / Railway / Fly.io
+**Runtime:**
+- Расширить `runtime/deploy/config.py` — добавить `render`, `railway`, `flyio` в allowed providers; поля для API keys.
+- Расширить `runtime/deploy/engine.py` — `DeployEngine` dispatch на новых провайдеров.
+- `runtime/deploy/providers/__init__.py`
+- `runtime/deploy/providers/render.py` — адаптация `RenderDeployer`
+- `runtime/deploy/providers/railway.py` — адаптация `RailwayDeployer`
+- `runtime/deploy/providers/flyio.py` — адаптация `FlyioDeployer`
 
-### Тесты
-- `tests/runtime/test_preview_engine.py`
-- `tests/figma/test_preview_workflow.py` (уже есть, дополнить проверкой status/rejection hints).
+**Агент:**
+- Обновить `.agent_loop/tooll_subagents/planning/deploy_planner.md` — упоминание новых провайдеров.
 
-## Runtime wiring
+**Тесты:**
+- `tests/runtime/test_deploy_providers.py`
 
-### `runtime/engine/agent_invocation_map.py`
-- Обновить `.agent_loop/scripts/generate_agent_invocation_map.py`:
-  - Добавить `planning_multi_page`, `planning_storybook`, `planning_deploy`, `planning_preview` в `classify()`.
-  - Классифицировать агенты по именам: `multi_page_*`, `storybook_*`, `deploy_*`, `preview_*`.
-- Добавить флаги в `PLANNING_FLAG_GROUPS`:
-  - `needs_multi_page`, `needs_storybook`, `needs_deploy`, `needs_preview`.
+### Этап 7 — Git Publisher (GitHub/GitLab)
+**Агенты:**
+- `.agent_loop/tooll_subagents/planning/git_publish_planner.md`
+- `.agent_loop/tooll_subagents/execution/git_publish_runtime_integrator.md`
 
-### `runtime/engine/pipeline_runner.py`
-- В `_execution_agent_enabled` добавить маппинг префиксов → флагам:
-  - `"multi_page": "needs_multi_page"`
-  - `"storybook": "needs_storybook"`
-  - `"deploy": "needs_deploy"`
-  - `"preview": "needs_preview"`
+**Runtime:**
+- `runtime/git_publisher/__init__.py`
+- `runtime/git_publisher/config.py` — `GitPublisherConfig`
+- `runtime/git_publisher/engine.py` — адаптация `GitPublisher`
 
-### Mock LLM responses
-- `runtime/engine/llm_engine.py`:
-  - Добавить базовые `passed`/`dry_run` ответы для новых planning/execution/validator агентов.
+**Тесты:**
+- `tests/runtime/test_git_publisher.py`
 
-## Валидация и документация
-- `.agent_loop/scripts/validate_runtime_coverage.py`: `EXPECTED_AGENT_COUNT` 256 → 272.
-- `.agent_loop/scripts/health_check.py`: `EXPECTED_AGENTS` 256 → 272.
-- `.agent_loop/ARCHITECTURE.md` и `.agent_loop/TECHNICAL_ASSIGNMENT.md`:
-  - Обновить counts: `tooll_subagents` 100 → 116, total 256 → 272.
-  - Добавить runtime engines в таблицу модулей.
-- `project_rules.md` — не трогаем без явного одобрения.
+### Этап 8 — Cost Tracker
+**Runtime:**
+- `runtime/cost_tracking/__init__.py`
+- `runtime/cost_tracking/config.py` — `CostTrackingConfig`
+- `runtime/cost_tracking/engine.py` — адаптация `CostTracker`
+- Интегрировать в `runtime/engine/llm_engine.py` — вызов `CostTracker.estimate()` / `.record()` после каждого LLM-вызова.
 
-## Верификация
-1. `python .agent_loop/scripts/generate_agent_invocation_map.py` — 0 unreachable.
-2. `python .agent_loop/scripts/validate_runtime_coverage.py` — OK (272 agents).
-3. `node .agent_loop/scripts/validate_cross_references.js` — clean.
-4. `node .agent_loop/scripts/validate_consistency.js` — 0 warnings.
-5. `python .agent_loop/scripts/health_check.py` — HEALTHY.
-6. `pytest -m core` — проходит.
-7. `graphify update .` — AST-only.
-8. Git: commit + push в ветку `finish-increment-check` (Gate 2 уже одобрен ранее).
+**Агент:**
+- `.agent_loop/tooll_subagents/observability/cost_audit_agent.md`
 
-## Риски и ограничения
-- Deploy execution запускает внешние CLI; по умолчанию `dry_run=True`, реальный deploy только при явном `--deploy-live`.
-- Preview workflow поднимает dev-сервер; в CI будет использоваться `--preview-workflow-page-url` или пропускаться.
-- Storybook требует дополнительных devDependencies; движок обновляет `package.json`, но не запускает `pnpm install`.
+**Тесты:**
+- `tests/runtime/test_cost_tracking.py`
+
+### Этап 9 — Notifications
+**Runtime:**
+- `runtime/notifications/__init__.py`
+- `runtime/notifications/config.py` — `NotificationsConfig`
+- `runtime/notifications/engine.py` — email/Telegram/Slack channels
+- `runtime/notifications/channels/email.py`, `telegram.py`, `slack.py`
+
+**Агент:**
+- `.agent_loop/tooll_subagents/execution/notification_runtime_integrator.md`
+
+**Тесты:**
+- `tests/runtime/test_notifications.py`
+
+### Этап 10 — Сквозная интеграция и валидация
+- Обновить `runtime/engine/agent_invocation_map.py` через `python .agent_loop/scripts/generate_agent_invocation_map.py`.
+- Обновить `mcp_servers/bootstrap.py` и `mcp_servers/registry.py` для новых MCP-серверов.
+- Обновить `.agent_loop/ARCHITECTURE.md` и `CLAUDE.md` с описанием новых модулей.
+- Запустить `node .agent_loop/scripts/validate_cross_references.js` и `node .agent_loop/scripts/validate_consistency.js`.
+- Запустить `python .agent_loop/scripts/health_check.py`.
+- Запустить `pytest tests/runtime/ tests/mcp/` для новых и затронутых тестов.
+- Обновить `requirements.txt` — добавить опциональные зависимости (`PyGithub`, `python-gitlab`, `qdrant-client`, `boto3` и т.д.) в отдельные `requirements-*.txt` файлы.
+
+## Приоритизация
+- **Phase 1 (must have):** Этапы 1, 2 — core web-project agents + templates.
+- **Phase 2 (quality gate):** Этапы 3, 4, 5 — code review, security scan, quality evaluator.
+- **Phase 3 (delivery):** Этапы 6, 7 — deploy-провайдеры + git publish.
+- **Phase 4 (observability):** Этапы 8, 9 — cost tracker + notifications.
+- **Phase 5 (optional):** RAG store (`rag_store.py`) и Artifact store (`artifact_store.py`) — добавить позже, если потребуется.
+
+## Критерии приёмки
+- Новые markdown-агенты следуют Algorithmic template (Role, Contract, Decision Flow, Failure Modes).
+- `validate_consistency.js` возвращает 0 errors, 0 warnings.
+- `validate_cross_references.js` не находит битых ссылок и изолированных агентов.
+- Новые runtime-модули имеют `Config` + `Engine`/`Result` и покрыты тестами.
+- `agent_invocation_map.py` регенерирован и включает новых агентов.
+- Health check проходит за <10 секунд.
+- Существующие тесты не ломаются.
+
+## Вопросы к заказчику
+1. **Scope:** реализовать все 4 phase сразу или начать с Phase 1+2?
+2. **Шаблоны:** включать все 8 preset'ов (`fastapi-react`, `django-htmx`, `flask-vanilla`, `go-fiber`, `rust-axum`, `typescript-nextjs`, `ci`, `deploy`) или сократить набор?
+3. **MCP:** нужны ли lazy MCP-серверы для новых runtime-модулей сразу, или достаточно runtime-интеграторов?
+4. **Уведомления:** какие каналы обязательны (email/Telegram/Slack)?
+5. **Deploy-провайдеры:** какие из Render/Railway/Fly.io реально нужны?
+
+## Статус выполнения (2026-07-13)
+- [x] Phase 1 — Web Project Agents (classifier / architect / developer) + шаблоны.
+- [x] Phase 2 — Code review, security scanner, quality evaluator.
+- [x] Phase 3 — Deploy-провайдеры (Render/Railway/Fly.io) + git publisher.
+- [x] Phase 4 — Cost tracker + notifications.
+- [x] Сквозная интеграция: `agent_invocation_map.py` регенерирован (289 агентов), `mcp_servers/bootstrap.py` зарегистрирован (25 серверов).
+- [x] Валидация: `validate_cross_references.js`, `validate_consistency.js`, `validate_runtime_coverage.py`, `health_check.py` — все зелёные.
+- [x] Тесты: `pytest tests/` — полный набор проходит.
+- [x] Документация: обновлены `ARCHITECTURE.md`, `CLAUDE.md`, `TECHNICAL_ASSIGNMENT.md`.
+- [x] Зависимости: `figma-agent-core/requirements.txt` дополнен `requests` и `pyyaml`; `health_check.py` обновлён до актуальных констант (289 агентов, 25 MCP-серверов) и таймаута pytest core (600 с).
+
+**Примечание:** критерий «Health check проходит за <10 секунд» недостижим из-за длительности pytest core (~280 с); остальные проверки health_check занимают <15 с. Текущий health check стабильно проходит.

@@ -32,6 +32,7 @@ Cross-cutting strategist for the terminal I/O pipeline. Manages session lifecycl
    - State tracking: terminal_state + command_history
    - REPL sessions: enable character-buffered I/O, disable echo removal (REPL behavior differs)
    - Watch sessions: skip prompt detection (no prompt in continuous output)
+   - Live dashboards: include tui_dashboard.md for real-time pipeline status rendering
 
 5. **Resource planning**
    - Output buffer size based on `max_output_bytes`

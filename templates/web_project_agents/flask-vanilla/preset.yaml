@@ -1,0 +1,21 @@
+id: flask-vanilla
+name: Flask + Vanilla JS
+base_category: Веб-сервис
+language: python
+description: |
+  Лёгкий server-rendered starter на Flask 3 с Jinja2, WTForms, Flask-Login
+  и чистом JavaScript во фронтенде.
+tags:
+  - flask
+  - vanilla-js
+  - server-side-rendering
+  - jinja2
+  - wtforms
+stack:
+  backend: Flask 3.x
+  frontend: vanilla JavaScript + Jinja2
+  orm: Flask-SQLAlchemy
+  db: PostgreSQL / SQLite
+  auth: Flask-Login
+variables:
+  backend_port: 5000

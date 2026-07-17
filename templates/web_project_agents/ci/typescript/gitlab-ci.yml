@@ -1,0 +1,22 @@
+image: node:20
+
+stages:
+  - install
+  - lint
+  - test
+
+install:
+  stage: install
+  script:
+    - npm ci
+
+lint:
+  stage: lint
+  script:
+    - npm run lint
+    - npm run typecheck
+
+test:
+  stage: test
+  script:
+    - npm test

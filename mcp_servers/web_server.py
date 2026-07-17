@@ -39,7 +39,7 @@ class WebMCPServer(MCPServer):
         self.register("parse_response", "Parse HTTP response — status, headers, body",
                        self._s({"response_body": "string", "content_type?": "string",
                                 "status_code?": "int"}), self.parse_response)
-        self.register("extract_content", "Extract structured content from HTML/JSON/XML response",
+        self.register("web_extract_content", "Extract structured content from HTML/JSON/XML response",
                        self._s({"body": "string", "content_type?": "string",
                                 "selector?": "string"}), self.extract_content)
         self.register("cache_response", "Cache a response for reuse",
@@ -48,7 +48,7 @@ class WebMCPServer(MCPServer):
         self.register("handle_retry", "Determine retry strategy for failed request",
                        self._s({"url": "string", "status_code": "int", "error?": "string",
                                 "attempt": "int"}), self.handle_retry)
-        self.register("analyze_error", "Analyze HTTP error response",
+        self.register("web_analyze_error", "Analyze HTTP error response",
                        self._s({"status_code": "int", "response_body?": "string"}), self.analyze_error)
 
     async def build_request(self, method: str, url: str, headers: dict[str, str] | None = None,

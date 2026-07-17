@@ -1,0 +1,235 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+
+DEFAULT_FORBIDDEN_FONTS: tuple[str, ...] = (
+    "Comic Sans MS",
+    "Papyrus",
+    "Curlz MT",
+    "Arial",
+    "Courier New",
+    "Times New Roman",
+    "Bradel Hand ITC",
+    "Vivaldi",
+    "Kristen ITC",
+    "Viner Hand",
+    "Mistral",
+    "Impact",
+    "Symbol",
+    "Stencil",
+    "Broad Latin",
+    "Extended Latin",
+    "Bleeding Cowboys",
+    "Zapfino",
+    "Barkentina",
+    "Gothici",
+    "Inter",
+    "Roboto",
+    "Space Grotesk",
+    "Open Sans",
+    "Helvetica",
+    "Segoe UI",
+    "San Francisco",
+    "Myriad Pro",
+    "Calibri",
+    "Verdana",
+    "Century Gothic",
+)
+
+DEFAULT_ALLOWED_FONTS: tuple[str, ...] = (
+    "Harmond",
+    "Wild World",
+    "Resist Sans",
+    "Harmony",
+    "Thunder",
+    "Magilio",
+    "Eskool",
+    "Neue Metana",
+    "Shrimp",
+    "Ramona",
+    "Triakis",
+    "Newake",
+    "Tropikal",
+    "Leiko",
+    "Super Duper",
+    "Stanley",
+    "Saint Regus",
+    "Obrazec",
+    "Creme Espana",
+    "Rebeqa",
+    "SK-Modernist",
+    "Elanor",
+    "Nighty",
+    "Casta",
+    "Subjectivity",
+    "Neutral Face",
+    "Pulchella",
+    "Maragsâ",
+    "Okta Neue",
+    "Kate",
+    "Kenoky & Coffekan",
+    "Migha",
+    "The Polite Type",
+    "Pangram Sans Rounded",
+    "Junicode",
+    "Calfine",
+    "Moniqa",
+    "Sonder",
+    "Archivo Narrow",
+    "Mak",
+    "Maghfirea",
+    "Nafta",
+    "Nafta Brush",
+    "Fogtwo No5",
+    "Projekt Blackbird",
+    "Bigilla",
+    "Karen",
+    "Bagnard Sans",
+    "Dx Rigraf",
+    "Luthon Southard",
+    "Archia",
+    "Futura",
+    "Garamond",
+    "Georgia",
+    "Gotham",
+    "Baskerville",
+    "Montserrat",
+    "Lato",
+    "Gill Sans",
+    "Bodoni",
+    "Didot",
+    "Frutiger",
+    "Univers",
+    "PT Sans",
+    "PT Serif",
+    "Poppins",
+    "Raleway",
+    "Oswald",
+    "Playfair Display",
+    "Merriweather",
+    "Nunito",
+    "Ubuntu",
+    "Fira Sans",
+    "Fira Code",
+    "Source Sans Pro",
+    "Lora",
+    "Bebas Neue",
+    "JetBrains Mono",
+    "Manrope",
+    "Rubik",
+    "Kanit",
+    "IBM Plex Sans",
+    "Plus Jakarta Sans",
+    "DM Sans",
+    "Jost",
+    "Comfortaa",
+    "PT Root UI",
+    "Work Sans",
+    "Inconsolata",
+    "Archivo",
+    "Pacifico",
+    "Lobster",
+    "Amatic SC",
+    "Bitter",
+    "Cinzel",
+    "Great Vibes",
+    "Neue Haas Grotesk",
+    "PP Neue Montreal",
+    "Suisse Int’l",
+    "Söhne",
+    "Geist Sans",
+    "GT America",
+    "Graphik",
+    "ABC Diatype",
+    "Monument Grotesk",
+    "Aperçu",
+    "Akzidenz-Grotesk",
+    "PP Editorial New",
+    "Canela",
+    "Tiempos Headline",
+    "GT Alpina",
+    "Circular",
+    "Proxima Nova",
+    "Brandon Grotesque",
+    "Basis Grotesque",
+    "Instrument Sans",
+    "TWK Lausanne",
+    "Aeonik",
+    "Univers Condensed",
+    "Druk",
+    "Druk Wide",
+    "CoFo Sans",
+    "DIN 1451",
+    "Cooper Black",
+    "Rockwell",
+    "Franklin Gothic",
+    "Avant Garde Gothic",
+    "Eurostyle",
+    "Abril Fatface",
+    "ChunkFive",
+    "Agrandir",
+    "Local Grotesk",
+    "Adisan Richard",
+    "Nicksen",
+    "Glowtone",
+    "Nextron",
+    "Neuroxa",
+)
+
+DEFAULT_DIRECTIONS: tuple[str, ...] = ("editorial", "brutalist", "swiss", "retro_futuristic")
+
+DEFAULT_ANTI_SLOP_RULES: list[dict[str, Any]] = [
+    {"id": "fonts", "name": "No forbidden/default fonts", "fail_if_found": DEFAULT_FORBIDDEN_FONTS},
+    {"id": "card_shadows", "name": "No decorative card shadows", "forbidden_patterns": [r"0\s+4px\s+6px", r"0\s+10px\s+15px", r"0\s+20px\s+25px"]},
+    {"id": "centered_buttons", "name": "No centered buttons without hierarchy", "forbidden_phrases": ["centered CTA", "centered button"], "allowed_if": ["asymmetry", "brutalist"]},
+    {"id": "gradient_blobs", "name": "No meaningless gradient blobs", "forbidden_phrases": ["gradient blob", "gradient shape", "blurred gradient"]},
+    {"id": "uniform_padding", "name": "Non-uniform rhythmic spacing", "min_distinct_levels": 3},
+    {"id": "generic_3col", "name": "No generic 3-column layout", "forbidden_phrases": ["three equal columns", "3 equal columns"], "required_if_mentioned": ["asymmetric", "disruption"]},
+    {"id": "gray_on_white", "name": "No flat gray on pure white", "forbidden_combo": {"text": r"#6{3}|#7{3}|#8{3}|#9{3}", "bg": r"#ffffff"}},
+    {"id": "layout_animations", "name": "No width/height/top/left animations", "forbidden_properties": ["width", "height", "top", "left"]},
+    {"id": "hover_banality", "name": "No opacity-only hover", "forbidden_only": ["opacity: 0.8"]},
+    {"id": "mass_fade_in", "name": "No mass fade-in scroll triggers", "forbidden_phrases": ["fade in on scroll", "fade-in on scroll"], "allowed_if": ["stagger", "transform"]},
+]
+
+
+@dataclass
+class PremiumDesignConfig:
+    target_dir: Path | str = "."
+    design_md_name: str = "DESIGN.md"
+    tokens_name: str = "design_tokens.json"
+    forbidden_fonts: tuple[str, ...] = DEFAULT_FORBIDDEN_FONTS
+    allowed_fonts: tuple[str, ...] = DEFAULT_ALLOWED_FONTS
+    directions: tuple[str, ...] = DEFAULT_DIRECTIONS
+    refactoring_ui_threshold: float = 0.7
+    strict_refactoring_ui: bool = True
+    anti_slop_rules: list[dict[str, Any]] = field(default_factory=lambda: [dict(r) for r in DEFAULT_ANTI_SLOP_RULES])
+
+    def __post_init__(self) -> None:
+        self.target_dir = Path(self.target_dir)
+
+    def validate(self) -> list[str]:
+        errors: list[str] = []
+        if not self.target_dir.exists():
+            errors.append(f"target_dir does not exist: {self.target_dir}")
+        if not self.design_md_name:
+            errors.append("design_md_name is required")
+        if not self.tokens_name:
+            errors.append("tokens_name is required")
+        return errors
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "PremiumDesignConfig":
+        return cls(
+            target_dir=data.get("target_dir", "."),
+            design_md_name=data.get("design_md_name", "DESIGN.md"),
+            tokens_name=data.get("tokens_name", "design_tokens.json"),
+            forbidden_fonts=tuple(data.get("forbidden_fonts", DEFAULT_FORBIDDEN_FONTS)),
+            allowed_fonts=tuple(data.get("allowed_fonts", DEFAULT_ALLOWED_FONTS)),
+            directions=tuple(data.get("directions", DEFAULT_DIRECTIONS)),
+            refactoring_ui_threshold=float(data.get("refactoring_ui_threshold", 0.7)),
+            strict_refactoring_ui=bool(data.get("strict_refactoring_ui", True)),
+            anti_slop_rules=data.get("anti_slop_rules", [dict(r) for r in DEFAULT_ANTI_SLOP_RULES]),
+        )

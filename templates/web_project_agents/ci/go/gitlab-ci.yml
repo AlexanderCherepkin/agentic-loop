@@ -1,0 +1,16 @@
+image: golang:1.22
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - go build ./...
+
+test:
+  stage: test
+  script:
+    - go test ./...
+    - go vet ./...

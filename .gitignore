@@ -20,6 +20,9 @@ __pycache__/
 .mypy_cache/
 .venv/
 venv/
+.claude/memory/
+.claude/worktrees/
+graphify-out/graph.html
 conductor_report.json
 spec.md
 layout_ast.json

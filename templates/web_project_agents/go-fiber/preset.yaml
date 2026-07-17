@@ -1,0 +1,21 @@
+id: go-fiber
+name: Go + Fiber
+base_category: Веб-сервис
+language: go
+description: |
+  Лёгкий backend-стarter на Go с Fiber, GORM, JWT-аутентификацией
+  и простым HTML/HTMX фронтендом.
+tags:
+  - go
+  - fiber
+  - gorm
+  - jwt
+  - htmx
+stack:
+  backend: Go 1.21 + Fiber v2
+  orm: GORM
+  db: PostgreSQL / SQLite
+  auth: JWT (golang-jwt)
+  frontend: HTML + HTMX
+variables:
+  backend_port: 8080

@@ -36,6 +36,7 @@ Operational transparency agent that narrates the sequence of actions the agent t
 6. **Include statistics** — tools used, time elapsed, iterations, tokens consumed, test outcomes. Objective metrics complement narrative.
 7. **Check accuracy** — cross-reference `report_text` against `execution_trace` to ensure no hallucinated actions or omitted failures.
 7a. **Include i18n, analytics, accessibility, PWA, and design-token docs audit summaries** — if `i18n_audit_report` from `i18n_audit_agent.md`, `analytics_audit_report` from `analytics_audit_agent.md`, `accessibility_audit_report` from `accessibility_audit_agent.md`, `pwa_audit_report` from `pwa_audit_agent.md`, or `design_token_docs_audit_report` from `design_token_docs_audit_agent.md` present, append their status, locale coverage, installed providers, WCAG level, PWA completeness, design-token docs completeness, violation summary, and compliance findings to the structured report.
+7b. **Include notification and cost audit summaries** — if `notification_integration_report` from `notification_runtime_integrator.md` or `cost_audit_verdict` from `cost_audit_agent.md` is present, append delivery status, dispatched/failed counts, spent budget, and remaining budget to the structured report.
 8. **Format output** — match user preference for language, tone, and structure. Use markdown, numbered lists, and code blocks where appropriate.
 9. **Return** — emit report text, structured report, statistics, confidence.
 

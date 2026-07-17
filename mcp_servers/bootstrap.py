@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MCP Bootstrap — wires all 16 MCP servers into the registry and connects them to the runtime.
+MCP Bootstrap — wires all 20 MCP servers into the registry and connects them to the runtime.
 
 Usage:
     python -m mcp_servers.bootstrap           # Register all servers, print summary
@@ -34,6 +34,15 @@ from .backend_server import BackendMCPServer
 from .headroom_server import HeadroomMCPServer
 from .memanto_server import MemantoMCPServer
 from .mem0_server import Mem0MCPServer
+from .brand_compliance_server import BrandComplianceMCPServer
+from .twenty_first_server import TwentyFirstMCPServer
+from .openpencil_server import OpenPencilMCPServer
+from .design_to_code_server import DesignToCodeMCPServer
+from .sandbox_server import SandboxMCPServer
+from .security_scanner_server import SecurityScannerMCPServer
+from .git_publisher_server import GitPublisherMCPServer
+from .cost_tracking_server import CostTrackingMCPServer
+from .notification_server import NotificationMCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -55,6 +64,15 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "headroom": HeadroomMCPServer,
         "memanto": MemantoMCPServer,
         "mem0": Mem0MCPServer,
+        "brand_compliance": BrandComplianceMCPServer,
+        "components_21st": TwentyFirstMCPServer,
+        "open_pencil": OpenPencilMCPServer,
+        "design_to_code": DesignToCodeMCPServer,
+        "sandbox": SandboxMCPServer,
+        "security_scanner": SecurityScannerMCPServer,
+        "git_publisher": GitPublisherMCPServer,
+        "cost_tracking": CostTrackingMCPServer,
+        "notifications": NotificationMCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -68,7 +86,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
 CATEGORY_TOOLS: dict[str, list[str]] = {
     "tools_read": [
         "read_file", "detect_encoding", "get_file_info", "read_chunk",
-        "extract_content", "validate_integrity", "format_output",
+        "read_extract_content", "validate_integrity", "format_output",
         "list_directory", "clear_cache",
     ],
     "tools_search": [
@@ -83,7 +101,7 @@ CATEGORY_TOOLS: dict[str, list[str]] = {
     "tools_runcom": [
         "build_command", "optimize_command", "setup_environment",
         "execute_command", "sandbox_check", "capture_output", "handle_timeout",
-        "analyze_error", "get_history",
+        "runcom_analyze_error", "get_history",
     ],
     "tools_runtest": [
         "discover_tests", "plan_execution", "optimize_suite", "execute_test",
@@ -101,13 +119,13 @@ CATEGORY_TOOLS: dict[str, list[str]] = {
     "tools_database": [
         "open_connection", "analyze_schema", "build_query", "execute_query",
         "begin_transaction", "commit_transaction", "rollback_transaction",
-        "map_result", "cache_query", "analyze_error", "suggest_migration",
+        "map_result", "cache_query", "db_analyze_error", "suggest_migration",
         "close_connection",
     ],
     "tools_web": [
         "build_request", "add_auth", "check_network", "check_rate_limit",
-        "send_request", "parse_response", "extract_content", "cache_response",
-        "handle_retry", "analyze_error",
+        "send_request", "parse_response", "web_extract_content", "cache_response",
+        "handle_retry", "web_analyze_error",
     ],
     "tools_memory": [
         "read_memory", "write_memory", "list_entries", "index_entry",
@@ -140,11 +158,42 @@ CATEGORY_TOOLS: dict[str, list[str]] = {
     "mem0": [
         "mem0_add", "mem0_search", "mem0_get_all", "mem0_delete",
     ],
+    "brand_compliance": [
+        "check_brand_policy", "check_design_tokens", "check_pr_slop",
+    ],
+    "components_21st": [
+        "search_components", "get_component_details", "plan_install", "check_stack_compatibility",
+    ],
+    "open_pencil": [
+        "openpencil_from_design_md", "openpencil_from_figma_json",
+        "openpencil_audit_output", "openpencil_check_runner",
+    ],
+    "design_to_code": [
+        "process_figma_document", "extract_tokens", "extract_layout",
+        "extract_component_tree", "write_design_to_code_artifacts",
+        "check_bridge_available",
+    ],
+    "sandbox": [
+        "sandbox_execute", "sandbox_run_dev_server", "sandbox_screenshot",
+        "sandbox_cleanup", "sandbox_status",
+    ],
+    "security_scanner": [
+        "scan_codebase",
+    ],
+    "git_publisher": [
+        "publish_repository", "check_configured",
+    ],
+    "cost_tracking": [
+        "estimate_cost", "get_report", "check_budget", "set_budget",
+    ],
+    "notifications": [
+        "dispatch_notification",
+    ],
 }
 
 
 def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
-    """Create and populate the MCP registry with all 16 servers.
+    """Create and populate the MCP registry with all 21 servers.
 
     Args:
         workspace_root: project root path.
@@ -215,7 +264,7 @@ async def test_all_servers(registry: MCPRegistry):
     # Test web server
     web = registry.get_server("tools_web")
     if web:
-        r = await web.call_tool("analyze_error", {"status_code": 404, "response_body": ""})
+        r = await web.call_tool("web_analyze_error", {"status_code": 404, "response_body": ""})
         results["web"] = "error" not in str(r.content)
 
     # Test memory server
@@ -293,6 +342,64 @@ async def test_all_servers(registry: MCPRegistry):
     if mem0:
         r = await mem0.call_tool("mem0_search", {"query": "test"})
         results["mem0"] = "error" not in str(r.content) or "degraded" in str(r.content)
+
+    # Test brand compliance server (succeeds even when DESIGN.md/tokens are absent)
+    bc = registry.get_server("brand_compliance")
+    if bc:
+        r = await bc.call_tool("check_pr_slop", {"path": "mcp_servers/bootstrap.py"})
+        results["brand_compliance"] = not r.is_error
+
+    # Test 21st.dev components server (degraded/remote-fallback is acceptable)
+    comp21 = registry.get_server("components_21st")
+    if comp21:
+        r = await comp21.call_tool("search_components", {"query": "hero", "limit": 5})
+        results["components_21st"] = not r.is_error
+
+    # Test Open Pencil server (degraded if runner is not installed)
+    op = registry.get_server("open_pencil")
+    if op:
+        r = await op.call_tool("openpencil_check_runner", {})
+        results["open_pencil"] = not r.is_error
+
+    # Test Design-to-Code server (degraded if bridge is missing)
+    d2c = registry.get_server("design_to_code")
+    if d2c:
+        r = await d2c.call_tool("check_bridge_available", {})
+        text = str(r.content)
+        results["design_to_code"] = (
+            ("status\": \"success\"" in text or "status\": \"degraded\"" in text)
+            and "traceback" not in text.lower()
+        )
+
+    # Test Sandbox server (degraded if neither Docker nor WSL is available)
+    sandbox = registry.get_server("sandbox")
+    if sandbox:
+        r = await sandbox.call_tool("sandbox_status", {})
+        results["sandbox"] = not r.is_error
+
+    # Test Security Scanner server
+    scanner = registry.get_server("security_scanner")
+    if scanner:
+        r = await scanner.call_tool("scan_codebase", {"codebase": {"main.py": "# clean sample\nprint('hello')"}})
+        results["security_scanner"] = not r.is_error
+
+    # Test Git Publisher server
+    git = registry.get_server("git_publisher")
+    if git:
+        r = await git.call_tool("check_configured", {"provider": "github"})
+        results["git_publisher"] = not r.is_error
+
+    # Test Cost Tracking server
+    cost = registry.get_server("cost_tracking")
+    if cost:
+        r = await cost.call_tool("estimate_cost", {"model": "gpt-4o", "input": "hello", "output": "hi"})
+        results["cost_tracking"] = not r.is_error
+
+    # Test Notifications server
+    notify = registry.get_server("notifications")
+    if notify:
+        r = await notify.call_tool("dispatch_notification", {"project_id": "test", "status": "completed"})
+        results["notifications"] = not r.is_error
 
     return results
 

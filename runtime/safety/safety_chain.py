@@ -61,6 +61,7 @@ class SafetyChain:
     def __init__(self, live_risk_threshold: float = 0.6):
         self.live_risk_threshold = live_risk_threshold
         self._rules = self._build_rules()
+        self.triggered_rules: list[TriggeredRule] = []
 
     def _build_rules(self) -> list[GuardrailRule]:
         rules: list[GuardrailRule] = []
@@ -92,7 +93,9 @@ class SafetyChain:
                     severity=SafetyLevel.ABORTED,
                 ))
 
-        return self._compute_result(triggered)
+        result = self._compute_result(triggered)
+        self.triggered_rules = result.triggered_rules
+        return result
 
     def post_check(self, output: str) -> SafetyResult:
         triggered: list[TriggeredRule] = []
@@ -112,7 +115,9 @@ class SafetyChain:
                     severity=SafetyLevel.ABORTED,
                 ))
 
-        return self._compute_result(triggered)
+        result = self._compute_result(triggered)
+        self.triggered_rules = result.triggered_rules
+        return result
 
     def check_content(self, content: str) -> SafetyResult:
         triggered: list[TriggeredRule] = []
@@ -131,7 +136,9 @@ class SafetyChain:
                     severity=SafetyLevel.ABORTED,
                 ))
 
-        return self._compute_result(triggered)
+        result = self._compute_result(triggered)
+        self.triggered_rules = result.triggered_rules
+        return result
 
     def _compute_result(self, triggered: list[TriggeredRule]) -> SafetyResult:
         if not triggered:

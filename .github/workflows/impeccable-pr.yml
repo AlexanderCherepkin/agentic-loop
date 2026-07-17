@@ -1,0 +1,120 @@
+name: Impeccable PR Anti-Slop Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "app/**"
+      - "components/**"
+      - "design_tokens.json"
+      - "DESIGN.md"
+      - "tailwind.config.*"
+
+jobs:
+  anti_slop:
+    name: Premium Design Anti-Slop Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f runtime/requirements.txt ]; then pip install -r runtime/requirements.txt; fi
+
+      - name: Ensure DESIGN.md and design_tokens.json exist when UI files change
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          ui_changed = any(Path(p).exists() for p in [
+              "src", "app", "components"
+          ])
+          if ui_changed:
+              missing = []
+              if not Path("DESIGN.md").exists():
+                  missing.append("DESIGN.md")
+              if not Path("design_tokens.json").exists():
+                  missing.append("design_tokens.json")
+              if missing:
+                  print("::error::Missing brand contract files: " + ", ".join(missing))
+                  raise SystemExit(1)
+          PY
+
+      - name: Run token anti-slop audit
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from runtime.premium_design import detect_slop_tokens
+          from runtime.premium_design.refactoring_ui_rules import run_all_refactoring_ui_checks, aggregate_score
+
+          if not Path("design_tokens.json").exists():
+              print("No design_tokens.json — skipping token audit")
+              raise SystemExit(0)
+
+          tokens = json.loads(Path("design_tokens.json").read_text(encoding="utf-8"))
+          slop = detect_slop_tokens(tokens)
+          if slop:
+              for v in slop:
+                  print(f"::error::Slop violation: {v}")
+              raise SystemExit(1)
+
+          scores = run_all_refactoring_ui_checks(tokens)
+          aggregate = aggregate_score(scores)
+          print(f"Refactoring UI aggregate: {aggregate}")
+          for s in scores:
+              print(f"  {s.principle}: {s.score}")
+          if aggregate < 0.7:
+              print("::error::Refactoring UI aggregate below 0.7")
+              raise SystemExit(1)
+          PY
+
+      - name: Run PR file anti-slop scan
+        run: |
+          python - <<'PY'
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          result = subprocess.run(
+              ["git", "diff", "--name-only", "origin/main", "--", "*.tsx", "*.ts", "*.jsx", "*.js", "*.css"],
+              capture_output=True, text=True, check=True,
+          )
+          files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+          if not files:
+              sys.exit(0)
+
+          forbidden_patterns = {
+              r"\bfont-['\"]?(Inter|Roboto|Open\sSans|Helvetica|Arial)\b": "default_font",
+              r"\bshadow-(md|lg|xl)\b": "generic_shadow",
+              r"\btransition-(all|width|height|margin|padding)\b": "layout_transition",
+              r"\btext-(gray|neutral|zinc)-(400|500|600)\b": "flat_gray_text",
+              r"\bw-[\d]+px\b|\bp-[\d]+px\b|\bh-[\d]+px\b": "magic_inline",
+          }
+
+          found = False
+          for f in files:
+              p = Path(f)
+              if not p.exists():
+                  continue
+              text = p.read_text(encoding="utf-8")
+              for pattern, rule in forbidden_patterns.items():
+                  for m in re.finditer(pattern, text, re.IGNORECASE):
+                      line = text[:m.start()].count("\n") + 1
+                      print(f"::error file={f},line={line}::{rule}: {m.group(0)!r}")
+                      found = True
+
+          if found:
+              sys.exit(1)
+          PY

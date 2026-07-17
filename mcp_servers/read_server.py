@@ -38,7 +38,7 @@ class ReadMCPServer(MCPServer):
                        self._schema({"path": "string", "start_line": "int", "end_line": "int"}),
                        self.read_chunk)
 
-        self.register("extract_content", "Extract specific content from file by regex pattern",
+        self.register("read_extract_content", "Extract specific content from file by regex pattern",
                        self._schema({"path": "string", "pattern": "string", "group?": "int"}),
                        self.extract_content)
 

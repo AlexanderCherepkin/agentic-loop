@@ -44,7 +44,7 @@ class DatabaseMCPServer(MCPServer):
         self.register("cache_query", "Cache query result for reuse",
                        self._s({"query": "string", "params_hash": "string", "result": "object",
                                 "ttl_seconds?": "int"}), self.cache_query)
-        self.register("analyze_error", "Analyze database error message",
+        self.register("db_analyze_error", "Analyze database error message",
                        self._s({"error_message": "string", "query?": "string"}), self.analyze_error)
         self.register("suggest_migration", "Suggest database migration based on schema diff",
                        self._s({"current_schema": "object", "target_schema": "object"}),

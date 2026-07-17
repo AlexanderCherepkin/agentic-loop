@@ -1,0 +1,19 @@
+{
+  "version": "2.0",
+  "workspace": {
+    "agent_mode": "modular"
+  },
+  "designSync": {
+    "enabled": true,
+    "strictMode": true,
+    "skills": ["premium-design-anti-slop"],
+    "hooks": {
+      "pre_generation": ["premium-design-anti-slop"],
+      "post_generation_audit": ["premium-design-anti-slop"]
+    }
+  },
+  "skills": {
+    "directories": [".claude/skills"],
+    "lazyLoad": true
+  }
+}

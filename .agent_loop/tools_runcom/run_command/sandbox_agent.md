@@ -11,9 +11,9 @@ Confines command execution to a safe, isolated environment. Limits filesystem ac
 ## Decision Flow
 
 1. **Determine sandbox type**
-   - Container available (Docker/Podman) → use container with volume mounts
-   - OS-level isolation available (chroot, namespace, bubblewrap) → use it
-   - Neither available → use process-level restrictions (ulimit, cgroup)
+   - Container available (Docker/Podman) РІвЂ вЂ™ use container with volume mounts
+   - OS-level isolation available (chroot, namespace, bubblewrap) РІвЂ вЂ™ use it
+   - Neither available РІвЂ вЂ™ use process-level restrictions (ulimit, cgroup)
    - Minimal: restrict to CWD only, no network, no new process spawns
 
 2. **Filesystem isolation**
@@ -38,7 +38,7 @@ Confines command execution to a safe, isolated environment. Limits filesystem ac
    - Test: can we spawn a process in the sandbox?
    - Test: are forbidden paths actually inaccessible?
    - Test: is network actually blocked (if `none`)?
-   - Ready → `ready: true`, executor_agent may proceed
+   - Ready РІвЂ вЂ™ `ready: true`, executor_agent may proceed
 
 ## Failure Modes
 | Condition | Response |
@@ -48,3 +48,6 @@ Confines command execution to a safe, isolated environment. Limits filesystem ac
 | Sandbox test fails (leak detected) | Abort, log security event |
 | Resource limits too restrictive for command | Warn, let command fail naturally (don't loosen limits) |
 | Platform doesn't support filesystem isolation | Apply network + process limits, warn about partial isolation |
+## Runtime Integration
+
+For Docker/WSL2-backed isolation the runtime uses `runtime/sandbox/SandboxEngine` (exposed as MCP category `sandbox`). Tools: `sandbox_execute`, `sandbox_run_dev_server`, `sandbox_screenshot`, `sandbox_cleanup`, `sandbox_status`. The engine falls back from Docker to WSL2 automatically and reports `status: degraded` when neither is available.

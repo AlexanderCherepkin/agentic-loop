@@ -34,8 +34,9 @@ Observability agent that audits the final deploy execution for command success, 
 4. **Check deploy URL** — for vercel/netlify, missing URL is a `warn`; for generic, URL is not required.
 5. **Check provider match** — verify `provider` in report matches requirements.
 6. **Generate recommendations** — suggest checking CLI authentication, build output, or environment variables.
-7. **Log to audit** — append findings to `audit_logger.md`.
-8. **Return report** with hint `result`.
+7. **Cost audit gate** — if cost tracking is enabled, invoke `cost_audit_agent.md` to verify the deploy scope did not exceed budget.
+8. **Log to audit** — append findings to `audit_logger.md`.
+9. **Return report** with hint `result`.
 
 ## Failure Modes
 
