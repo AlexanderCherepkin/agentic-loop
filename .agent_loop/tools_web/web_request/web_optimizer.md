@@ -35,6 +35,7 @@ Optimizes web requests — connection reuse, compression, request batching, pref
    - Batch window: collect requests over N ms, send as batch, fan-out results
    - Batching trade-off: latency gain by parallelism vs batch window delay
    - Auto-detect: if >3 concurrent requests to same host within 50ms → batch
+   - Volume caps: `MAX_CONCURRENT_PER_HOST=6`; `MAX_BATCH_SIZE=16`; `MAX_PREFETCH_URLS=20`; `MAX_TOTAL_INFLIGHT=32`. Stop at the cap and queue or drop with a logged truncation notice.
    - `rate_limiter` adjusts batch window sizes to respect token-bucket and sliding-window quotas
 
 4. **Prefetching and speculation**

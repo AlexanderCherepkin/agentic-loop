@@ -28,6 +28,7 @@ Cross-cutting strategist for the search pipeline. Analyzes the query and scope, 
    - Medium scope (100-1000 files) → build/use index, single searcher
    - Large scope (>1000 files) → build index, run regex + semantic in parallel
    - Parallelism cap: 4 concurrent searchers max
+   - Volume caps: `MAX_RESULTS=100` per query; `MAX_FILES_PER_CHUNK=500` for full scans; `MAX_CHUNKS=10` for chunked index rebuilds. Stop at the cap and report truncation rather than silently dropping results.
 
 4. **Pipeline configuration**
    - Safety chain (always): scope_detector → permission_agent

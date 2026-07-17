@@ -17,6 +17,7 @@ Optimizes memory store performance — storage efficiency, retrieval speed, inde
    - Frontmatter trimming: remove unused metadata fields
    - File consolidation: merge small single-entry files if they share tags/type
    - Format normalization: consistent indentation, line endings, encoding (UTF-8)
+   - Volume caps: process at most `MAX_ENTRIES_PER_PASS=1000`, `MAX_CHUNKS=10`, and `MAX_MERGE_BATCH=100` per optimization pass. Stop at the cap and schedule a follow-up pass rather than silently growing the work unit.
 
 2. **Retrieval speed optimization**
    - Profile: measure p50, p95, p99 search latency

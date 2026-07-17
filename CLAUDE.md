@@ -125,6 +125,10 @@ Ponytail protocol: `runtime/engine/ponytail_optimizer.py` injects the 7-step Lad
 - **No new files** unless the architecture requires it — prefer editing existing agents
 - **Safety first** — any change to execution, control, or safety layers must respect the three-circuit flow
 - **Cross-cutting optimizer** — each `tools_*` category has one strategist agent (e.g., `read_optimizer`, `project_optimizer`, `db_optimizer`) that coordinates the pipeline
+- **Prompt structure** — shape every LLM request as Role → Context → Task → Constraints → Format; agents that deviate must document why in their Decision Flow
+- **Model tiering** — prefer the fast/cheap tier (`claude-haiku-4-5`) for bulk read/search/web/memory extraction and scoring; the balanced tier (`claude-sonnet-4-6`) for planning, analysis, and synthesis; the strong tier (`claude-opus-4-8`) for architecture, complex self-correction, and final high-stakes review. Configured in `runtime/engine/llm_engine.py` `LLMConfig`
+- **Volume caps** — any batched, chunked, or parallel agent must declare hard `MAX`, `CHUNK`, or `MAX_CHUNKS` limits and stop at the cap rather than silently growing
+- **Adversarial verification** — for high-stakes validation verdicts, run 3 independent critics with distinct lenses; accept a finding only when ≥2 critics agree, otherwise escalate or gather more evidence
 - **Ponytail protocol** — code-generation agents receive the 7-step Ladder of Laziness in their system prompt (mode `lite`/`full`/`ultra`/`off`); over-engineering is reviewed in self-correction
 - **Headroom protocol** — optional context compression for large tool outputs, logs, RAG chunks, and multi-agent handoffs; enabled by default via `HEADROOM_ENABLED`; safety/control/audit layers always receive uncompressed originals unless an explicit compression step is planned
 - **Memanto protocol** — optional active semantic memory for durable cross-session facts; enabled via `MEMANTO_ENABLED`/`MEMANTO_URL`; degrades to in-memory fallback when the server is unavailable; safety/control/audit layers never route sensitive data through Memanto unless explicitly allowed by policy

@@ -40,6 +40,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `escalation_required`: boolean — true when `iteration_count` reaches `max_iterations` and issues remain
 - `refinement_actions`: list of concrete corrective actions for `plan_adjustment.md` when visual QA or Lighthouse discrepancies are found
 - `lighthouse_status`: enum (`not_applicable`, `passed`, `needs_refinement`, `max_iterations_reached`) summarizing the Lighthouse hard-gate state
+- `adversarial_verdicts`: optional list of 3 independent critic verdicts (`goal`, `quality/security`, `Ponytail/consistency`) used when high-stakes verification is triggered
 
 ### Side Effects
 - Writes validation record to session memory for future reference
@@ -58,6 +59,11 @@ Post-execution verification agent that checks whether the observed outcomes matc
 7. **Score each criterion** — `pass` if fully satisfied; `fail` if violated or missing; `partial` if mostly satisfied but with minor gaps.
 8. **Request fast evaluator verdict** — if `goal_evaluation` is not yet present, invoke `goal_evaluator.md` with the goal, observation artifacts, and current criteria. Store its `verdict` and `criteria_checklist`.
 9. **Aggregate verdict** — `complete` if all criteria pass; `partial` if some pass and no critical failures; `failed` if critical criterion fails or majority fail; `inconclusive` if insufficient evidence to judge.
+9a. **Adversarial verification (high-stakes)** — if the task is high-stakes (deploy, security, client deliverable, or validation verdict is contested), run 3 independent critics with distinct lenses:
+   - Lens 1: `goal_evaluator.md` — cheap pass/fail against the stated goal.
+   - Lens 2: `quality_evaluator_agent.md` or `security_scan_validator.md` — quality/security lens.
+   - Lens 3: `ponytail_review.md` (coding tasks) or `mutual_check/consistency_checker.md` (non-coding) — over-engineering/consistency lens.
+   Accept a verdict only when ≥2 critics agree. If no majority, set `validation_status=inconclusive`, keep `retry_recommended=true`, and request more evidence. Record all three verdicts in `gap_analysis`.
 10. **Visual QA verdict** — if `visual_qa_report` present:
     - `status=passed` and no `discrepancies` → contribution to `complete`.
     - DOM assertion failures or image diff above threshold → derive `refinement_actions` and set `needs_refinement`.
@@ -109,7 +115,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
     - If `verdict.pass=false` with a concrete reason, set `validation_status=needs_refinement`, append the reason to `gap_analysis`, and set `retry_recommended=true` when `iteration_count < max_iterations`.
     - If `verdict.confidence < 0.5`, treat the evaluator as uncertain: keep current `validation_status`, set `retry_recommended=true`, and request more evidence on next cycle.
 15. **Determine retry recommendation** — `retry_recommended=true` if `partial` or `needs_refinement` and root cause appears addressable (missing dependency, typo, single test failure, layout tweak, over-engineering cut); `false` if `failed` due to fundamental mismatch or `inconclusive`.
-16. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation, escalation flag, goal_evaluation summary, `lighthouse_status`, and refinement actions.
+16. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation, escalation flag, goal_evaluation summary, `lighthouse_status`, `adversarial_verdicts`, and refinement actions.
 
 ## Failure Modes
 
@@ -156,5 +162,7 @@ Post-execution verification agent that checks whether the observed outcomes matc
 | Regression guard detects regression after `max_iterations` | `validation_status=needs_human`; `escalation_required=true`; route to `assistance_request.md` |
 | Regression guard blocked (missing baseline) and iteration budget remains | Keep current `validation_status`; log missing baseline to `audit_logger.md` |
 | Regression guard blocked after `max_iterations` | `validation_status=needs_human`; include baseline-missing diagnostic in `gap_analysis` |
+| Adversarial critics disagree (no ≥2 majority) | `validation_status=inconclusive`; `retry_recommended=true`; request more evidence and log all three verdicts |
+| Adversarial verification missing required critics | Run available critics; if fewer than 2, treat as `inconclusive` and require more evidence |
 
 

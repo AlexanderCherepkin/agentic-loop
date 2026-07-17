@@ -48,9 +48,34 @@ class LLMConfig:
     evaluator_provider: LLMProvider = LLMProvider.ANTHROPIC
     evaluator_model: str = "claude-haiku-4-5-20251001"
     use_evaluator: bool = True
+    # Model tiering: which model to use by task complexity.
+    fast_model: str = "claude-haiku-4-5-20251001"
+    balanced_model: str = "claude-sonnet-4-6"
+    strong_model: str = "claude-opus-4-8"
+    # Volume caps for batched/chunked agent work.
+    max_parallel_agents: int = 16
+    max_chunks_per_agent: int = 10
     # Headroom context compression (optional; agents call explicitly).
     headroom_enabled: bool = field(default_factory=lambda: os.getenv("HEADROOM_ENABLED", "true").lower() not in ("false", "0", "off", "no"))
     headroom_threshold_tokens: int = 500
+
+    def select_model(self, task_complexity: str = "balanced") -> str:
+        mapping = {
+            "fast": self.fast_model,
+            "cheap": self.fast_model,
+            "bulk": self.fast_model,
+            "scoring": self.fast_model,
+            "balanced": self.balanced_model,
+            "analysis": self.balanced_model,
+            "planning": self.balanced_model,
+            "synthesis": self.balanced_model,
+            "strong": self.strong_model,
+            "complex": self.strong_model,
+            "architecture": self.strong_model,
+            "review": self.strong_model,
+            "self_correction": self.strong_model,
+        }
+        return mapping.get(task_complexity, self.model)
 
 
 class MockLLMEngine:
