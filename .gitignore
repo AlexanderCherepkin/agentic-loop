@@ -15,6 +15,7 @@ docker-compose.yml
 npm-debug.log*
 .pnpm-debug.log*
 coverage
+htmlcov/
 __pycache__/
 *.pyc
 .mypy_cache/
