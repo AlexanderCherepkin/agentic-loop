@@ -5,6 +5,11 @@ from pathlib import Path
 
 from ..contracts.agent_spec import AgentSpec, ContractSpec, DecisionFlow, DecisionStep, FailureMode, Parameter
 
+# Module-level cache shared across AgentLoader instances to avoid re-parsing
+# the same agent specs during tests and health checks.
+_AGENT_CACHE: dict[tuple[str, str], AgentSpec] = {}
+_ALL_AGENTS_CACHE: dict[str, dict[str, AgentSpec]] = {}
+
 
 class AgentLoader:
     def __init__(self, agent_loop_root: Path):
@@ -13,18 +18,28 @@ class AgentLoader:
             raise FileNotFoundError(f"Agent loop root not found: {self.root}")
 
     def load_agent(self, relative_path: str) -> AgentSpec:
+        cache_key = (str(self.root), relative_path)
+        if cache_key in _AGENT_CACHE:
+            return _AGENT_CACHE[cache_key]
+
         full_path = self.root / relative_path
         if not full_path.suffix:
             full_path = full_path.with_suffix(".md")
         if not full_path.exists():
             raise FileNotFoundError(f"Agent spec not found: {full_path}")
         content = full_path.read_text(encoding="utf-8")
-        return self._parse(full_path, content)
+        spec = self._parse(full_path, content)
+        _AGENT_CACHE[cache_key] = spec
+        return spec
 
     def load_all_agents(self) -> dict[str, AgentSpec]:
+        cache_key = str(self.root)
+        if cache_key in _ALL_AGENTS_CACHE:
+            return _ALL_AGENTS_CACHE[cache_key]
+
         agents: dict[str, AgentSpec] = {}
         for md_file in self.root.rglob("*.md"):
-            if md_file.name in ("ARCHITECTURE.md", "TECHNICAL_ASSIGNMENT.md"):
+            if md_file.name in ("ARCHITECTURE.md", "TECHNICAL_ASSIGNMENT.md", "TECHNICAL.md"):
                 continue
             content = md_file.read_text(encoding="utf-8")
             if "## Role" not in content or "## Contract" not in content:
@@ -35,6 +50,7 @@ class AgentLoader:
                 agents[key] = spec
             except Exception:
                 continue
+        _ALL_AGENTS_CACHE[cache_key] = agents
         return agents
 
     def _parse(self, path: Path, content: str) -> AgentSpec:

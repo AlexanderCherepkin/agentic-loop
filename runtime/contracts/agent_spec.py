@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -131,8 +132,23 @@ class AgentSpec:
         parts.append("\n## Output Format\nReturn a JSON object matching the Output Contract above. No extra text outside the JSON.")
         return "\n".join(parts)
 
+    @staticmethod
+    def _render_input_value(value: Any) -> str:
+        """Render an input value inside a fenced code block to prevent prompt injection.
+
+        Untrusted user data may contain markdown headings, role overrides, or
+        instruction-escape sequences. Wrapping each value in a code fence keeps
+        it structurally separate from the system prompt and neutralizes markdown
+        control characters. Backtick fences inside the value are escaped so the
+        outer fence cannot be closed prematurely.
+        """
+        text = json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value
+        # Escape any triple-backtick sequence so the fenced block stays intact.
+        safe = str(text).replace("```", "`''`")
+        return f"```\n{safe}\n```"
+
     def to_input_message(self, inputs: dict[str, Any]) -> str:
         lines = ["Execute your Decision Flow with the following inputs:"]
         for key, value in inputs.items():
-            lines.append(f"\n**{key}**: {value}")
+            lines.append(f"\n**{key}**: {self._render_input_value(value)}")
         return "\n".join(lines)

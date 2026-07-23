@@ -70,7 +70,7 @@ function main() {
 
   // Known false positives: documentation target files (not agents)
   const knownFalsePositives = ['README', 'API', 'CHANGELOG', 'MEMORY', 'project_rules', 'DESIGN', '_spec', 'SKILL'];
-  const docFiles = ['ARCHITECTURE.md', 'TECHNICAL_ASSIGNMENT.md', 'CLAUDE.md'];
+  const docFiles = ['ARCHITECTURE.md', 'TECHNICAL_ASSIGNMENT.md', 'CLAUDE.md', 'TECHNICAL.md'];
   const filteredBroken = broken.filter(b => {
     if (knownFalsePositives.includes(b.to)) return false;
     if (docFiles.some(d => b.from.includes(d))) return false;
