@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer, MCPToolResult
+from .path_guard import MCPPathGuard
+from runtime.safety.file_system_guard import FSOperation
 
 
 class ReadMCPServer(MCPServer):
@@ -17,6 +19,7 @@ class ReadMCPServer(MCPServer):
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="tools_read", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
         self._cache: dict[str, tuple[float, str]] = {}
 
         self._register_all()
@@ -59,13 +62,7 @@ class ReadMCPServer(MCPServer):
                        self.clear_cache)
 
     def _resolve(self, path: str) -> Path:
-        p = Path(path)
-        if not p.is_absolute():
-            p = self.workspace / p
-        resolved = p.resolve()
-        if not str(resolved).startswith(str(self.workspace)):
-            raise PermissionError(f"Access denied: {path} is outside workspace")
-        return resolved
+        return self._guard.resolve(path, FSOperation.READ)
 
     async def read_file(self, path: str, encoding: str = "utf-8", start_line: int = 0, end_line: int = 0) -> dict[str, Any]:
         filepath = self._resolve(path)

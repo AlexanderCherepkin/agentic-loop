@@ -10,15 +10,43 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
+from runtime.safety.file_system_guard import FSOperation, FSVerdict
 
 
 class RuncomMCPServer(MCPServer):
     """MCP server for tools_runcom — command execution pipeline (sandboxed)."""
 
-    def __init__(self, workspace_root: str = ".", sandbox_enabled: bool = True):
+    # Base names of executables that may be launched directly. Shells and
+    # interpreters with inline-code flags are excluded; see _blocked_inline_flags.
+    DEFAULT_ALLOWED_EXECUTABLES: frozenset[str] = frozenset({
+        "python", "python3", "py", "pytest", "pip", "pip3",
+        "node", "npm", "npx", "yarn", "pnpm",
+        "git",
+        "echo", "ls", "cat", "mkdir", "rmdir", "cp", "mv", "rm", "touch",
+        "find", "grep", "rg",
+    })
+
+    # Characters that imply shell interpretation / command chaining.
+    SHELL_METACHARACTERS: set[str] = set(";|&`$()<>{}[]\\")
+
+    # (executable, flag) pairs that allow arbitrary inline code execution.
+    BLOCKED_INLINE_FLAGS: set[tuple[str, str]] = {
+        ("python", "-c"), ("python3", "-c"), ("py", "-c"),
+        ("node", "-e"), ("node", "--eval"),
+    }
+
+    def __init__(
+        self,
+        workspace_root: str = ".",
+        sandbox_enabled: bool = True,
+        allowed_executables: set[str] | None = None,
+    ):
         super().__init__(name="tools_runcom", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
         self.sandbox_enabled = sandbox_enabled
+        self._guard = MCPPathGuard(self.workspace)
+        self._allowed_executables = allowed_executables or set(self.DEFAULT_ALLOWED_EXECUTABLES)
         self._forbidden_commands = {"rm -rf /", "sudo ", "chmod 777 /", "mkfs.", "dd if=",
                                      ":(){ :|:& };:", "> /dev/sda"}
         self._command_history: list[dict[str, Any]] = []
@@ -32,7 +60,7 @@ class RuncomMCPServer(MCPServer):
         self.register("setup_environment", "Setup environment variables for command execution",
                        self._s({"env_vars": "object", "cwd?": "string"}),
                        self.setup_environment)
-        self.register("execute_command", "Execute a shell command with timeout and output capture",
+        self.register("execute_command", "Execute a command with timeout and output capture (shell=False by default)",
                        self._s({"command": "string", "cwd?": "string", "timeout_ms?": "int",
                                 "env?": "object", "shell?": "bool"}),
                        self.execute_command)
@@ -68,31 +96,77 @@ class RuncomMCPServer(MCPServer):
     async def setup_environment(self, env_vars: dict[str, str], cwd: str = "") -> dict[str, Any]:
         new_env = os.environ.copy()
         new_env.update(env_vars)
-        work_dir = str(self.workspace / cwd) if cwd else str(self.workspace)
+        work_dir = self._resolve_work_dir(cwd)
         return {"env_count": len(env_vars), "cwd": work_dir,
                 "keys": list(env_vars.keys())}
 
+    def _resolve_work_dir(self, cwd: str) -> str:
+        """Resolve and validate cwd against the workspace via MCPPathGuard."""
+        raw = cwd if cwd else "."
+        return str(self._guard.resolve(raw, FSOperation.EXECUTE))
+
+    def _validate_command_tokens(self, tokens: list[str]) -> dict[str, Any] | None:
+        """Validate an already-tokenized command against the allow-list and inline-code flags."""
+        if not tokens:
+            return {"safe": False, "blocked": True, "reason": "Empty command"}
+
+        executable = Path(tokens[0]).name
+        if executable.lower() not in {e.lower() for e in self._allowed_executables}:
+            return {"safe": False, "blocked": True,
+                    "reason": f"Executable '{executable}' is not in the allow-list"}
+
+        exe_lower = executable.lower()
+        for idx, arg in enumerate(tokens[1:]):
+            if not arg.startswith("-"):
+                continue
+            if (exe_lower, arg.lower()) in self.BLOCKED_INLINE_FLAGS:
+                return {"safe": False, "blocked": True,
+                        "reason": f"Inline execution flag '{arg}' is forbidden for {executable}"}
+            # Block shell-style substitution / redirection markers sneaking into arguments.
+            if any(ch in arg for ch in self.SHELL_METACHARACTERS):
+                return {"safe": False, "blocked": True,
+                        "reason": f"Argument '{arg}' contains shell metacharacters"}
+        return None
+
+    def _validate_command_string(self, command: str, shell: bool) -> dict[str, Any] | None:
+        """Validate a raw command string. Returns a block dict if unsafe, else None."""
+        cmd_lower = command.lower()
+        for forbidden in self._forbidden_commands:
+            if forbidden.lower() in cmd_lower:
+                return {"safe": False, "blocked": True, "reason": f"Forbidden pattern: {forbidden}"}
+
+        # Shell mode is deprecated and only accepted when the string is free of shell syntax.
+        if shell and any(ch in command for ch in self.SHELL_METACHARACTERS):
+            return {"safe": False, "blocked": True,
+                    "reason": "shell=True with shell metacharacters is not permitted"}
+
+        try:
+            tokens = shlex.split(command)
+        except ValueError as e:
+            return {"safe": False, "blocked": True, "reason": f"Command parsing failed: {e}"}
+
+        return self._validate_command_tokens(tokens)
+
     async def execute_command(self, command: str, cwd: str = "", timeout_ms: int = 30000,
-                              env: dict[str, str] | None = None, shell: bool = True) -> dict[str, Any]:
-        sandbox_result = await self.sandbox_check(command)
+                              env: dict[str, str] | None = None, shell: bool = False) -> dict[str, Any]:
+        sandbox_result = await self.sandbox_check(command, shell=shell)
         if sandbox_result.get("blocked"):
             return {"error": sandbox_result["reason"], "blocked": True}
 
-        work_dir = str(self.workspace / cwd) if cwd else str(self.workspace)
+        try:
+            work_dir = self._resolve_work_dir(cwd)
+        except PermissionError as e:
+            return {"error": str(e), "blocked": True}
+
+        tokens = shlex.split(command)
         merged_env = os.environ.copy()
         if env:
             merged_env.update(env)
 
         t0 = time.perf_counter()
         try:
-            proc = await asyncio.create_subprocess_shell(
-                command,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-                cwd=work_dir,
-                env=merged_env,
-            ) if shell else await asyncio.create_subprocess_exec(
-                *shlex.split(command),
+            proc = await asyncio.create_subprocess_exec(
+                *tokens,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=work_dir,
@@ -126,15 +200,8 @@ class RuncomMCPServer(MCPServer):
                                        "timestamp": time.time()})
         return result
 
-    async def sandbox_check(self, command: str) -> dict[str, Any]:
-        cmd_lower = command.lower()
-        for forbidden in self._forbidden_commands:
-            if forbidden.lower() in cmd_lower:
-                return {"safe": False, "blocked": True, "reason": f"Forbidden pattern: {forbidden}"}
-        if ".." in command and ("/" in command or "\\" in command):
-            if any(p in cmd_lower for p in ["/etc", "/proc", "/sys", "/var", "system32"]):
-                return {"safe": False, "blocked": True, "reason": "Access to system directory blocked"}
-        return {"safe": True, "blocked": False}
+    async def sandbox_check(self, command: str, shell: bool = False) -> dict[str, Any]:
+        return self._validate_command_string(command, shell=shell) or {"safe": True, "blocked": False}
 
     async def capture_output(self, pid: int) -> dict[str, Any]:
         return {"pid": pid, "available": False, "note": "Use execute_command for output capture"}

@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
+from runtime.safety.file_system_guard import FSOperation
 
 
 class SearchMCPServer(MCPServer):
@@ -15,6 +17,7 @@ class SearchMCPServer(MCPServer):
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="tools_search", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
 
         self.register("regex_search", "Search using regex patterns across files",
                        self._s({"query": "string", "path?": "string", "glob?": "string",
@@ -50,10 +53,7 @@ class SearchMCPServer(MCPServer):
                        self.diff_search)
 
     def _resolve(self, path: str = ".") -> Path:
-        p = Path(path)
-        if not p.is_absolute():
-            p = self.workspace / p
-        return p.resolve()
+        return self._guard.resolve(path, FSOperation.READ)
 
     async def regex_search(self, query: str, path: str = ".", glob: str = "*",
                            max_results: int = 50, context_lines: int = 2,

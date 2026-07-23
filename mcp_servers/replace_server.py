@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
+from runtime.safety.file_system_guard import FSOperation
 
 
 class ReplaceMCPServer(MCPServer):
@@ -18,6 +20,7 @@ class ReplaceMCPServer(MCPServer):
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="tools_replace", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
         self._backup_dir = self.workspace / ".backup"
         self._backup_dir.mkdir(exist_ok=True)
 
@@ -43,11 +46,8 @@ class ReplaceMCPServer(MCPServer):
         self.register("safe_delete", "Safely delete a file with backup",
                        self._s({"path": "string"}), self.safe_delete)
 
-    def _resolve(self, path: str) -> Path:
-        p = Path(path)
-        if not p.is_absolute():
-            p = self.workspace / p
-        return p.resolve()
+    def _resolve(self, path: str, operation: FSOperation = FSOperation.WRITE) -> Path:
+        return self._guard.resolve(path, operation)
 
     async def create_backup(self, path: str) -> dict[str, Any]:
         filepath = self._resolve(path)

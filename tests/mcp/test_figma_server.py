@@ -129,7 +129,7 @@ def test_figma_extract_tokens_invokes_design_tokens(figma_server: FigmaMCPServer
     cmd = args[0]
     assert cmd[1] == "design_tokens.py"
     assert "--file" in cmd
-    assert "figma_node.json" in cmd
+    assert any(str(p).endswith("figma_node.json") for p in cmd)
     assert "--output-dir" in cmd
     assert "--registry" in cmd
     assert "--tailwind-config" in cmd
@@ -156,7 +156,7 @@ def test_figma_generate_component_invokes_agent(figma_server: FigmaMCPServer) ->
     cmd = args[0]
     assert cmd[1] == "agent.py"
     assert "--file" in cmd
-    assert "figma_node.json" in cmd
+    assert any(str(p).endswith("figma_node.json") for p in cmd)
     assert "--node-id" in cmd
     assert "662:808" in cmd
     assert "--output-name" in cmd
@@ -184,13 +184,13 @@ def test_figma_map_interactions_invokes_interactive_layer_mapper(figma_server: F
     cmd = args[0]
     assert cmd[1] == "interactive_layer_mapper.py"
     assert "--figma-file" in cmd
-    assert "figma_node.json" in cmd
+    assert any(str(p).endswith("figma_node.json") for p in cmd)
     assert "--ast" in cmd
-    assert "page_ast.json" in cmd
+    assert any(str(p).endswith("page_ast.json") for p in cmd)
     assert "--ast-output" in cmd
-    assert "interactive_ast.json" in cmd
+    assert any(str(p).endswith("interactive_ast.json") for p in cmd)
     assert "--registry-output" in cmd
-    assert "interactive_registry.json" in cmd
+    assert any(str(p).endswith("interactive_registry.json") for p in cmd)
 
 
 def test_figma_download_assets_invokes_asset_pipeline(figma_server: FigmaMCPServer) -> None:
@@ -215,10 +215,13 @@ def test_figma_download_assets_invokes_asset_pipeline(figma_server: FigmaMCPServ
     cmd = args[0]
     assert cmd[1] == "asset_pipeline.py"
     assert "--file" in cmd
-    assert "figma_node.json" in cmd
+    assert any(str(p).endswith("figma_node.json") for p in cmd)
     assert "--public-dir" in cmd
+    assert any(str(p).endswith("public") for p in cmd)
     assert "--assets-dir" in cmd
+    assert any(str(p).endswith("assets/figma") or str(p).endswith(r"assets\figma") for p in cmd)
     assert "--registry" in cmd
+    assert any(str(p).endswith("asset_registry.json") for p in cmd)
     assert "--skip-download" in cmd
     assert "--no-optimize" in cmd
 
@@ -248,7 +251,7 @@ def test_figma_run_pipeline_dry_run(figma_server: FigmaMCPServer) -> None:
     assert "--api-depth" in cmd
     assert "2" in cmd
     assert "--spec-output" in cmd
-    assert "spec.md" in cmd
+    assert any(str(p).endswith("spec.md") for p in cmd)
 
 
 def test_figma_run_pipeline_forwards_backend_and_url_params(figma_server: FigmaMCPServer) -> None:
@@ -275,11 +278,11 @@ def test_figma_run_pipeline_forwards_backend_and_url_params(figma_server: FigmaM
     env = kwargs.get("env", {})
     assert cmd[1] == "conductor.py"
     assert "--openapi" in cmd
-    assert "openapi.yaml" in cmd
+    assert any(str(p).endswith("openapi.yaml") for p in cmd)
     assert "--backend-output-dir" in cmd
-    assert "backend_out" in cmd
+    assert any(str(p).endswith("backend_out") for p in cmd)
     assert "--backend-mapping-file" in cmd
-    assert "mapping.json" in cmd
+    assert any(str(p).endswith("mapping.json") for p in cmd)
     assert env.get("FIGMA_URL") == "https://www.figma.com/design/abc123/Sample?node-id=1-2"
     assert env.get("FIGMA_FILE_KEY") == "abc123"
 
@@ -311,3 +314,22 @@ def test_figma_analyze_schema_has_optional_file(figma_server: FigmaMCPServer) ->
     assert "file" in props
     assert props["file"]["type"] == "string"
     assert tool["inputSchema"].get("required", []) == []
+
+
+def test_figma_analyze_blocks_file_path_traversal(figma_server: FigmaMCPServer) -> None:
+    with pytest.raises(PermissionError):
+        figma_server.figma_analyze(file="../../../etc/passwd")
+
+
+def test_figma_generate_spec_blocks_output_path_traversal(figma_server: FigmaMCPServer) -> None:
+    with pytest.raises(PermissionError):
+        figma_server.figma_generate_spec(file="figma_node.json", output="../escaped_spec.md")
+
+
+def test_figma_run_pipeline_blocks_backend_output_dir_traversal(figma_server: FigmaMCPServer) -> None:
+    with pytest.raises(PermissionError):
+        figma_server.figma_run_pipeline(
+            dry_run=True,
+            openapi="openapi.yaml",
+            backend_output_dir="../../../../../tmp/pwned",
+        )

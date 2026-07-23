@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
+from runtime.safety.file_system_guard import FSOperation
 
 warnings.filterwarnings("ignore", category=ResourceWarning)
 
@@ -23,14 +25,45 @@ class FigmaMCPServer(MCPServer):
     pipeline stages, plus a full-pipeline convenience tool.
     """
 
+    # Arguments that are filesystem paths and must stay inside the workspace.
+    PATH_ARGS = frozenset({
+        "file", "output", "ast_file", "figma_file", "layout_ast_file", "output_dir",
+        "registry_file", "tailwind_config", "globals_css", "output_name",
+        "page_ast_output", "component_map_output", "ast_output", "registry_output",
+        "public_dir", "assets_dir", "spec_output", "openapi", "prisma",
+        "backend_output_dir", "backend_mapping_file", "image_enrichment_output_dir",
+        "scan_dirs",
+    })
+
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="figma", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
         self._core_dir = self.workspace / "figma-agent-core"
         self._degraded_reason: str | None = None
         self._ensure_core()
         self._register_tools()
         self._initialized = True
+
+    def _safe_path(self, name: str, value: str | None, operation: FSOperation = FSOperation.READ) -> str | None:
+        """Resolve a filesystem argument through the path guard; returns value on error so degraded flows pass."""
+        if not value:
+            return value
+        try:
+            return str(self._guard.resolve(value, operation))
+        except PermissionError as e:
+            raise PermissionError(f"Access denied for {name}: {e}") from e
+
+    def _build_safe_args(self, arg_pairs: list[tuple[str, str | None, str]], operation: FSOperation = FSOperation.READ) -> list[str]:
+        """Convert flag/value pairs into CLI args, resolving path-like values."""
+        args: list[str] = []
+        for flag, value, arg_name in arg_pairs:
+            if not value:
+                continue
+            if arg_name in self.PATH_ARGS:
+                value = self._safe_path(arg_name, value, operation)
+            args.extend([flag, value])
+        return args
 
     def _ensure_core(self) -> None:
         if not self._core_dir.exists():
@@ -154,14 +187,18 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--file", file]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+        ])
         return self._run_core_script("analyzer.py", args)
 
     def figma_precise_mode_audit(self, file: str = "figma_node.json", node_id: str = "", target_viewport: str = "") -> dict[str, Any]:
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--file", file]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+        ])
         if node_id:
             args.extend(["--node-id", node_id])
         if target_viewport:
@@ -173,7 +210,10 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--file", file, "--output", output]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+            ("--output", output, "output"),
+        ])
         if node_id:
             args.extend(["--node-id", node_id])
         return self._run_core_script("spec_writer.py", args)
@@ -185,13 +225,13 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = [
-            "--file", file,
-            "--output-dir", output_dir,
-            "--registry", registry_file,
-            "--tailwind-config", tailwind_config,
-            "--globals-css", globals_css,
-        ]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+            ("--output-dir", output_dir, "output_dir"),
+            ("--registry", registry_file, "registry_file"),
+            ("--tailwind-config", tailwind_config, "tailwind_config"),
+            ("--globals-css", globals_css, "globals_css"),
+        ], FSOperation.WRITE)
         return self._run_core_script("design_tokens.py", args)
 
     def figma_generate_component(self, file: str = "figma_node.json", node_id: str = "",
@@ -199,7 +239,9 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--file", file]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+        ])
         if node_id:
             args.extend(["--node-id", node_id])
         if output_name:
@@ -212,11 +254,18 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--file", file, "--output", output]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+            ("--output", output, "output"),
+        ], FSOperation.WRITE)
         if node_id:
             args.extend(["--node-id", node_id])
         for d in scan_dirs or []:
-            args.extend(["--scan-dir", d])
+            try:
+                safe_d = str(self._guard.resolve(d, FSOperation.READ))
+            except PermissionError as e:
+                raise PermissionError(f"Access denied for scan_dirs: {e}") from e
+            args.extend(["--scan-dir", safe_d])
         return self._run_core_script("component_registry.py", args)
 
     def figma_extract_components(self, ast_file: str = "layout_ast.json", output_dir: str = "src/app/components",
@@ -226,13 +275,13 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = [
-            "--ast", ast_file,
-            "--output-dir", output_dir,
-            "--page-ast-output", page_ast_output,
-            "--component-map-output", component_map_output,
-            "--min-duplicates", str(min_duplicates),
-        ]
+        args = self._build_safe_args([
+            ("--ast", ast_file, "ast_file"),
+            ("--output-dir", output_dir, "output_dir"),
+            ("--page-ast-output", page_ast_output, "page_ast_output"),
+            ("--component-map-output", component_map_output, "component_map_output"),
+        ], FSOperation.WRITE)
+        args.extend(["--min-duplicates", str(min_duplicates)])
         if patterns:
             args.extend(["--patterns", patterns])
         return self._run_core_script("component_extractor.py", args)
@@ -247,12 +296,12 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = [
-            "--figma-file", figma_file,
-            "--ast", ast_file,
-            "--ast-output", ast_output,
-            "--registry-output", registry_output,
-        ]
+        args = self._build_safe_args([
+            ("--figma-file", figma_file, "figma_file"),
+            ("--ast", ast_file, "ast_file"),
+            ("--ast-output", ast_output, "ast_output"),
+            ("--registry-output", registry_output, "registry_output"),
+        ], FSOperation.WRITE)
         return self._run_core_script("interactive_layer_mapper.py", args)
 
     def figma_responsive_compose(
@@ -266,12 +315,12 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = [
-            "--layout-ast", layout_ast_file,
-            "--figma-file", figma_file,
-            "--output", output,
-            "--report", report,
-        ]
+        args = self._build_safe_args([
+            ("--layout-ast", layout_ast_file, "layout_ast_file"),
+            ("--figma-file", figma_file, "figma_file"),
+            ("--output", output, "output"),
+            ("--report", report, "output"),
+        ], FSOperation.WRITE)
         if node_id:
             args.extend(["--node-id", node_id])
         return self._run_core_script("responsive_composer.py", args)
@@ -288,12 +337,12 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = [
-            "--file", file,
-            "--public-dir", public_dir,
-            "--assets-dir", assets_dir,
-            "--registry", registry_file,
-        ]
+        args = self._build_safe_args([
+            ("--file", file, "file"),
+            ("--public-dir", public_dir, "public_dir"),
+            ("--assets-dir", assets_dir, "assets_dir"),
+            ("--registry", registry_file, "registry_file"),
+        ], FSOperation.WRITE)
         if skip_download:
             args.append("--skip-download")
         if not optimize:
@@ -313,7 +362,10 @@ class FigmaMCPServer(MCPServer):
         degraded = self._check_degraded()
         if degraded:
             return degraded
-        args = ["--all", "--api-depth", str(api_depth), "--spec-output", spec_output]
+        args = ["--all", "--api-depth", str(api_depth)]
+        args.extend(self._build_safe_args([
+            ("--spec-output", spec_output, "output"),
+        ], FSOperation.WRITE))
         if force_refresh:
             args.append("--force")
         if node_id:
@@ -327,21 +379,29 @@ class FigmaMCPServer(MCPServer):
         if enable_image_enrichment:
             args.append("--enable-image-enrichment")
             args.extend(["--image-provider", image_provider])
-            if image_provider_api_key:
-                args.extend(["--image-provider-api-key", image_provider_api_key])
             if image_enrichment_output_dir:
-                args.extend(["--image-enrichment-output-dir", image_enrichment_output_dir])
+                args.extend(self._build_safe_args([
+                    ("--image-enrichment-output-dir", image_enrichment_output_dir, "image_enrichment_output_dir"),
+                ], FSOperation.WRITE))
             args.extend(["--image-enrichment-max-images", str(image_enrichment_max_images)])
         if openapi:
-            args.extend(["--openapi", openapi])
+            args.extend(self._build_safe_args([
+                ("--openapi", openapi, "openapi"),
+            ], FSOperation.READ))
         if prisma:
-            args.extend(["--prisma", prisma])
+            args.extend(self._build_safe_args([
+                ("--prisma", prisma, "prisma"),
+            ], FSOperation.READ))
         if backend_spec_text:
             args.extend(["--backend-spec-text", backend_spec_text])
         if backend_output_dir:
-            args.extend(["--backend-output-dir", backend_output_dir])
+            args.extend(self._build_safe_args([
+                ("--backend-output-dir", backend_output_dir, "backend_output_dir"),
+            ], FSOperation.WRITE))
         if backend_mapping_file:
-            args.extend(["--backend-mapping-file", backend_mapping_file])
+            args.extend(self._build_safe_args([
+                ("--backend-mapping-file", backend_mapping_file, "backend_mapping_file"),
+            ], FSOperation.WRITE))
         if dry_run:
             args.append("--dry-run")
 
@@ -350,6 +410,8 @@ class FigmaMCPServer(MCPServer):
             env["FIGMA_URL"] = figma_url
         if file_key:
             env["FIGMA_FILE_KEY"] = file_key
+        if image_provider_api_key:
+            env["UNSPLASH_ACCESS_KEY"] = image_provider_api_key
         return self._run_core_script("conductor.py", args, env=env if env else None)
 
 
