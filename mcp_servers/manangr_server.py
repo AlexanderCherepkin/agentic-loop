@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
 
 
 class ManangrMCPServer(MCPServer):
@@ -16,6 +17,7 @@ class ManangrMCPServer(MCPServer):
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="tools_manangr", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
 
         self.register("analyze_structure", "Analyze project directory structure — files, sizes, languages",
                        self._s({"path?": "string", "max_depth?": "int"}), self.analyze_structure)
@@ -36,7 +38,10 @@ class ManangrMCPServer(MCPServer):
                        self._s({"path?": "string"}), self.organize_files)
 
     async def analyze_structure(self, path: str = ".", max_depth: int = 5) -> dict[str, Any]:
-        root = self.workspace / path if path else self.workspace
+        try:
+            root = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         if not root.exists():
             return {"error": f"Path not found: {path}"}
 
@@ -66,7 +71,10 @@ class ManangrMCPServer(MCPServer):
             "javascript": [(r"require\s*\(\s*['\"](.+?)['\"]", "require"), (r"from\s+['\"](.+?)['\"]", "import")],
         }
         patterns = import_patterns.get(language, import_patterns["python"])
-        root = self.workspace / path if path else self.workspace
+        try:
+            root = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         deps: dict[str, list[str]] = {}
 
         for filepath in root.rglob("*.py" if language == "python" else "*.{js,ts,jsx,tsx}"):
@@ -83,9 +91,13 @@ class ManangrMCPServer(MCPServer):
         return {"dependencies": deps, "file_count": len(deps), "language": language}
 
     async def analyze_impact(self, file_path: str, change_type: str = "modify") -> dict[str, Any]:
+        try:
+            target_path = self._guard.read_path(file_path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         deps = await self.map_dependencies()
-        target = file_path.replace(str(self.workspace), "").lstrip("/\\")
-        target_module = os.path.splitext(target.replace("/", ".").replace("\\", "."))[0]
+        target = str(target_path.relative_to(self.workspace)).replace("/", ".").replace("\\", ".")
+        target_module = os.path.splitext(target)[0]
 
         affected: list[str] = []
         for dep_file, imports in deps["dependencies"].items():
@@ -114,7 +126,10 @@ class ManangrMCPServer(MCPServer):
         return {"tasks": tasks, "total": len(tasks), "requirements_summary": requirements[:200]}
 
     async def suggest_refactor(self, path: str = ".", threshold_lines: int = 300) -> dict[str, Any]:
-        root = self.workspace / path if path else self.workspace
+        try:
+            root = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         suggestions: list[dict[str, Any]] = []
 
         for filepath in root.rglob("*.py"):
@@ -136,7 +151,16 @@ class ManangrMCPServer(MCPServer):
                 "count": len(suggestions), "threshold": threshold_lines}
 
     async def manage_config(self, config_path: str, action: str, data: dict[str, Any] | None = None) -> dict[str, Any]:
-        filepath = self.workspace / config_path
+        try:
+            if action == "read":
+                filepath = self._guard.read_path(config_path)
+            elif action == "write" and data:
+                filepath = self._guard.write_path(config_path)
+            else:
+                return {"error": f"Unknown action: {action}"}
+        except PermissionError as exc:
+            return {"error": str(exc)}
+
         if action == "read":
             if not filepath.exists():
                 return {"error": f"Config not found: {config_path}"}
@@ -153,7 +177,10 @@ class ManangrMCPServer(MCPServer):
         return {"error": f"Unknown action: {action}"}
 
     async def generate_docs(self, path: str = ".", format: str = "markdown") -> dict[str, Any]:
-        root = self.workspace / path if path else self.workspace
+        try:
+            root = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         modules: list[dict[str, Any]] = []
         for filepath in root.rglob("*.py"):
             try:
@@ -171,7 +198,10 @@ class ManangrMCPServer(MCPServer):
         return {"modules": modules, "total_modules": len(modules), "format": format}
 
     async def organize_files(self, path: str = ".") -> dict[str, Any]:
-        root = self.workspace / path if path else self.workspace
+        try:
+            root = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         by_type: dict[str, list[str]] = {}
         for filepath in root.rglob("*"):
             if filepath.is_file() and not filepath.name.startswith("."):

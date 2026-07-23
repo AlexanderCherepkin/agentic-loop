@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from .path_guard import MCPPathGuard
 
 
 class RuntestMCPServer(MCPServer):
@@ -17,6 +18,7 @@ class RuntestMCPServer(MCPServer):
     def __init__(self, workspace_root: str = "."):
         super().__init__(name="tools_runtest", version="1.0.0")
         self.workspace = Path(workspace_root).resolve()
+        self._guard = MCPPathGuard(self.workspace)
         self._test_cache: dict[str, dict[str, Any]] = {}
 
         self.register("discover_tests", "Discover test files and test functions in project",
@@ -42,7 +44,10 @@ class RuntestMCPServer(MCPServer):
                        self._s({"results": "array", "format?": "string"}), self.generate_report)
 
     async def discover_tests(self, path: str = ".", framework: str = "auto") -> dict[str, Any]:
-        search_path = self.workspace / path if path else self.workspace
+        try:
+            search_path = self._guard.read_path(path)
+        except PermissionError as exc:
+            return {"error": str(exc), "tests": [], "count": 0}
         discovered: list[dict[str, Any]] = []
 
         test_patterns = {
@@ -97,7 +102,10 @@ class RuntestMCPServer(MCPServer):
 
     async def execute_test(self, test_file: str, test_name: str = "",
                            framework: str = "pytest", timeout_ms: int = 60000) -> dict[str, Any]:
-        filepath = self.workspace / test_file
+        try:
+            filepath = self._guard.read_path(test_file)
+        except PermissionError as exc:
+            return {"error": str(exc)}
         if not filepath.exists():
             return {"error": f"Test file not found: {test_file}"}
 

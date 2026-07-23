@@ -101,6 +101,20 @@ def test_execute_test_missing_file(runtest_server: RuntestMCPServer) -> None:
     assert result.get("error") is not None
 
 
+def test_execute_test_blocks_path_traversal(runtest_server: RuntestMCPServer, tmp_path: Path) -> None:
+    victim = tmp_path.parent / "stolen_test.py"
+    victim.write_text("def test_pwn():\n    assert True\n", encoding="utf-8")
+    result = asyncio.run(runtest_server.execute_test(test_file="../stolen_test.py"))
+    assert "error" in result
+    assert "Access denied" in result["error"]
+
+
+def test_discover_tests_blocks_path_traversal(runtest_server: RuntestMCPServer) -> None:
+    result = asyncio.run(runtest_server.discover_tests(path="../../../etc"))
+    assert "error" in result
+    assert "Access denied" in result["error"]
+
+
 def test_analyze_failure(runtest_server: RuntestMCPServer) -> None:
     result = asyncio.run(runtest_server.analyze_failure(
         test_name="t", stdout="", stderr="ImportError: No module named x"

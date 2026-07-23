@@ -105,7 +105,24 @@ def test_generate_docs(manangr_server: ManangrMCPServer, python_project: Path) -
     assert modules >= {"main.py", "helper.py"}
 
 
+
 def test_organize_files(manangr_server: ManangrMCPServer, python_project: Path) -> None:
     result = asyncio.run(manangr_server.organize_files(path="."))
     assert result["total_files"] == 2
     assert ".py" in result["by_type"]
+
+
+def test_analyze_structure_blocks_path_traversal(manangr_server: ManangrMCPServer) -> None:
+    result = asyncio.run(manangr_server.analyze_structure(path="../../../etc"))
+    assert "error" in result
+    assert "Access denied" in result["error"]
+
+
+def test_manage_config_write_blocks_path_traversal(manangr_server: ManangrMCPServer, tmp_path: Path) -> None:
+    victim = tmp_path.parent / "stolen.json"
+    result = asyncio.run(
+        manangr_server.manage_config(config_path="../stolen.json", action="write", data={"pwned": True})
+    )
+    assert "error" in result
+    assert "Access denied" in result["error"]
+    assert not victim.exists()

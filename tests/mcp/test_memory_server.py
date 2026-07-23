@@ -115,3 +115,17 @@ def test_optimize_store(memory_server: MemoryMCPServer) -> None:
     asyncio.run(memory_server.write_memory(key="dup2", content="same"))
     result = asyncio.run(memory_server.optimize_store())
     assert result["duplicates_removed"] == 1
+
+
+def test_write_memory_blocks_path_traversal(memory_server: MemoryMCPServer, tmp_path: Path) -> None:
+    victim = tmp_path.parent / "stolen.md"
+    result = asyncio.run(memory_server.write_memory(key="../stolen", content="pwned"))
+    assert "error" in result
+    assert "Access denied" in result["error"]
+    assert not victim.exists()
+
+
+def test_read_memory_blocks_path_traversal(memory_server: MemoryMCPServer, tmp_path: Path) -> None:
+    result = asyncio.run(memory_server.read_memory(key="../../etc/passwd"))
+    assert "error" in result
+    assert "Access denied" in result["error"]

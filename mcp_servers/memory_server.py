@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .base import MCPServer
+from runtime.safety.file_system_guard import FileSystemGuard, FSOperation, FSVerdict
 
 
 class MemoryMCPServer(MCPServer):
@@ -20,15 +21,16 @@ class MemoryMCPServer(MCPServer):
         self._memory_store: dict[str, dict[str, Any]] = {}
         self._index: dict[str, list[str]] = {}
         self._access_count: dict[str, int] = {}
+        self._mem_dir = Path(os.environ.get(
+            "MEMORY_DIR",
+            os.path.expandvars(r"%USERPROFILE%\.claude\projects\D--My-head-folders-My-desktop----------Agentic-Loop\memory")
+        )).resolve()
+        self._guard = FileSystemGuard(self._mem_dir)
         self._load_memory_files()
 
     def _load_memory_files(self):
-        mem_dir = Path(os.environ.get(
-            "MEMORY_DIR",
-            os.path.expandvars(r"%USERPROFILE%\.claude\projects\D--My-head-folders-My-desktop----------Agentic-Loop\memory")
-        ))
-        if mem_dir.exists():
-            for md_file in mem_dir.glob("*.md"):
+        if self._mem_dir.exists():
+            for md_file in self._mem_dir.glob("*.md"):
                 if md_file.name == "MEMORY.md":
                     continue
                 try:
@@ -42,12 +44,13 @@ class MemoryMCPServer(MCPServer):
                 except Exception:
                     pass
 
-    def _resolve_path(self, path: str) -> Path:
-        base = Path(os.environ.get(
-            "MEMORY_DIR",
-            os.path.expandvars(r"%USERPROFILE%\.claude\projects\D--My-head-folders-My-desktop----------Agentic-Loop\memory")
-        ))
-        return base / path
+    def _resolve_path(self, path: str, operation: FSOperation = FSOperation.READ) -> Path:
+        result = self._guard.check(path, operation)
+        if result.verdict != FSVerdict.ALLOWED:
+            raise PermissionError(f"Access denied: {path} is outside memory directory")
+        if not result.normalized_path:
+            raise PermissionError(f"Access denied: {path} could not be resolved")
+        return Path(result.normalized_path)
 
     def register_all(self):
         self.register("read_memory", "Read a memory entry by key",
@@ -78,7 +81,10 @@ class MemoryMCPServer(MCPServer):
     async def read_memory(self, key: str) -> dict[str, Any]:
         entry = self._memory_store.get(key)
         if not entry:
-            mem_file = self._resolve_path(key) if not key.endswith(".md") else self._resolve_path(key)
+            try:
+                mem_file = self._resolve_path(key)
+            except PermissionError as exc:
+                return {"error": str(exc)}
             if mem_file.exists():
                 content = mem_file.read_text(encoding="utf-8")
                 entry = {"name": mem_file.stem, "content": content, "size": len(content)}
@@ -90,7 +96,10 @@ class MemoryMCPServer(MCPServer):
 
     async def write_memory(self, key: str, content: str, type: str = "project",
                            tags: list[str] | None = None) -> dict[str, Any]:
-        mem_file = self._resolve_path(key) if key.endswith(".md") else self._resolve_path(f"{key}.md")
+        try:
+            mem_file = self._resolve_path(key if key.endswith(".md") else f"{key}.md", FSOperation.WRITE)
+        except PermissionError as exc:
+            return {"error": str(exc)}
 
         frontmatter = f"""---
 name: {key.replace('.md', '')}
