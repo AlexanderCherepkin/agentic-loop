@@ -3,6 +3,7 @@ import re
 import importlib.util
 from pathlib import Path
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 
 DEFAULT_PUBLIC_DIR = "public"
@@ -26,26 +27,53 @@ def _safe_filename(name: str, extension: str) -> str:
     return f"{base}.{extension}"
 
 
+def _is_safe_asset_url(url: str) -> bool:
+    """Block non-public HTTP(S) targets to prevent SSRF via image URLs."""
+    parsed = urlparse(url)
+    scheme = parsed.scheme.lower()
+    if scheme not in ("http", "https"):
+        return False
+    host = parsed.hostname or ""
+    host_lower = host.lower()
+    private_patterns = (
+        r"^127\.",
+        r"^10\.",
+        r"^172\.(1[6-9]|2[0-9]|3[0-1])\.",
+        r"^192\.168\.",
+        r"^169\.254\.",
+        r"^0\.0\.0\.0$",
+        r"^::1$",
+        r"^fc00:",
+        r"^fe80:",
+    )
+    if any(re.match(p, host) for p in private_patterns):
+        return False
+    if host_lower in {"localhost", "metadata.google.internal", "metadata.aws.internal"}:
+        return False
+    if host_lower.startswith("metadata"):
+        return False
+    return True
+
+
 def download_asset(url: str, dest_path: Path, timeout: int = 60) -> bool:
-    """Скачивает ассет по URL и сохраняет в dest_path."""
+    """Скачивает ассет по URL и сохраняет в dest_path.
+
+    Всегда использует AssetDownloader из asset_pipeline.py, который применяет
+    rate limiting, retry, SSRF guard, content-type checks и SVG sanitization.
+    Простого requests.get fallback больше нет — он обходил защиты и создавал
+    повышенную поверхность атаки.
+    """
+    _ = timeout  # future use / API symmetry; AssetDownloader has its own timeout.
+    # Reject non-public HTTP(S) targets to prevent local file exfiltration / SSRF.
+    if not _is_safe_asset_url(url):
+        return False
     try:
         module = _load_asset_pipeline()
         downloader = module.AssetDownloader()
         return downloader.download(url, dest_path)
     except Exception:
-        # Fallback для обратной совместимости: простой requests.get.
-        import requests
-
-        try:
-            response = requests.get(url, timeout=timeout)
-            if response.status_code != 200:
-                return False
-            dest_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(dest_path, "wb") as f:
-                f.write(response.content)
-            return True
-        except Exception:
-            return False
+        # Fail closed: do not fall back to an unguarded raw HTTP client.
+        return False
 
 
 def save_asset(node_id: str, node_name: str, extension: str, image_url: str, public_dir: str = DEFAULT_PUBLIC_DIR) -> str:
