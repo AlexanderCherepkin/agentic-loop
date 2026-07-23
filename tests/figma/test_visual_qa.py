@@ -40,9 +40,52 @@ def test_allowed_url_localhost() -> None:
     assert visual_qa._is_allowed_url("http://127.0.0.1:3000") is True
 
 
-def test_disallowed_file_outside_workspace(tmp_path: Path) -> None:
-    outside = "file:///C:/outside/page.html"
-    assert visual_qa._is_allowed_url(outside) is False
+def test_allowed_url_exact_domain_match() -> None:
+    assert visual_qa._is_allowed_url("https://github.com/foo", allowed_domains=["github.com"]) is True
+    assert visual_qa._is_allowed_url("https://api.github.com/foo", allowed_domains=["github.com"]) is True
+
+
+def test_allowed_url_substring_in_query_blocked() -> None:
+    # https://evil.com/?x=github.com must NOT pass for github.com.
+    assert visual_qa._is_allowed_url("https://evil.com/?x=github.com", allowed_domains=["github.com"]) is False
+
+
+def test_allowed_url_subdomain_hosting_blocked() -> None:
+    # attacker.github.com.evil.com must NOT pass for github.com.
+    assert visual_qa._is_allowed_url("https://attacker.github.com.evil.com", allowed_domains=["github.com"]) is False
+
+
+def test_allowed_url_file_inside_workspace(tmp_path: Path) -> None:
+    page = tmp_path / "page.html"
+    page.write_text("<html></body>", encoding="utf-8")
+    url = page.as_uri()  # file:// URI
+    assert visual_qa._is_allowed_url(url, root_dir=str(tmp_path)) is True
+
+
+def test_allowed_url_file_outside_workspace_blocked(tmp_path: Path) -> None:
+    outside = tmp_path.parent / "outside.html"
+    outside.write_text("<html></body>", encoding="utf-8")
+    url = outside.as_uri()
+    assert visual_qa._is_allowed_url(url, root_dir=str(tmp_path)) is False
+
+
+def test_sanitize_output_dir_blocks_partial_traversal(tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "qa"
+    with pytest.raises(ValueError):
+        visual_qa._sanitize_output_dir(str(sibling), root_dir=str(tmp_path))
+
+
+def test_allowed_url_file_partial_traversal_blocked(tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "page.html"
+    sibling.parent.mkdir(parents=True, exist_ok=True)
+    sibling.write_text("<html></body>", encoding="utf-8")
+    url = sibling.as_uri()
+    assert visual_qa._is_allowed_url(url, root_dir=str(tmp_path)) is False
+
+
+def test_blocked_url_without_scheme() -> None:
+    assert visual_qa._is_allowed_url("javascript:alert(1)") is False
+    assert visual_qa._is_allowed_url("data:text/html,<script>alert(1)</script>") is False
 
 
 def test_visual_qa_blocked_without_playwright() -> None:

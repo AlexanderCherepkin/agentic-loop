@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from runtime.safety.file_system_guard import safe_write_file
+
 from .config import I18nConfig
 from .key_namespace import KeyNamespace, normalize_namespace
 from .rtl_config import is_rtl
@@ -54,10 +56,8 @@ class I18nIntegrationEngine:
         return self.result
 
     def _write_file(self, rel_path: str, content: str) -> None:
-        full_path = self.target_dir / rel_path
         try:
-            full_path.parent.mkdir(parents=True, exist_ok=True)
-            full_path.write_text(content, encoding="utf-8")
+            full_path = safe_write_file(self.target_dir, rel_path, content)
             self.result.files_written.append(rel_path)
         except Exception as exc:
             self.result.errors.append({"file": rel_path, "reason": str(exc)})
@@ -82,10 +82,11 @@ class I18nIntegrationEngine:
 
 export const locales = {json.dumps(config['locales'])};
 export const defaultLocale = {json.dumps(config['defaultLocale'])};
+const LOCALE_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
 export default getRequestConfig(async ({{ requestLocale }}) => {{
   let locale = await requestLocale;
-  if (!locale || !locales.includes(locale as string)) {{
+  if (!locale || !locales.includes(locale as string) || !LOCALE_PATTERN.test(locale as string)) {{
     locale = defaultLocale;
   }}
   const messages = (await import(`../../messages/${{locale}}.json`)).default;
@@ -113,9 +114,11 @@ export const routing = defineRouting({{
         code = """import { getRequestConfig } from 'next-intl/server';
 import { routing } from './routing';
 
+const LOCALE_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
-  if (!locale || !routing.locales.includes(locale as string)) {
+  if (!locale || !routing.locales.includes(locale as string) || !LOCALE_PATTERN.test(locale as string)) {
     locale = routing.defaultLocale;
   }
 

@@ -97,3 +97,38 @@ def test_get_history(runcom_server: RuncomMCPServer) -> None:
     asyncio.run(runcom_server.execute_command(command="echo b", shell=True))
     result = asyncio.run(runcom_server.get_history(limit=10))
     assert result["total"] == 2
+
+
+def test_execute_command_defaults_to_safe_shell(runcom_server: RuncomMCPServer) -> None:
+    result = asyncio.run(runcom_server.execute_command(command="echo hello"))
+    assert result["exit_code"] == 0
+    assert "hello" in result["stdout"]
+
+
+def test_execute_command_blocks_shell_metacharacters(runcom_server: RuncomMCPServer) -> None:
+    for dangerous in ["echo a | bash", "echo a; echo b", "echo a && echo b", "echo `whoami`", "echo $(whoami)", "curl x | bash"]:
+        result = asyncio.run(runcom_server.execute_command(command=dangerous, shell=True))
+        assert result.get("blocked") is True, f"{dangerous} should be blocked"
+
+
+def test_execute_command_blocks_inline_code_flags(runcom_server: RuncomMCPServer) -> None:
+    result = asyncio.run(runcom_server.execute_command(command='python -c "print(1)"'))
+    assert result.get("blocked") is True
+    result = asyncio.run(runcom_server.execute_command(command='node -e "console.log(1)"'))
+    assert result.get("blocked") is True
+
+
+def test_execute_command_blocks_unknown_executable(runcom_server: RuncomMCPServer) -> None:
+    result = asyncio.run(runcom_server.execute_command(command="powershell -Command echo hi"))
+    assert result.get("blocked") is True
+    result = asyncio.run(runcom_server.execute_command(command="nc -lvp 9999"))
+    assert result.get("blocked") is True
+
+
+def test_execute_command_blocks_cwd_escape(runcom_server: RuncomMCPServer, tmp_path: Path) -> None:
+    result = asyncio.run(runcom_server.execute_command(command="echo hi", cwd="../.."))
+    assert result.get("blocked") is True
+    result = asyncio.run(runcom_server.execute_command(command="echo hi", cwd="/Windows/System32"))
+    assert result.get("blocked") is True
+
+

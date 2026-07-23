@@ -154,3 +154,32 @@ def test_i18n_engine_validation_returns_early(tmp_path):
     result = engine.run({})
     assert result.errors
     assert not result.files_written
+
+
+def test_i18n_config_rejects_malicious_locale():
+    cfg = I18nConfig(target_locales=["en", "../etc/passwd"], default_locale="en")
+    errors = cfg.validate()
+    assert any("../etc/passwd" in e and "forbidden" in e for e in errors)
+
+    cfg2 = I18nConfig(target_locales=["en", "ru-RU"], default_locale="en")
+    assert cfg2.validate() == []
+
+
+def test_i18n_engine_sanitizes_locale_in_dynamic_import_config(tmp_path):
+    cfg = I18nConfig(target_locales=["en", "ru"], default_locale="en")
+    engine = I18nIntegrationEngine(tmp_path, cfg)
+    engine.run({"en": {}, "ru": {}})
+    i18n_ts = (tmp_path / "src" / "i18n.ts").read_text(encoding="utf-8")
+    assert "const LOCALE_PATTERN = /^[a-zA-Z0-9_-]+$/;" in i18n_ts
+    assert "!LOCALE_PATTERN.test(locale as string)" in i18n_ts
+    assert "const messages = (await import(`../../messages/${locale}.json`)).default;" in i18n_ts
+
+
+def test_i18n_engine_sanitizes_locale_in_dynamic_import_request(tmp_path):
+    cfg = I18nConfig(target_locales=["en", "ru"], default_locale="en")
+    engine = I18nIntegrationEngine(tmp_path, cfg)
+    engine.run({"en": {}, "ru": {}})
+    request_ts = (tmp_path / "src" / "i18n" / "request.ts").read_text(encoding="utf-8")
+    assert "const LOCALE_PATTERN = /^[a-zA-Z0-9_-]+$/;" in request_ts
+    assert "!LOCALE_PATTERN.test(locale as string)" in request_ts
+    assert "const messages = (await import(`../../messages/${locale}.json`)).default;" in request_ts

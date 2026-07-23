@@ -24,7 +24,20 @@ class TestNetworkGuardDefaults:
     def test_allows_github_raw(self, guard):
         result = guard.check_url("https://raw.githubusercontent.com/foo/bar/main/README.md")
         assert result.verdict == NetworkVerdict.ALLOWED
-        assert result.matched_allow in ("github.com", "raw.githubusercontent.com")
+        assert result.matched_allow == "raw.githubusercontent.com"
+
+    def test_blocks_untrusted_subdomain(self, guard):
+        result = guard.check_url("https://attacker.github.com/x")
+        assert result.verdict == NetworkVerdict.BLOCKED
+        assert "not in the allow-list" in result.reason.lower()
+
+    def test_allows_exact_subdomain(self, guard):
+        result = guard.check_url("https://api.figma.com/v1/files/abc")
+        assert result.verdict == NetworkVerdict.ALLOWED
+        assert result.matched_allow == "api.figma.com"
+        result = guard.check_url("https://www.figma.com/design/abc")
+        assert result.verdict == NetworkVerdict.ALLOWED
+        assert result.matched_allow == "www.figma.com"
 
     def test_blocks_localhost(self, guard):
         result = guard.check_url("http://localhost:8080/admin")

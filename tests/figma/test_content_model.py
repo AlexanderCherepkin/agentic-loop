@@ -122,6 +122,17 @@ def test_rejects_path_traversal(tmp_path: Path) -> None:
         )
 
 
+def test_rejects_partial_path_traversal(tmp_path: Path) -> None:
+    ast = {"root": {"tag": "div", "children": []}}
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "sections"
+    with pytest.raises(ValueError):
+        content_model.build_content_model(
+            ast,
+            output_dir=str(sibling),
+            root_dir=str(tmp_path),
+        )
+
+
 def test_skips_component_context_nodes(tmp_path: Path) -> None:
     ast = {
         "root": {

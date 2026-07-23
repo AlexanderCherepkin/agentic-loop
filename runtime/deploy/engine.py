@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import shlex
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -14,6 +15,7 @@ from .config import DeployConfig
 class DeployResult:
     provider: str = ""
     command: str = ""
+    command_argv: list[str] = field(default_factory=list)
     dry_run: bool = True
     success: bool = False
     deploy_url: str | None = None
@@ -41,23 +43,23 @@ class DeployEngine:
         if self.config.is_image_provider:
             return self._run_image_provider()
 
-        command = self._build_command()
-        self.result.command = command
+        command_argv = self._build_command_argv()
+        self.result.command = subprocess.list2cmdline(command_argv) if os.name == "nt" else shlex.join(command_argv)
+        self.result.command_argv = command_argv
 
         if self.config.dry_run:
             self.result.success = True
-            self.result.notes.append(f"Dry-run mode: would run '{command}'")
+            self.result.notes.append(f"Dry-run mode: would run {self.result.command}")
             return self.result
 
         env = os.environ.copy()
         env.update(self.config.env)
-        shell = os.name == "nt"
         try:
             proc = subprocess.run(
-                command,
+                command_argv,
                 cwd=str(self.target_dir),
                 env=env,
-                shell=shell,
+                shell=False,
                 capture_output=True,
                 text=True,
                 timeout=self.config.timeout,
@@ -134,12 +136,16 @@ class DeployEngine:
 
         return self.result
 
-    def _build_command(self) -> str:
+    def _build_command_argv(self) -> list[str]:
+        """Build a command argv list. No shell interpolation; safe on both Windows and POSIX."""
         if self.config.provider == "vercel":
-            return "npx vercel --prod --yes"
+            return ["npx", "vercel", "--prod", "--yes"]
         if self.config.provider == "netlify":
-            return f"{self.config.build_command} && npx netlify deploy --prod --dir={self.config.dist_dir}"
-        return f"{self.config.build_command} && echo 'Build complete. Upload {self.config.dist_dir}/ to your host.'"
+            return [
+                "npx", "netlify", "deploy", "--prod",
+                f"--dir={self.config.dist_dir}",
+            ]
+        return ["echo", f"Build complete. Upload {self.config.dist_dir}/ to your host. ({self.config.build_command})"]
 
     @staticmethod
     def _extract_url(text: str) -> str | None:

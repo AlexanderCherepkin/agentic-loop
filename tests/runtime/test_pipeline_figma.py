@@ -24,18 +24,23 @@ from runtime.engine.llm_engine import LLMConfig, LLMEngine, LLMProvider
 from runtime.engine.message_bus import MessageBus
 from runtime.engine.pipeline_runner import IterationTrace, PipelineResult, PipelineRunner, SessionMetrics
 from runtime.engine.state_manager import StateManager
+from runtime.observability.resource_monitor import ResourceMonitor
 
 
 def _make_runner(workspace_root: Path, mcp_enabled: bool = True) -> PipelineRunner:
     config = LLMConfig(provider=LLMProvider.MOCK, mcp_enabled=mcp_enabled)
     llm = LLMEngine(config=config)
-    return PipelineRunner(
+    runner = PipelineRunner(
         loader=AgentLoader(".agent_loop"),
         llm=llm,
         bus=MessageBus(),
         state=StateManager(),
         workspace_root=str(workspace_root),
     )
+    # Deterministic resource monitoring: disable psutil so CPU/RAM checks are
+    # skipped and only disk usage (which is stable in temp dirs) is evaluated.
+    runner._resource_monitor = ResourceMonitor(workspace_root=str(workspace_root), disable_psutil=True)
+    return runner
 
 
 def test_figma_available_when_configured() -> None:
@@ -93,11 +98,33 @@ def test_design_intake_short_circuits_for_full_code() -> None:
             assert args[0] == "figma_run_pipeline"
             assert args[1].get("figma_url") == "https://www.figma.com/design/abc123/Sample"
             assert args[1].get("file_key") == "abc123"
+            assert args[1].get("dry_run") is False
         return result
 
     result = asyncio.run(_run())
     assert result.termination_status.value == "success"
     assert "Design pipeline triggered" in result.final_response
+
+
+def test_design_intake_honors_dry_run_flag() -> None:
+    runner = _make_runner(Path.cwd())
+
+    async def _run():
+        with patch.object(runner, "execute_mcp_tool", new=AsyncMock(return_value={
+            "tool": "figma_run_pipeline",
+            "result": {"status": "success", "returncode": 0, "stdout": "generated", "stderr": ""},
+            "mcp_executed": True,
+        })) as mock_mcp:
+            result = await runner.run(
+                "сделай dry-run по макету Figma https://www.figma.com/design/abc123/Sample"
+            )
+            args = mock_mcp.await_args[0]
+            assert args[0] == "figma_run_pipeline"
+            assert args[1].get("dry_run") is True
+        return result
+
+    result = asyncio.run(_run())
+    assert result.termination_status.value in ("success", "partial")
 
 
 def test_design_intake_continues_planning_for_spec() -> None:
@@ -106,8 +133,8 @@ def test_design_intake_continues_planning_for_spec() -> None:
     async def _run():
         original_execute = runner.llm.execute
 
-        async def _mock_execute(spec, inputs):
-            response = await original_execute(spec, inputs)
+        async def _mock_execute(spec, inputs, extra_context=None):
+            response = await original_execute(spec, inputs, extra_context=extra_context)
             agent_path = getattr(spec, "source_path", "")
             if agent_path.endswith("user/design_intake.md"):
                 response.parsed["design_descriptor"]["output_mode"] = "technical_assignment"

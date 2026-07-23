@@ -1,7 +1,7 @@
 {
   "name": "agentic-loop",
   "version": "1.0.0",
-  "description": "Multi-agent AI system with hierarchical safety-first architecture — 156 agents across 6 layers",
+  "description": "Multi-agent AI system with hierarchical safety-first architecture — 296 agents/files across 6 layers",
   "main": "cli.js",
   "bin": {
     "agentic-loop": "cli.js"

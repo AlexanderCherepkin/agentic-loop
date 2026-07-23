@@ -95,7 +95,9 @@ class ComplianceReport:
         }
 
 
-def _load_project_rules(path: Path) -> str:
+def _load_project_rules(path: Path, workspace_root: Path) -> str:
+    if not _is_inside_workspace(path, workspace_root):
+        raise ValueError(f"Rules path outside workspace: {path}")
     if not path.exists():
         return ""
     with open(path, "r", encoding="utf-8") as f:
@@ -264,7 +266,7 @@ def run_compliance_check(
 ) -> Dict[str, Any]:
     workspace = Path(workspace_root).resolve() if workspace_root else Path.cwd().resolve()
     rules_file = Path(rules_path).resolve()
-    rules_text = _load_project_rules(rules_file)
+    rules_text = _load_project_rules(rules_file, workspace)
 
     severity_rank = {"low": 0, "medium": 1, "high": 2, "critical": 3}
     threshold = severity_rank.get(severity_threshold, 0)
@@ -336,7 +338,9 @@ def run_compliance_check(
     )
 
     if output_path:
-        out = Path(output_path)
+        out = Path(output_path).resolve()
+        if not _is_inside_workspace(out, workspace):
+            raise ValueError(f"Output path outside workspace: {output_path}")
         out.parent.mkdir(parents=True, exist_ok=True)
         with open(out, "w", encoding="utf-8") as f:
             json.dump(report.to_dict(), f, ensure_ascii=False, indent=2)

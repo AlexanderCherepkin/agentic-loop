@@ -1,10 +1,20 @@
 import json
+import os
 import re
+import sys
 import time
 import argparse
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import urlparse
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from runtime.safety.file_system_guard import FSOperation, FileSystemGuard
 
 
 try:
@@ -115,24 +125,68 @@ def _extract_figma_stroke_color(node: Dict[str, Any]) -> Optional[str]:
 
 
 def _sanitize_output_dir(output_dir: str, root_dir: Optional[str] = None) -> Path:
-    target = Path(output_dir).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
-    if not str(target).startswith(str(root)):
-        raise ValueError(f"Output directory outside workspace: {output_dir}")
+    output_path = Path(output_dir)
+    raw_target = output_path if output_path.is_absolute() else root / output_path
+    target = Path(os.path.normpath(str(raw_target)))
+    try:
+        target.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Output directory outside workspace: {output_dir}") from exc
     target.mkdir(parents=True, exist_ok=True)
     return target
 
 
-def _is_allowed_url(url: str, allowed_domains: Optional[List[str]] = None) -> bool:
+def _match_allowed_domain(host: str, allowed_domain: str) -> bool:
+    """Exact host match or explicit subdomain of an allowed domain.
+
+    Example: allowed_domain="github.com" matches "github.com" and "api.github.com",
+    but NOT "attacker.github.com.evil.com" or a substring elsewhere in the URL.
+    """
+    host_lower = host.lower()
+    allowed_lower = allowed_domain.lower()
+    if host_lower == allowed_lower:
+        return True
+    return host_lower.endswith("." + allowed_lower)
+
+
+def _is_allowed_url(
+    url: str,
+    allowed_domains: Optional[List[str]] = None,
+    root_dir: Optional[str] = None,
+) -> bool:
+    parsed = urlparse(url)
+    scheme = parsed.scheme.lower()
+
+    # Local dev servers are always allowed.
     if url.startswith("http://localhost:") or url.startswith("http://127.0.0.1:"):
         return True
-    if url.startswith("file://"):
-        path = Path(url.replace("file://", "").replace("/", "\\") if "win" in __import__("sys").platform else url.replace("file://", ""))
-        return str(path.resolve()).startswith(str(Path.cwd().resolve()))
+
+    # file:// URLs must resolve inside the workspace root.
+    if scheme == "file":
+        file_path_str = parsed.path
+        # Normalize leading slash on Windows, e.g. file:///C:/... -> C:/...
+        if sys.platform == "win32" and file_path_str.startswith("/") and len(file_path_str) > 1 and file_path_str[2] == ":":
+            file_path_str = file_path_str[1:]
+        try:
+            file_path = Path(file_path_str).resolve()
+            root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
+            file_path.relative_to(root)
+            return True
+        except ValueError:
+            return False
+
+    # Only http/https URLs are allowed for external navigation.
+    if scheme not in {"http", "https"}:
+        return False
+
+    host = parsed.hostname or ""
+    if not host:
+        return False
+
     if allowed_domains:
         for domain in allowed_domains:
-            host = __import__("urllib.parse").urlparse(url).hostname or ""
-            if domain == host or domain in url:
+            if _match_allowed_domain(host, domain):
                 return True
     return False
 
@@ -199,6 +253,7 @@ class VisualQaReport:
 
 
 class VisualQAEngine:
+
     def __init__(
         self,
         viewport: Optional[Dict[str, int]] = None,
@@ -210,6 +265,7 @@ class VisualQAEngine:
         self.viewport = viewport or DEFAULT_VIEWPORT.copy()
         self.allowed_domains = allowed_domains or []
         self.output_dir = _sanitize_output_dir(output_dir, root_dir=root_dir)
+        self.root_dir = root_dir or str(Path.cwd())
         self.bbox_tolerance_px = bbox_tolerance_px
         self.report = VisualQaReport(status="blocked")
 
@@ -225,13 +281,22 @@ class VisualQAEngine:
         if not PLAYWRIGHT_AVAILABLE:
             return self._blocked("Playwright is not installed. Install with: pip install playwright && playwright install")
 
-        if not _is_allowed_url(page_url, self.allowed_domains):
+        if not _is_allowed_url(page_url, self.allowed_domains, root_dir=self.root_dir):
             return self._blocked(f"URL not allowed by network guard: {page_url}")
 
         screenshot_path = self.output_dir / f"page_{int(time.time())}.png"
         reference_screenshot_path = None
         if reference_path:
-            reference_screenshot_path = str(Path(reference_path).resolve())
+            guard = FileSystemGuard(
+                workspace_root=self.output_dir,
+                allowed_dirs=[str(self.output_dir), self.root_dir],
+                allow_read_anywhere=False,
+            )
+            resolved = Path(reference_path).resolve()
+            result = guard.check(str(resolved), FSOperation.READ)
+            if result.verdict.value != "allowed":
+                return self._blocked(f"Reference path not allowed by filesystem guard: {reference_path}")
+            reference_screenshot_path = str(resolved)
 
         viewport = self.viewport.copy()
         if figma_frame:

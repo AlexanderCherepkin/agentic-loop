@@ -50,19 +50,19 @@ class RailwayDeployer(DeployProvider):
             railway_project_id = project_resp["data"]["projectCreate"]["id"]
             logs.append(f"Railway project created: {railway_project_id}")
 
-            service_mutation = (
-                f'mutation serviceCreate {{ serviceCreate(input: {{ '
-                f'projectId: "{railway_project_id}", name: "{service_name}" }}) {{ id __typename }} }}'
+            service_resp = self._graphql(
+                headers,
+                "mutation serviceCreate($projectId: String!, $name: String!) { serviceCreate(input: { projectId: $projectId, name: $name }) { id __typename } }",
+                variables={"projectId": railway_project_id, "name": service_name},
             )
-            service_resp = self._graphql(headers, service_mutation)
             service_id = service_resp["data"]["serviceCreate"]["id"]
             logs.append(f"Railway service created: {service_id}")
 
-            deploy_mutation = (
-                f'mutation serviceInstanceDeploy {{ serviceInstanceDeploy('
-                f'input: {{ serviceId: "{service_id}", image: "{image_tag}" }}) {{ id status }} }}'
+            deploy_resp = self._graphql(
+                headers,
+                "mutation serviceInstanceDeploy($serviceId: String!, $image: String!) { serviceInstanceDeploy(input: { serviceId: $serviceId, image: $image }) { id status } }",
+                variables={"serviceId": service_id, "image": image_tag},
             )
-            deploy_resp = self._graphql(headers, deploy_mutation)
             deployment_id = deploy_resp["data"]["serviceInstanceDeploy"]["id"]
             logs.append(f"Railway deployment started: {deployment_id}")
 
@@ -80,12 +80,20 @@ class RailwayDeployer(DeployProvider):
                 logs=logs,
             )
 
-    def _graphql(self, headers: dict[str, str], query: str) -> dict[str, Any]:
+    def _graphql(
+        self,
+        headers: dict[str, str],
+        query: str,
+        variables: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {"query": query}
+        if variables is not None:
+            payload["variables"] = variables
         with httpx.Client(timeout=60) as client:
             resp = client.post(
                 self.GRAPHQL_URL,
                 headers=headers,
-                json={"query": query},
+                json=payload,
             )
             resp.raise_for_status()
             data = resp.json()

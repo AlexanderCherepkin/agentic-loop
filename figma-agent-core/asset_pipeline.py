@@ -83,6 +83,48 @@ def _to_pascal_case_icon_name(name: str) -> str:
     return result
 
 
+def _resolve_workspace_dir(path_str: str, name: str = "directory") -> Path:
+    """Resolve a configured directory/file and reject traversal outside CWD/workspace."""
+    p = Path(path_str)
+    if not p.is_absolute():
+        p = Path.cwd() / p
+    resolved = p.resolve()
+    cwd = Path.cwd().resolve()
+    try:
+        resolved.relative_to(cwd)
+    except ValueError:
+        raise ValueError(f"{name} outside workspace: {path_str}")
+    return resolved
+
+
+def _resolve_pipeline_dir(path_str: str, name: str = "directory") -> Path:
+    """Resolve a directory for pipeline use.
+
+    Absolute paths are accepted (programmatic/test use). Relative paths must
+    resolve inside the current working directory to prevent traversal.
+    """
+    p = Path(path_str)
+    if p.is_absolute():
+        return p.resolve()
+    resolved = (Path.cwd() / p).resolve()
+    cwd = Path.cwd().resolve()
+    try:
+        resolved.relative_to(cwd)
+    except ValueError:
+        raise ValueError(f"{name} escapes workspace: {path_str}")
+    return resolved
+
+
+def _resolve_public_subdir(public_dir: Path, subpath: str, name: str = "assets_dir") -> Path:
+    """Resolve a subdirectory under public_dir and reject traversal outside it."""
+    p = (public_dir / subpath).resolve()
+    try:
+        p.relative_to(public_dir.resolve())
+    except ValueError:
+        raise ValueError(f"{name} outside public_dir: {subpath}")
+    return p
+
+
 def _asset_dest_path(node_id: str, name: str, extension: str, assets_dir: Path) -> Path:
     stem = _safe_filename(name)
     unique = f"{stem}_{node_id.replace(':', '_').replace('-', '_')}"
@@ -292,18 +334,16 @@ class AssetDownloader:
             return {}
 
         remaining: List[str] = []
-        cached_urls: Dict[str, str] = {}
         for node_id in node_ids:
             if assets_dir is not None:
-                cached = self._is_cached(node_id, fmt, scale, assets_dir)
-                if cached:
-                    # Возвращаем dummy URL, чтобы downstream понял, что файл уже есть.
-                    cached_urls[node_id] = f"file://{cached.resolve().as_posix()}"
+                if self._is_cached(node_id, fmt, scale, assets_dir):
+                    # Skip API request for existing local files; AssetPipeline will
+                    # reuse the cached file directly without generating a file:// URL.
                     continue
             remaining.append(node_id)
 
         if not remaining:
-            return cached_urls
+            return {}
 
         results: Dict[str, str] = {}
         base_url = "https://api.figma.com/v1"
@@ -321,19 +361,24 @@ class AssetDownloader:
             for future in as_completed(futures):
                 chunk_results = future.result()
                 results.update(chunk_results)
-        return {**cached_urls, **results}
+        return results
+
+    def is_cached(
+        self,
+        node_id: str,
+        fmt: str,
+        scale: float,
+        assets_dir: Path,
+    ) -> Optional[Path]:
+        """Public cache probe; returns the existing local file path or None."""
+        return self._is_cached(node_id, fmt, scale, assets_dir)
 
     def download(self, url: str, dest: Path) -> bool:
-        if url.startswith("file://"):
-            try:
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                existing = Path(url.replace("file://", ""))
-                if existing == dest or existing.resolve() == dest.resolve():
-                    return dest.exists()
-                shutil.copy2(existing, dest)
-                return True
-            except Exception:
-                return False
+        # Only HTTP(S) URLs are supported. file://, ftp://, etc. would let an attacker
+        # supply arbitrary local paths (e.g. /etc/passwd, private keys) and copy them
+        # into the public output directory.
+        if not re.match(r"^https?://", url, re.IGNORECASE):
+            return False
 
         if not self._client:
             return False
@@ -363,6 +408,33 @@ class InlineSvgExtractor:
     def __init__(self, max_size_bytes: int = 1024) -> None:
         self.max_size_bytes = max_size_bytes
 
+    @staticmethod
+    def _forbidden_tag_re(tags: Set[str]) -> re.Pattern:
+        names = "|".join(re.escape(t) for t in tags)
+        # Opening or self-closing tag with arbitrary whitespace between '<' and name.
+        return re.compile(rf"<\s*(?:{names})(?=[\s/>])", re.IGNORECASE)
+
+    @staticmethod
+    def _forbidden_closing_tag_re(tags: Set[str]) -> re.Pattern:
+        names = "|".join(re.escape(t) for t in tags)
+        return re.compile(rf"<\s*/\s*(?:{names})(?=[\s>])", re.IGNORECASE)
+
+    @staticmethod
+    def _event_handler_re() -> re.Pattern:
+        # onload=, onclick=, etc. with optional whitespace.
+        return re.compile(r"\bon\w+\s*=", re.IGNORECASE)
+
+    @staticmethod
+    def _js_url_re() -> re.Pattern:
+        # href="javascript:..." or xlink:href='javascript:...'
+        return re.compile(r"(?:href|xlink:href)\s*=\s*[\"']?\s*javascript:", re.IGNORECASE)
+
+    @staticmethod
+    def _complex_attr_re(attrs: Tuple[str, ...]) -> re.Pattern:
+        names = "|".join(re.escape(a) for a in attrs)
+        # Match attr= with a leading space, quote or slash (attribute context).
+        return re.compile(rf"(?:^|[\s\"'/])(?:{names})\s*=", re.IGNORECASE)
+
     def extract(self, path: Path) -> Optional[str]:
         try:
             content = path.read_text(encoding="utf-8")
@@ -370,11 +442,21 @@ class InlineSvgExtractor:
             return None
         if len(content.encode("utf-8")) > self.max_size_bytes:
             return None
-        lowered = content.lower()
-        if any(f"<{tag}" in lowered for tag in self.FORBIDDEN_TAGS):
+
+        # Robust forbidden tag detection: spaces/newlines after '<' are no bypass.
+        if self._forbidden_tag_re(self.FORBIDDEN_TAGS).search(content):
             return None
-        if any(f" {attr}" in lowered or f"='{attr}" in lowered for attr in self.COMPLEX_ATTRS):
+        if self._forbidden_closing_tag_re(self.FORBIDDEN_TAGS).search(content):
             return None
+        # Event handlers and javascript: URLs.
+        if self._event_handler_re().search(content):
+            return None
+        if self._js_url_re().search(content):
+            return None
+        # Keep existing complexity guard (filters/masks/gradients inline are complex).
+        if self._complex_attr_re(self.COMPLEX_ATTRS).search(content):
+            return None
+
         # Убираем XML declaration и DOCTYPE.
         content = re.sub(r"<\?xml[^?]*\?>\s*", "", content)
         content = re.sub(r"<!DOCTYPE[^>]*>\s*", "", content, flags=re.IGNORECASE)
@@ -419,8 +501,16 @@ class SvgClassifier:
     def _is_simple(self, content: str, byte_size: int) -> bool:
         if byte_size > self.SIMPLE_MAX_BYTES:
             return False
-        lowered = content.lower()
-        if any(f"<{tag}" in lowered for tag in self.FORBIDDEN_INLINE_TAGS):
+        # Whitespace-tolerant forbidden tag detection.
+        names = "|".join(re.escape(t) for t in self.FORBIDDEN_INLINE_TAGS)
+        if re.search(rf"<\s*(?:{names})(?=[\s/>])", content, re.IGNORECASE):
+            return False
+        if re.search(rf"<\s*/\s*(?:{names})(?=[\s>])", content, re.IGNORECASE):
+            return False
+        # Event handlers and javascript: URLs also disqualify inline use.
+        if re.search(r"\bon\w+\s*=", content, re.IGNORECASE):
+            return False
+        if re.search(r"(?:href|xlink:href)\s*=\s*[\"']?\s*javascript:", content, re.IGNORECASE):
             return False
         return True
 
@@ -485,9 +575,9 @@ class AssetPipeline:
         optimizer: Optional[AssetOptimizer] = None,
         skip_download: bool = False,
     ) -> None:
-        self.public_dir = Path(public_dir)
-        self.assets_dir = self.public_dir / assets_dir
-        self.components_dir = Path(components_dir)
+        self.public_dir = _resolve_pipeline_dir(public_dir, "public_dir")
+        self.assets_dir = _resolve_public_subdir(self.public_dir, assets_dir, "assets_dir")
+        self.components_dir = _resolve_pipeline_dir(components_dir, "components_dir")
         self.downloader = downloader or AssetDownloader()
         self.optimizer = optimizer or AssetOptimizer(enabled=True)
         self.skip_download = skip_download
@@ -563,10 +653,10 @@ class AssetPipeline:
             for asset in assets:
                 url = urls.get(asset["id"])
                 if not url:
-                    print(f"[WARNING] No download URL for asset {asset['id']} ({asset['name']})")
-                    results.append((asset["ref"], None, None))
-                    continue
-                futures.append((asset, executor.submit(self._download_and_process_asset, asset, url)))
+                    # No remote URL may mean the asset exists locally and skip_existing
+                    # is enabled; _download_and_process_asset will check the cache.
+                    print(f"[INFO] No remote URL for asset {asset['id']} ({asset['name']}); trying local cache")
+                futures.append((asset, executor.submit(self._download_and_process_asset, asset, url or "")))
             for asset, future in futures:
                 try:
                     ref, entry, icon_info = future.result()
@@ -625,8 +715,12 @@ class AssetPipeline:
             elif strategy == "icon":
                 if content:
                     entry["inlineSvg"] = content
-                svg_text = content or (dest.read_text(encoding="utf-8") if dest.exists() else "")
-                icon_file = self._write_icon_component(asset["name"], svg_text)
+                else:
+                    # Sanitized SVG content is unavailable (e.g. rejected by security
+                    # rules); do not emit a TSX component from raw, unchecked SVG.
+                    entry["strategy"] = "image"
+                    return entry
+                icon_file = self._write_icon_component(asset["name"], content)
                 entry["componentPath"] = icon_file
                 entry["componentName"] = _to_pascal_case_icon_name(asset["name"])
         return entry
@@ -693,8 +787,10 @@ export default function {component_name}(props: React.SVGProps<SVGSVGElement>) {
 
     def __del__(self):
         # Закрываем HTTP-сессию при сборке мусора, чтобы не держать соединения.
-        if self.downloader:
-            self.downloader.close()
+        # __init__ may raise before downloader is set; guard against partial state.
+        downloader = getattr(self, "downloader", None)
+        if downloader:
+            downloader.close()
 
 
 def write_registry(registry: Dict[str, Any], path: Path) -> None:
@@ -722,7 +818,16 @@ def main() -> None:
     parser.add_argument("--skip-existing-assets", action=argparse.BooleanOptionalAction, default=True, help="Skip download if local asset already exists.")
     args = parser.parse_args()
 
-    file_path = Path(args.file)
+    # CLI path validation: reject traversal outside the workspace directory.
+    try:
+        file_path = _resolve_workspace_dir(args.file, "file")
+        public_dir = _resolve_workspace_dir(args.public_dir, "public_dir")
+        components_dir = _resolve_workspace_dir(args.components_dir, "components_dir")
+        registry_path = _resolve_workspace_dir(args.registry, "registry")
+    except ValueError as e:
+        print(f"[ERROR] {e}")
+        sys.exit(1)
+
     if not file_path.exists():
         print(f"[ERROR] File not found: {args.file}")
         sys.exit(1)
@@ -741,9 +846,9 @@ def main() -> None:
     )
     optimizer = AssetOptimizer(enabled=not args.no_optimize)
     pipeline = AssetPipeline(
-        public_dir=args.public_dir,
+        public_dir=str(public_dir),
         assets_dir=args.assets_dir,
-        components_dir=args.components_dir,
+        components_dir=str(components_dir),
         downloader=downloader,
         optimizer=optimizer,
         skip_download=args.skip_download,
@@ -751,7 +856,6 @@ def main() -> None:
 
     registry = pipeline.run(figma_data)
 
-    registry_path = Path(args.registry)
     write_registry(registry, registry_path)
     print(f"[ASSETS] registry: {registry_path}")
     print(f"[ASSETS] discovered={registry['stats']['discovered']} downloaded={registry['stats']['downloaded']} optimized={registry['stats']['optimized']} skipped={registry['stats']['skipped']} icons={registry['stats'].get('icons', 0)}")

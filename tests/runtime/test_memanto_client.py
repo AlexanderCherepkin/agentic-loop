@@ -19,24 +19,32 @@ def _reset_singleton() -> None:
     MemantoClient._instance = None
 
 
+def _make_client(enabled: bool = True, reset: bool = True) -> MemantoClient:
+    if reset:
+        _reset_singleton()
+    client = MemantoClient(MemantoConfig(enabled=enabled))
+    client._server_reachable = lambda: False  # avoid network ping in tests
+    return client
+
+
 def test_memanto_client_singleton() -> None:
     _reset_singleton()
     client1 = MemantoClient(MemantoConfig(enabled=False))
+    client1._server_reachable = lambda: False
     client2 = MemantoClient(MemantoConfig(enabled=False))
+    client2._server_reachable = lambda: False
     assert client1 is client2
 
 
 def test_memanto_disabled_returns_passthrough() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=False))
+    client = _make_client(enabled=False)
     result = client.remember(content="fact", title="t")
     assert result["available"] is False
     assert result["operation"] == "remember"
 
 
 def test_memanto_fallback_remember_and_recall() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=True))
+    client = _make_client(enabled=True)
     client._sdk = MemantoUnavailable()
 
     store = client._fallback_store
@@ -53,8 +61,7 @@ def test_memanto_fallback_remember_and_recall() -> None:
 
 
 def test_memanto_fallback_answer_empty() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=True))
+    client = _make_client(enabled=True)
     client._sdk = MemantoUnavailable()
 
     result = client.answer(query="What do we know?")
@@ -64,8 +71,7 @@ def test_memanto_fallback_answer_empty() -> None:
 
 
 def test_memanto_create_agent_passthrough_when_unavailable() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=True))
+    client = _make_client(enabled=True)
     client._sdk = MemantoUnavailable()
 
     result = client.create_agent(agent_id="test_agent")
@@ -74,8 +80,7 @@ def test_memanto_create_agent_passthrough_when_unavailable() -> None:
 
 
 def test_memanto_stats_reports_fallback() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=True))
+    client = _make_client(enabled=True)
     client._sdk = MemantoUnavailable()
     client._fallback_store.clear()
 
@@ -87,8 +92,7 @@ def test_memanto_stats_reports_fallback() -> None:
 
 
 def test_memanto_to_dict_reports_unavailable_when_disabled() -> None:
-    _reset_singleton()
-    client = MemantoClient(MemantoConfig(enabled=False))
+    client = _make_client(enabled=False)
     d = client.to_dict()
     assert d["available"] is False
     assert d["enabled"] is False

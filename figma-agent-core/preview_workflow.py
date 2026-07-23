@@ -6,9 +6,11 @@ client feedback, and feeds the feedback into the refinement loop.
 """
 
 import argparse
+import html
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import time
@@ -24,10 +26,18 @@ DEFAULT_FEEDBACK_TIMEOUT = 86400  # 24 hours in seconds
 
 
 def _sanitize_output_dir(output_dir: str, root_dir: Optional[str] = None) -> Path:
-    target = Path(output_dir).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
-    if not str(target).startswith(str(root)):
-        raise ValueError(f"Output directory outside workspace: {output_dir}")
+    output_path = Path(output_dir)
+    # Absolute paths are allowed only when they resolve inside root_dir.
+    if output_path.is_absolute():
+        raw_target = output_path
+    else:
+        raw_target = root / output_path
+    target = Path(os.path.normpath(str(raw_target)))
+    try:
+        target.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Output directory outside workspace: {output_dir}") from exc
     target.mkdir(parents=True, exist_ok=True)
     return target
 
@@ -111,16 +121,17 @@ def _save_json(path: Path, data: Dict[str, Any]) -> None:
 
 
 def _build_preview_html(report: PreviewReport, title: str = "Preview") -> str:
-    screenshot = report.screenshot_path or ""
-    qr = report.qr_path or ""
-    url = report.page_url or ""
-    feedback = report.feedback_file_path or ""
+    screenshot = html.escape(report.screenshot_path or "")
+    qr = html.escape(report.qr_path or "")
+    url = html.escape(report.page_url or "")
+    feedback = html.escape(report.feedback_file_path or "")
+    safe_title = html.escape(title)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title} — Preview</title>
+  <title>{safe_title} — Preview</title>
   <style>
     body {{ font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 2rem; background: #f6f6f6; }}
     .container {{ max-width: 960px; margin: 0 auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }}
@@ -134,7 +145,7 @@ def _build_preview_html(report: PreviewReport, title: str = "Preview") -> str:
 </head>
 <body>
   <div class="container">
-    <h1>{title}</h1>
+    <h1>{safe_title}</h1>
     <p class="meta">Live URL: <a href="{url}">{url}</a></p>
     {f'<img class="qr" src="{qr}" alt="QR code"/>' if qr else ""}
     {f'<img src="{screenshot}" alt="Preview screenshot"/>' if screenshot else ""}
@@ -184,24 +195,51 @@ def _read_feedback(feedback_file: Path) -> Dict[str, Any]:
         return {}
 
 
+# Shell metacharacters that must never appear in a dev command string.
+_DEV_COMMAND_SHELL_METACHARACTERS = set(";|&`$()<>{}[]\\\"")
+
+
+def _validate_dev_command(command: str) -> List[str]:
+    """Parse dev_command into argv and reject shell metacharacters / injection patterns."""
+    if not command or not command.strip():
+        raise ValueError("dev_command must be a non-empty string")
+    for ch in command:
+        if ch in _DEV_COMMAND_SHELL_METACHARACTERS:
+            raise ValueError(f"dev_command contains forbidden shell metacharacter: {ch!r}")
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise ValueError(f"dev_command is not safely parseable: {exc}") from exc
+    if not argv:
+        raise ValueError("dev_command parsed to empty argv")
+    executable = Path(argv[0])
+    if len(executable.parts) > 1:
+        raise ValueError(f"dev_command executable must be a bare name, got path: {argv[0]}")
+    return argv
+
+
 def start_dev_server(
     site_dir: str,
     port: int = DEFAULT_PORT,
     command: str = "pnpm dev",
     timeout: float = 60.0,
 ) -> subprocess.Popen:
-    """Start the Next.js dev server and wait until it responds."""
+    """Start the Next.js dev server and wait until it responds.
+
+    The command is parsed via shlex.split and executed with shell=False to avoid
+    shell-injection when dev_command comes from configuration or CLI args.
+    """
     cwd = Path(site_dir).resolve()
     if not cwd.exists():
         raise ValueError(f"Site directory does not exist: {site_dir}")
     env = os.environ.copy()
     env["PORT"] = str(port)
-    shell = sys.platform == "win32"
+    argv = _validate_dev_command(command)
     process = subprocess.Popen(
-        command,
+        argv,
         cwd=str(cwd),
         env=env,
-        shell=shell,
+        shell=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -351,8 +389,19 @@ def run_preview_workflow(
         return report_dict
 
     finally:
-        # Keep server alive in interactive mode so client can review live page.
-        pass
+        # In automated/CI mode (no interactive client) stop the dev server so it
+        # does not leak. Interactive callers can set start_server=False and provide
+        # an existing page_url to keep a manually started server alive.
+        if server_process is not None:
+            try:
+                server_process.terminate()
+                try:
+                    server_process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    server_process.kill()
+                    server_process.wait(timeout=5)
+            except Exception:
+                pass
 
 
 def _load_module(file_name: str, module_name: str) -> Any:

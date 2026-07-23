@@ -14,8 +14,6 @@ class SecurityScannerConfig:
     scan_sqli: bool = True
     scan_xss: bool = True
     scan_hardcoded: bool = True
-    scan_dependencies: bool = False
-    dependency_tools: tuple[str, ...] = ("pip-audit", "bandit")
     severity_threshold: str = "medium"  # low | medium | high | critical
     excluded_paths: tuple[str, ...] = (
         "node_modules/",
@@ -32,8 +30,6 @@ class SecurityScannerConfig:
             "scan_sqli": self.scan_sqli,
             "scan_xss": self.scan_xss,
             "scan_hardcoded": self.scan_hardcoded,
-            "scan_dependencies": self.scan_dependencies,
-            "dependency_tools": list(self.dependency_tools),
             "severity_threshold": self.severity_threshold,
             "excluded_paths": list(self.excluded_paths),
         }

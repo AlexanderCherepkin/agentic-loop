@@ -91,3 +91,17 @@ def test_engine_reports_missing_code(tmp_path):
     result = MultiPageEngine(tmp_path, cfg).run()
     assert result.errors
     assert any("missing page code" in e["reason"] for e in result.errors)
+
+
+def test_engine_blocks_path_traversal_write(tmp_path):
+    cfg = MultiPageConfig(
+        target_dir=tmp_path,
+        base_url="https://example.com",
+        pages=[
+            {"slug": "home", "title": "Home", "code": "export default function Home() {}"},
+        ],
+    )
+    engine = MultiPageEngine(tmp_path, cfg)
+    engine._write_file("../../evil.tsx", "evil")
+    assert any("Path escapes" in e["reason"] for e in engine.result.errors)
+    assert not (tmp_path.parent / "evil.tsx").exists()

@@ -12,15 +12,11 @@ Self-correction agent that runs a local, deterministic security scan on a genera
 - `brief`: string — original assignment (optional)
 - `config`: dict — overrides for `runtime/security_scanner/config.py`
 
+
 ### Returns
-- `security_report`: structured object:
-  - `passed`: bool
-  - `overall_risk`: str (`low` | `medium` | `high` | `critical`)
-  - `issues`: list[{ `file`, `severity`, `category`, `line`, `title`, `description`, `fix` }]
-  - `dependency_vulnerabilities`: list[dict]
-  - `blocking`: bool
-  - `refinement_actions`: list[str]
-  - `next_phase_hint`: enum (`self_correction`, `execution`, `result`)
+- `passed`: bool — true when overall risk is below `severity_threshold`
+- `overall_risk`: str — one of `low`, `medium`, `high`, `critical`
+- `issues`: list[dict] — findings with `category`, `path`, `line`, `severity`, `message`
 
 ### Side effects
 - Invokes `runtime/security_scanner/engine.py` `SecurityScanner.scan()`
@@ -41,7 +37,6 @@ Self-correction agent that runs a local, deterministic security scan on a genera
 | Condition | Response |
 |---|---|
 | Empty codebase | Return `passed=true`, `overall_risk=low`, and `next_phase_hint=result` |
-| Dependency scanner unavailable | Skip dependency vulnerabilities; continue with static patterns |
 | Config threshold not recognized | Default to `medium`; log warning |
 | Critical secret leak detected | Set `blocking=true` immediately; do not proceed to deploy |
 | Scan raises exception | Return `passed=false`, `overall_risk=high`, and escalate to `assistance_request.md` |

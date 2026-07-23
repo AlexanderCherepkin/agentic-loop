@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from runtime.safety.file_system_guard import safe_write_file
+
 from .config import PwaConfig
 
 
@@ -52,10 +54,8 @@ class PwaEngine:
             self.result.errors.append({"file": "package.json", "reason": "missing package.json; target_dir is not a Next.js project"})
 
     def _write_file(self, rel_path: str, content: str) -> None:
-        full_path = self.target_dir / rel_path
         try:
-            full_path.parent.mkdir(parents=True, exist_ok=True)
-            full_path.write_text(content, encoding="utf-8")
+            safe_write_file(self.target_dir, rel_path, content)
             self.result.files_written.append(rel_path)
         except Exception as exc:
             self.result.errors.append({"file": rel_path, "reason": str(exc)})

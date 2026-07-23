@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from runtime.safety.file_system_guard import safe_write_file
+
 from .categories import ConsentCategory, category_for_provider, requires_consent
 from .csp_helper import build_csp_directives
 from .script_injector import SnippetSpec, build_privacy_policy_stub, build_script_tags, build_snippet
@@ -81,10 +83,8 @@ class AnalyticsIntegrationEngine:
         return self.result
 
     def _write_file(self, rel_path: str, content: str) -> None:
-        full_path = self.target_dir / rel_path
         try:
-            full_path.parent.mkdir(parents=True, exist_ok=True)
-            full_path.write_text(content, encoding="utf-8")
+            safe_write_file(self.target_dir, rel_path, content)
             self.result.files_written.append(rel_path)
         except Exception as exc:
             self.result.errors.append({"file": rel_path, "reason": str(exc)})

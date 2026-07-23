@@ -33,6 +33,12 @@ class DeployConfig:
     def is_image_provider(self) -> bool:
         return self.provider in {"render", "railway", "flyio"}
 
+    # Characters not allowed inside build_command/dist_dir to prevent command injection.
+    SHELL_METACHARACTERS: tuple[str, ...] = (";", "|", "&", "`", "$", "(", ")", "<", ">", "{", "}", "[", "]", "\\")
+
+    def _has_shell_meta(self, value: str) -> bool:
+        return any(ch in value for ch in self.SHELL_METACHARACTERS)
+
     def validate(self) -> list[str]:
         errors: list[str] = []
         if not self.target_dir.exists():
@@ -41,6 +47,10 @@ class DeployConfig:
             errors.append(f"provider must be vercel, netlify, generic, render, railway, or flyio; got {self.provider}")
         if not self.build_command:
             errors.append("build_command is required")
+        if self._has_shell_meta(self.build_command):
+            errors.append("build_command contains forbidden shell metacharacters")
+        if self.provider in {"netlify", "generic"} and self._has_shell_meta(self.dist_dir):
+            errors.append("dist_dir contains forbidden shell metacharacters")
         if self.provider == "generic" and not self.dist_dir:
             errors.append("dist_dir is required for generic provider")
         if self.is_image_provider:

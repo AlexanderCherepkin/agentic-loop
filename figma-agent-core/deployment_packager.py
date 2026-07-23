@@ -10,6 +10,7 @@ Generates ready-to-publish artifacts:
 
 import argparse
 import json
+import os
 import textwrap
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -350,11 +351,18 @@ def package_site(
     If skip_existing is True, files that already exist are left untouched
     (protects design_tokens-generated tailwind.config.ts / globals.css).
     """
-    base = Path(output_dir).resolve()
+    raw_base = Path(output_dir)
     if root_dir:
         root = Path(root_dir).resolve()
-        if not str(base).startswith(str(root)):
-            raise ValueError(f"Output directory outside workspace: {output_dir}")
+        if not raw_base.is_absolute():
+            raw_base = root / raw_base
+        base = Path(os.path.normpath(str(raw_base)))
+        try:
+            base.relative_to(root)
+        except ValueError as exc:
+            raise ValueError(f"Output directory outside workspace: {output_dir}") from exc
+    else:
+        base = raw_base.resolve()
     base.mkdir(parents=True, exist_ok=True)
 
     src_app = base / "src" / "app"

@@ -177,6 +177,12 @@ def test_package_site_root_dir_containment(tmp_path: Path) -> None:
         packager.package_site(str(output_dir), site_name="Test Site", root_dir=str(tmp_path))
 
 
+def test_package_site_partial_traversal_blocked(tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil")
+    with pytest.raises(ValueError):
+        packager.package_site(str(sibling), site_name="Test Site", root_dir=str(tmp_path))
+
+
 def test_site_slug_normalization() -> None:
     assert packager._site_slug("My Cool Site!!!") == "my-cool-site"
     assert packager._site_slug("  ") == "figma-site"

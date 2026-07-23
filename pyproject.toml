@@ -31,7 +31,7 @@ packages = []
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests", "runtime"]
-addopts = "-q"
+addopts = "-q --cov=runtime --cov=mcp_servers --cov=figma-agent-core --cov-report=term-missing --cov-fail-under=60"
 markers = [
     "core: fast unit tests covering runtime phase transitions, memory, observability, backend bridge, and integration pipeline (no external tokens)",
     "mcp: MCP server smoke tests covering registry, gateway, server initialization, and tool pings (mocked/local servers)",

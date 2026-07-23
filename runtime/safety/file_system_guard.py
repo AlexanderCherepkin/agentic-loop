@@ -7,6 +7,55 @@ from pathlib import Path
 from typing import Any
 
 
+def safe_write_file(
+    base_dir: str | Path,
+    rel_path: str | Path,
+    content: str,
+    *,
+    track_existing: bool = False,
+) -> Path | tuple[Path, bool]:
+    """Write content to a path relative to base_dir, blocking traversal escapes.
+
+    - Collapses `..` and redundant separators using os.path.normpath (does NOT
+      follow symlinks, so this check is safe for untrusted relative paths).
+    - Verifies the normalized path is still inside base_dir.
+    - Runs the path through FileSystemGuard for WRITE operation.
+    - Creates parent directories automatically.
+
+    If track_existing is True, returns (path, existed_before_write).
+
+    Raises FileSystemGuardError if the path escapes base_dir or is blocked.
+    """
+    base = Path(base_dir).resolve()
+    raw_target = base / rel_path
+    normalized = Path(os.path.normpath(str(raw_target)))
+
+    # Path-traversal guard: normalized path must remain inside base_dir.
+    try:
+        normalized.relative_to(base)
+    except ValueError as exc:
+        result = FSGuardResult(
+            path=str(normalized),
+            operation=FSOperation.WRITE,
+            verdict=FSVerdict.BLOCKED,
+            reason=f"Path escapes base directory: {base}",
+            normalized_path=str(normalized),
+            allowed_dirs=[str(base)],
+        )
+        raise FileSystemGuardError(result) from exc
+
+    # Additional guard against blocked components and protected names.
+    guard = FileSystemGuard(workspace_root=str(base))
+    guard.assert_allowed(str(normalized), FSOperation.WRITE)
+
+    existed = normalized.exists() if track_existing else False
+    normalized.parent.mkdir(parents=True, exist_ok=True)
+    normalized.write_text(content, encoding="utf-8")
+    if track_existing:
+        return normalized, existed
+    return normalized
+
+
 class FSOperation(str, Enum):
     READ = "read"
     WRITE = "write"
@@ -55,6 +104,9 @@ class FileSystemGuard:
     """
 
     # Relative path components that are forbidden anywhere inside a resolved path.
+    # Multi-component entries are split at runtime into ordered segment tuples so that
+    # checks match the full sequence (e.g. AppData/Local/Microsoft/Windows) rather than
+    # a single part that never appears in resolved_parts.
     DEFAULT_BLOCKED_RELATIVE_PARTS = (
         ".ssh",
         ".env",
@@ -118,8 +170,14 @@ class FileSystemGuard:
                     self.allowed_dirs.append(p)
 
         self.blocked_parts: set[str] = set()
+        self.blocked_sequences: list[tuple[str, ...]] = []
         for part in self.DEFAULT_BLOCKED_RELATIVE_PARTS:
-            self.blocked_parts.add(part.lower().replace("\\", "/"))
+            normalized = part.lower().replace("\\", "/")
+            segments = tuple(normalized.split("/"))
+            if len(segments) == 1:
+                self.blocked_parts.add(segments[0])
+            else:
+                self.blocked_sequences.append(segments)
 
         self.blocked_dirs: list[Path] = []
         source_dirs = blocked_dirs or self.DEFAULT_BLOCKED_ABSOLUTE_DIRS
@@ -172,6 +230,15 @@ class FileSystemGuard:
                 result.verdict = FSVerdict.BLOCKED
                 result.reason = f"Path contains blocked component: {part}"
                 return result
+
+        # 1b. Blocked multi-component sequences (e.g. AppData/Local/Microsoft/Windows).
+        for sequence in self.blocked_sequences:
+            seq_len = len(sequence)
+            for i in range(len(resolved_parts) - seq_len + 1):
+                if tuple(resolved_parts[i:i + seq_len]) == sequence:
+                    result.verdict = FSVerdict.BLOCKED
+                    result.reason = f"Path contains blocked sequence: {'/'.join(sequence)}"
+                    return result
 
         # 2. Block-list check: explicit absolute sensitive directories.
         for blocked in self.blocked_dirs:
@@ -232,6 +299,7 @@ class FileSystemGuard:
             "allowed_dirs": [str(d) for d in self.allowed_dirs],
             "blocked_dirs": [str(d) for d in self.blocked_dirs],
             "blocked_parts": sorted(self.blocked_parts),
+            "blocked_sequences": ["/".join(seq) for seq in self.blocked_sequences],
             "allow_read_anywhere": self.allow_read_anywhere,
         }
 

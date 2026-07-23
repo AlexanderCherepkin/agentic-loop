@@ -78,6 +78,14 @@ class EmbeddingAgent:
         self._init_backend()
 
     def _init_backend(self) -> None:
+        # Fast path: explicit simple backend avoids importing heavy sentence-transformers.
+        if self._preferred == "simple":
+            self._backend = "simple"
+            self._model_name = "simple-bow"
+            self._dim = self._fixed_dim or 5000
+            self._simple = _SimpleEmbedding(max_vocab=self._dim)
+            return
+
         # Tier 1: sentence-transformers local
         try:
             from sentence_transformers import SentenceTransformer

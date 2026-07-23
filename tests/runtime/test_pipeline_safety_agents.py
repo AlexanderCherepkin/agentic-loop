@@ -97,6 +97,20 @@ def test_safety_pre_check_blocks_on_any_agent_blocked(tmp_path):
     assert result is False
 
 
+def test_safety_chain_command_check_blocks_dangerous_tool_arguments(tmp_path):
+    runner = _make_runner(tmp_path)
+    blocked = runner._check_safety_for_tool("Bash", {"command": "rm -rf /tmp"})
+    assert blocked is not None
+    assert blocked.get("guard_blocked") is True
+    assert "Safety chain blocked" in blocked.get("error", "")
+
+
+def test_safety_chain_command_check_allows_safe_tool_arguments(tmp_path):
+    runner = _make_runner(tmp_path)
+    allowed = runner._check_safety_for_tool("Bash", {"command": "python .agent_loop/scripts/health_check.py"})
+    assert allowed is None
+
+
 def test_full_run_with_mock_safety_agents_terminates(tmp_path):
     runner = _make_runner(tmp_path)
 

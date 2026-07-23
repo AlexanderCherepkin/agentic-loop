@@ -33,10 +33,15 @@ def _parse_file_key(source: str) -> Optional[str]:
 
 
 def _sanitize_output_dir(output_path: str, root_dir: Optional[str] = None) -> Path:
-    target = Path(output_path).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
-    if not str(target).startswith(str(root)):
-        raise ValueError(f"Output path outside workspace: {output_path}")
+    raw_target = Path(output_path)
+    if not raw_target.is_absolute():
+        raw_target = root / raw_target
+    target = Path(os.path.normpath(str(raw_target)))
+    try:
+        target.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Output path outside workspace: {output_path}") from exc
     target.parent.mkdir(parents=True, exist_ok=True)
     return target
 

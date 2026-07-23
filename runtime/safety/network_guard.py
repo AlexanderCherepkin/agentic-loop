@@ -214,14 +214,14 @@ class NetworkGuard:
         return None
 
     def _match_allowed(self, host: str) -> str | None:
-        """Return the matching allowed domain if host or its parent is allowed."""
+        """Return the matching allowed domain only on exact match.
+
+        Suffix/parent matching is intentionally disabled: allowing github.com
+        must not allow attacker.github.com. Use explicit allow-list entries for
+        subdomains.
+        """
         if host in self.allowed_domains:
             return host
-        parts = host.split(".")
-        for i in range(1, len(parts)):
-            suffix = ".".join(parts[i:])
-            if suffix in self.allowed_domains:
-                return suffix
         return None
 
     def is_allowed(self, raw_url: str) -> bool:

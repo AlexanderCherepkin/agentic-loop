@@ -85,3 +85,15 @@ def test_download_outside_workspace_guard(tmp_path: Path) -> None:
             file_key="k",
             root_dir=str(tmp_path),
         )
+
+
+def test_download_partial_traversal_blocked(tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "ref.png"
+    with pytest.raises(ValueError):
+        downloader.download_figma_reference(
+            node_id="10:1",
+            output_path=str(sibling),
+            token="t",
+            file_key="k",
+            root_dir=str(tmp_path),
+        )

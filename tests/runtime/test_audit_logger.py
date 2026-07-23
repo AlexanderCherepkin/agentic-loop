@@ -153,6 +153,67 @@ class TestAuditLoggerAppendOnly:
         assert entry["payload"]["inputs"]["text"].endswith("...")
         assert len(entry["payload"]["inputs"]["text"]) == 1003
 
+    def test_sanitize_redacts_secret_keys(self, tmp_path):
+        logger = AuditLogger(log_dir=tmp_path, buffer_size=1)
+        logger.log_agent_invoked(
+            "agent.md",
+            "session-1",
+            "anchor-1",
+            {
+                "api_key": "sk-12345",
+                "unsplash_api_key": "uk-67890",
+                "providerApiKey": "pk-abcde",
+                "token": "t-kjhgf",
+                "secret": "shhh",
+                "password": "hunter2",
+                "private_key": "-----BEGIN RSA PRIVATE KEY-----",
+                "access_key": "AKIAIOSFODNN7EXAMPLE",
+                "image_provider_api_key": "ipk-secret",
+                "public": "visible",
+            },
+        )
+
+        from datetime import datetime
+        today_str = datetime.utcnow().strftime("%Y-%m-%d")
+        log_file = tmp_path / f"audit_{today_str}.jsonl"
+        entry = json.loads(log_file.read_text(encoding="utf-8").strip().split("\n")[0])
+        inputs = entry["payload"]["inputs"]
+        for secret_key in (
+            "api_key",
+            "unsplash_api_key",
+            "providerApiKey",
+            "token",
+            "secret",
+            "password",
+            "private_key",
+            "access_key",
+            "image_provider_api_key",
+        ):
+            assert inputs[secret_key] == "***REDACTED***", secret_key
+        assert inputs["public"] == "visible"
+
+    def test_sanitize_redacts_secrets_in_nested_arguments(self, tmp_path):
+        logger = AuditLogger(log_dir=tmp_path, buffer_size=1)
+        logger.log_tool_invoked(
+            "figma_server",
+            "session-1",
+            "anchor-1",
+            {
+                "file_key": "abc123",
+                "image_provider_api_key": "super-secret-key",
+                "nested": {"credentials": {"password": "deep-secret"}},
+            },
+        )
+
+        from datetime import datetime
+        today_str = datetime.utcnow().strftime("%Y-%m-%d")
+        log_file = tmp_path / f"audit_{today_str}.jsonl"
+        entry = json.loads(log_file.read_text(encoding="utf-8").strip().split("\n")[0])
+        arguments = entry["payload"]["arguments"]
+        assert arguments["file_key"] == "abc123"
+        assert arguments["image_provider_api_key"] == "***REDACTED***"
+        assert arguments["nested"]["credentials"] == "***REDACTED***"
+
 
 class TestAuditLoggerErrors:
     def test_constructor_raises_when_log_dir_is_file(self, tmp_path):

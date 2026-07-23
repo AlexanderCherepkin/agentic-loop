@@ -5,6 +5,7 @@ Avoids real dev-server startup by mocking subprocess and visual_qa.
 
 from __future__ import annotations
 
+import html
 import importlib.util
 import json
 import sys
@@ -72,6 +73,56 @@ def test_build_preview_html_includes_url_and_paths() -> None:
     assert "feedback.json" in html
 
 
+def test_build_preview_html_escapes_xss_payloads() -> None:
+    xss_title = "<script>alert('title')</script>"
+    xss_url = "http://127.0.0.1:3000/?q=\">onclick=alert('url')"
+    xss_path = "img\"><script>alert('path')</script>"
+    report = preview.PreviewReport(
+        status="awaiting_feedback",
+        page_url=xss_url,
+        screenshot_path=xss_path,
+        qr_path=xss_path,
+        feedback_file_path=xss_path,
+    )
+    preview_html = preview._build_preview_html(report, title=xss_title)
+    assert "<script>" not in preview_html
+    assert html.escape(xss_title) in preview_html
+    # The URL is escaped in both href and link text; raw JS handlers must not appear.
+    assert '"onclick=' not in preview_html
+    assert "'onclick=" not in preview_html
+    assert html.escape(xss_url) in preview_html
+    assert html.escape(xss_path) in preview_html
+
+
+def test_validate_dev_command_rejects_shell_metacharacters() -> None:
+    for bad in ["pnpm dev && rm -rf /", "npm; whoami", "npx `cat /etc/passwd`", 'node -e "process.exit(1)"']:
+        with pytest.raises(ValueError, match="forbidden shell metacharacter"):
+            preview._validate_dev_command(bad)
+
+
+def test_validate_dev_command_returns_argv_for_safe_command() -> None:
+    assert preview._validate_dev_command("pnpm dev") == ["pnpm", "dev"]
+    assert preview._validate_dev_command("npm run dev --port 3000") == ["npm", "run", "dev", "--port", "3000"]
+
+
+def test_validate_dev_command_rejects_executable_path() -> None:
+    with pytest.raises(ValueError, match="must be a bare name"):
+        preview._validate_dev_command("/usr/bin/pnpm dev")
+
+
+def test_sanitize_output_dir_blocks_traversal(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="outside workspace"):
+        preview._sanitize_output_dir("../outside", root_dir=str(tmp_path))
+    with pytest.raises(ValueError, match="outside workspace"):
+        preview._sanitize_output_dir("inside/../../outside", root_dir=str(tmp_path))
+
+
+def test_sanitize_output_dir_resolves_absolute_inside_root(tmp_path: Path) -> None:
+    out_dir = tmp_path / "preview"
+    result = preview._sanitize_output_dir(str(out_dir), root_dir=str(tmp_path))
+    assert result == out_dir
+
+
 def test_preview_report_to_dict_serializable() -> None:
     report = preview.PreviewReport(status="approved", approved=True)
     data = report.to_dict()
@@ -133,11 +184,12 @@ def test_run_preview_workflow_rejected_yields_refinement_hints(tmp_path: Path) -
 
 
 def test_run_preview_workflow_missing_url_blocked() -> None:
-    result = preview.run_preview_workflow(
-        site_dir="/nonexistent",
-        page_url="http://127.0.0.1:3000",
-        start_server=False,
-    )
+    with patch.object(preview, "_is_available", return_value=False):
+        result = preview.run_preview_workflow(
+            site_dir="/nonexistent",
+            page_url="http://127.0.0.1:3000",
+            start_server=False,
+        )
     assert result["status"] == "blocked"
 
 

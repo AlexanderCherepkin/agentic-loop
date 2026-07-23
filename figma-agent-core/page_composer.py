@@ -1,5 +1,6 @@
 import html
 import json
+import os
 import re
 import argparse
 import sys
@@ -83,10 +84,15 @@ def _render_inline_styles(styles: Dict[str, str]) -> str:
 
 
 def _sanitize_path(path: str, root_dir: Optional[str] = None) -> Path:
-    target = Path(path).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
-    if not str(target).startswith(str(root)):
-        raise ValueError(f"Path traversal detected: {path}")
+    raw_target = Path(path)
+    if not raw_target.is_absolute():
+        raw_target = root / raw_target
+    target = Path(os.path.normpath(str(raw_target)))
+    try:
+        target.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Path traversal detected: {path}") from exc
     return target
 
 
@@ -982,10 +988,15 @@ def write_pages(
 ) -> List[str]:
     """Write generated pages to app/[slug]/page.tsx, with home slug mapped to app/page.tsx."""
     written: List[str] = []
-    base = Path(output_dir).resolve()
     root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
-    if not str(base).startswith(str(root)):
-        raise ValueError(f"Output directory outside workspace: {output_dir}")
+    raw_base = Path(output_dir)
+    if not raw_base.is_absolute():
+        raw_base = root / raw_base
+    base = Path(os.path.normpath(str(raw_base)))
+    try:
+        base.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Output directory outside workspace: {output_dir}") from exc
     base.mkdir(parents=True, exist_ok=True)
 
     for page in pages:

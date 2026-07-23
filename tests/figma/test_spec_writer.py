@@ -87,13 +87,19 @@ def test_generate_spec_writes_markdown(tmp_path: Path) -> None:
         ],
     }
     output = tmp_path / "spec.md"
-    path = spec_writer.generate_spec(node, output_path=str(output))
+    path = spec_writer.generate_spec(node, output_path=str(output), root_dir=str(tmp_path))
     assert path == str(output)
     text = output.read_text(encoding="utf-8")
     assert "# Техническое задание: Landing Page" in text
     assert "LandingPage" in text
     assert "AutoLayout vertical" in text
     assert "Hello" in text
+
+
+def test_generate_spec_blocks_output_traversal(tmp_path: Path) -> None:
+    outside = tmp_path.parent / "outside_spec.md"
+    with pytest.raises(ValueError):
+        spec_writer.generate_spec({"id": "1:1", "name": "X", "type": "FRAME", "children": []}, output_path=str(outside))
 
 
 def test_extract_layout_rules_includes_autolayout() -> None:

@@ -115,3 +115,9 @@ def test_rollback(replace_server: ReplaceMCPServer, sample_file: Path) -> None:
     result = asyncio.run(replace_server.rollback(path="sample.py", backup_id=backup["backup_id"]))
     assert result["rolled_back"] is True
     assert sample_file.read_text(encoding="utf-8") == "print('hello')\n"
+
+
+def test_write_file_partial_traversal_blocked(replace_server: ReplaceMCPServer, tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "evil.py"
+    with pytest.raises(PermissionError):
+        asyncio.run(replace_server.write_file(path=str(sibling), content="x = 1\n"))

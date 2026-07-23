@@ -77,6 +77,15 @@ def test_read_file_outside_workspace_blocked(read_server: ReadMCPServer, tmp_pat
         asyncio.run(read_server.read_file(path=str(outside)))
 
 
+def test_read_file_partial_traversal_blocked(read_server: ReadMCPServer, tmp_path: Path) -> None:
+    # A sibling directory whose name starts with the workspace name must not escape.
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "secret.txt"
+    sibling.parent.mkdir(parents=True, exist_ok=True)
+    sibling.write_text("secret", encoding="utf-8")
+    with pytest.raises(PermissionError):
+        asyncio.run(read_server.read_file(path=str(sibling)))
+
+
 def test_get_file_info(read_server: ReadMCPServer, sample_file: Path) -> None:
     result = asyncio.run(read_server.get_file_info(path="sample.txt"))
     assert result["path"] == str(sample_file)

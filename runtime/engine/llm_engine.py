@@ -306,7 +306,6 @@ class MockLLMEngine:
     }
 
     async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
-        await asyncio.sleep(0.01)  # Simulate tiny latency
         agent_path = getattr(spec, "source_path", "") or ""
         base_latency = 15.0
 
@@ -353,6 +352,16 @@ class MockLLMEngine:
                     "parsed_request": {"intent": "general"},
                     "confidence": 0.8,
                 }
+
+            design_descriptor = response_data.get("design_descriptor")
+            if design_descriptor:
+                raw_request_text = str(inputs.get("raw_request", "")).lower()
+                dry_run_signals = ["dry-run", "dry run", "сухой прогон", "пробный прогон", "только план"]
+                generation_signals = ["сверстай", "сделай код", "реализуй", "сгенерируй код"]
+                design_descriptor["dry_run"] = (
+                    any(s in raw_request_text for s in dry_run_signals)
+                    and not any(s in raw_request_text for s in generation_signals)
+                )
 
         # Special handling for task scoping: trivial for simple requests, large for design/client work
         if agent_str.endswith("planning/task_scoping_agent.md"):

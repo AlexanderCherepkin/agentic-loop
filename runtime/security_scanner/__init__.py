@@ -1,7 +1,7 @@
 """Security scanner runtime module.
 
 Scans generated codebases locally for secrets, SQL injections, XSS vectors,
-hardcoded credentials, and dependency vulnerabilities.
+and hardcoded credentials.
 """
 
 from __future__ import annotations

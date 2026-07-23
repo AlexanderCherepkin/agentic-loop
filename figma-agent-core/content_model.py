@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass, field
@@ -450,9 +451,14 @@ def build_content_model(
     component_mapper: Optional[Dict[str, Any]] = None,
 ) -> ContentModelResult:
     abs_root = Path(root_dir).resolve()
-    abs_out = Path(output_dir).resolve()
-    if not str(abs_out).startswith(str(abs_root)):
-        raise ValueError(f"Output directory outside workspace: {output_dir}")
+    raw_out = Path(output_dir)
+    if not raw_out.is_absolute():
+        raw_out = abs_root / raw_out
+    abs_out = Path(os.path.normpath(str(raw_out)))
+    try:
+        abs_out.relative_to(abs_root)
+    except ValueError as exc:
+        raise ValueError(f"Output directory outside workspace: {output_dir}") from exc
     abs_out.mkdir(parents=True, exist_ok=True)
 
     root = ast.get("root", ast)

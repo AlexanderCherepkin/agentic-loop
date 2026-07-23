@@ -171,3 +171,29 @@ def test_report_written_to_output_path(tmp_path: Path) -> None:
     assert output.exists()
     assert output.read_text(encoding="utf-8").startswith("{")
     assert result["passed"] is True
+
+
+def test_output_path_outside_workspace_blocked(tmp_path: Path) -> None:
+    file = tmp_path / "page.tsx"
+    file.write_text('export default function Page() { return <h1>Hello</h1>; }\n', encoding="utf-8")
+    outside = tmp_path.parent / "outside_report.json"
+    with pytest.raises(ValueError):
+        compliance.run_compliance_check(
+            code_paths=[str(file)],
+            workspace_root=str(tmp_path),
+            rules_path=str(tmp_path / "project_rules.md"),
+            output_path=str(outside),
+        )
+
+
+def test_rules_path_outside_workspace_blocked(tmp_path: Path) -> None:
+    file = tmp_path / "page.tsx"
+    file.write_text('export default function Page() { return <h1>Hello</h1>; }\n', encoding="utf-8")
+    outside_rules = tmp_path.parent / "outside_rules.md"
+    outside_rules.write_text("No comments unless WHY is non-obvious.\n", encoding="utf-8")
+    with pytest.raises(ValueError):
+        compliance.run_compliance_check(
+            code_paths=[str(file)],
+            workspace_root=str(tmp_path),
+            rules_path=str(outside_rules),
+        )

@@ -220,6 +220,12 @@ def test_write_page_blocks_path_traversal() -> None:
         page_composer.write_page("code", "../outside/page.tsx")
 
 
+def test_write_page_blocks_partial_traversal(tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "page.tsx"
+    with pytest.raises(ValueError):
+        page_composer.write_page("code", str(sibling), root_dir=str(tmp_path))
+
+
 def test_compose_from_ast_file(tmp_path: Path) -> None:
     ast_path = tmp_path / "layout_ast.json"
     ast = _minimal_ast([{"tag": "section", "children": [{"tag": "h1", "text": "From file"}]}])

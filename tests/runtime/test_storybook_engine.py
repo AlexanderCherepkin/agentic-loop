@@ -74,3 +74,17 @@ def test_engine_missing_package_json_error(tmp_path):
     result = StorybookEngine(tmp_path, cfg).run()
     # No components means early return before package.json check.
     assert any("No React components found" in n for n in result.notes)
+
+
+def test_engine_blocks_path_traversal_write(tmp_path):
+    root = _make_project(tmp_path)
+    (root / "src" / "app" / "components" / "Button.tsx").write_text(
+        "export default function Button() { return <button>Click</button>; }\n",
+        encoding="utf-8",
+    )
+    cfg = StorybookConfig(target_dir=root)
+    # Inject a malicious component path by overriding directory discovery.
+    engine = StorybookEngine(root, cfg)
+    engine._write_file("../../../evil.stories.tsx", "evil")
+    assert any("Path escapes" in e["reason"] for e in engine.result.errors)
+    assert not (tmp_path.parent / "evil.stories.tsx").exists()

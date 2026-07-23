@@ -18,7 +18,7 @@ class SecurityIssue(BaseModel):
 
     file: str = Field(..., description="File path")
     severity: str = Field(..., description="critical | high | medium | low")
-    category: str = Field(..., description="secret | sqli | xss | hardcoded | dependency | other")
+    category: str = Field(..., description="secret | sqli | xss | hardcoded | other")
     line: int | None = Field(None, description="Line number")
     title: str = Field(..., description="Issue title")
     description: str = Field(..., description="Issue description")
@@ -31,7 +31,6 @@ class SecurityScanResult(BaseModel):
     passed: bool = Field(..., description="True if no blocking issues")
     overall_risk: str = Field(..., description="low | medium | high | critical")
     issues: list[SecurityIssue] = Field(default_factory=list)
-    dependency_vulnerabilities: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class SecurityScanner:
@@ -126,25 +125,19 @@ class SecurityScanner:
                 continue
             issues.extend(self._scan_file(path, content))
 
-        dep_vulns: list[dict[str, Any]] = []
-        if self.config.scan_dependencies:
-            dep_vulns = self._scan_dependencies(codebase)
-
-        overall_risk = self._compute_risk(issues, dep_vulns)
+        overall_risk = self._compute_risk(issues)
         passed = self._RISK_ORDER[overall_risk] < self._RISK_ORDER[self.config.severity_threshold]
 
         logger.info(
-            "Security scan: risk=%s, issues=%d, dep_vulns=%d, passed=%s",
+            "Security scan: risk=%s, issues=%d, passed=%s",
             overall_risk,
             len(issues),
-            len(dep_vulns),
             passed,
         )
         return SecurityScanResult(
             passed=passed,
             overall_risk=overall_risk,
             issues=issues,
-            dependency_vulnerabilities=dep_vulns,
         )
 
     def _is_excluded(self, path: str) -> bool:
@@ -220,23 +213,10 @@ class SecurityScanner:
 
         return issues
 
-    def _scan_dependencies(self, codebase: dict[str, str]) -> list[dict[str, Any]]:
-        """Best-effort dependency vulnerability scan (placeholder)."""
-        # Real scanning would require pip-audit/safety/bandit tools.
-        # Returning empty list keeps the engine deterministic and lightweight.
-        return []
-
-    def _compute_risk(
-        self,
-        issues: list[SecurityIssue],
-        dep_vulns: list[dict[str, Any]],
-    ) -> str:
+    def _compute_risk(self, issues: list[SecurityIssue]) -> str:
         max_risk = 0
         for issue in issues:
             max_risk = max(max_risk, self._RISK_ORDER.get(issue.severity, 0))
-        for vuln in dep_vulns:
-            severity = str(vuln.get("severity", "low")).lower()
-            max_risk = max(max_risk, self._RISK_ORDER.get(severity, 0))
         for risk, order in self._RISK_ORDER.items():
             if order == max_risk:
                 return risk

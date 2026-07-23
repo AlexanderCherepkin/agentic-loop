@@ -18,6 +18,7 @@ Intake agent that recognizes when the incoming user request is a design project 
   - `design_source`: enum (`figma_url`, `figma_node_id`, `local_json`, `design_brief`)
   - `source_value`: the URL, node ID, file path, or brief text
   - `output_mode`: enum (`technical_assignment`, `full_code`, `both`) — what the user wants back
+  - `dry_run`: bool — when true, only plan/simulate the pipeline without writing files or starting servers
   - `target_stack`: optional enum (`react_next_tailwind`, `vue_nuxt`, `svelte`, `plain_html`, `infer_from_rules`)
   - `target_scope`: enum (`single_section`, `all_sections`, `whole_page`)
   - `backend_spec`: optional structured object:
@@ -50,6 +51,7 @@ Intake agent that recognizes when the incoming user request is a design project 
    - "ТЗ", "техническое задание", "спецификация" → `technical_assignment`.
    - "сделай код", "сверстай", "компонент", "реализуй" → `full_code`.
    - Ambiguous or both requested → `both`.
+4a. **Determine dry-run mode** — if the request contains "dry-run", "dry run", "сухой прогон", "планирование", or "пробный прогон" without an explicit code-generation verb, set `dry_run=true`. Explicit generation verbs ("сверстай", "сделай код", "реализуй") keep `dry_run=false` unless "dry-run" is explicitly requested.
 5. **Infer target stack** — use `project_rules.tooling_preferences` if present; otherwise default to `react_next_tailwind`.
 6. **Infer target scope** — default to `single_section` if node ID provided, else `whole_page` or `all_sections` based on wording.
 7. **Extract backend spec** — if OpenAPI/Prisma/structured spec file is found, populate `design_descriptor.backend_spec` with `spec_type` and `spec_path`; set `metadata.has_backend_spec=true`.

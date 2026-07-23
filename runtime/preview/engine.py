@@ -82,10 +82,8 @@ class PreviewEngine:
         return self.result
 
     def _load_preview_module(self) -> Any:
+        """Load preview_workflow only from the target project; no repo-root fallback."""
         preview_path = self.target_dir / "figma-agent-core" / "preview_workflow.py"
-        if not preview_path.exists():
-            # Try repo-relative fallback.
-            preview_path = Path(__file__).resolve().parent.parent.parent / "figma-agent-core" / "preview_workflow.py"
         if not preview_path.exists():
             return None
         module_name = "figma_preview_workflow_runtime"

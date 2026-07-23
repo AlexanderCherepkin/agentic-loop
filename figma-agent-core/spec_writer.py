@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import argparse
 from pathlib import Path
@@ -184,7 +185,7 @@ def _build_page_tree(node: Dict[str, Any], depth: int = 0) -> List[str]:
     return lines
 
 
-def generate_spec(node: Dict[str, Any], output_path: str = OUTPUT_FILE) -> str:
+def generate_spec(node: Dict[str, Any], output_path: str = OUTPUT_FILE, root_dir: Optional[str] = None) -> str:
     """Генерирует Markdown-спецификацию на основе Figma-ноды и сохраняет в файл."""
     nodes = _walk(node)
     root_name = node.get("name", "Figma Design")
@@ -297,7 +298,16 @@ def generate_spec(node: Dict[str, Any], output_path: str = OUTPUT_FILE) -> str:
     lines.append("")
 
     content = "\n".join(lines)
-    path = Path(output_path)
+    root = Path(root_dir).resolve() if root_dir else Path.cwd().resolve()
+    raw_path = Path(output_path)
+    if not raw_path.is_absolute():
+        raw_path = root / raw_path
+    path = Path(os.path.normpath(str(raw_path)))
+    try:
+        path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"Output path outside workspace: {output_path}") from exc
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
     return str(path)

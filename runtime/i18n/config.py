@@ -1,8 +1,21 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
+
+
+LOCALE_PATTERN = re.compile(r"^[a-zA-Z0-9_-]+$")
+
+
+def validate_locale(locale: str) -> str | None:
+    """Return an error message if locale is not a safe BCP-47-like identifier."""
+    if not isinstance(locale, str) or not locale:
+        return "locale must be a non-empty string"
+    if not LOCALE_PATTERN.match(locale):
+        return f"locale {locale!r} contains forbidden characters; use [a-zA-Z0-9_-]+ only"
+    return None
 
 
 class RoutingStrategy(Enum):
@@ -126,6 +139,11 @@ class I18nConfig:
         if self.default_locale not in self.target_locales:
             errors.append("default_locale must be in target_locales")
         for locale in self.target_locales:
-            if not locale or not isinstance(locale, str):
-                errors.append(f"invalid locale: {locale!r}")
+            err = validate_locale(locale)
+            if err:
+                errors.append(err)
+        for locale in self.rtl_locales:
+            err = validate_locale(locale)
+            if err:
+                errors.append(err)
         return errors

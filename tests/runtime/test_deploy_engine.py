@@ -56,6 +56,19 @@ def test_engine_builds_generic_command(tmp_path):
     assert "npm run build" in result.command
 
 
+def test_config_validation_blocks_shell_metacharacters(tmp_path):
+    cfg = DeployConfig(target_dir=tmp_path, provider="netlify", build_command="pnpm build; rm -rf /")
+    errors = cfg.validate()
+    assert any("shell metacharacters" in e for e in errors)
+
+
+def test_engine_passes_command_as_argv_not_shell_string(tmp_path):
+    cfg = DeployConfig(target_dir=tmp_path, provider="netlify", dry_run=True, dist_dir="out dir")
+    result = DeployEngine(tmp_path, cfg).run()
+    assert result.command_argv
+    assert any("--dir=out dir" in arg for arg in result.command_argv)
+
+
 def test_extract_url_finds_vercel_and_netlify():
     engine = DeployEngine(Path("."), DeployConfig())
     assert engine._extract_url("Preview: https://demo.vercel.app") == "https://demo.vercel.app"

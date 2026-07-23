@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -274,13 +275,54 @@ class AuditLogger:
         canonical = json.dumps(entry, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
+    # Keys that commonly carry secrets should be redacted regardless of length.
+    SECRET_KEY_PATTERNS: tuple[str, ...] = (
+        "api_key", "apikey", "token", "secret", "password", "private_key", "access_key", "credential"
+    )
+
+    # Regex patterns that detect secret *values* even when the key is not recognized.
+    SECRET_VALUE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+        ("aws_access_key", re.compile(r"AKIA[0-9A-Z]{16}")),
+        ("private_key", re.compile(r"-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----")),
+        ("github_token", re.compile(r"gh[pousr]_[A-Za-z0-9_]{36,}")),
+        ("openai_api_key", re.compile(r"sk-[a-zA-Z0-9]{48}")),
+    )
+
+    def _is_secret_key(self, key: str) -> bool:
+        lower = key.lower()
+        return any(pattern in lower for pattern in self.SECRET_KEY_PATTERNS)
+
+    def _contains_secret_value(self, value: Any) -> bool:
+        text = ""
+        if isinstance(value, str):
+            text = value
+        elif isinstance(value, (dict, list)):
+            text = json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
+        for name, pattern in self.SECRET_VALUE_PATTERNS:
+            if pattern.search(text):
+                return True
+        return False
+
+    def _redact(self, value: Any, *, _already_redacting: bool = False) -> Any:
+        if isinstance(value, str):
+            if not _already_redacting and self._contains_secret_value(value):
+                return "***REDACTED***"
+            if len(value) > 1000:
+                return value[:1000] + "..."
+            return value
+        if isinstance(value, dict):
+            return self._sanitize(value)
+        if isinstance(value, list):
+            return [self._redact(item, _already_redacting=_already_redacting) for item in value]
+        return value
+
     def _sanitize(self, data: dict[str, Any] | None) -> dict[str, Any]:
         if data is None:
             return {}
         sanitized: dict[str, Any] = {}
         for k, v in data.items():
-            if isinstance(v, str) and len(v) > 1000:
-                sanitized[k] = v[:1000] + "..."
+            if self._is_secret_key(k) or self._contains_secret_value(v):
+                sanitized[k] = "***REDACTED***"
             else:
-                sanitized[k] = v
+                sanitized[k] = self._redact(v, _already_redacting=True)
         return sanitized

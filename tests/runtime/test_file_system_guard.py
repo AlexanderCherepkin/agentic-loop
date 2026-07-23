@@ -7,7 +7,13 @@ import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from runtime.safety.file_system_guard import FSOperation, FSVerdict, FileSystemGuard, FileSystemGuardError
+from runtime.safety.file_system_guard import (
+    FSOperation,
+    FSVerdict,
+    FileSystemGuard,
+    FileSystemGuardError,
+    safe_write_file,
+)
 
 
 @pytest.fixture
@@ -138,3 +144,51 @@ class TestFileSystemGuardSerialization:
         assert any(str(tmp_path.resolve()) in d for d in data["allowed_dirs"])
         assert len(data["blocked_dirs"]) > 0
         assert ".ssh" in data["blocked_parts"]
+
+    def test_blocks_multi_component_relative_sequence(self, guard, tmp_path):
+        target = tmp_path / "some" / "AppData" / "Local" / "Microsoft" / "Windows" / "secret.txt"
+        result = guard.check(str(target), FSOperation.READ)
+        assert result.verdict == FSVerdict.BLOCKED
+        assert "appdata/local/microsoft/windows" in result.reason.lower()
+
+    def test_allows_similar_but_not_matching_sequence(self, guard, tmp_path):
+        # Only AppData/Local/Microsoft/Windows is blocked, not AppData/Local/Other.
+        target = tmp_path / "AppData" / "Local" / "Other" / "file.txt"
+        result = guard.check(str(target), FSOperation.READ)
+        assert result.verdict == FSVerdict.ALLOWED
+
+
+class TestSafeWriteFile:
+    def test_writes_simple_relative_file(self, tmp_path):
+        path = safe_write_file(tmp_path, "hello.txt", "world")
+        assert path.read_text(encoding="utf-8") == "world"
+        assert path == (tmp_path / "hello.txt").resolve()
+
+    def test_creates_nested_parent_directories(self, tmp_path):
+        path = safe_write_file(tmp_path, "a/b/c/nested.txt", "content")
+        assert path.exists()
+        assert path.read_text(encoding="utf-8") == "content"
+
+    def test_blocks_traversal_with_dotdot(self, tmp_path):
+        with pytest.raises(FileSystemGuardError):
+            safe_write_file(tmp_path, "../escape.txt", "bad")
+
+    def test_blocks_absolute_path_outside_base(self, tmp_path):
+        with pytest.raises(FileSystemGuardError):
+            safe_write_file(tmp_path, str(tmp_path.parent / "abs_escape.txt"), "bad")
+
+    def test_blocks_blocked_components(self, tmp_path):
+        with pytest.raises(FileSystemGuardError):
+            safe_write_file(tmp_path, "secret/.env", "bad")
+
+    def test_track_existing_reports_existing_file(self, tmp_path):
+        existing = tmp_path / "existing.txt"
+        existing.write_text("old", encoding="utf-8")
+        path, existed = safe_write_file(tmp_path, "existing.txt", "new", track_existing=True)
+        assert existed is True
+        assert path.read_text(encoding="utf-8") == "new"
+
+    def test_track_existing_reports_new_file(self, tmp_path):
+        path, existed = safe_write_file(tmp_path, "brand_new.txt", "x", track_existing=True)
+        assert existed is False
+        assert path.read_text(encoding="utf-8") == "x"

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 import re
+import shlex
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import PurePath
 from typing import Any
 
 
@@ -46,17 +49,46 @@ class SafetyResult:
 class SafetyChain:
     FORBIDDEN_PATTERNS = [
         (r"rm\s+-rf\s+/", SafetyLevel.ABORTED, "Recursive root deletion attempt"),
+        (r"rm\s+(?:-\S+\s+)*\S*[\\/]", SafetyLevel.ABORTED, "Absolute-path deletion"),
+        (r"rmdir\s+/s\s+", SafetyLevel.ABORTED, "Windows recursive directory deletion"),
+        (r"del\s+/[fq]", SafetyLevel.ABORTED, "Windows force-delete flag"),
         (r"DROP\s+(TABLE|DATABASE)", SafetyLevel.PAUSED, "Database destruction command"),
+        (r"curl\s+\S+", SafetyLevel.PAUSED, "Unreviewed network fetch"),
+        (r"wget\s+\S+", SafetyLevel.PAUSED, "Unreviewed network fetch"),
         (r"curl.*\|\s*(ba)?sh", SafetyLevel.ABORTED, "Pipe-to-shell pattern"),
-        (r"eval\s+", SafetyLevel.WARNING, "Dynamic code evaluation"),
+        (r"python\s+-c\s+", SafetyLevel.PAUSED, "Dynamic Python one-liner"),
+        (r"python\s+-m\s+http\.server", SafetyLevel.PAUSED, "Ad-hoc HTTP server"),
+        (r"eval\s*\(", SafetyLevel.ABORTED, "Dynamic code evaluation"),
+        (r"exec\s*\(", SafetyLevel.ABORTED, "Dynamic code execution"),
+        (r"os\.system\s*\(", SafetyLevel.ABORTED, "OS system call"),
+        (r"subprocess\.(?:run|call|check_output|Popen)\s*\(", SafetyLevel.ABORTED, "Subprocess invocation"),
         (r"sudo\s+", SafetyLevel.PAUSED, "Privilege escalation attempt"),
         (r"/etc/(passwd|shadow)", SafetyLevel.ABORTED, "Access to system auth files"),
         (r"\.env", SafetyLevel.WARNING, "Access to environment secrets"),
+        (r"mkfs", SafetyLevel.ABORTED, "Filesystem format"),
+        (r"fdisk", SafetyLevel.ABORTED, "Partition manipulation"),
+        (r"dd\s+if=/dev", SafetyLevel.ABORTED, "Disk overwrite"),
+        (r">\s*/dev/[sh]da", SafetyLevel.ABORTED, "Disk overwrite"),
+        (r":\(\)\s*{\s*:\|:", SafetyLevel.ABORTED, "Fork bomb"),
     ]
 
     FORBIDDEN_PATHS = [
-        "/etc/", "/proc/", "/sys/", "C:\\Windows\\System32\\",
+        "/etc/", "/proc/", "/sys/", "/dev/",
+        "C:\\Windows\\System32\\",
     ]
+
+    ALLOWED_COMMANDS = {
+        "git", "python", "python3", "pytest", "node", "npm", "pnpm", "yarn",
+        "npx", "pip", "pipenv", "poetry", "mypy", "black", "ruff", "isort",
+        "next", "tsc", "eslint", "prettier", "graphql-codegen", "prisma",
+    }
+
+    BLOCKED_COMMANDS = {
+        "rm", "rmdir", "del", "erase", "format", "mkfs", "fdisk", "dd", "shred",
+        "nc", "netcat", "nmap", "msfconsole", "sqlmap",
+    }
+
+    SHELL_INTERPRETERS = {"bash", "sh", "cmd", "powershell", "pwsh", "zsh", "fish"}
 
     def __init__(self, live_risk_threshold: float = 0.6):
         self.live_risk_threshold = live_risk_threshold
@@ -75,27 +107,86 @@ class SafetyChain:
         return rules
 
     def pre_check(self, user_input: str) -> SafetyResult:
-        triggered: list[TriggeredRule] = []
+        triggered = self._evaluate_text(user_input)
+        result = self._compute_result(triggered)
+        self.triggered_rules = result.triggered_rules
+        return result
 
-        for rule in self._rules:
-            try:
-                if rule.evaluate(user_input):
-                    triggered.append(TriggeredRule(rule=rule, evidence=f"Matched pattern in input", severity=rule.severity))
-            except Exception:
-                continue
-
-        for path in self.FORBIDDEN_PATHS:
-            if path.lower() in str(user_input).lower():
-                triggered.append(TriggeredRule(
-                    rule=GuardrailRule(name="forbidden_path", description=f"Access to {path}", severity=SafetyLevel.ABORTED,
-                                       evaluate=lambda x: True),
-                    evidence=f"Path reference: {path}",
-                    severity=SafetyLevel.ABORTED,
-                ))
+    def check_command(self, command: str, arguments: dict[str, Any] | list | None = None) -> SafetyResult:
+        normalized = self._normalize_command(command, arguments)
+        triggered = self._evaluate_text(normalized)
+        triggered.extend(self._evaluate_command_base(command))
 
         result = self._compute_result(triggered)
         self.triggered_rules = result.triggered_rules
         return result
+
+    def _normalize_command(self, command: str, arguments: dict[str, Any] | list | None) -> str:
+        parts: list[str] = [str(command).strip()]
+        if isinstance(arguments, dict):
+            for key in sorted(arguments):
+                parts.append(f"{key}={self._serialize_argument(arguments[key])}")
+        elif isinstance(arguments, list):
+            for arg in arguments:
+                parts.append(self._serialize_argument(arg))
+        return " ".join(parts)
+
+    def _serialize_argument(self, value: Any) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, (dict, list)):
+            return json.dumps(value, sort_keys=True, ensure_ascii=False)
+        return shlex.quote(str(value))
+
+    def _command_base(self, command: str) -> str:
+        text = str(command).strip()
+        # Strip common executable extensions and extract the last path segment.
+        base = PurePath(text.split(None, 1)[0]).name
+        for ext in (".exe", ".cmd", ".bat", ".ps1", ".py"):
+            if base.lower().endswith(ext):
+                base = base[: -len(ext)]
+        return base.lower()
+
+    def _evaluate_command_base(self, command: str) -> list[TriggeredRule]:
+        base = self._command_base(command)
+        if base in self.BLOCKED_COMMANDS:
+            return [TriggeredRule(
+                rule=GuardrailRule(name="blocked_command_base", description=f"Command '{base}' is in block-list", severity=SafetyLevel.ABORTED, evaluate=lambda x: True),
+                evidence=f"blocked command base: {base}",
+                severity=SafetyLevel.ABORTED,
+            )]
+        if base in self.SHELL_INTERPRETERS:
+            return [TriggeredRule(
+                rule=GuardrailRule(name="shell_interpreter", description=f"Shell interpreter '{base}' can execute arbitrary code", severity=SafetyLevel.PAUSED, evaluate=lambda x: True),
+                evidence=f"shell interpreter: {base}",
+                severity=SafetyLevel.PAUSED,
+            )]
+        if base not in self.ALLOWED_COMMANDS:
+            return [TriggeredRule(
+                rule=GuardrailRule(name="command_not_allowed", description=f"Command '{base}' is not in allow-list", severity=SafetyLevel.WARNING, evaluate=lambda x: True),
+                evidence=f"command base: {base}",
+                severity=SafetyLevel.WARNING,
+            )]
+        return []
+
+    def _evaluate_text(self, text: str) -> list[TriggeredRule]:
+        triggered: list[TriggeredRule] = []
+        for rule in self._rules:
+            try:
+                if rule.evaluate(text):
+                    triggered.append(TriggeredRule(rule=rule, evidence="Matched pattern in input", severity=rule.severity))
+            except Exception:
+                continue
+
+        for path in self.FORBIDDEN_PATHS:
+            if path.lower() in str(text).lower():
+                triggered.append(TriggeredRule(
+                    rule=GuardrailRule(name="forbidden_path", description=f"Access to {path}", severity=SafetyLevel.ABORTED, evaluate=lambda x: True),
+                    evidence=f"Path reference: {path}",
+                    severity=SafetyLevel.ABORTED,
+                ))
+
+        return triggered
 
     def post_check(self, output: str) -> SafetyResult:
         triggered: list[TriggeredRule] = []
@@ -109,8 +200,7 @@ class SafetyChain:
         for pattern, desc in sensitive_patterns:
             if re.search(pattern, str(output), re.IGNORECASE):
                 triggered.append(TriggeredRule(
-                    rule=GuardrailRule(name="sensitive_data_leak", description=desc, severity=SafetyLevel.ABORTED,
-                                       evaluate=lambda x: True),
+                    rule=GuardrailRule(name="sensitive_data_leak", description=desc, severity=SafetyLevel.ABORTED, evaluate=lambda x: True),
                     evidence=f"Pattern: {pattern}",
                     severity=SafetyLevel.ABORTED,
                 ))
@@ -130,8 +220,7 @@ class SafetyChain:
         for pattern, desc in suspicious:
             if re.search(pattern, str(content), re.IGNORECASE):
                 triggered.append(TriggeredRule(
-                    rule=GuardrailRule(name="xss", description=desc, severity=SafetyLevel.ABORTED,
-                                       evaluate=lambda x: True),
+                    rule=GuardrailRule(name="xss", description=desc, severity=SafetyLevel.ABORTED, evaluate=lambda x: True),
                     evidence=f"Pattern: {pattern}",
                     severity=SafetyLevel.ABORTED,
                 ))

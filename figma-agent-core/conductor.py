@@ -32,11 +32,32 @@ def _setup_logging(log_file: str = "conductor.log", verbose: bool = False) -> No
     )
 
 
-def _run_command(command: List[str], timeout: int = 600) -> subprocess.CompletedProcess:
+def _redact_command(command: List[str], secret_flags: Optional[set[str]] = None) -> List[str]:
+    """Return a copy of command with secret values replaced by <REDACTED>."""
+    flags = secret_flags or {"--provider-api-key", "--image-provider-api-key"}
+    redacted: List[str] = []
+    skip_next = False
+    for i, token in enumerate(command):
+        if skip_next:
+            redacted.append("<REDACTED>")
+            skip_next = False
+            continue
+        if token in flags and i + 1 < len(command):
+            redacted.append(token)
+            redacted.append("<REDACTED>")
+            skip_next = True
+            continue
+        redacted.append(token)
+    return redacted
+
+
+def _run_command(command: List[str], timeout: int = 600,
+                 secret_flags: Optional[set[str]] = None) -> subprocess.CompletedProcess:
     """Запускает subprocess и логирует результат.
 
     Если скрипт не найден относительно рабочей директории, но существует
     рядом с conductor.py (в figma-agent-core), подставляет полный путь.
+    Секретные флаги redact'ятся в логах.
     """
     if len(command) >= 2 and command[1].endswith(".py"):
         script = Path(command[1])
@@ -44,7 +65,8 @@ def _run_command(command: List[str], timeout: int = 600) -> subprocess.Completed
             candidate = Path(__file__).parent / script.name
             if candidate.exists():
                 command[1] = str(candidate)
-    logger.info(f"Running: {' '.join(command)}")
+    log_command = _redact_command(command, secret_flags=secret_flags)
+    logger.info(f"Running: {' '.join(log_command)}")
     try:
         result = subprocess.run(
             command,
@@ -60,12 +82,12 @@ def _run_command(command: List[str], timeout: int = 600) -> subprocess.Completed
             for line in result.stderr.splitlines():
                 logger.warning(line)
         if result.returncode != 0:
-            logger.error(f"Command failed with exit code {result.returncode}: {' '.join(command)}")
+            logger.error(f"Command failed with exit code {result.returncode}: {' '.join(log_command)}")
         else:
-            logger.info(f"Command succeeded: {' '.join(command)}")
+            logger.info(f"Command succeeded: {' '.join(log_command)}")
         return result
     except subprocess.TimeoutExpired:
-        logger.error(f"Command timed out after {timeout}s: {' '.join(command)}")
+        logger.error(f"Command timed out after {timeout}s: {' '.join(log_command)}")
         raise
     except Exception as e:
         logger.error(f"Command error: {e}")
@@ -218,16 +240,14 @@ def stage_image_enrichment(
     ]
     if asset_registry_path.exists():
         command.extend(["--asset-registry", str(asset_registry_path)])
-    if provider_api_key and effective_provider == "unsplash":
-        command.extend(["--provider-api-key", provider_api_key])
     if not skip_existing:
         command.append("--no-skip-existing")
 
     if dry_run:
-        logger.info(f"[DRY-RUN] Would run: {' '.join(command)}")
+        logger.info(f"[DRY-RUN] Would run: {' '.join(_redact_command(command))}")
         return True
 
-    result = _run_command(command, timeout=300)
+    result = _run_command(command, timeout=300, secret_flags={"--provider-api-key"})
     return result.returncode == 0
 
 

@@ -29,26 +29,26 @@ class TestEmbeddingAgent(unittest.TestCase):
             del os.environ["OPENAI_API_KEY"]
 
     def test_fallback_backend_exists(self):
-        agent = EmbeddingAgent()
+        agent = EmbeddingAgent(model="simple", dimensions=8)
         self.assertIn(agent.backend, ("local", "openai", "simple"))
         self.assertGreater(agent.dimensions, 0)
 
     def test_embed_normalized(self):
-        agent = EmbeddingAgent()
+        agent = EmbeddingAgent(model="simple", dimensions=8)
         vec = agent.embed("hello world")
         self.assertEqual(vec.shape, (agent.dimensions,))
         norm = np.linalg.norm(vec)
         self.assertAlmostEqual(norm, 1.0, places=5)
 
     def test_batch_embed(self):
-        agent = EmbeddingAgent()
+        agent = EmbeddingAgent(model="simple", dimensions=8)
         batch = agent.batch_embed(["first text", "second text"])
         self.assertEqual(batch.shape, (2, agent.dimensions))
         for vec in batch:
             self.assertAlmostEqual(np.linalg.norm(vec), 1.0, places=5)
 
     def test_similarity_range(self):
-        agent = EmbeddingAgent()
+        agent = EmbeddingAgent(model="simple", dimensions=8)
         a = agent.embed("dog")
         b = agent.embed("cat")
         sim = agent.similarity(a, b)
@@ -146,7 +146,7 @@ class TestMemoryManager(unittest.TestCase):
         self._old_key = os.environ.pop("OPENAI_API_KEY", None)
         self.tmpdir = tempfile.mkdtemp()
         self.db_path = os.path.join(self.tmpdir, "memory.db")
-        self.mm = MemoryManager(db_path=self.db_path)
+        self.mm = MemoryManager(db_path=self.db_path, embedding_model="simple", embedding_dim=8)
 
     def tearDown(self):
         self.mm.close()

@@ -6,18 +6,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from runtime.safety.file_system_guard import safe_write_file
+
 from .config import MultiPageConfig
 
 
 def _stable_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True)
-
-
-def _sanitize_path(path: Path, root: Path) -> Path:
-    resolved = path.resolve()
-    if not str(resolved).startswith(str(root.resolve())):
-        raise ValueError(f"Path outside workspace: {path}")
-    return resolved
 
 
 def _is_valid_url_slug(slug: str) -> bool:
@@ -65,15 +60,14 @@ class MultiPageEngine:
         (self.target_dir / self.config.components_dir).mkdir(parents=True, exist_ok=True)
 
     def _write_file(self, rel_path: str, content: str) -> None:
-        full_path = self.target_dir / rel_path
         try:
-            full_path.parent.mkdir(parents=True, exist_ok=True)
-            mode = "modified" if full_path.exists() else "written"
-            full_path.write_text(content, encoding="utf-8")
-            if mode == "written":
-                self.result.files_written.append(rel_path)
-            else:
+            full_path, existed = safe_write_file(
+                self.target_dir, rel_path, content, track_existing=True
+            )
+            if existed:
                 self.result.files_modified.append(rel_path)
+            else:
+                self.result.files_written.append(rel_path)
         except Exception as exc:
             self.result.errors.append({"file": rel_path, "reason": str(exc)})
 

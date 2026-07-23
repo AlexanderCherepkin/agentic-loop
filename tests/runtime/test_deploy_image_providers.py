@@ -10,7 +10,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from runtime.deploy import DeployConfig, DeployEngine
-from runtime.deploy.providers import DeployProviderFactory
+from runtime.deploy.providers import DeployProviderFactory, RailwayDeployer
 
 
 pytestmark = [pytest.mark.core, pytest.mark.runtime]
@@ -91,3 +91,100 @@ def test_flyio_live_without_org_slug_fails(tmp_path, monkeypatch):
     result = DeployEngine(tmp_path, cfg).run()
     assert not result.success
     assert any("ORG_SLUG" in e["reason"] for e in result.errors)
+
+
+def test_railway_uses_graphql_variables(monkeypatch):
+    """RailwayDeployer must send values via GraphQL variables, not string interpolation."""
+    from unittest.mock import MagicMock, patch
+
+    monkeypatch.setenv("DEPLOY_RAILWAY_API_KEY", "token-123")
+
+    def fake_post(url, *, headers, json):
+        resp = MagicMock()
+        resp.status_code = 200
+        if "projectCreate" in json.get("query", ""):
+            resp.json.return_value = {"data": {"projectCreate": {"id": "proj-1", "name": "demo"}}}
+        elif "serviceCreate" in json.get("query", ""):
+            assert "variables" in json
+            assert json["variables"]["name"] == "demo-svc"
+            assert json["variables"]["projectId"] == "proj-1"
+            resp.json.return_value = {"data": {"serviceCreate": {"id": "svc-1", "__typename": "Service"}}}
+        elif "serviceInstanceDeploy" in json.get("query", ""):
+            assert "variables" in json
+            assert json["variables"]["serviceId"] == "svc-1"
+            assert json["variables"]["image"] == "example/app:latest"
+            resp.json.return_value = {"data": {"serviceInstanceDeploy": {"id": "dep-1", "status": "SUCCESS"}}}
+        else:
+            resp.json.return_value = {}
+        resp.raise_for_status = lambda: None
+        return resp
+
+    with patch("httpx.Client") as mock_client_class:
+        instance = MagicMock()
+        instance.post.side_effect = fake_post
+        instance.__enter__ = MagicMock(return_value=instance)
+        instance.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = instance
+
+        deployer = RailwayDeployer(api_key="token-123")
+        result = deployer.deploy(
+            image_tag="example/app:latest",
+            project={"project_id": "demo", "language": "typescript"},
+            config={"service_name": "demo-svc"},
+        )
+
+    assert result.error is None
+    assert result.service_id == "svc-1"
+
+
+def test_railway_rejects_injection_in_variables(monkeypatch):
+    """Values supplied via GraphQL variables cannot break query structure."""
+    from unittest.mock import MagicMock, patch
+
+    monkeypatch.setenv("DEPLOY_RAILWAY_API_KEY", "token-123")
+
+    captured: list[dict] = []
+
+    def fake_post(url, *, headers, json):
+        captured.append(json)
+        resp = MagicMock()
+        resp.status_code = 200
+        if "projectCreate" in json.get("query", ""):
+            resp.json.return_value = {"data": {"projectCreate": {"id": "proj-1", "name": "demo"}}}
+        elif "serviceCreate" in json.get("query", ""):
+            resp.json.return_value = {"data": {"serviceCreate": {"id": "svc-1", "__typename": "Service"}}}
+        elif "serviceInstanceDeploy" in json.get("query", ""):
+            resp.json.return_value = {"data": {"serviceInstanceDeploy": {"id": "dep-1", "status": "SUCCESS"}}}
+        else:
+            resp.json.return_value = {}
+        resp.raise_for_status = lambda: None
+        return resp
+
+    with patch("httpx.Client") as mock_client_class:
+        instance = MagicMock()
+        instance.post.side_effect = fake_post
+        instance.__enter__ = MagicMock(return_value=instance)
+        instance.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = instance
+
+        malicious_service_name = 'bad" } bad'
+        malicious_image = 'app:latest" }) { __typename '
+        deployer = RailwayDeployer(api_key="token-123")
+        result = deployer.deploy(
+            image_tag=malicious_image,
+            project={"project_id": "demo", "language": "typescript"},
+            config={"service_name": malicious_service_name},
+        )
+
+    assert result.error is None
+    # Query string must remain structurally valid; payloads sent via variables.
+    for payload in captured:
+        if "variables" in payload:
+            # The query template itself must not contain the injected value.
+            assert malicious_service_name not in payload["query"]
+            assert malicious_image not in payload["query"]
+            # Service create carries the malicious name as a variable; deploy carries the image.
+            if "serviceCreate" in payload["query"]:
+                assert payload["variables"].get("name") == malicious_service_name
+            if "serviceInstanceDeploy" in payload["query"]:
+                assert payload["variables"].get("image") == malicious_image

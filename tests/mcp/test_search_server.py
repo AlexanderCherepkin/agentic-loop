@@ -103,3 +103,11 @@ def test_diff_search(search_server: SearchMCPServer) -> None:
     result = asyncio.run(search_server.diff_search(a="x\ny", b="x\nz"))
     assert result["count"] == 1
     assert result["differences"][0]["added"] == "z"
+
+
+def test_search_partial_traversal_blocked(search_server: SearchMCPServer, tmp_path: Path) -> None:
+    sibling = tmp_path.parent / (tmp_path.name + "_evil") / "secret.py"
+    sibling.parent.mkdir(parents=True, exist_ok=True)
+    sibling.write_text("SECRET = 1\n", encoding="utf-8")
+    with pytest.raises(PermissionError):
+        asyncio.run(search_server.regex_search(query="SECRET", path=str(sibling)))
