@@ -4029,21 +4029,6 @@
     "ast_hash": "34e6052a07860cc6e0e11ac02b54323a",
     "semantic_hash": ""
   },
-  ".agent_loop/specs/3641a5376b8e4b19b0bc38543fe89567_spec.md": {
-    "mtime": 1784818652.5352366,
-    "ast_hash": "5bab40a851032ad8589348dacd9f433b",
-    "semantic_hash": ""
-  },
-  ".agent_loop/specs/7fb3c9f7125d45edafe4312a961d5553_spec.md": {
-    "mtime": 1784818545.2614768,
-    "ast_hash": "bdaff3eeebab3ba61a160ae9cb86df20",
-    "semantic_hash": ""
-  },
-  ".agent_loop/specs/e585c0a402b74c33ae95ff789cefa2c5_spec.md": {
-    "mtime": 1784818469.0498145,
-    "ast_hash": "e5364ebdf75e68ed1d10ac61fca3d7ff",
-    "semantic_hash": ""
-  },
   ".agent_loop/tooll_subagents/planning/verification_planner.md": {
     "mtime": 1784818022.317202,
     "ast_hash": "db17c0ee9ec6dd49aea685f21d49e604",
@@ -4052,6 +4037,71 @@
   ".agent_loop/tooll_subagents/result/skill_packager.md": {
     "mtime": 1784818034.9706302,
     "ast_hash": "6e5c53bfe8cce4ce49a303fc862c813d",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/analyze-competitors.workflow.js": {
+    "mtime": 1784819767.4364028,
+    "ast_hash": "d498a666e60ace49990aa0633ba47fe9",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/audience-insights.workflow.js": {
+    "mtime": 1784821198.5542932,
+    "ast_hash": "e5b264f49a04eaf31ec9a28065cc90c3",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/codebase-audit.workflow.js": {
+    "mtime": 1784820194.7742155,
+    "ast_hash": "c36f4b3bb378b73f94c29eab98a480b9",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/content-angles.workflow.js": {
+    "mtime": 1784820396.4187188,
+    "ast_hash": "48b652c263d40885c9e022fe6a943027",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/data-analytics.workflow.js": {
+    "mtime": 1784820601.0814276,
+    "ast_hash": "ca9663f5c415d92c61a841b177f886a8",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/deep-research.workflow.js": {
+    "mtime": 1784820686.4438224,
+    "ast_hash": "cb5ec27a03c551b685faba915dba6858",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/592ec8c3ba13462282d94cf6a23a6a46_spec.md": {
+    "mtime": 1784821562.7614436,
+    "ast_hash": "3053e2bfdee423f503e5a379de3d4d12",
+    "semantic_hash": ""
+  },
+  ".claude/skills/spec-pilot/CHEATSHEET.md": {
+    "mtime": 1784819283.3328075,
+    "ast_hash": "b524028d9053a0e7a1be60a96836f0e2",
+    "semantic_hash": ""
+  },
+  ".claude/skills/spec-pilot/HOW_TO_USE.md": {
+    "mtime": 1784819575.3705857,
+    "ast_hash": "a1cc78cbdd891f54f724d921d18fa62e",
+    "semantic_hash": ""
+  },
+  ".claude/skills/spec-pilot/README.md": {
+    "mtime": 1784819284.530155,
+    "ast_hash": "fa546b6bcd03dd1ae749162e51cbd336",
+    "semantic_hash": ""
+  },
+  ".claude/skills/spec-pilot/SKILL.md": {
+    "mtime": 1784819406.120022,
+    "ast_hash": "ac130052b47d28196c04d948cf838448",
+    "semantic_hash": ""
+  },
+  ".claude/skills/spec-pilot/\u0418\u041d\u0421\u0422\u0420\u0423\u041a\u0426\u0418\u042f.md": {
+    "mtime": 1784819283.9957793,
+    "ast_hash": "3d16a14b122d289eec5f44545740343f",
+    "semantic_hash": ""
+  },
+  ".claude/workflows/README.md": {
+    "mtime": 1784821216.3332045,
+    "ast_hash": "afb10e9e2456ebf36037b36efaf5bad7",
     "semantic_hash": ""
   }
 }
