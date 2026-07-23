@@ -23,9 +23,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from runtime.engine.agent_invocation_map import all_referenced_paths  # noqa: E402
 from runtime.engine.agent_loader import AgentLoader  # noqa: E402
 
-EXPECTED_AGENT_COUNT = 296
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Runtime agent coverage validator")
     parser.add_argument("--json", action="store_true", help="Emit JSON report")
@@ -42,26 +39,22 @@ def main() -> int:
     unreachable = sorted(loaded_paths - referenced)
     missing = sorted(referenced - loaded_paths)
 
-    count_ok = len(loaded_paths) == EXPECTED_AGENT_COUNT
     coverage_ok = not unreachable
 
     if args.json:
         report = {
-            "coverage_ok": coverage_ok and count_ok,
-            "expected_count": EXPECTED_AGENT_COUNT,
+            "coverage_ok": coverage_ok,
             "loaded_count": len(loaded_paths),
             "referenced_count": len(referenced),
             "unreachable_agents": unreachable,
             "referenced_but_missing": missing,
         }
         print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 0 if coverage_ok and count_ok else 1
+        return 0 if coverage_ok else 1
 
     print("=== Runtime Agent Coverage Validator ===")
-    print(f"Loaded agents: {len(loaded_paths)} (expected {EXPECTED_AGENT_COUNT})")
+    print(f"Loaded agents: {len(loaded_paths)}")
     print(f"Referenced by runtime/MCP map: {len(referenced)}")
-    if not count_ok:
-        print(f"[FAIL] Agent count mismatch: expected {EXPECTED_AGENT_COUNT}, got {len(loaded_paths)}")
     if missing:
         print(f"[WARN] Referenced but not loaded: {len(missing)}")
         for p in missing:

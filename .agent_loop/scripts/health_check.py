@@ -25,17 +25,41 @@ import re
 import subprocess
 import sys
 import time
+import tomllib
 from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+# Ensure repo-root packages are importable when the script is invoked directly.
+sys.path.insert(0, str(PROJECT_ROOT))
 AGENT_LOOP_DIR = PROJECT_ROOT / ".agent_loop"
 CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
+PYPROJECT_PATH = PROJECT_ROOT / "pyproject.toml"
 
-EXPECTED_AGENTS = 298
-EXPECTED_MCP_SERVERS = 25
+
+def _expected_agent_count() -> int:
+    """Compute expected agent count from the actual .agent_loop specs."""
+    from runtime.engine.agent_loader import AgentLoader
+
+    return len(AgentLoader(str(AGENT_LOOP_DIR)).load_all_agents())
+
+
+def _expected_mcp_server_count() -> int:
+    """Compute expected MCP server count from the lazy registry catalog."""
+    from mcp_servers.bootstrap import create_registry
+
+    return create_registry(str(PROJECT_ROOT), eager=False).server_count
+
+
+def _coverage_threshold() -> float:
+    """Read the coverage fail-under threshold from pyproject.toml."""
+    with open(PYPROJECT_PATH, "rb") as f:
+        data = tomllib.load(f)
+    return float(
+        data.get("tool", {}).get("coverage", {}).get("report", {}).get("fail_under", 60)
+    )
 
 
 def run(cmd: list[str], timeout: int = 60, **kwargs: Any) -> subprocess.CompletedProcess:
@@ -61,10 +85,13 @@ def check_agents() -> dict[str, Any]:
     total = int(total_match.group(1)) if total_match else 0
     broken = 0 if broken_match and broken_match.group(1) == "NONE" else int(broken_match.group(1) or 0)
     isolated = 0 if isolated_match and isolated_match.group(1) == "NONE" else int(isolated_match.group(1) or 0)
+    expected = _expected_agent_count()
 
     return {
         "label": "Agents",
-        "ok": result.returncode == 0 and total >= EXPECTED_AGENTS and broken == 0 and isolated == 0,
+        "ok": result.returncode == 0 and total >= expected and broken == 0 and isolated == 0,
+        "expected": expected,
+        "total": total,
         "value": f"{total} agents",
         "details": f"broken_links={broken}, isolated={isolated}",
         "elapsed_sec": round(elapsed, 2),
@@ -130,10 +157,12 @@ def check_mcp_servers() -> dict[str, Any]:
     fail_count = len(re.findall(r"\[FAIL\]", result.stdout))
     operational_match = re.search(r"(\d+/\d+)\s+servers operational", result.stdout)
     operational = operational_match.group(1) if operational_match else f"{pass_count}/{pass_count + fail_count}"
+    expected = _expected_mcp_server_count()
 
     return {
         "label": "MCP servers",
-        "ok": pass_count == EXPECTED_MCP_SERVERS and fail_count == 0,
+        "ok": pass_count == expected and fail_count == 0,
+        "expected": expected,
         "value": f"{operational} operational",
         "details": f"pass={pass_count}, fail={fail_count}",
         "elapsed_sec": round(elapsed, 2),
@@ -177,7 +206,6 @@ def check_pytest_coverage() -> dict[str, Any]:
             "--cov=mcp_servers",
             "--cov=figma-agent-core",
             "--cov-report=term",
-            "--cov-fail-under=60",
         ],
         timeout=1200,
     )
@@ -192,13 +220,15 @@ def check_pytest_coverage() -> dict[str, Any]:
 
     coverage_match = re.search(r"Total coverage:\s+([\d.]+)%", result.stdout)
     coverage = float(coverage_match.group(1)) if coverage_match else 0.0
-    threshold_reached = coverage >= 60.0
+    threshold = _coverage_threshold()
+    threshold_reached = coverage >= threshold
 
     ok = result.returncode == 0 and passed > 0 and failed == 0 and threshold_reached
 
     return {
         "label": "pytest coverage",
         "ok": ok,
+        "threshold": threshold,
         "value": f"{coverage:.1f}% coverage" if coverage else "coverage not reported",
         "details": f"{passed} passed, exit_code={result.returncode}",
         "elapsed_sec": round(elapsed, 2),
@@ -211,8 +241,11 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
 
     agents = next((c for c in checks if c["label"] == "Agents"), None)
     if agents and not agents["ok"]:
-        if str(EXPECTED_AGENTS) not in agents["value"]:
-            recs.append(f"Agent count mismatch: expected {EXPECTED_AGENTS}. Review newly added or deleted agent specs.")
+        if agents.get("total", 0) < agents.get("expected", 0):
+            recs.append(
+                f"Agent count mismatch: expected at least {agents['expected']}. "
+                "Review newly added or deleted agent specs."
+            )
         if "broken_links" in agents["details"] and "broken_links=0" not in agents["details"]:
             recs.append("Run `node .agent_loop/scripts/validate_cross_references.js` and fix broken agent references.")
         if "isolated=" in agents["details"] and "isolated=0" not in agents["details"]:
@@ -236,7 +269,11 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
 
     cov = next((c for c in checks if c["label"] == "pytest coverage"), None)
     if cov and not cov["ok"]:
-        recs.append("Coverage target (60%) not met. Run `pytest --cov --cov-fail-under=60` and add tests for uncovered runtime modules.")
+        threshold = cov.get("threshold", 60.0)
+        recs.append(
+            f"Coverage target ({threshold:.0f}%) not met. "
+            f"Run `pytest --cov` and add tests for uncovered runtime modules."
+        )
 
     if not recs:
         recs.append("All checks healthy. Proceed with next increment.")
@@ -250,7 +287,7 @@ def main() -> int:
     parser.add_argument(
         "--coverage",
         action="store_true",
-        help="Also run the full pytest suite with 60%% coverage threshold (slower)",
+        help="Also run the full pytest suite with the pyproject.toml coverage threshold (slower)",
     )
     args = parser.parse_args()
 

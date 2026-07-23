@@ -1,6 +1,6 @@
 """Agentic Loop Runtime — LLM-powered multi-agent execution engine.
 
-296 agents/files across 6 layers. Three-circuit safety architecture.
+Multi-agent AI system with hierarchical safety-first architecture.
 Parses Markdown agent specs from .agent_loop/ and executes them
 via LLM API calls with state-machine Decision Flow interpretation.
 """
