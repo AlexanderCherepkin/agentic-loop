@@ -28,6 +28,8 @@ Post-execution verification agent that checks whether the observed outcomes matc
 - `max_iterations`: integer (default 3)
 - `lighthouse_max_iterations`: integer (default 8) — hard limit for Lighthouse refinement loop
 - `success_criteria`: optional explicit criteria from user or inferred from request type
+- `verification_plan`: optional structured plan from `planning/verification_planner.md` containing `tests`, `linters`, `browsers`, `scripts`, and `required` flag
+- `plan`: optional current plan object; if `spec_scope_aligned` is false, validation must emit a spec-alignment refinement action
 - `goal_evaluation`: optional structured verdict from `self_correction/goal_evaluator.md` containing `verdict.pass`, `verdict.reason`, `verdict.confidence`, and `criteria_checklist`
 
 ### Returns
@@ -51,6 +53,11 @@ Post-execution verification agent that checks whether the observed outcomes matc
 ## Decision Flow
 
 1. **Load criteria** — if `success_criteria` provided, use it; otherwise infer from `request_type` and domain patterns (e.g., code_change: tests pass, no syntax errors, files modified as intended; question: answer addresses all parts, sources cited).
+   - If `verification_plan` is provided, add each listed verification item as an explicit success criterion.
+1a. **Spec alignment check** — if `plan` is provided and `plan.spec_scope_aligned` is `false`:
+   - Set `validation_status=needs_refinement`, `retry_recommended=true`.
+   - Append a `refinement_action` to route to `tooll_subagents/self_correction/plan_adjustment.md` with the reason from `plan.spec_alignment_reason` and the misaligned tasks from `plan.spec_misaligned_tasks`.
+   - Do not mark `complete` until alignment is restored.
 2. **Map to observations** — for each criterion, identify which `observation_artifacts` or `visual_qa_report` fields provide evidence.
 3. **Check completeness** — verify all expected outputs were produced (files created, commands executed, answers generated).
 4. **Check correctness** — verify outputs meet quality standards (syntax valid, tests pass, no errors in logs, no contradictions in answer).

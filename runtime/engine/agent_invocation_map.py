@@ -87,6 +87,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/planning/premium_design_system_generator.md",
         "tooll_subagents/planning/project_architect.md",
         "tooll_subagents/planning/project_classifier.md",
+        "tooll_subagents/planning/verification_planner.md",
         "tooll_subagents/planning/visual_to_architecture_planner.md",
     ],
     "planning_figma": [
@@ -259,6 +260,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
     "result": [
         "tooll_subagents/result/action_report.md",
         "tooll_subagents/result/modified_files.md",
+        "tooll_subagents/result/skill_packager.md",
         "tooll_subagents/result/solution.md",
         "tooll_subagents/result/summary_recommendations.md",
     ],

@@ -39,14 +39,15 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │       ├── feedback_aggregator.md        #     Aggregate feedback
 │       └── compliance_checker.md         #     Check regulatory compliance
 │
-├── control/                              # Runtime control layer (7 agents)
+├── control/                              # Runtime control layer (8 agents)
 │   ├── file_system_guard.md              #   Guard file system access
 │   ├── network_guard.md                  #   Guard network access
 │   ├── resource_monitor.md               #   Monitor resource usage
 │   ├── human_oversight.md                #   Strategic human oversight
 │   ├── policy_enforcer.md                #   Enforce runtime policies
 │   ├── scope_manager.md                  #   Manage operation boundaries
-│   └── input_aggregation.md              #   Aggregate control inputs
+│   ├── input_aggregation.md              #   Aggregate control inputs
+│   └── spec_lock.md                      #   Runtime hard gate: block execution until spec_status == approved
 │
 ├── tooll_subagents/                      # ReAct cycle decomposition
 │   ├── user/                             #   Input layer (5 agents)
@@ -55,14 +56,17 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── limitations.md                #     Known limitations
 │   │   ├── design_intake.md              #     Detect design-project inputs and emit a design_descriptor
 │   │   └── client_brief_agent.md         #     PM-style structured client intake and brief builder
-│   ├── planning/                         #   Planning layer (50 agents)
+│   ├── planning/                         #   Planning layer (57 agents)
 │   │   ├── task_decomposition.md         #     Break down tasks
+│   │   ├── task_scoping_agent.md         #     Classify task size and decide spec-approval path
+│   │   ├── spec_approval_gate.md         #     Interview, draft spec, and require explicit approval
 │   │   ├── cost_risk_assessment.md       #     Assess costs and risks
 │   │   ├── tool_plan_selection.md        #     Select tools and plan
 │   │   ├── internal_monologue.md         #     Internal reasoning
 │   │   ├── figma_design_analyst.md       #     Run Figma pipeline and produce a design_blueprint
 │   │   ├── figma_precise_mode_auditor.md #     Builder.io-style readiness audit before Figma-to-code generation
 │   │   ├── design_to_code_planner.md     #     Decide technical_assignment vs full_code handoff
+│   │   ├── visual_to_architecture_planner.md #     Convert visual blueprint to architecture manifest
 │   │   ├── premium_design_analyst.md     #     Propose distinctive premium direction and font system; await user confirmation
 │   │   ├── design_reference_extractor.md #     Parse competitor/brand DESIGN.md or URL into DTCG-compatible brief
 │   │   ├── premium_design_system_generator.md # Generate DESIGN.md and design_tokens.json before code
@@ -100,13 +104,18 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── pwa_optimizer.md                      # Select manifest/service-worker/offline strategy and resource optimizations
 │   │   ├── design_token_docs_requirements_analyst.md # Extract design-token documentation requirements for client/team handoff
 │   │   ├── design_token_docs_format_selector.md      # Select docs formats (markdown/json/html) and output plan
+│   │   ├── multi_page_planner.md         #     Plan Next.js App Router pages, navigation, and SEO metadata
+│   │   ├── storybook_planner.md          #     Plan Storybook stories and configuration
+│   │   ├── deploy_planner.md             #     Plan deployment target, secrets, and dry-run strategy
+│   │   ├── preview_planner.md            #     Plan dev-server preview, screenshot, QR, and client feedback loop
 │   │   ├── copywriting_agent.md          #     Generate landing-page copy from client brief
 │   │   ├── estimation_proposal_agent.md  #     Estimate timeline/cost and produce SOW/proposal from client brief
+│   │   ├── client_onboarding_brief_agent.md #     PM-style structured client intake and brief builder
 │   │   ├── project_classifier.md         #     Classify a technical brief into project type, stack, and language
 │   │   ├── project_architect.md          #     Produce an architecture manifest from classification
 │   │   ├── project_starter_agent.md      #     Select and materialize landing/SaaS/portfolio/e-commerce starter
 │   │   └── git_publish_planner.md        #     Plan repository publication to GitHub/GitLab
-│   ├── execution/                        #   Execution layer (16 agents)
+│   ├── execution/                        #   Execution layer (20 agents)
 │   │   ├── tool_invocation.md            #     Invoke selected tool
 │   │   ├── safety_guardrails.md          #     Apply safety guardrails
 │   │   ├── human_approval.md             #     Tactical human approval gate
@@ -120,10 +129,14 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── accessibility_runtime_integrator.md # Run static WCAG audit via runtime/accessibility/AccessibilityEngine
 │   │   ├── pwa_runtime_integrator.md     #     Materialize PWA manifest/service worker/offline page and performance-budget diagnostics via runtime/pwa/PwaEngine
 │   │   ├── design_token_docs_runtime_integrator.md # Generate markdown/json/html design-token handoff docs via runtime/design_token_docs/DesignTokenDocsEngine
+│   │   ├── multi_page_runtime_integrator.md #     Materialize Next.js App Router pages, Navigation.tsx, sitemap.ts, robots.ts
+│   │   ├── storybook_runtime_integrator.md  #     Materialize Storybook stories and configuration
+│   │   ├── deploy_runtime_integrator.md     #     Materialize deployment target configuration and dry-run wrapper
+│   │   ├── preview_runtime_integrator.md    #     Materialize dev-server preview, screenshot, QR, and feedback loop
 │   │   ├── project_developer.md          #     Generate project code from architecture manifest
 │   │   ├── git_publish_runtime_integrator.md # Publish generated codebase to GitHub/GitLab
 │   │   └── notification_runtime_integrator.md # Dispatch pipeline completion notifications
-│   ├── observability/                    #   Observation layer (19 agents)
+│   ├── observability/                    #   Observation layer (24 agents)
 │   │   ├── environment_result.md         #     Capture environment state
 │   │   ├── runtime_output.md             #     Capture runtime output
 │   │   ├── file_context.md               #     Capture file changes
@@ -142,9 +155,15 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── cms_audit_agent.md            #     Audit CMS/data-query implementation
 │   │   ├── accessibility_audit_agent.md  #     Audit accessibility/WCAG 2.1 implementation
 │   │   ├── pwa_audit_agent.md            #     Audit PWA manifest, service worker, offline UX, and performance budgets
-│   │   └── design_token_docs_audit_agent.md # Audit design-token documentation completeness and audience fit
-│   ├── self_correction/                  #   Self-correction layer (21 agents)
+│   │   ├── design_token_docs_audit_agent.md # Audit design-token documentation completeness and audience fit
+│   │   ├── multi_page_audit_agent.md     #     Audit multi-page routing, navigation, and SEO metadata
+│   │   ├── storybook_audit_agent.md      #     Audit Storybook coverage and configuration
+│   │   ├── deploy_audit_agent.md         #     Audit deployment readiness and secret safety
+│   │   ├── preview_audit_agent.md        #     Audit preview artifacts and client feedback loop
+│   │   └── gotcha_extractor.md           #     Capture reusable pitfalls and propose skills
+│   ├── self_correction/                  #   Self-correction layer (26 agents)
 │   │   ├── result_validation.md          #     Validate results
+│   │   ├── spec_compliance_validator.md  #     Verify artifacts match approved spec and no early sub-agent runs
 │   │   ├── plan_adjustment.md            #     Adjust plan if needed
 │   │   ├── recursion_or_termination.md   #     Decide: loop or finish
 │   │   ├── assistance_request.md         #     Request human help
@@ -159,6 +178,10 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │   │   ├── accessibility_validator.md    #     Verify WCAG audit results and emit refinement actions
 │   │   ├── pwa_validator.md              #     Verify PWA/performance-budget audit results and emit refinement actions
 │   │   ├── design_token_docs_validator.md # Verify design-token docs completeness and emit refinement actions
+│   │   ├── multi_page_validator.md         #     Verify multi-page routing and SEO metadata
+│   │   ├── storybook_validator.md          #     Verify Storybook coverage and configuration
+│   │   ├── deploy_validator.md             #     Verify deployment readiness and secret safety
+│   │   ├── preview_validator.md            #     Verify preview artifacts and client feedback loop
 │   │   ├── regression_guard.md           #     Cross-iteration regression detector (screenshot, layout, Lighthouse, files)
 │   │   ├── code_review_validator.md      #     Review generated code against brief/manifest and emit fixes
 │   │   ├── diff_patch_applier.md         #     Apply surgical text patches from code review
@@ -171,13 +194,13 @@ Multi-agent AI system with hierarchical safety-first architecture. Central LLM a
 │       ├── action_report.md              #     Report actions taken
 │       └── summary_recommendations.md    #     Summary and recommendations
 │
-└── tools_*/                              # Tool sub-agents (123 agents across 12 categories)
+└── tools_*/                              # Tool sub-agents (124 agents across 12 categories)
     ├── tools_read/read_file/             #   File reading — linear pipeline (10 agents + read_optimizer)
     ├── tools_search/search_code/         #   Code search — diamond pipeline (10 agents + search_optimizer)
     ├── tools_replace/replace_in_file/    #   File editing — safety-gated pipeline (10 agents + edit_optimizer)
     ├── tools_runcom/run_command/         #   Command execution — sandboxed pipeline (10 agents + command_optimizer)
     ├── tools_runtest/run_tests/          #   Test running — framework-dispatch pipeline (10 agents + test_optimizer)
-    ├── tools_terminal/terminal_io/       #   Terminal I/O — session-stateful pipeline (10 agents + terminal_optimizer)
+    ├── tools_terminal/terminal_io/       #   Terminal I/O — session-stateful pipeline (11 agents + terminal_optimizer)
     ├── tools_manangr/project_manager/    #   Project management — analysis-planning pipeline (10 agents + project_optimizer)
     ├── tools_database/database_query/    #   Database queries — query-lifecycle pipeline (10 agents + db_optimizer)
     ├── tools_web/web_request/            #   Web requests — request-lifecycle pipeline (10 agents + web_optimizer)
@@ -317,10 +340,11 @@ User Request
 | orchestrator | 6 |
 | safety-control | 9 |
 | safety-control/mutual_check | 10 |
-| control | 7 |
-| tooll_subagents | 132 |
+| control | 8 |
+| tooll_subagents | 138 |
 | tools_* | 124 |
-| **Total** | **289** |
+| meta/specs | 2 |
+| **Total** | **298** |
 
 ## Naming Convention
 - snake_case filenames
@@ -359,14 +383,14 @@ User Request
 
 ## Implementation Status
 
-All 289 agents/files are fully implemented following the Algorithmic template:
+All 298 agents/files are fully implemented following the Algorithmic template:
 - `main_loop.md` (1) — ReAct head agent orchestrating the full cycle with conditional phase transitions, Lighthouse hard-gate integration, Headroom context-compaction integration, and the client-order brief branch
 - `orchestrator/` (6) — router, dispatcher, pipeline_coordinator, state_manager, api_gateway, message_bus
 - `safety-control/` (9) — input_sanitizer, permission_checker, command_guard, threat_detector, data_leak_preventer, output_reviewer, bias_detector, safety_assessor, content_checker
 - `safety-control/mutual_check/` (10) — audit_logger, action_verifier, consistency_checker, result_validator, performance_monitor, quota_manager, anomaly_detector, quality_assessor, feedback_aggregator, compliance_checker
 - `control/` (7) — file_system_guard, network_guard, resource_monitor, human_oversight, policy_enforcer, scope_manager, input_aggregation
-- `tooll_subagents/` (132) — Full ReAct cycle across 6 phases: user (5 with `design_intake.md` and `client_brief_agent.md`), planning (55 with `project_classifier.md`, `project_architect.md`, `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `premium_design_analyst.md`, `premium_design_system_generator.md`, `anti_slop_validator.md`, `copywriting_agent.md`, `estimation_proposal_agent.md`, `project_starter_agent.md`, `git_publish_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, and the i18n/analytics/auth/CMS/accessibility/PWA/design-token-docs/multi-page/storybook/deploy/preview planners), execution (20 with `project_developer.md`, `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, `design_token_docs_runtime_integrator.md`, `multi_page_runtime_integrator.md`, `storybook_runtime_integrator.md`, `deploy_runtime_integrator.md`, `git_publish_runtime_integrator.md`, `notification_runtime_integrator.md`, and `preview_runtime_integrator.md`), observability (23 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, `design_token_docs_audit_agent.md`, `multi_page_audit_agent.md`, `storybook_audit_agent.md`, `deploy_audit_agent.md`, and `preview_audit_agent.md`), self_correction (25 with `goal_evaluator.md`, `ponytail_review.md`, `regression_guard.md`, `anti_slop_validator.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, `design_token_docs_validator.md`, `multi_page_validator.md`, `storybook_validator.md`, `deploy_validator.md`, `preview_validator.md`, `code_review_validator.md`, `diff_patch_applier.md`, `security_scan_validator.md`, `quality_evaluator_agent.md`, and `cost_audit_agent.md`), result (4)
-- `tools_*` (123) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
+- `tooll_subagents/` (138) — Full ReAct cycle across 6 phases: user (5 with `design_intake.md` and `client_brief_agent.md`), planning (58 with `task_scoping_agent.md`, `spec_approval_gate.md`, `verification_planner.md`, `visual_to_architecture_planner.md`, `project_classifier.md`, `project_architect.md`, `figma_design_analyst.md`, `figma_precise_mode_auditor.md`, `design_to_code_planner.md`, `premium_design_analyst.md`, `premium_design_system_generator.md`, `anti_slop_validator.md`, `copywriting_agent.md`, `estimation_proposal_agent.md`, `project_starter_agent.md`, `git_publish_planner.md`, `backend_spec_bridge.md`, `responsive_composer.md`, `component_registry.md`, `component_mapper.md`, `asset_agent.md`, `image_enrichment_agent.md`, `ponytail_injector.md`, `ponytail_audit.md`, `headroom_injector.md`, `multi_page_planner.md`, `storybook_planner.md`, `deploy_planner.md`, `preview_planner.md`, and the i18n/analytics/auth/CMS/accessibility/PWA/design-token-docs planners), execution (20 with `project_developer.md`, `i18n_runtime_integrator.md`, `i18n_fallback_resolver.md`, `analytics_runtime_integrator.md`, `cookie_consent_blocker.md`, `auth_runtime_integrator.md`, `cms_runtime_integrator.md`, `accessibility_runtime_integrator.md`, `pwa_runtime_integrator.md`, `design_token_docs_runtime_integrator.md`, `multi_page_runtime_integrator.md`, `storybook_runtime_integrator.md`, `deploy_runtime_integrator.md`, `preview_runtime_integrator.md`, `git_publish_runtime_integrator.md`, `notification_runtime_integrator.md`, and `tool_invocation.md`), observability (24 with `headroom_compressor.md`, `headroom_retriever.md`, `memanto_remember.md`, `memanto_recall.md`, `memanto_answer.md`, `mem0_remember.md`, `mem0_recall.md`, `mem0_list.md`, `i18n_audit_agent.md`, `analytics_audit_agent.md`, `auth_audit_agent.md`, `cms_audit_agent.md`, `accessibility_audit_agent.md`, `pwa_audit_agent.md`, `design_token_docs_audit_agent.md`, `multi_page_audit_agent.md`, `storybook_audit_agent.md`, `deploy_audit_agent.md`, `preview_audit_agent.md`, `gotcha_extractor.md`, and `environment_result.md`), self_correction (26 with `spec_compliance_validator.md`, `goal_evaluator.md`, `ponytail_review.md`, `regression_guard.md`, `anti_slop_validator.md`, `i18n_rtl_validator.md`, `i18n_missing_key_guard.md`, `analytics_privacy_validator.md`, `auth_validator.md`, `cms_validator.md`, `accessibility_validator.md`, `pwa_validator.md`, `design_token_docs_validator.md`, `multi_page_validator.md`, `storybook_validator.md`, `deploy_validator.md`, `preview_validator.md`, `code_review_validator.md`, `diff_patch_applier.md`, `security_scan_validator.md`, `quality_evaluator_agent.md`, and `cost_audit_agent.md`), result (5 with `action_report.md`, `modified_files.md`, `solution.md`, `summary_recommendations.md`, and `skill_packager.md`)
+- `tools_*` (124) — 12 categories × 10+ agents each with cross-cutting optimizers, including `tools_browser/headless_automation` for Playwright-based dynamic web automation and `tools_lighthouse/audit` for Lighthouse 100% hard-gate audits
 - `runtime/accessibility/` — deterministic static WCAG 2.1 audit engine (`AccessibilityEngine`) with `AccessibilityConfig`/`AccessibilityResult`, Tailwind/CSS color parsing, contrast calculation, focus/ARIA/keyboard/heading/alt/form-label checks, and optional async browser hook
 - `runtime/pwa/` — deterministic PWA + performance-budget engine (`PwaEngine`) with `PwaConfig`/`PwaResult`, manifest/service worker/offline-page generation, `srcset`/`sizes` image hints, font-subsetting guidance, JS/CSS/image/font/third-party budget diagnostics, and `next.config.js` patching
 - `runtime/design_token_docs/` — deterministic design-token documentation engine (`DesignTokenDocsEngine`) with `DesignTokenDocsConfig`/`DesignTokenDocsResult`; generates `docs/DESIGN_TOKENS.md`, `docs/design_tokens.docs.json`, and optional `docs/design_tokens.html` from `design_tokens.json` and `component_registry.json`
@@ -390,7 +414,7 @@ All 289 agents/files are fully implemented following the Algorithmic template:
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
 - `mcp_servers/mem0_server.py` — lazy MCP wrapper around `runtime/engine/mem0_client.py` exposing `mem0_add`, `mem0_search`, `mem0_get_all`, and `mem0_delete`; degrades to in-memory fallback when `mem0ai` is not installed or the API is unreachable
 
-Zero remaining stubs. All 289 agent specs include Role, Contract, Decision Flow, and Failure Modes.
+Zero remaining stubs. All 298 agent specs include Role, Contract, Decision Flow, and Failure Modes.
 
 ## Runtime / MCP
 
@@ -463,7 +487,7 @@ Optional servers still register their tools in lazy mode, so the planner sees th
 
 ### Cross-Reference Integrity
 
-All 289 agents are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
+All 298 agents/files are wired into a single reference graph. Every agent is reachable from at least one other agent, and no agent references a missing file.
 
 **Test results (2026-07-08):**
 - Broken links: 0 (6 known false positives filtered — `README.md`, `API.md`, `CHANGELOG.md`, `MEMORY.md`, `project_rules.md` are documentation targets, not agents)

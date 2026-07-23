@@ -32,6 +32,7 @@ Structured specification author and approval checkpoint. Gathers the minimum nec
 
 ### Side Effects
 - Persists draft spec and approval state to session store under `approved_spec`
+- If approved, writes a durable spec artifact to `.agent_loop/specs/<session_id>_spec.md` with YAML frontmatter and markdown body
 - Logs every approval event to `audit_logger.md`
 - If approved, stores the spec in long-term memory via `memanto_remember.md` / `mem0_remember.md`
 
@@ -50,7 +51,13 @@ Structured specification author and approval checkpoint. Gathers the minimum nec
    - Explicit approval (`да`, `ok`, `yes`, `продолжай`, `собирай`, `согласен`, `давай`, `+`) → set `spec_status=approved`, generate `approval_token`, `next_action=proceed`, attach `approved_spec`.
    - Rejection or request to change (`нет`, `изменить`, `не так`, `переделай`) → set `spec_status=rejected`, keep draft, ask what to change, `next_action=ask_user`. Do NOT proceed.
    - Silence, evasion, or vague replies such as "сделай как лучше", "на твоё усмотрение", "выглядит ок", "вроде норм", "давай попробуем", "ок" without context → treat as NOT approved. Repeat the approval prompt once; if still vague, set `next_action=escalate_human`.
-8. **Persist approved spec** — on approval, write `approved_spec` to session state and to memory. On rejection, log the rejection reason and stay in draft.
+8. **Persist approved spec** — on approval:
+   - Write `approved_spec` to session state.
+   - Materialize a durable spec artifact at `.agent_loop/specs/<session_id>_spec.md` with:
+     - YAML frontmatter containing `session_id`, `approval_token`, `approved_at` (ISO timestamp), `scope_size`, and `automation_mode`.
+     - Markdown body containing `goal`, `scope` (in/out), `key_decisions`, `deliverables`, `success_criteria`, `human_zones`, `assumptions`, and optionally `verification_plan`.
+   - Store the spec in long-term memory via `memanto_remember.md` / `mem0_remember.md`.
+   - On rejection, log the rejection reason and stay in draft.
 9. **Return** — emit current `spec_status`, `approved_spec`, `questions`, `next_action`, and `response`.
 
 ## Failure Modes

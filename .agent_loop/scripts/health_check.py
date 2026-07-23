@@ -34,7 +34,7 @@ CROSS_REF_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_cross_references.js"
 CONSISTENCY_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_consistency.js"
 COVERAGE_SCRIPT = AGENT_LOOP_DIR / "scripts" / "validate_runtime_coverage.py"
 
-EXPECTED_AGENTS = 294
+EXPECTED_AGENTS = 298
 EXPECTED_MCP_SERVERS = 25
 
 
@@ -143,8 +143,8 @@ def check_mcp_servers() -> dict[str, Any]:
 
 def check_pytest_core() -> dict[str, Any]:
     start = time.perf_counter()
-    # Use default verbosity so pytest prints the final "N passed, M deselected" line.
-    result = run([sys.executable, "-m", "pytest", "-m", "core"], timeout=600)
+    # Run core suite without coverage so this check stays fast and independent.
+    result = run([sys.executable, "-m", "pytest", "-m", "core", "--no-cov"], timeout=600)
     elapsed = time.perf_counter() - start
 
     summary_match = re.search(r"(\d+)\s+passed(?:,\s+(\d+)\s+failed)?", result.stdout)
@@ -160,6 +160,47 @@ def check_pytest_core() -> dict[str, Any]:
         "ok": ok,
         "value": f"{passed} passed" + (f", {failed} failed" if failed else ""),
         "details": f"exit_code={result.returncode}",
+        "elapsed_sec": round(elapsed, 2),
+        "raw": {"stdout": result.stdout, "stderr": result.stderr, "returncode": result.returncode},
+    }
+
+
+def check_pytest_coverage() -> dict[str, Any]:
+    """Full pytest run with coverage threshold enforced via pyproject.toml."""
+    start = time.perf_counter()
+    result = run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--cov=runtime",
+            "--cov=mcp_servers",
+            "--cov=figma-agent-core",
+            "--cov-report=term",
+            "--cov-fail-under=60",
+        ],
+        timeout=1200,
+    )
+    elapsed = time.perf_counter() - start
+
+    summary_match = re.search(r"(\d+)\s+passed(?:,\s+(\d+)\s+failed)?", result.stdout)
+    passed = int(summary_match.group(1)) if summary_match else 0
+    failed = int(summary_match.group(2) or 0) if summary_match else 0
+    if failed == 0 and result.returncode != 0:
+        failed_match = re.search(r"(\d+)\s+failed", result.stdout)
+        failed = int(failed_match.group(1)) if failed_match else 1
+
+    coverage_match = re.search(r"Total coverage:\s+([\d.]+)%", result.stdout)
+    coverage = float(coverage_match.group(1)) if coverage_match else 0.0
+    threshold_reached = coverage >= 60.0
+
+    ok = result.returncode == 0 and passed > 0 and failed == 0 and threshold_reached
+
+    return {
+        "label": "pytest coverage",
+        "ok": ok,
+        "value": f"{coverage:.1f}% coverage" if coverage else "coverage not reported",
+        "details": f"{passed} passed, exit_code={result.returncode}",
         "elapsed_sec": round(elapsed, 2),
         "raw": {"stdout": result.stdout, "stderr": result.stderr, "returncode": result.returncode},
     }
@@ -193,6 +234,10 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
     if tests and not tests["ok"]:
         recs.append("Core pytest suite failing. Run `pytest -m core -v` to identify regressions.")
 
+    cov = next((c for c in checks if c["label"] == "pytest coverage"), None)
+    if cov and not cov["ok"]:
+        recs.append("Coverage target (60%) not met. Run `pytest --cov --cov-fail-under=60` and add tests for uncovered runtime modules.")
+
     if not recs:
         recs.append("All checks healthy. Proceed with next increment.")
 
@@ -202,6 +247,11 @@ def build_recommendations(checks: list[dict[str, Any]]) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Agentic Loop health check")
     parser.add_argument("--json", action="store_true", help="Emit JSON report")
+    parser.add_argument(
+        "--coverage",
+        action="store_true",
+        help="Also run the full pytest suite with 60%% coverage threshold (slower)",
+    )
     args = parser.parse_args()
 
     overall_start = time.perf_counter()
@@ -213,6 +263,8 @@ def main() -> int:
         check_mcp_servers(),
         check_pytest_core(),
     ]
+    if args.coverage:
+        checks.append(check_pytest_coverage())
 
     recommendations = build_recommendations(checks)
     overall_elapsed = time.perf_counter() - overall_start

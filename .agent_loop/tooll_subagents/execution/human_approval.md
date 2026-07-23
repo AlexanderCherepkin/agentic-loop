@@ -9,6 +9,7 @@ Tactical human-in-the-loop gate for specific high-risk tool invocations during e
 - `action_to_approve`: structured description of the tool call requiring approval (tool name, parameters, expected impact, irreversibility flag)
 - `approval_urgency`: enum (`immediate`, `standard`, `batched`) — how quickly approval is needed
 - `approval_context`: why approval is required (policy rule, scope expansion, resource threshold, safety flag, project_rules_update)
+- `automation_mode`: enum (`automate`, `augment`, `human_loop`) — derived from task scoping; `human_loop` forces explicit approval even in non-gated phases
 - `timeout_seconds`: max time to wait for human response
 - `default_on_timeout`: enum (`allow`, `deny`, `defer`) — fallback if no response
 
@@ -36,7 +37,7 @@ Only two phases require human confirmation. All others auto-approve.
 
 ## Decision Flow
 
-1. **Check phase and action type** — if `approval_context.phase` is NOT `interview` and NOT `pre_deploy` AND `approval_context.action_type` is NOT `project_rules_update`, auto-return `approval_status=approved`, `human_decision="auto_approved: non-gated phase"`, log to audit, skip remaining steps.
+1. **Check phase, action type, and automation mode** — if `approval_context.phase` is NOT `interview` and NOT `pre_deploy` AND `approval_context.action_type` is NOT `project_rules_update` AND `automation_mode` is NOT `human_loop`, auto-return `approval_status=approved`, `human_decision="auto_approved: non-gated phase"`, log to audit, skip remaining steps. If `automation_mode=human_loop`, require explicit approval regardless of phase.
 2. **Classify action** — determine if `action_to_approve` matches auto-approval criteria (reversible, sandboxed, within user trust tier, previously approved pattern). `project_rules_update` is never auto-approved.
 3. **Render summary** — generate concise, decision-ready description: what will happen, to what resources, why it matters, and what are the risks.
 4. **Present alternatives** — if applicable, show 1–2 alternative approaches with different risk/cost trade-offs.

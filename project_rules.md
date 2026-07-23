@@ -3,7 +3,7 @@
 ## Scope
 
 This repository implements a multi-agent AI system with hierarchical safety-first architecture.
-It contains 253 agents/files across 6 layers, plus runtime code and MCP servers that expose those agents over JSON-RPC.
+It contains 298 agents/files across 6 layers, plus runtime code and MCP servers that expose those agents over JSON-RPC.
 Any change must preserve the three-circuit safety model (`safety-control → mutual_check → control`) and the ReAct cycle decomposition.
 
 ## Conventions
@@ -128,7 +128,8 @@ The following actions still require explicit human approval:
 - Exposure of the project on local hosting or any network for visualization.
 - Updates to this `project_rules.md` file when the change is not directly ordered by the user.
 
-All other actions — including destructive filesystem operations within the workspace, network egress to configured allow-list destinations, browser automation on trusted domains, CAPTCHA handling, and privilege changes requested by the autonomous bot — are auto-approved inside the autonomous run.
+All other actions — including network egress to configured allow-list destinations, browser automation on trusted domains, CAPTCHA handling, and routine privilege changes requested by the autonomous bot — are auto-approved inside the autonomous run.
+- Destructive filesystem operations (`rm -rf`, `rmdir`, `del /s`, `mkfs`, `dd`, wiping files) require explicit human approval regardless of phase.
 - Any operation explicitly flagged as critical by `control/human_oversight.md`.
 
 ## Internal Agent / Framework Exposure Restriction

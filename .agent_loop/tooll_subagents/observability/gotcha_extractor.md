@@ -55,7 +55,7 @@ Observability agent that watches successful and partially-successful project exe
 6. **Decide recommendation**:
    - `ignore` — no useful gotchas found.
    - `store_only` — useful but not reusable enough for a skill; persist to memory.
-   - `propose_skill` — reusable pattern observed ≥ 2 times; propose to the user and create a skill only if explicitly approved. Do not write the skill file without approval.
+   - `propose_skill` — reusable pattern observed ≥ 2 times; propose to the user and route to `tooll_subagents/result/skill_packager.md` for materialization only if explicitly approved. Do not write the skill file without approval.
 7. **Return** — emit gotchas, candidate, memories, and recommendation.
 
 ## Failure Modes

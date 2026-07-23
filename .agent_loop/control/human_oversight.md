@@ -8,6 +8,7 @@ Strategic human-in-the-loop gate that escalates high-stakes, ambiguous, or novel
 ### Receives
 - `escalation_request`: structured case containing context, proposed action, risk summary, and urgency
 - `escalation_reason`: enum (`high_risk`, `policy_conflict`, `novel_scenario`, `autonomy_limit`, `compliance_flag`, `user_request`)
+- `automation_mode`: enum (`none`, `augment`, `automate`, `human_loop`) from `task_scoping_agent.md`
 - `timeout_config`: max seconds to wait for human response
 - `fallback_policy`: enum (`block`, `defer`, `escalate_chain`, `auto_resolve_with_caution`) if human unavailable
 
@@ -34,7 +35,7 @@ Only two phases require human confirmation. All others auto-resolve.
 
 ## Decision Flow
 
-1. **Check phase** — if `escalation_context.phase` is NOT `interview` and NOT `pre_deploy`, auto-return `oversight_status=approved`, `human_decision="auto_resolved: non-gated phase"`, log to audit, skip remaining steps.
+1. **Check phase and automation mode** — if `escalation_context.phase` is NOT `interview` and NOT `pre_deploy` AND `automation_mode` is NOT `human_loop`, auto-return `oversight_status=approved`, `human_decision="auto_resolved: non-gated phase"`, log to audit, skip remaining steps. If `automation_mode=human_loop`, require explicit human approval regardless of phase.
 2. **Assess urgency** — classify `escalation_reason` into response-time buckets (critical = immediate, standard = 5 min, low = 30 min).
 3. **Select channel** — route to on-call operator, domain expert queue, or product owner based on reason and domain.
 4. **Render case** — present concise, decision-ready summary: what, why, risks, alternatives, recommended action.

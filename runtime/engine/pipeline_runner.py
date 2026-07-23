@@ -120,6 +120,12 @@ class PhaseTransitionManager:
             )
         if recommendation == "reduce_scope":
             return PhaseTransition(next_phase="planning", reason="Scope reduced; replan before execution")
+        plan = state.get("plan", {})
+        if plan.get("spec_scope_aligned") is False:
+            return PhaseTransition(
+                next_phase="self_correction",
+                reason=f"Plan deviates from approved spec scope: {plan.get('spec_alignment_reason', 'unknown')}",
+            )
         hint = self._get(state, "cost_risk_assessment.next_phase_hint")
         if hint in ("execution", "planning", "result"):
             return PhaseTransition(next_phase=hint, reason="Explicit next_phase_hint from cost_risk_assessment")
@@ -541,6 +547,14 @@ class PipelineRunner:
             )
             return network_check
 
+        safety_check = self._check_safety_for_tool(tool_name, arguments)
+        if safety_check:
+            self._audit_logger.log_safety_blocked(
+                f"mcp:{tool_name}", "", self._current_audit_anchor or "",
+                safety_check.get("error", "safety chain blocked"),
+            )
+            return safety_check
+
         mcp_agent = f"mcp:{tool_name}"
         self._audit_logger.log_tool_invoked(mcp_agent, "", self._current_audit_anchor or "", arguments)
         t0 = time.perf_counter()
@@ -608,6 +622,22 @@ class PipelineRunner:
                     "guard_blocked": True,
                     "guard_result": result.to_dict(),
                 }
+        return None
+
+    def _check_safety_for_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any] | None:
+        """Return a guarded error dict if the tool or its inner command trigger the safety chain."""
+        if isinstance(arguments, dict) and isinstance(arguments.get("command"), str):
+            safety_result = self._safety_chain.check_command(arguments["command"])
+        else:
+            safety_result = self._safety_chain.check_command(tool_name, arguments)
+        if safety_result.verdict in (SafetyVerdict.ABORT_AND_REPORT, SafetyVerdict.RESUME_WITH_LIMITS, SafetyVerdict.ESCALATE_TO_HUMAN):
+            reason = safety_result.triggered_rules[0].rule.description if safety_result.triggered_rules else "deterministic safety guardrail"
+            return {
+                "error": f"Safety chain blocked {tool_name}: {reason}",
+                "is_error": True,
+                "guard_blocked": True,
+                "safety_result": safety_result,
+            }
         return None
 
     def get_mcp_categories(self) -> list[str]:
@@ -796,6 +826,12 @@ class PipelineRunner:
                         TerminationStatus.SUCCESS,
                         metrics, audit_anchor, trace, session_id,
                     )
+
+            # Materialize approved spec as a durable workspace artifact
+            if approved_spec and spec_status == "approved":
+                spec_path = self._write_spec_artifact(session_id, approved_spec)
+                if spec_path:
+                    approved_spec["spec_artifact_path"] = str(spec_path)
 
             # Phase 3: Plan
             await self._publish_progress("phase.start", {"phase": "planning", "session_id": session_id})
@@ -1065,15 +1101,81 @@ class PipelineRunner:
             "response": "\n".join(questions) if next_action == "ask_user" else "",
         }
 
+    def _write_spec_artifact(self, session_id: str, approved_spec: dict[str, Any]) -> Path | None:
+        """Materialize an approved spec as a durable markdown artifact.
+
+        The file is written inside `.agent_loop/specs/` so it is covered by the
+        workspace filesystem guard and remains auditable outside session state.
+        """
+        if not approved_spec:
+            return None
+        specs_dir = Path(self.workspace) / ".agent_loop" / "specs"
+        try:
+            specs_dir.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            return None
+        spec_path = specs_dir / f"{session_id}_spec.md"
+        now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        frontmatter = {
+            "session_id": session_id,
+            "approval_token": approved_spec.get("approval_token") or "",
+            "approved_at": now,
+            "scope_size": approved_spec.get("scope_size", "unknown"),
+            "automation_mode": approved_spec.get("automation_mode", "none"),
+        }
+        lines = ["---"]
+        for key, value in frontmatter.items():
+            lines.append(f"{key}: {value}")
+        lines.extend(["---", ""])
+
+        def _section(title: str, content: Any) -> None:
+            lines.append(f"## {title}")
+            if isinstance(content, list):
+                for item in content:
+                    lines.append(f"- {item}")
+            elif isinstance(content, dict):
+                for key, value in content.items():
+                    lines.append(f"- **{key}**: {value}")
+            elif content:
+                lines.append(str(content))
+            else:
+                lines.append("_not specified_")
+            lines.append("")
+
+        _section("Goal", approved_spec.get("goal"))
+        _section("Scope", approved_spec.get("scope"))
+        _section("Key decisions", approved_spec.get("key_decisions"))
+        _section("Deliverables", approved_spec.get("deliverables"))
+        _section("Success criteria", approved_spec.get("success_criteria"))
+        _section("Human zones", approved_spec.get("human_zones"))
+        _section("Assumptions", approved_spec.get("assumptions"))
+        _section("Verification plan", approved_spec.get("verification_plan"))
+
+        try:
+            spec_path.write_text("\n".join(lines), encoding="utf-8")
+            self._audit_logger.log_agent_completed(
+                "spec_artifact_writer", session_id,
+                self._current_audit_anchor or session_id,
+                {"spec_path": str(spec_path)}, 0.0,
+            )
+            return spec_path
+        except Exception as e:
+            self._audit_logger.log_agent_failed(
+                "spec_artifact_writer", session_id,
+                self._current_audit_anchor or session_id, str(e),
+            )
+            return None
+
     async def _run_design_pipeline(self, design_descriptor: dict[str, Any],
                                    session_id: str) -> dict[str, Any]:
         """Trigger the full Figma-to-code pipeline via MCP figma_run_pipeline."""
         source_value = design_descriptor.get("source_value", "")
         backend_spec = design_descriptor.get("backend_spec") or {}
         image_enrichment = design_descriptor.get("image_enrichment") or {}
+        dry_run = bool(design_descriptor.get("dry_run", False))
         args: dict[str, Any] = {
             "output_name": session_id[:8],
-            "dry_run": False,
+            "dry_run": dry_run,
             "figma_url": source_value if design_descriptor.get("design_source") == "figma_url" else "",
         }
         file_key = self._extract_figma_file_key(source_value)
@@ -1192,12 +1294,85 @@ class PipelineRunner:
             await self._run_conditional_agents(groups, plan, trace, metrics, "planning")
 
         # Spec-compliance: if a plan deviates from approved_spec.scope, mark it for re-approval.
-        if approved_spec and "scope" in approved_spec:
-            plan_scope = plan.get("scope") or plan.get("task_graph", {})
-            approved_scope = approved_spec.get("scope", [])
-            # TODO: implement structured scope comparison once task_graph schema is stable.
-            plan["spec_scope_aligned"] = True
+        if approved_spec:
+            aligned, misaligned, reason = self._is_plan_aligned_with_spec(plan, approved_spec)
+            plan["spec_scope_aligned"] = aligned
+            plan["spec_misaligned_tasks"] = misaligned
+            plan["spec_alignment_reason"] = reason
+            if not aligned:
+                self._audit_logger.log_safety_blocked(
+                    "plan_spec_alignment", session_id, self._current_audit_anchor or session_id,
+                    reason,
+                )
         return plan
+
+    def _is_plan_aligned_with_spec(
+        self, plan: dict[str, Any], approved_spec: dict[str, Any],
+    ) -> tuple[bool, list[str], str]:
+        """Compare the generated plan against the approved spec scope.
+
+        Returns (aligned, misaligned_tasks, reason). A plan is aligned when every
+        planned task or deliverable is covered by the approved spec scope and
+        no approved deliverable is completely missing from the plan.
+        """
+        approved_scope = approved_spec.get("scope", [])
+        if not approved_scope:
+            return True, [], "no approved scope to compare"
+
+        approved_deliverables = {d.lower().strip() for d in approved_spec.get("deliverables", []) if isinstance(d, str)}
+        approved_scope_items = {s.lower().strip() for s in approved_scope if isinstance(s, str)}
+        approved_keywords = approved_scope_items | approved_deliverables
+
+        task_graph = plan.get("task_graph") or plan.get("tasks") or {}
+        tasks: list[str] = []
+        if isinstance(task_graph, list):
+            tasks = [str(t) for t in task_graph]
+        elif isinstance(task_graph, dict):
+            for value in task_graph.values():
+                if isinstance(value, list):
+                    tasks.extend(str(v) for v in value)
+                elif isinstance(value, dict):
+                    tasks.extend(str(v) for v in value.values() if not isinstance(v, dict))
+                else:
+                    tasks.append(str(value))
+
+        # If task_graph is empty but the plan carries module flags, derive tasks from flags.
+        if not tasks:
+            for flag, active in (plan.get("flags") or {}).items():
+                if active and isinstance(active, bool):
+                    tasks.append(flag.replace("needs_", "").replace("_", " "))
+
+        misaligned: list[str] = []
+        for task in tasks:
+            task_lower = task.lower().strip()
+            if not task_lower:
+                continue
+            if any(keyword in task_lower or task_lower in keyword for keyword in approved_keywords):
+                continue
+            misaligned.append(task)
+
+        # Detect missing approved deliverables if the plan has explicit tasks/flags.
+        if tasks:
+            planned_keywords: set[str] = set()
+            for task in tasks:
+                task_lower = task.lower().strip()
+                planned_keywords.update(task_lower.split())
+                planned_keywords.add(task_lower)
+            missing_deliverables = [
+                d for d in approved_spec.get("deliverables", [])
+                if isinstance(d, str) and d.lower().strip() not in planned_keywords
+                and not any(word in planned_keywords for word in d.lower().strip().split())
+            ]
+            if missing_deliverables:
+                if misaligned:
+                    reason = f"plan contains {len(misaligned)} tasks outside approved scope and omits approved deliverables: {missing_deliverables[:3]}"
+                else:
+                    reason = f"plan omits approved deliverables: {missing_deliverables[:3]}"
+                return False, misaligned, reason
+
+        if misaligned:
+            return False, misaligned, f"plan contains tasks outside approved scope: {misaligned[:3]}"
+        return True, [], "plan aligns with approved spec scope"
 
 
     async def _run_phase(self, phase: str, state: dict[str, Any],
@@ -1361,6 +1536,7 @@ class PipelineRunner:
                 "goal_evaluation": goal_evaluation,
                 "iteration_count": state.get("iteration", 0),
                 "max_iterations": self._max_iterations,
+                "plan": state.get("plan", {}),
             },
             trace, "validation", metrics,
         )

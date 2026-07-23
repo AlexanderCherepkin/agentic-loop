@@ -13,8 +13,12 @@ function getAllMdFiles(dir, list = []) {
   const items = fs.readdirSync(dir, { withFileTypes: true });
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) getAllMdFiles(fullPath, list);
-    else if (item.name.endsWith('.md')) list.push(fullPath);
+    if (item.isDirectory()) {
+      if (item.name === 'specs') continue;
+      getAllMdFiles(fullPath, list);
+    } else if (item.name.endsWith('.md')) {
+      list.push(fullPath);
+    }
   }
   return list;
 }
@@ -65,7 +69,7 @@ function main() {
   }
 
   // Known false positives: documentation target files (not agents)
-  const knownFalsePositives = ['README', 'API', 'CHANGELOG', 'MEMORY', 'project_rules', 'DESIGN'];
+  const knownFalsePositives = ['README', 'API', 'CHANGELOG', 'MEMORY', 'project_rules', 'DESIGN', '_spec', 'SKILL'];
   const docFiles = ['ARCHITECTURE.md', 'TECHNICAL_ASSIGNMENT.md', 'CLAUDE.md'];
   const filteredBroken = broken.filter(b => {
     if (knownFalsePositives.includes(b.to)) return false;

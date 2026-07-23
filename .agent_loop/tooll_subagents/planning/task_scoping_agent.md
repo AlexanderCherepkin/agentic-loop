@@ -17,9 +17,12 @@ First planning-layer gate that classifies the incoming task by **size and uncert
 - `scope_size`: enum (`trivial`, `medium`, `large`)
 - `uncertainty_level`: enum (`low`, `medium`, `high`)
 - `interview_depth`: enum (`none`, `short`, `full`) — how many clarifying questions are justified
+- `max_questions`: integer — hard cap on clarifying questions (0 / 3 / 8)
 - `needs_spec`: boolean — whether an approved written spec is required before sub-agents run
 - `needs_sub_agents`: boolean — whether parallel/sequential sub-agent delegation is expected
-- `rationale`: string — why this size was chosen
+- `human_in_the_loop_required`: boolean — true when the task involves automation, irreversible actions, or high blast-radius
+- `automation_mode`: enum (`none`, `augment`, `automate`, `human_loop`) — classification of `automate this` requests per spec-pilot methodology
+- `rationale`: string — why this size and automation_mode were chosen
 - `assumptions`: list[str] — default assumptions that will be used if the user does not override them
 
 ### Side Effects
@@ -39,7 +42,13 @@ First planning-layer gate that classifies the incoming task by **size and uncert
 3. **Detect medium tasks** — classify as `medium` when the request is a single feature or cohesive change with 2–4 non-obvious decisions (e.g., add a form with unknown fields, add one page with routing, configure a new integration). Set `scope_size=medium`, `interview_depth=short`, `needs_spec=true`, `needs_sub_agents=true`, `max_questions=3`.
 4. **Detect large tasks** — classify as `large` when the request spans multiple subsystems, involves client deliverables (landing/SaaS/e-commerce site, design system, multi-page app), or has high ambiguity. Set `scope_size=large`, `interview_depth=full`, `needs_spec=true`, `needs_sub_agents=true`, `max_questions=8`.
 5. **Prefer higher scope when in doubt** — if the task sits on the boundary, choose the larger scope. The user can explicitly downgrade with phrases such as "это мелочь, не гоняй порядок" or "тривиально". Without such explicit downgrade, never lower the scope.
-6. **Handle `automate this` / `автоматизируй`** — if the raw request contains "автоматизируй", "automate this", "сделай автоматизацию", or "make it automatic": bump `scope_size` one level (medium→large, large stays large), set `needs_spec=true`, set `human_in_the_loop_required=true`, and add to `assumptions`: "Автоматизация затрагивает действия, где требуется человеческое подтверждение; финальное решение о полной автоматизации принимается пользователем."
+6. **Handle `automate this` / `автоматизируй`** — if the raw request contains "автоматизируй", "automate this", "сделай автоматизацию", or "make it automatic":
+   - Bump `scope_size` one level (medium→large, large stays large), set `needs_spec=true`, set `human_in_the_loop_required=true`.
+   - Classify `automation_mode` using the augment vs automate matrix:
+     - `human_loop` first — if the implied workflow touches payment, sending money, data deletion, database migrations, bulk emails, deploy/publish, `git push --force`, `rm -rf`, production API keys/secrets, production webhooks, or any irreversible/high-blast-radius action. Add to `assumptions`: "Автоматизация затрагивает необратимые или высокорисковые действия — человек остаётся в контуре контроля; полная автоматизация недопустима."
+     - `augment` — if the workflow requires taste, judgment, ambiguous criteria, creative decisions, or cannot be measured deterministically (e.g., "сделай красиво", "подбери премиум-стиль", "напиши убедительный текст"). Add to `assumptions`: "Автоматизация возможна только как augmentation: система генерирует варианты, но финальный выбор остаётся за человеком."
+     - `automate` — if the workflow is repeatable ≥2 times, has a deterministic success metric, low blast-radius, and no required human taste (e.g., regenerate `sitemap.ts` after content changes, run Lighthouse on every build, patch `next.config.js` with known keys). Add to `assumptions`: "Автоматизация измерима и повторяема — может быть выполнена автоматически по спеке с verify-before-handoff."
+   - If the signal is present but classification is uncertain, default to `augment` (never default to `automate`).
 7. **Infer uncertainty** — `uncertainty_level=high` if the request contains vague phrases such as "лучше", "как-нибудь", "подумай", "премиум", "красиво" without concrete criteria; otherwise derive from the number of unresolved decisions.
 8. **Emit assumptions** — for every missing but inferable decision, state the default that will be used unless the user overrides it.
 9. **Return** — emit scope verdict, `max_questions`, rationale, and session state updates.
