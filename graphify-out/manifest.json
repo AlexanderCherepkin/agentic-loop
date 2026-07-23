@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "mcp_servers/bootstrap.py": {
-    "mtime": 1784308257.0888374,
-    "ast_hash": "5df53bf70b504d3770f232aa3eaeff6c",
+    "mtime": 1784834354.0334456,
+    "ast_hash": "d4a4aacf2282f732c5af10c39624c2e3",
     "semantic_hash": ""
   },
   "mcp_servers/database_server.py": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "mcp_servers/registry.py": {
-    "mtime": 1783017496.0,
-    "ast_hash": "9f244638746ac427c4d3bbf68c60f4d5",
+    "mtime": 1784834358.6719382,
+    "ast_hash": "0853b3eddc04968bffd154fa6ccea6ff",
     "semantic_hash": ""
   },
   "mcp_servers/replace_server.py": {
@@ -185,8 +185,8 @@
     "semantic_hash": ""
   },
   "runtime/__init__.py": {
-    "mtime": 1784643717.6970932,
-    "ast_hash": "6e3d9684412085d376c22bf2c20b1f97",
+    "mtime": 1784832575.3650265,
+    "ast_hash": "736113af0fde748ada131c7b35c74233",
     "semantic_hash": ""
   },
   "runtime/cli.py": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/ARCHITECTURE.md": {
-    "mtime": 1784818355.81468,
-    "ast_hash": "961c16af7ad9f3d8c1626a6cd333ae50",
+    "mtime": 1784833258.1839998,
+    "ast_hash": "3e1a524b644aa24081c162ff944470f1",
     "semantic_hash": ""
   },
   ".agent_loop/control/file_system_guard.md": {
@@ -620,8 +620,8 @@
     "semantic_hash": "2a39110d6970f5d07f80f35f689337b8"
   },
   ".agent_loop/tooll_subagents/planning/tool_plan_selection.md": {
-    "mtime": 1784315056.308333,
-    "ast_hash": "026bb8b0daf51cf3c32b8526f089cadb",
+    "mtime": 1784835501.776247,
+    "ast_hash": "4d926102e1931761a10cd0f76e859da0",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/result/action_report.md": {
@@ -660,8 +660,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/self_correction/result_validation.md": {
-    "mtime": 1784818000.5550084,
-    "ast_hash": "051edcb8aa01e9e84eb9c6dad985b6ea",
+    "mtime": 1784834306.3221054,
+    "ast_hash": "2714b3cf621dc3ef53b6704323ad54c4",
     "semantic_hash": ""
   },
   ".agent_loop/tooll_subagents/user/context.md": {
@@ -1310,8 +1310,8 @@
     "semantic_hash": "752aa83aa64361ac32860f882dcff932"
   },
   "CLAUDE.md": {
-    "mtime": 1784818387.1781566,
-    "ast_hash": "3de42352a40d98c6bfa1ecc4a30a11bb",
+    "mtime": 1784833204.0028112,
+    "ast_hash": "ce019d18f9d23e87544d995f35fadba7",
     "semantic_hash": ""
   },
   "runtime/requirements.txt": {
@@ -1325,8 +1325,8 @@
     "semantic_hash": ""
   },
   "project_rules.md": {
-    "mtime": 1784818321.2376661,
-    "ast_hash": "e6944a80700bfc91f5b7d1b9e6008ecb",
+    "mtime": 1784832579.1386619,
+    "ast_hash": "6a91cb1f58272bc1c1159ea8f40c90a3",
     "semantic_hash": ""
   },
   "mcp_servers/browser_server.py": {
@@ -1860,8 +1860,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1784830450.1431086,
-    "ast_hash": "639b8f7350b49c95ff39b30336358b46",
+    "mtime": 1784832333.708071,
+    "ast_hash": "0c73cee5c3007e9289bbb2eeed1cc691",
     "semantic_hash": ""
   },
   "figma-agent-core/figma_http_client.py": {
@@ -2135,8 +2135,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/scripts/health_check.py": {
-    "mtime": 1784818507.8431087,
-    "ast_hash": "c606d725cf7576a709c1cf9bc3b4b11d",
+    "mtime": 1784833270.9767056,
+    "ast_hash": "5c6829cd2e4168dae7b626c588afbee5",
     "semantic_hash": ""
   },
   "runtime/observability/resource_monitor.py": {
@@ -2755,8 +2755,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/scripts/validate_runtime_coverage.py": {
-    "mtime": 1784818608.3457541,
-    "ast_hash": "27061436bab446bc09062e32d3b0635c",
+    "mtime": 1784833034.6590886,
+    "ast_hash": "4eef7ed68e1f5faa36fe03cdee02dcc8",
     "semantic_hash": ""
   },
   "pyproject.toml": {
@@ -2765,8 +2765,8 @@
     "semantic_hash": ""
   },
   "runtime/engine/agent_invocation_map.py": {
-    "mtime": 1784818278.091257,
-    "ast_hash": "391f7893186da903f7c8275f6d38697a",
+    "mtime": 1784834391.9799242,
+    "ast_hash": "0bae28389c34e30b11c3f90061f31563",
     "semantic_hash": ""
   },
   "tests/runtime/test_runtime_coverage.py": {
@@ -4010,8 +4010,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1784818321.7495668,
-    "ast_hash": "c99e15c145d7afdee363ef7241c191f7",
+    "mtime": 1784832582.565658,
+    "ast_hash": "57984ae868af6a2781871ce59704eb39",
     "semantic_hash": ""
   },
   "tests/runtime/test_safety_chain.py": {
@@ -4435,8 +4435,8 @@
     "semantic_hash": ""
   },
   ".agent_loop/TECHNICAL.md": {
-    "mtime": 1784818434.3367796,
-    "ast_hash": "0455f67bc2450ce37dd05f92175d06cd",
+    "mtime": 1784832776.4842992,
+    "ast_hash": "ba541b14f755d2346a1390a6521a5a9c",
     "semantic_hash": ""
   },
   ".agent_loop/specs/15275ce438b94094a8694a2f173c6dd8_spec.md": {
@@ -4512,6 +4512,166 @@
   ".agent_loop/specs/c5702c203a514251b63f6f59d918b1e5_spec.md": {
     "mtime": 1784822172.04047,
     "ast_hash": "62bd412d156f34538a155c895dd9edc1",
+    "semantic_hash": ""
+  },
+  "mcp_servers/hermes_memory_server.py": {
+    "mtime": 1784834292.3956785,
+    "ast_hash": "d67103caf26280cbc7c333987c97c235",
+    "semantic_hash": ""
+  },
+  "runtime/engine/hermes_memory_client.py": {
+    "mtime": 1784834576.895427,
+    "ast_hash": "870a38cb851499a843dffe2e95c135bc",
+    "semantic_hash": ""
+  },
+  "runtime/temporal_memory/__init__.py": {
+    "mtime": 1784834150.3404617,
+    "ast_hash": "9f863b0669e40c2ceb390f0a95a49783",
+    "semantic_hash": ""
+  },
+  "runtime/temporal_memory/config.py": {
+    "mtime": 1784834106.043759,
+    "ast_hash": "4e6112325dff8746b7cd5216d62bd820",
+    "semantic_hash": ""
+  },
+  "runtime/temporal_memory/engine.py": {
+    "mtime": 1784834634.0527227,
+    "ast_hash": "e5dc9a5dae6439ab4ab11ac0ccf3f53e",
+    "semantic_hash": ""
+  },
+  "runtime/temporal_memory/result.py": {
+    "mtime": 1784834110.6537037,
+    "ast_hash": "6496071036924b3e72022c8ea90cfb21",
+    "semantic_hash": ""
+  },
+  "tests/mcp/test_hermes_memory_server.py": {
+    "mtime": 1784834587.9364288,
+    "ast_hash": "0c138c6466d5dc3995c9a2db0e26c86d",
+    "semantic_hash": ""
+  },
+  "tests/observability/test_feedback_pipeline.py": {
+    "mtime": 1784834335.865869,
+    "ast_hash": "d1b8a5bebb063b9ac749360c1af1058e",
+    "semantic_hash": ""
+  },
+  "tests/runtime/test_project_starter.py": {
+    "mtime": 1784831234.2571354,
+    "ast_hash": "6f52848d330c33c32e89a84b6f13f993",
+    "semantic_hash": ""
+  },
+  "tests/runtime/test_quality_evaluation.py": {
+    "mtime": 1784831187.4031074,
+    "ast_hash": "0b81186252e3b6307c38ae3f121856d9",
+    "semantic_hash": ""
+  },
+  "tests/runtime/test_web_project_agents.py": {
+    "mtime": 1784831227.248911,
+    "ast_hash": "dce8d2e888720d19bd78ea4f92be929c",
+    "semantic_hash": ""
+  },
+  "tests/temporal_memory/test_engine.py": {
+    "mtime": 1784834316.3647923,
+    "ast_hash": "d6741128050fbc180d78a0a7b5bab9e6",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/381cb1e8ee84449282aed019d3c5f6f6_spec.md": {
+    "mtime": 1784831640.1894164,
+    "ast_hash": "2a40331a574b0dd50764e6ee25f8e516",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/402507ac1b2645b6ab859db72e88a20b_spec.md": {
+    "mtime": 1784831406.2549293,
+    "ast_hash": "e7ed832c66a4cafefec2154bf375d8f1",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/551f9c687d6945b8805f1a02dd82fcf8_spec.md": {
+    "mtime": 1784833393.6416237,
+    "ast_hash": "6be8bbab5fbc917722ca8d99029c9d76",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/5a42868953dc41b3beddf87fb9d59340_spec.md": {
+    "mtime": 1784831824.564938,
+    "ast_hash": "1a40ce08702d8c50e2d955395fc26720",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/9009c01a914642758a69a11ba1871639_spec.md": {
+    "mtime": 1784831969.7908669,
+    "ast_hash": "02bf83e9877da3c731aeb3d97729c79e",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/b38502c429574f0fa13c7f1c844c7ca6_spec.md": {
+    "mtime": 1784831298.4627428,
+    "ast_hash": "1b7a3e74a88711fc9cdcf3c16d903f61",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/b56d5eff87414cac9e6b393e93d8a0da_spec.md": {
+    "mtime": 1784830854.9736955,
+    "ast_hash": "4568ca7226f6b453223a644a62d4ceb7",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/c1b97d22c08d4d9ebb55194c63f8456b_spec.md": {
+    "mtime": 1784831109.394196,
+    "ast_hash": "a9e1304c27977254a5c03099dbd53902",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/c8ef79cd9e8045cfa075ad374c0cc0cd_spec.md": {
+    "mtime": 1784834988.1087923,
+    "ast_hash": "0e3e179fd33e57be8f25a6264c988df7",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/cc5403c06d93404ab493fcd93e44eebb_spec.md": {
+    "mtime": 1784831522.708405,
+    "ast_hash": "ab796209799c2795290b13743f3e3005",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/ed567adc77df4c628e11b6f24a59a9b8_spec.md": {
+    "mtime": 1784834777.6426704,
+    "ast_hash": "588f181766eedecbd7cbfa25b89c8431",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/memory_architecture_upgrade_spec.md": {
+    "mtime": 1784833989.1052716,
+    "ast_hash": "1f222538884956988533c8fe10811eb5",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/execution/temporal_memory_runtime_integrator.md": {
+    "mtime": 1784834230.0754974,
+    "ast_hash": "40af424596f1cf920655a07cd25e6f06",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/observability/feedback_collector.md": {
+    "mtime": 1784834245.26137,
+    "ast_hash": "a69df5049a5719eda9627735cfd71dd4",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/observability/feedback_recall.md": {
+    "mtime": 1784834258.0886385,
+    "ast_hash": "8b32437b3ac2eac195488f0aea442830",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/observability/feedback_writer.md": {
+    "mtime": 1784834251.6343765,
+    "ast_hash": "28570f5a6cc3309b87458f2ee99ebee1",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/observability/temporal_memory_audit_agent.md": {
+    "mtime": 1784834237.3561115,
+    "ast_hash": "e8b23419333588f98b5dd012eff27f79",
+    "semantic_hash": ""
+  },
+  ".agent_loop/tooll_subagents/planning/temporal_memory_planner.md": {
+    "mtime": 1784834220.4811006,
+    "ast_hash": "cca70c7e2329c755a0aa988874ac0440",
+    "semantic_hash": ""
+  },
+  "memory/4-tier-memory-architecture.md": {
+    "mtime": 1784834405.0938005,
+    "ast_hash": "fb26b959585842073402533e54da6571",
+    "semantic_hash": ""
+  },
+  ".agent_loop/specs/f90f587275ec44c09977e6adbf603087_spec.md": {
+    "mtime": 1784835360.0673225,
+    "ast_hash": "890ef209da7503078775760b3d2e9b97",
     "semantic_hash": ""
   }
 }

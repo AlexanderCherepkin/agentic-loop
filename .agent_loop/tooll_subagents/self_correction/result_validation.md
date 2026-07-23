@@ -122,7 +122,11 @@ Post-execution verification agent that checks whether the observed outcomes matc
     - If `verdict.pass=false` with a concrete reason, set `validation_status=needs_refinement`, append the reason to `gap_analysis`, and set `retry_recommended=true` when `iteration_count < max_iterations`.
     - If `verdict.confidence < 0.5`, treat the evaluator as uncertain: keep current `validation_status`, set `retry_recommended=true`, and request more evidence on next cycle.
 15. **Determine retry recommendation** — `retry_recommended=true` if `partial` or `needs_refinement` and root cause appears addressable (missing dependency, typo, single test failure, layout tweak, over-engineering cut); `false` if `failed` due to fundamental mismatch or `inconclusive`.
-16. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation, escalation flag, goal_evaluation summary, `lighthouse_status`, `adversarial_verdicts`, and refinement actions.
+16. **Emit Reflexion feedback payload** — if `validation_status` is `failed`, `needs_refinement`, or `partial`:
+    - Build a `feedback_payload` containing `validation_status`, `gap_analysis`, `refinement_actions`, `iteration_count`, `audit_anchor`, and `original_request` summary.
+    - Route the payload to `tooll_subagents/observability/feedback_collector.md` so the failure can be turned into a durable `feedback_*.md` note.
+    - If the same failure pattern appears in ≥ 2 prior feedback notes, escalate a summary to `tooll_subagents/observability/gotcha_extractor.md` for skill packaging review.
+17. **Return** — emit status, checklist, gap analysis, confidence, retry recommendation, escalation flag, goal_evaluation summary, `lighthouse_status`, `adversarial_verdicts`, `refinement_actions`, and `feedback_payload` when failures occurred.
 
 ## Failure Modes
 

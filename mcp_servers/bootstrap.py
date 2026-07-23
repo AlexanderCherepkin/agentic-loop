@@ -43,6 +43,7 @@ from .security_scanner_server import SecurityScannerMCPServer
 from .git_publisher_server import GitPublisherMCPServer
 from .cost_tracking_server import CostTrackingMCPServer
 from .notification_server import NotificationMCPServer
+from .hermes_memory_server import HermesMemoryMCPServer
 
 
 def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPServer, list[dict[str, Any]]]:
@@ -73,6 +74,7 @@ def _build_server(category: str, root: Path, eager: bool = True) -> tuple[MCPSer
         "git_publisher": GitPublisherMCPServer,
         "cost_tracking": CostTrackingMCPServer,
         "notifications": NotificationMCPServer,
+        "hermes_memory": HermesMemoryMCPServer,
     }
     cls = constructors[category]
     server = cls(str(root))
@@ -188,6 +190,13 @@ CATEGORY_TOOLS: dict[str, list[str]] = {
     ],
     "notifications": [
         "dispatch_notification",
+    ],
+    "hermes_memory": [
+        "hermes_memory_list",
+        "hermes_memory_read",
+        "hermes_memory_write",
+        "hermes_memory_search",
+        "hermes_journey_query",
     ],
 }
 
@@ -400,6 +409,13 @@ async def test_all_servers(registry: MCPRegistry):
     if notify:
         r = await notify.call_tool("dispatch_notification", {"project_id": "test", "status": "completed"})
         results["notifications"] = not r.is_error
+
+    # Test Hermes memory server (degraded is acceptable if Hermes is not installed)
+    hermes = registry.get_server("hermes_memory")
+    if hermes:
+        r = await hermes.call_tool("hermes_memory_list", {"limit": 5})
+        text = str(r.content)
+        results["hermes_memory"] = "error" not in text or "degraded" in text
 
     return results
 

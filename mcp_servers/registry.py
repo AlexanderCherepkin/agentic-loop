@@ -48,6 +48,7 @@ class MCPRegistry:
         "headroom": "Headroom context compression pipeline",
         "memanto": "Memanto semantic memory pipeline",
         "mem0": "Mem0 long-term memory pipeline",
+        "hermes_memory": "Hermes local memory bridge pipeline",
     }
 
     def __init__(self):

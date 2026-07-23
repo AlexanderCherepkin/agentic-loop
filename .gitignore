@@ -36,6 +36,8 @@ figma_component_map.json
 test_audit_debug*/
 src/app/page.tsx
 src/app/components/
+.agent_loop/specs/*_spec.md
+!.agent_loop/specs/memory_architecture_upgrade_spec.md
 graphify-out/cache/
 graphify-out/2026-*/
 figma-agent-core/graphify-out/

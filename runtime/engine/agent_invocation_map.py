@@ -179,6 +179,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/planning/ponytail_audit.md",
         "tooll_subagents/planning/ponytail_injector.md",
     ],
+    "planning_temporal_memory": [
+        "tooll_subagents/planning/temporal_memory_planner.md",
+    ],
     "execution_core": [
         "tooll_subagents/execution/tool_invocation.md",
         "tooll_subagents/execution/safety_guardrails.md",
@@ -202,6 +205,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/execution/project_developer.md",
         "tooll_subagents/execution/pwa_runtime_integrator.md",
         "tooll_subagents/execution/storybook_runtime_integrator.md",
+        "tooll_subagents/execution/temporal_memory_runtime_integrator.md",
     ],
     "observability": [
         "tooll_subagents/observability/environment_result.md",
@@ -228,6 +232,10 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/observability/preview_audit_agent.md",
         "tooll_subagents/observability/pwa_audit_agent.md",
         "tooll_subagents/observability/storybook_audit_agent.md",
+        "tooll_subagents/observability/temporal_memory_audit_agent.md",
+        "tooll_subagents/observability/feedback_collector.md",
+        "tooll_subagents/observability/feedback_writer.md",
+        "tooll_subagents/observability/feedback_recall.md",
     ],
     "self_correction": [
         "tooll_subagents/self_correction/result_validation.md",
@@ -460,6 +468,9 @@ MCP_CATEGORY_AGENT_PATHS: dict[str, list[str]] = {
         "tooll_subagents/observability/mem0_recall.md",
         "tooll_subagents/observability/mem0_remember.md",
     ],
+    "hermes_memory": [
+        "tooll_subagents/observability/feedback_recall.md",
+    ],
     "security_scanner": [
         "tooll_subagents/self_correction/security_scan_validator.md",
     ],
@@ -496,6 +507,7 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {
     "needs_memanto": ["planning_memanto"],
     "needs_mem0": ["planning_mem0"],
     "needs_ponytail": ["planning_ponytail"],
+    "needs_temporal_memory": ["planning_temporal_memory"],
     "needs_lighthouse": ["lighthouse_audit"],
 }
 
