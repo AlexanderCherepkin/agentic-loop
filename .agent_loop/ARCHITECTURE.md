@@ -291,6 +291,21 @@ runtime/skill_automation/               #   Skill automation for learn-from-sour
     ├── __init__.py                       #     Public exports
     ├── config.py                         #     SkillAutomationConfig thresholds and exclusions
     └── engine.py                         #     SkillAutomationEngine (source scanning + graphify-need detection)
+
+runtime/skill_integration/              #   Deterministic write gate for approved skill and wiki operations
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     SkillIntegrationConfig
+    └── engine.py                         #     SkillIntegrationEngine (SKILL.md / wiki page writes with approval + audit)
+
+runtime/wiki/                           #   LLM Wiki runtime module (Karpathy method)
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     WikiConfig
+    └── engine.py                         #     WikiEngine with ingest/query/lint
+
+memory/wiki/                            #   Karpathy-method wiki pages
+    ├── index.md                          #     Human + machine navigable index with [[links]]
+    ├── wiki-schema.md                    #     Allowed page types and frontmatter rules
+    └── *.md                              #     Concept / howto / decision / project / source / person / tool pages
 ```
 
 ## Flow
@@ -303,9 +318,9 @@ User Request
         → safety-control/mutual_check/ (cross-validation)
           → control/ (scope, policy, resource enforcement)
             → orchestrator/dispatcher.md
-              → tooll_subagents/user/ (user context + project_rules.md + design_intake)
-              → tooll_subagents/planning/ (task decomposition + skill_value_analyst + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates premium_design_analyst, premium_design_system_generator, anti_slop_validator in premium mode, i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
-              → tooll_subagents/execution/ (tool invocation [i18n_runtime_integrator, i18n_fallback_resolver, analytics_runtime_integrator, cookie_consent_blocker, auth_runtime_integrator, cms_runtime_integrator, accessibility_runtime_integrator, pwa_runtime_integrator, design_token_docs_runtime_integrator, multi_page_runtime_integrator, storybook_runtime_integrator, deploy_runtime_integrator, preview_runtime_integrator])
+              → tooll_subagents/user/ (user context + project_rules.md + design_intake [detects skill_operation requests])
+              → tooll_subagents/planning/ (task decomposition + skill_request_router + skill_value_analyst + wiki_ingest_planner + wiki_lint_planner + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates premium_design_analyst, premium_design_system_generator, anti_slop_validator in premium mode, i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
+              → tooll_subagents/execution/ (tool invocation [i18n_runtime_integrator, i18n_fallback_resolver, analytics_runtime_integrator, cookie_consent_blocker, auth_runtime_integrator, cms_runtime_integrator, accessibility_runtime_integrator, pwa_runtime_integrator, design_token_docs_runtime_integrator, multi_page_runtime_integrator, storybook_runtime_integrator, deploy_runtime_integrator, preview_runtime_integrator] + skill_integrator for approved SKILL.md and wiki page writes → runtime/skill_integration/SkillIntegrationEngine)
                 → tools_*/ (specialized tool agents)
                 → tools_browser/headless_automation (Playwright dynamic pages + visual_qa_agent)
                 → tools_lighthouse/audit (Lighthouse hard-gate audit + report parsing + correction prompts)
@@ -396,6 +411,8 @@ All agent files are fully implemented following the Algorithmic template:
 - `runtime/cost_tracking/` — LLM cost estimation and budget tracking (`CostTrackingEngine` + `SQLiteCostBackend`) with per-scope budgets and integration into `runtime/engine/llm_engine.py`
 - `runtime/notifications/` — pipeline notification dispatcher (`NotificationsEngine`) with email/Telegram/Slack channels
 - `runtime/skill_automation/` — skill automation engine (`SkillAutomationEngine` + `SkillAutomationConfig`) that detects markdown sources suitable for reusable Claude Code skills, records candidates to `data/skill_automation.jsonl`, and recommends `graphify . --update` refreshes after significant workspace changes; wired to `source_detector.md`, `graphify_auto_updater.md`, `skill_value_analyst.md`, and `skill_proposal_presenter.md`; full `SKILL.md` creation remains user-approved
+- `runtime/skill_integration/` — deterministic write gate (`SkillIntegrationEngine` + `SkillIntegrationConfig`) for approved skill and wiki operations; enforces explicit `approved`/`modify` approval, rejects paths outside `.claude/skills/` and `memory/wiki/`, logs every write/rejection to the audit logger, and emits durable memory notes for created skills/wiki pages
+- `runtime/wiki/` — LLM Wiki engine (`WikiEngine` + `WikiConfig`) implementing the Karpathy-method two-sided memory layer with ingest/query/lint operations over `memory/wiki/`; `MEMORY.md` stays thin and only links to this module
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable

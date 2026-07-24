@@ -13,7 +13,7 @@ Intake agent that recognizes when the incoming user request is a design project 
 - `project_rules`: dict | None — lightweight project-level rules from `project_rules.md`
 
 ### Returns
-- `request_type`: enum (`design_project`, `client_order`, `code_change`, `question`, `debug`, `refactor`, `documentation`, `test`, `general`)
+- `request_type`: enum (`design_project`, `client_order`, `code_change`, `question`, `debug`, `refactor`, `documentation`, `test`, `skill_operation`, `general`)
 - `design_descriptor`: structured object present only when `request_type=design_project`:
   - `design_source`: enum (`figma_url`, `figma_node_id`, `local_json`, `design_brief`)
   - `source_value`: the URL, node ID, file path, or brief text
@@ -42,6 +42,7 @@ Intake agent that recognizes when the incoming user request is a design project 
    - Backend spec signals: OpenAPI (`openapi.yaml`, `swagger.json`), Prisma (`schema.prisma`), structured JSON brief (`*_spec.json` with `entities`/`endpoints`).
    - Keywords: "макет", "дизайн", "Figma", "section", "frame", "компонент", "верстка", "React по макету", "OpenAPI", "Prisma", "backend".
    - Client-order signals: business/audience/goal language such as "landing page", "сайт для", "заказать сайт", "бриф", "целевая аудитория", "CTA", "конверсия", "MVP", "SaaS", "продукт", "leads", "customers", "conversion". If these dominate over explicit Figma signals and no Figma URL is present, classify as `client_order` and route to `tooll_subagents/user/client_brief_agent.md` for structured PM-style intake.
+   - Skill-operation signals: `/skill`, `/learn`, `/lint`, `/wiki-ingest`, `/wiki-query`, `/wiki-lint`, "сохрани этот чат как навык", "научи навыку", "сделай навык", "почисти вики", "wiki lint", "skill system". If these dominate, set `request_type=skill_operation` and route to `tooll_subagents/planning/skill_request_router.md`.
 2. **Client-order branch (conditional)** — if client-order signals dominate and no Figma URL / local design JSON is present:
    - Set `request_type=client_order`.
    - Emit a lightweight `design_descriptor` with `design_source=design_brief` and `source_value=raw_request`.

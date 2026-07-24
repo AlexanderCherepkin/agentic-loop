@@ -2,7 +2,7 @@
 
 ## Role
 
-Planning-layer agent that receives a markdown source candidate from `tooll_subagents/observability/source_detector.md` and explains whether it is worth turning into a reusable Claude Code skill. Acts as a guard against creating low-value or one-off skills.
+Planning-layer agent that receives a markdown source candidate and explains whether it is worth turning into a reusable Claude Code skill. Acts as a guard against creating low-value or one-off skills.
 
 ## Contract
 

@@ -733,6 +733,40 @@ class PipelineRunner:
                             metrics, audit_anchor, trace, session_id,
                         )
 
+                if request_type == "skill_operation":
+                    skill_result = await self._run_skill_operation(
+                        user_input, session_id, trace, metrics,
+                    )
+                    metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+                    self.state.update(f"session:{session_id}", {
+                        "status": PipelineStatus.COMPLETED.value,
+                        "completed_at": time.time(),
+                    }, scope="session")
+                    return await self._finalize_and_return(
+                        user_input,
+                        skill_result.get("summary", "Skill operation complete."),
+                        TerminationStatus.SUCCESS,
+                        metrics, audit_anchor, trace, session_id,
+                    )
+
+            # Skill operation continuation: if a pending proposal exists and the
+            # user now provides an approval marker, apply the write gate.
+            continuation = self._maybe_apply_pending_skill_operation(
+                user_input, session_id, trace, metrics,
+            )
+            if continuation:
+                metrics.time_elapsed_ms = (time.perf_counter() - t_start) * 1000
+                self.state.update(f"session:{session_id}", {
+                    "status": PipelineStatus.COMPLETED.value,
+                    "completed_at": time.time(),
+                }, scope="session")
+                return await self._finalize_and_return(
+                    user_input,
+                    continuation.get("summary", "Skill operation complete."),
+                    TerminationStatus.SUCCESS,
+                    metrics, audit_anchor, trace, session_id,
+                )
+
             if design_descriptor and self.mcp_enabled and self.figma_available:
                 output_mode = design_descriptor.get("output_mode", "both")
                 if output_mode in ("full_code", "both"):
@@ -1100,6 +1134,191 @@ class PipelineRunner:
             "short_circuit": next_action == "ask_user",
             "response": "\n".join(questions) if next_action == "ask_user" else "",
         }
+
+    async def _run_skill_operation(self, user_input: str, session_id: str,
+                                   trace: list[IterationTrace],
+                                   metrics: SessionMetrics) -> dict[str, Any]:
+        """Handle /skill, /learn, /lint, and wiki-* commands via skill_request_router."""
+        existing_skills = [
+            str(p.parent.name)
+            for p in sorted(Path(self.workspace).glob(".claude/skills/*/SKILL.md"))
+        ]
+        wiki_pages = [
+            str(p.name)
+            for p in sorted(Path(self.workspace).glob("memory/wiki/*.md"))
+        ]
+        route_result = await self._invoke_agent(
+            "tooll_subagents/planning/skill_request_router.md",
+            {
+                "user_input": user_input,
+                "session_id": session_id,
+                "existing_skills": existing_skills,
+                "available_wiki_pages": wiki_pages,
+            },
+            trace, "planning", metrics,
+        )
+        if not route_result or not route_result.parsed:
+            return {"summary": "Could not classify skill request."}
+        route_to = route_result.parsed.get("route_to", "none")
+        skill_request = route_result.parsed.get("skill_request") or {}
+        summary = route_result.parsed.get("reason", "Skill operation complete.")
+
+        if route_to == "wiki_linter":
+            from runtime.wiki import WikiConfig, WikiEngine
+            engine = WikiEngine(WikiConfig(memory_root=Path(self.workspace) / "memory"))
+            lint_result = engine.lint()
+            return {
+                "summary": lint_result.summary,
+                "issues": lint_result.issues,
+                "requires_approval": lint_result.requires_approval,
+            }
+
+        if route_to in ("skill_installer", "skill_learner"):
+            proposal_payload = self._build_skill_proposal_payload(skill_request)
+            pending_key = f"session:{session_id}:pending_skill_operation"
+            self.state.update(
+                pending_key,
+                {
+                    "operation": proposal_payload.get("operation"),
+                    "proposal": proposal_payload.get("proposal"),
+                    "requires_approval": True,
+                    "created_at": time.time(),
+                },
+                scope="session",
+            )
+            display = skill_request.get("target") or skill_request.get("source") or skill_request.get("proposed_name", "")
+            return {
+                "summary": (
+                    f"Proposed {proposal_payload['operation']} for '{display}'.\n"
+                    f"Reply with 'да' / 'ok' / 'yes' / '+' to write it, or 'нет' / 'no' to cancel."
+                ),
+                "command": skill_request.get("command"),
+                "target": display,
+                "proposed_name": skill_request.get("proposed_name"),
+                "requires_approval": True,
+                "pending_key": pending_key,
+            }
+
+        if route_to == "wiki_learner":
+            pending_key = f"session:{session_id}:pending_skill_operation"
+            self.state.update(
+                pending_key,
+                {
+                    "operation": "ingest_wiki",
+                    "proposal": [{"source": skill_request.get("source")}],
+                    "requires_approval": True,
+                    "created_at": time.time(),
+                },
+                scope="session",
+            )
+            return {
+                "summary": (
+                    "Proposed wiki ingest.\n"
+                    "Reply with 'да' / 'ok' / 'yes' / '+' to write it, or 'нет' / 'no' to cancel."
+                ),
+                "command": "wiki-ingest",
+                "target": skill_request.get("source"),
+                "requires_approval": True,
+                "pending_key": pending_key,
+            }
+
+        return {"summary": summary, "requires_approval": False}
+
+    def _build_skill_proposal_payload(self, skill_request: dict[str, Any]) -> dict[str, Any]:
+        """Convert a skill_request into the payload stored for approval continuation."""
+        command = skill_request.get("command", "skill")
+        target = skill_request.get("target") or skill_request.get("source") or skill_request.get("proposed_name", "")
+        operation = "update_skill" if command == "update" else "create_skill"
+        return {
+            "operation": operation,
+            "proposal": {
+                "name": target,
+                "trigger": f"User invokes /{command} {target}.",
+                "description": f"Reusable Claude Code skill for {target}.",
+                "decision_flow": [],
+                "failure_modes": [],
+                "gotchas": [],
+            },
+        }
+
+    def _maybe_apply_pending_skill_operation(
+        self, user_input: str, session_id: str,
+        trace: list[IterationTrace], metrics: SessionMetrics,
+    ) -> dict[str, Any] | None:
+        """If the previous turn left a pending skill proposal and the user now
+        replies with an approval/rejection marker, apply or clear it.
+        """
+        pending_key = f"session:{session_id}:pending_skill_operation"
+        pending = self.state.read(pending_key, scope="session")
+        if pending.status.value != "success" or not pending.value:
+            return None
+
+        approval = self._detect_approval(user_input)
+        if approval is None:
+            return None
+
+        from runtime.skill_integration import SkillIntegrationConfig, SkillIntegrationEngine
+
+        engine = SkillIntegrationEngine(SkillIntegrationConfig(workspace_root=self.workspace))
+        operation = pending.value.get("operation", "none")
+        proposal = pending.value.get("proposal")
+        if approval:
+            result = engine.apply(
+                operation=operation,
+                user_approval="approved",
+                skill_candidate=proposal if operation in ("create_skill", "update_skill") else None,
+                wiki_updates=proposal if operation == "ingest_wiki" else None,
+                lint_plan=proposal if operation == "lint_wiki" else None,
+                session_id=session_id,
+            )
+            self.state.delete(pending_key, scope="session", hard=True)
+            self._persist_memory_notes(result.memory_notes)
+            return {
+                "summary": (
+                    f"Applied {operation}.\n"
+                    f"Written: {', '.join(result.written_paths) or 'none'}.\n"
+                    f"{result.summary}"
+                ),
+                "result": result.to_dict(),
+            }
+
+        self.state.delete(pending_key, scope="session", hard=True)
+        return {
+            "summary": f"Cancelled pending {operation}. No files were written.",
+            "result": {"status": "cancelled"},
+        }
+
+    def _detect_approval(self, user_input: str) -> bool | None:
+        """Return True for approval, False for rejection, None for neutral."""
+        lowered = user_input.lower().strip()
+        approval_markers = ("да", "ok", "yes", "продолжай", "собирай", "согласен", "давай", "+")
+        rejection_markers = ("нет", "no", "отмена", "cancel", "стоп", "stop")
+        if any(lowered == m or lowered.startswith(m) for m in approval_markers):
+            return True
+        if any(lowered == m or lowered.startswith(m) for m in rejection_markers):
+            return False
+        return None
+
+    def _persist_memory_notes(self, notes: list[dict[str, Any]]) -> None:
+        """Store durable memory notes for created skills/wiki pages."""
+        if not notes:
+            return
+        try:
+            from runtime.memory.memory_manager import MemoryManager
+            mm = MemoryManager()
+            for note in notes:
+                note_id = note.get("id") or f"skill-integration-{int(time.time()*1000)}"
+                mm.store({
+                    "id": note_id,
+                    "type": note.get("type", "project"),
+                    "title": note.get("title", ""),
+                    "body": note.get("body", ""),
+                    "tags": note.get("tags", []),
+                    "source": note.get("source", ""),
+                })
+            mm.close()
+        except Exception:
+            pass
 
     def _write_spec_artifact(self, session_id: str, approved_spec: dict[str, Any]) -> Path | None:
         """Materialize an approved spec as a durable markdown artifact.
