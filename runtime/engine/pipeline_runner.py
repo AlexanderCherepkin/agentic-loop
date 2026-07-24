@@ -1476,6 +1476,53 @@ class PipelineRunner:
         state["observation"] = result
         if "result" in result:
             state["result"] = result["result"]
+        await self._run_skill_automation(state, trace, metrics)
+
+    async def _run_skill_automation(self, state: dict[str, Any],
+                                    trace: list[IterationTrace],
+                                    metrics: SessionMetrics) -> None:
+        """Route source-detector candidates through value analysis and surface proposals."""
+        observation = state.get("observation", {})
+        candidates = observation.get("source_candidates", [])
+        recommendation = observation.get("recommendation", "ignore")
+        if not candidates or recommendation != "propose_value_analysis":
+            if observation.get("needs_update"):
+                state["graphify_recommendation"] = {
+                    "needs_update": True,
+                    "command": observation.get("command"),
+                    "reason": observation.get("reason"),
+                    "warning_large_corpus": observation.get("warning_large_corpus", False),
+                }
+            return
+
+        existing_skills = [
+            str(p.parent.name)
+            for p in sorted(Path(self.workspace).glob(".claude/skills/*/SKILL.md"))
+        ]
+        enriched: list[dict[str, Any]] = []
+        for candidate in candidates:
+            analysis = await self._invoke_agent(
+                "tooll_subagents/planning/skill_value_analyst.md",
+                {
+                    "source_candidate": candidate,
+                    "existing_skills": existing_skills,
+                    "project_rules": self._project_rules,
+                    "session_id": state.get("session_id", ""),
+                },
+                trace, "observation", metrics,
+            )
+            enriched_candidate = dict(candidate)
+            if analysis and analysis.parsed:
+                enriched_candidate.update(analysis.parsed)
+            enriched.append(enriched_candidate)
+
+        state["skill_automation_candidates"] = enriched
+        state["graphify_recommendation"] = {
+            "needs_update": bool(observation.get("needs_update")),
+            "command": observation.get("command"),
+            "reason": observation.get("reason"),
+            "warning_large_corpus": observation.get("warning_large_corpus", False),
+        }
 
     async def _run_self_correction_review(self, state: dict[str, Any],
                                           trace: list[IterationTrace],
@@ -1576,6 +1623,8 @@ class PipelineRunner:
             "validation": state.get("validation"),
             "user_input": state.get("user_input"),
             "session_id": state.get("session_id"),
+            "source_candidates": state.get("skill_automation_candidates", []),
+            "graphify_recommendation": state.get("graphify_recommendation"),
         }
         for agent_path in self.RESULT_AGENTS:
             llm_result = await self._invoke_agent(agent_path, result_input, trace, "result", metrics)

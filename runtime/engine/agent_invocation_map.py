@@ -87,6 +87,8 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/planning/premium_design_system_generator.md",
         "tooll_subagents/planning/project_architect.md",
         "tooll_subagents/planning/project_classifier.md",
+        "tooll_subagents/planning/skill_value_analyst.md",
+        "tooll_subagents/planning/temporal_memory_planner.md",
         "tooll_subagents/planning/verification_planner.md",
         "tooll_subagents/planning/visual_to_architecture_planner.md",
     ],
@@ -179,9 +181,6 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/planning/ponytail_audit.md",
         "tooll_subagents/planning/ponytail_injector.md",
     ],
-    "planning_temporal_memory": [
-        "tooll_subagents/planning/temporal_memory_planner.md",
-    ],
     "execution_core": [
         "tooll_subagents/execution/tool_invocation.md",
         "tooll_subagents/execution/safety_guardrails.md",
@@ -216,8 +215,12 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/observability/cms_audit_agent.md",
         "tooll_subagents/observability/deploy_audit_agent.md",
         "tooll_subagents/observability/design_token_docs_audit_agent.md",
+        "tooll_subagents/observability/feedback_collector.md",
+        "tooll_subagents/observability/feedback_recall.md",
+        "tooll_subagents/observability/feedback_writer.md",
         "tooll_subagents/observability/file_context.md",
         "tooll_subagents/observability/gotcha_extractor.md",
+        "tooll_subagents/observability/graphify_auto_updater.md",
         "tooll_subagents/observability/headroom_compressor.md",
         "tooll_subagents/observability/headroom_retriever.md",
         "tooll_subagents/observability/i18n_audit_agent.md",
@@ -231,11 +234,9 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/observability/multi_page_audit_agent.md",
         "tooll_subagents/observability/preview_audit_agent.md",
         "tooll_subagents/observability/pwa_audit_agent.md",
+        "tooll_subagents/observability/source_detector.md",
         "tooll_subagents/observability/storybook_audit_agent.md",
         "tooll_subagents/observability/temporal_memory_audit_agent.md",
-        "tooll_subagents/observability/feedback_collector.md",
-        "tooll_subagents/observability/feedback_writer.md",
-        "tooll_subagents/observability/feedback_recall.md",
     ],
     "self_correction": [
         "tooll_subagents/self_correction/result_validation.md",
@@ -269,6 +270,7 @@ PHASE_AGENTS: dict[str, list[str]] = {
         "tooll_subagents/result/action_report.md",
         "tooll_subagents/result/modified_files.md",
         "tooll_subagents/result/skill_packager.md",
+        "tooll_subagents/result/skill_proposal_presenter.md",
         "tooll_subagents/result/solution.md",
         "tooll_subagents/result/summary_recommendations.md",
     ],
@@ -468,9 +470,6 @@ MCP_CATEGORY_AGENT_PATHS: dict[str, list[str]] = {
         "tooll_subagents/observability/mem0_recall.md",
         "tooll_subagents/observability/mem0_remember.md",
     ],
-    "hermes_memory": [
-        "tooll_subagents/observability/feedback_recall.md",
-    ],
     "security_scanner": [
         "tooll_subagents/self_correction/security_scan_validator.md",
     ],
@@ -507,7 +506,6 @@ PLANNING_FLAG_GROUPS: dict[str, list[str]] = {
     "needs_memanto": ["planning_memanto"],
     "needs_mem0": ["planning_mem0"],
     "needs_ponytail": ["planning_ponytail"],
-    "needs_temporal_memory": ["planning_temporal_memory"],
     "needs_lighthouse": ["lighthouse_audit"],
 }
 

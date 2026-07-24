@@ -286,6 +286,11 @@ runtime/notifications/                  #   Pipeline notification dispatcher
         ├── email.py
         ├── telegram.py
         └── slack.py
+
+runtime/skill_automation/               #   Skill automation for learn-from-source and graphify
+    ├── __init__.py                       #     Public exports
+    ├── config.py                         #     SkillAutomationConfig thresholds and exclusions
+    └── engine.py                         #     SkillAutomationEngine (source scanning + graphify-need detection)
 ```
 
 ## Flow
@@ -299,7 +304,7 @@ User Request
           → control/ (scope, policy, resource enforcement)
             → orchestrator/dispatcher.md
               → tooll_subagents/user/ (user context + project_rules.md + design_intake)
-              → tooll_subagents/planning/ (task decomposition + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates premium_design_analyst, premium_design_system_generator, anti_slop_validator in premium mode, i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
+              → tooll_subagents/planning/ (task decomposition + skill_value_analyst + figma_design_analyst [orchestrates figma_precise_mode_auditor, asset_agent, image_enrichment_agent, i18n_language_detector, i18n_key_extractor, i18n_dictionary_generator, i18n_optimizer, analytics_event_mapper] + design_to_code_planner [orchestrates premium_design_analyst, premium_design_system_generator, anti_slop_validator in premium mode, i18n_requirements_analyst, i18n_routing_planner, i18n_component_rewriter, analytics_requirements_analyst, analytics_provider_selector, cookie_consent_jurisdiction_mapper, cookie_consent_policy_generator, analytics_script_injector, cookie_consent_banner_planner, analytics_optimizer, auth_requirements_analyst, auth_provider_selector, cms_requirements_analyst, cms_source_selector, accessibility_requirements_analyst, accessibility_checker_planner, pwa_requirements_analyst, pwa_optimizer, design_token_docs_requirements_analyst, design_token_docs_format_selector] + memanto_recall)
               → tooll_subagents/execution/ (tool invocation [i18n_runtime_integrator, i18n_fallback_resolver, analytics_runtime_integrator, cookie_consent_blocker, auth_runtime_integrator, cms_runtime_integrator, accessibility_runtime_integrator, pwa_runtime_integrator, design_token_docs_runtime_integrator, multi_page_runtime_integrator, storybook_runtime_integrator, deploy_runtime_integrator, preview_runtime_integrator])
                 → tools_*/ (specialized tool agents)
                 → tools_browser/headless_automation (Playwright dynamic pages + visual_qa_agent)
@@ -316,10 +321,10 @@ User Request
                 → mcp_servers/headroom_server.py (optional Headroom context-compression CCR tools)
                 → mcp_servers/memanto_server.py (optional Memanto semantic-memory tools)
                 → mcp_servers/mem0_server.py (optional Mem0 long-term memory tools)
-              → tooll_subagents/observability/ (result capture + memanto_remember + mem0_remember + i18n_audit_agent + analytics_audit_agent + auth_audit_agent + cms_audit_agent + accessibility_audit_agent + pwa_audit_agent + design_token_docs_audit_agent + multi_page_audit_agent + storybook_audit_agent + deploy_audit_agent + preview_audit_agent)
+              → tooll_subagents/observability/ (result capture + memanto_remember + mem0_remember + i18n_audit_agent + analytics_audit_agent + auth_audit_agent + cms_audit_agent + accessibility_audit_agent + pwa_audit_agent + design_token_docs_audit_agent + multi_page_audit_agent + storybook_audit_agent + deploy_audit_agent + preview_audit_agent + source_detector + graphify_auto_updater)
               → tooll_subagents/self_correction/ (validate [result_validation + goal_evaluator + visual_qa_agent + regression_guard + anti_slop_validator + i18n_rtl_validator + i18n_missing_key_guard + analytics_privacy_validator + auth_validator + cms_validator + accessibility_validator + pwa_validator + design_token_docs_validator + multi_page_validator + storybook_validator + deploy_validator + preview_validator] → adjust → loop or finish)
                 → PhaseTransitionManager (runtime conditional phase routing)
-              → tooll_subagents/result/ (final output + memanto_answer + mem0_recall + action_report with audit summaries)
+              → tooll_subagents/result/ (final output + memanto_answer + mem0_recall + action_report with audit summaries + skill_proposal_presenter)
   → User Response
 ```
 
@@ -390,6 +395,7 @@ All agent files are fully implemented following the Algorithmic template:
 - `runtime/git_publisher/` — GitHub/GitLab publisher (`GitPublisherEngine`) that creates repos and commits generated files; optional PyGithub/python-gitlab dependencies
 - `runtime/cost_tracking/` — LLM cost estimation and budget tracking (`CostTrackingEngine` + `SQLiteCostBackend`) with per-scope budgets and integration into `runtime/engine/llm_engine.py`
 - `runtime/notifications/` — pipeline notification dispatcher (`NotificationsEngine`) with email/Telegram/Slack channels
+- `runtime/skill_automation/` — skill automation engine (`SkillAutomationEngine` + `SkillAutomationConfig`) that detects markdown sources suitable for reusable Claude Code skills, records candidates to `data/skill_automation.jsonl`, and recommends `graphify . --update` refreshes after significant workspace changes; wired to `source_detector.md`, `graphify_auto_updater.md`, `skill_value_analyst.md`, and `skill_proposal_presenter.md`; full `SKILL.md` creation remains user-approved
 - `mcp_servers/figma_server.py` — lazy MCP wrapper around `figma-agent-core/` exposing the Figma-to-code pipeline, including design-token extraction (`figma_extract_tokens`), component registry (`figma_build_component_registry`), reusable component extraction (`figma_extract_components`), responsive breakpoint composition (`figma_responsive_compose`), and Playwright-based Visual QA with automatic Figma reference download and structural layout checks
 - `mcp_servers/backend_server.py` — lazy MCP wrapper around the Backend Spec Bridge, exposing `backend_run_bridge` for fullstack UI+backend generation
 - `mcp_servers/memanto_server.py` — lazy MCP wrapper around `runtime/engine/memanto_client.py` exposing `memanto_create_agent`, `memanto_remember`, `memanto_recall`, and `memanto_answer`; degrades to in-memory fallback when the Memanto server is unreachable
