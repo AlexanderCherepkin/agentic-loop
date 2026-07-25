@@ -1,0 +1,43 @@
+id: anti-slop-solo-claude
+name: Anti-Slop Solo Frontend
+base_category: Веб-сервис
+language: typescript
+description: |
+  Премиум лендинг/SaaS-стартёр для соло-фронтендера. Базовая anti-slop гигиена через
+  Anthropic Frontend Design Skill, audit/polish через Impeccable, анимации через Motion.
+  Направление выбирается до кода; banned-паттерны блокируют handoff.
+tags:
+  - anti-slop
+  - typescript
+  - nextjs
+  - react
+  - tailwind
+  - framer-motion
+  - premium-design
+stack:
+  framework: Next.js 15 (App Router)
+  language: TypeScript 5
+  styling: Tailwind CSS v4
+  motion: Framer Motion / motion.dev
+  design_method: Refactoring UI
+  skill_stack:
+    - Anthropic Frontend Design Skill
+    - Impeccable (audit/polish)
+    - Motion (animation primitives)
+variables:
+  port: 3000
+anti_slop:
+  default_direction: editorial
+  forbidden_fonts:
+    - Inter
+    - Roboto
+    - Arial
+    - Space Grotesk
+  allowed_directions:
+    - brutalist
+    - editorial
+    - swiss
+    - retro_futuristic
+    - glassmorphism
+    - bento
+    - minimal_tech

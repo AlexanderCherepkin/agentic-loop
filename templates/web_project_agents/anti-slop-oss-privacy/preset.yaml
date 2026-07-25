@@ -1,0 +1,42 @@
+id: anti-slop-oss-privacy
+name: Anti-Slop OSS Privacy
+base_category: Веб-сервис
+language: typescript
+description: |
+  Премиум стартёр для privacy-first проектов и NDA-клиентов. Local-first через
+  Open Design (nexio), BYOK на 22+ CLI-агентах, Taste Skill (VARIANCE / MOTION / DENSITY)
+  для быстрого старта, ux-ui-agent-skills для DTCG-токенов и WCAG 2.2 accessibility.
+tags:
+  - anti-slop
+  - typescript
+  - nextjs
+  - react
+  - tailwind
+  - open-design
+  - byok
+  - accessibility
+stack:
+  framework: Next.js 15 (App Router)
+  language: TypeScript 5
+  styling: Tailwind CSS v4
+  motion: Framer Motion
+  design_platform: Open Design (nexio)
+  byok: true
+  accessibility: WCAG 2.2 AA / AAA
+variables:
+  port: 3000
+anti_slop:
+  default_direction: brutalist
+  forbidden_fonts:
+    - Inter
+    - Roboto
+    - Arial
+    - Space Grotesk
+  allowed_directions:
+    - brutalist
+    - editorial
+    - swiss
+    - retro_futuristic
+    - glassmorphism
+    - bento
+    - minimal_tech

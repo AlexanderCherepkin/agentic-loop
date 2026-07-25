@@ -1,0 +1,43 @@
+id: anti-slop-team-claude
+name: Anti-Slop Team Claude Design
+base_category: Веб-сервис
+language: typescript
+description: |
+  Премиум стартёр для команд на Claude Pro / Max / Team / Enterprise. Использует
+  Claude Design с /design-sync для импорта дизайн-системы из GitHub, Brand compliance
+  для командного контроля, Impeccable для review каждого PR, Transitions.dev для
+  curated переходов.
+tags:
+  - anti-slop
+  - typescript
+  - nextjs
+  - react
+  - tailwind
+  - claude-design
+  - brand-compliance
+stack:
+  framework: Next.js 15 (App Router)
+  language: TypeScript 5
+  styling: Tailwind CSS v4
+  motion: Framer Motion / Transitions.dev
+  design_platform: Claude Design
+  compliance: Brand compliance
+  review: Impeccable PR audit
+variables:
+  port: 3000
+anti_slop:
+  default_direction: swiss
+  design_system_source: github
+  forbidden_fonts:
+    - Inter
+    - Roboto
+    - Arial
+    - Space Grotesk
+  allowed_directions:
+    - brutalist
+    - editorial
+    - swiss
+    - retro_futuristic
+    - glassmorphism
+    - bento
+    - minimal_tech
