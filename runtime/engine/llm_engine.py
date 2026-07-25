@@ -6,22 +6,26 @@ import logging
 import os
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from ..contracts.agent_spec import AgentSpec
 from ..cost_tracking import CostTrackingEngine
-
 from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig
+from .drift_detector import DriftDetector, DriftReport
 from .headroom_client import HeadroomClient, HeadroomConfig
+from .mode_manager import ModeManager
+from .profile_resolver import ProfileResolver, ResolvedProfile
 
 logger = logging.getLogger(__name__)
 
 
-class LLMProvider(str, Enum):
+class LLMProvider(StrEnum):
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
     DEEPSEEK = "deepseek"
+    OPENROUTER = "openrouter"
+    GOOGLE = "google"
     MOCK = "mock"
 
 
@@ -38,7 +42,7 @@ class LLMResponse:
 @dataclass
 class LLMConfig:
     provider: LLMProvider = LLMProvider.ANTHROPIC
-    model: str = "claude-sonnet-4-6"
+    model: str = "claude-sonnet-5"
     max_tokens: int = 4096
     temperature: float = 0.3
     api_key: str | None = None
@@ -445,7 +449,12 @@ class LLMEngine:
       Anthropic → OpenAI → DeepSeek
     """
 
-    def __init__(self, config: LLMConfig | None = None):
+    def __init__(
+        self,
+        config: LLMConfig | None = None,
+        mode_manager: ModeManager | None = None,
+        profile_resolver: ProfileResolver | None = None,
+    ):
         self.config = config or LLMConfig()
         self._resolve_api_key()
         self._breaker = CircuitBreaker(
@@ -454,30 +463,85 @@ class LLMEngine:
         )
         self._fallback_chain: list[LLMConfig] = self._build_fallback_chain()
         self._cost_tracker = CostTrackingEngine()
+        self._mode_manager = mode_manager or ModeManager()
+        self._drift_detector = DriftDetector()
+        self._profile_resolver = profile_resolver or ProfileResolver()
 
     def _resolve_api_key(self):
         if self.config.api_key:
             return
-        if self.config.provider == LLMProvider.ANTHROPIC:
-            self.config.api_key = os.getenv("ANTHROPIC_API_KEY")
-        elif self.config.provider == LLMProvider.OPENAI:
-            self.config.api_key = os.getenv("OPENAI_API_KEY")
-        elif self.config.provider == LLMProvider.DEEPSEEK:
-            self.config.api_key = os.getenv("DEEPSEEK_API_KEY")
+        env_map = {
+            LLMProvider.ANTHROPIC: "ANTHROPIC_API_KEY",
+            LLMProvider.OPENAI: "OPENAI_API_KEY",
+            LLMProvider.DEEPSEEK: "DEEPSEEK_API_KEY",
+            LLMProvider.OPENROUTER: "OPENROUTER_API_KEY",
+            LLMProvider.GOOGLE: "GOOGLE_API_KEY",
+        }
+        env_name = env_map.get(self.config.provider)
+        if env_name:
+            self.config.api_key = os.getenv(env_name)
 
     def _build_fallback_chain(self) -> list[LLMConfig]:
         """Build ordered list of fallback providers based on available API keys."""
         chain: list[LLMConfig] = []
         candidates = [
-            (LLMProvider.ANTHROPIC, "claude-sonnet-4-6"),
+            (LLMProvider.ANTHROPIC, "claude-sonnet-5"),
             (LLMProvider.OPENAI, "gpt-4o"),
             (LLMProvider.DEEPSEEK, "deepseek-chat"),
+            (LLMProvider.OPENROUTER, "openrouter/auto"),
         ]
         for prov, model in candidates:
             key = os.getenv(f"{prov.value.upper()}_API_KEY")
             if key and prov != self.config.provider:
                 chain.append(LLMConfig(provider=prov, model=model, api_key=key))
         return chain
+
+    @staticmethod
+    def _provider_from_str(provider: str) -> LLMProvider:
+        """Map a model-economy provider string to an ``LLMProvider`` enum value."""
+        try:
+            return LLMProvider(provider.lower())
+        except ValueError:
+            return LLMProvider.ANTHROPIC
+
+    @property
+    def mode_manager(self) -> ModeManager:
+        """Read-only access to the runtime mode manager."""
+        return self._mode_manager
+
+    def resolve_model(self, slot: str | None = None) -> tuple[LLMProvider, str]:
+        """Resolve the effective provider/model for a slot.
+
+        ``slot=None`` or ``slot="main"`` returns the engine's main ``LLMConfig``
+        provider/model so the existing primary code path is preserved. Auxiliary
+        slots respect runtime overrides first, then the active mode template.
+        """
+        if slot is None or slot == "main":
+            return (self.config.provider, self.config.model)
+        ref = self._mode_manager.current_effective_refs().get(slot)
+        if ref is None:
+            ref = self._mode_manager.active_mode.model_for(slot)
+        return (self._provider_from_str(ref.provider), ref.model)
+
+    def apply_guardrails(self, system_prompt: str) -> str:
+        """Prefix the active guardrail template to ``system_prompt`` if one exists."""
+        template = self._mode_manager.guardrail_template
+        if not template:
+            return system_prompt
+        return f"{template.strip()}\n\n{system_prompt}"
+
+    def check_drift(self, critical: bool = False) -> DriftReport:
+        """Run drift detection against the active mode template and snapshot.
+
+        Non-critical drift is returned as a flagged report. Critical drift raises
+        so that callers cannot proceed without resetting the economy state.
+        """
+        report = self._drift_detector.detect(self._mode_manager, critical=critical)
+        if critical and report.has_drift:
+            raise RuntimeError(
+                f"Critical model economy drift detected: {report.audit_event}"
+            )
+        return report
 
     def maybe_compress_messages(
         self,
@@ -497,7 +561,13 @@ class LLMEngine:
         client = HeadroomClient(HeadroomConfig(enabled=self.config.headroom_enabled))
         return client.compress_messages(messages, target_ratio=target_ratio)
 
-    async def execute(self, spec: AgentSpec, inputs: dict[str, Any], extra_context: str | None = None) -> LLMResponse:
+    async def execute(
+        self,
+        spec: AgentSpec,
+        inputs: dict[str, Any],
+        extra_context: str | None = None,
+        profile_id: str | None = None,
+    ) -> LLMResponse:
         if self.config.provider == LLMProvider.MOCK:
             response = await MockLLMEngine().execute(spec, inputs, extra_context=extra_context)
             self._track_cost(spec, "", "", response)
@@ -506,6 +576,7 @@ class LLMEngine:
         system_prompt = spec.to_system_prompt()
         if extra_context:
             system_prompt = f"{extra_context}\n\n{system_prompt}"
+        system_prompt = self._apply_profile_and_guardrails(system_prompt, profile_id=profile_id)
         user_message = spec.to_input_message(inputs)
 
         # Primary provider with circuit breaker
@@ -552,7 +623,7 @@ class LLMEngine:
         for attempt in range(1, self.config.max_retries + 1):
             try:
                 return await self._call_api(system_prompt, user_message)
-            except Exception as e:
+            except Exception:
                 if attempt == self.config.max_retries:
                     raise
                 await asyncio.sleep(2 ** attempt * 0.5)
@@ -567,6 +638,18 @@ class LLMEngine:
             result = await self._call_openai(system_prompt, user_message)
         elif self.config.provider == LLMProvider.DEEPSEEK:
             result = await self._call_openai(system_prompt, user_message, base_url="https://api.deepseek.com/v1")
+        elif self.config.provider == LLMProvider.OPENROUTER:
+            result = await self._call_openai(
+                system_prompt,
+                user_message,
+                base_url="https://openrouter.ai/api/v1",
+            )
+        elif self.config.provider == LLMProvider.GOOGLE:
+            result = await self._call_openai(
+                system_prompt,
+                user_message,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+            )
         else:
             raise ValueError(f"Unknown provider: {self.config.provider}")
 
@@ -615,9 +698,22 @@ class LLMEngine:
         )
 
     async def raw_chat_completion(
-        self, system: str, user: str, max_tokens: int | None = None, temperature: float = 0.2
+        self,
+        system: str,
+        user: str,
+        max_tokens: int | None = None,
+        temperature: float = 0.2,
+        critical: bool = False,
+        profile_id: str | None = None,
     ) -> str:
-        """Direct API call without AgentSpec wrapping. Returns raw text."""
+        """Direct API call without AgentSpec wrapping. Returns raw text.
+
+        Args:
+            critical: If ``True``, hard-block on model-economy drift before calling.
+            profile_id: Optional profile to apply model/system prompt overrides.
+        """
+        self.check_drift(critical=critical)
+        system = self._apply_profile_and_guardrails(system, profile_id=profile_id)
         saved_max = self.config.max_tokens
         saved_temp = self.config.temperature
         try:
@@ -629,6 +725,26 @@ class LLMEngine:
         finally:
             self.config.max_tokens = saved_max
             self.config.temperature = saved_temp
+
+    def _apply_profile_and_guardrails(
+        self,
+        system_prompt: str,
+        profile_id: str | None = None,
+    ) -> str:
+        """Apply mode guardrails and optional profile prompts to ``system_prompt``."""
+        # 1. Mode guardrail from Model Economy
+        system_prompt = self.apply_guardrails(system_prompt)
+        if profile_id is None:
+            return system_prompt
+
+        # 2. Profile guardrail + SOUL + base system
+        profile = self._profile_resolver.resolve(profile_id, mode_manager=self._mode_manager)
+        return profile.full_system_prefix(system_prompt)
+
+    def resolve_profile_model(self, profile_id: str) -> tuple[LLMProvider, str]:
+        """Return the effective provider/model for a profile."""
+        profile = self._profile_resolver.resolve(profile_id, mode_manager=self._mode_manager)
+        return (self._provider_from_str(profile.model_ref.provider), profile.model_ref.model)
 
     def _extract_json(self, text: str) -> dict[str, Any] | None:
         text = text.strip()
@@ -729,8 +845,10 @@ Rules:
                 raw_output="",
             )
 
-        parsed = self._engine._extract_json(raw) or {}
-        if not isinstance(parsed, dict):
+        parsed = self._engine._extract_json(raw)
+        if parsed is None:
+            parsed = {"raw_output": raw}
+        elif not isinstance(parsed, dict):
             parsed = {"raw_output": str(parsed)}
 
         verdict = parsed.get("verdict", parsed)

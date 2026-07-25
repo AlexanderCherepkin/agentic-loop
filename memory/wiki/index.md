@@ -12,4 +12,11 @@
 
 This page is the index itself and does not need to be linked from itself.
 
+- [[project-agentic-loop]] — Project baseline for Agentic Loop.
+- [[multi-agent-profiles-moa]] — fork subagents, profiles, and MOA mechanics.
+- [[fork-subagents]] — background worker swarm with status panel.
+- [[profiles]] — per-profile model + system prompt.
+- [[moa]] — Mixture of Agents: advisors + aggregator.
+- [[model-economy]] — runtime model economy (modes, slots, drift detection).
+- [[howto-switch-mode]] — switch model economy modes.
 - [[smoke-concept]] — Smoke test wiki page

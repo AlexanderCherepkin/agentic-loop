@@ -1,0 +1,132 @@
+# Project default model economy for Agentic Loop.
+# User-specific overrides may be placed in ~/.hermes/config.yaml under the same keys.
+
+guardrail_template: |
+  You are Agentic Loop, a multi-agent coding assistant. Prefer existing code, avoid over-engineering,
+  respect the approved spec and project_rules.md, and keep changes minimal and reversible.
+
+modes:
+  default:
+    description: Balanced mode for normal planning and implementation work.
+    main:
+      provider: anthropic
+      model: claude-sonnet-5
+    auxiliary:
+      title:
+        provider: google
+        model: gemini-flash-latest
+      vision:
+        provider: google
+        model: gemini-2.5-flash
+      compression:
+        provider: google
+        model: gemini-flash-latest
+      approval:
+        provider: openai
+        model: gpt-4o-mini
+      web_extract:
+        provider: google
+        model: gemini-flash-latest
+      code_review:
+        provider: openai
+        model: gpt-4o-mini
+      summary:
+        provider: google
+        model: gemini-flash-latest
+
+  cheap_background:
+    description: Low-cost mode for bulk parsing, indexing, and summarization.
+    main:
+      provider: google
+      model: gemini-flash-latest
+    auxiliary:
+      title:
+        provider: google
+        model: gemini-flash-latest
+      vision:
+        provider: google
+        model: gemini-2.5-flash
+      compression:
+        provider: google
+        model: gemini-flash-latest
+      approval:
+        provider: openai
+        model: gpt-4o-mini
+      web_extract:
+        provider: google
+        model: gemini-flash-latest
+      code_review:
+        provider: openai
+        model: gpt-4o-mini
+      summary:
+        provider: google
+        model: gemini-flash-latest
+
+  premium_final:
+    description: High-stakes mode for architecture review and final code review.
+    main:
+      provider: anthropic
+      model: claude-opus-4-8
+    auxiliary:
+      title:
+        provider: google
+        model: gemini-flash-latest
+      vision:
+        provider: google
+        model: gemini-2.5-flash
+      compression:
+        provider: google
+        model: gemini-flash-latest
+      approval:
+        provider: openai
+        model: gpt-4o-mini
+      web_extract:
+        provider: google
+        model: gemini-flash-latest
+      code_review:
+        provider: anthropic
+        model: claude-sonnet-5
+      summary:
+        provider: google
+        model: gemini-flash-latest
+
+  fallback:
+    description: Provider-agnostic recovery mode when primary providers fail.
+    main:
+      provider: openrouter
+      model: openrouter/auto
+    auxiliary:
+      title:
+        provider: google
+        model: gemini-flash-latest
+      vision:
+        provider: google
+        model: gemini-2.5-flash
+      compression:
+        provider: google
+        model: gemini-flash-latest
+      approval:
+        provider: openai
+        model: gpt-4o-mini
+      web_extract:
+        provider: google
+        model: gemini-flash-latest
+      code_review:
+        provider: openai
+        model: gpt-4o-mini
+      summary:
+        provider: google
+        model: gemini-flash-latest
+
+smart_routers:
+  auto:
+    provider: openrouter
+    model: openrouter/auto
+    min_coding_score: 0.0
+    min_context_tokens: 0
+
+  pareto_code:
+    provider: openrouter
+    model: openrouter/pareto-code
+    min_coding_score: 0.65
+    min_context_tokens: 65536

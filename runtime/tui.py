@@ -22,16 +22,18 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from rich.console import Console, Group
+from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
 from rich.table import Table
 from rich.tree import Tree
 
 from runtime.contracts.message import Message, MessageType
+from runtime.engine.fork_pool import ForkPool
 from runtime.engine.message_bus import MessageBus
-from runtime.engine.state_manager import StateManager, OperationStatus
+from runtime.engine.state_manager import OperationStatus, StateManager
+from runtime.tui.fork_panel import build_fork_panel
 
 
 @dataclass
@@ -45,6 +47,7 @@ class TUIState:
     logs: list[str] = field(default_factory=list)
     start_time: float = field(default_factory=time.time)
     status: str = "idle"
+    fork_pool: ForkPool | None = None
 
 
 class AgenticTUI:
@@ -57,6 +60,7 @@ class AgenticTUI:
         self._running = False
         self._bus = MessageBus()
         self._state_mgr = StateManager()
+        self._fork_pool: ForkPool | None = None
 
         # Progress tracking
         self._progress = Progress(
@@ -158,8 +162,13 @@ class AgenticTUI:
         top_row.add_row(self._build_tree(), self._build_progress())
 
         table.add_row(top_row)
+        table.add_row(self._build_fork_panel())
         table.add_row(self._build_logs())
         return table
+
+    def _build_fork_panel(self) -> Panel:
+        """Render fork worker status panel."""
+        return build_fork_panel(self._fork_pool)
 
     def _fmt_elapsed(self) -> str:
         sec = int(time.time() - self.state.start_time)
@@ -196,6 +205,26 @@ class AgenticTUI:
             sender="pipeline_runner",
         )
         asyncio.create_task(self._bus.publish(msg))
+
+    def get_or_create_fork_pool(self) -> ForkPool:
+        """Return the active fork pool, creating one if necessary."""
+        if self._fork_pool is None:
+            self._fork_pool = ForkPool()
+            self.state.fork_pool = self._fork_pool
+        return self._fork_pool
+
+    async def cmd_fork(self, task_description: str, worker_func, approved: bool = False) -> str:
+        """Add a worker to the fork pool and, if approved, run the pool."""
+        pool = self.get_or_create_fork_pool()
+        worker_id = pool.add(task_description, worker_func)
+        self._add_log(f"[FORK ADD] {worker_id}: {task_description}")
+        if approved:
+            await pool.run(approved=True)
+        return worker_id
+
+    def cmd_agents(self) -> Panel:
+        """Return the fork panel for rendering."""
+        return build_fork_panel(self._fork_pool)
 
 
 def cmd_dashboard(args: argparse.Namespace) -> int:
