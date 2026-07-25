@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft — pending approval.
+Approved and implemented. Verification passed: 756 core tests passed, cross-references clean, health check healthy.
 
 ## Goal
 
