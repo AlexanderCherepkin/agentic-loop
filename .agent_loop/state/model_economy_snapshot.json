@@ -1,0 +1,34 @@
+{
+  "main": {
+    "provider": "anthropic",
+    "model": "claude-sonnet-5"
+  },
+  "title": {
+    "provider": "openai",
+    "model": "gpt-4o"
+  },
+  "vision": {
+    "provider": "google",
+    "model": "gemini-2.5-flash"
+  },
+  "compression": {
+    "provider": "google",
+    "model": "gemini-flash-latest"
+  },
+  "approval": {
+    "provider": "openai",
+    "model": "gpt-4o-mini"
+  },
+  "web_extract": {
+    "provider": "google",
+    "model": "gemini-flash-latest"
+  },
+  "code_review": {
+    "provider": "openai",
+    "model": "gpt-4o-mini"
+  },
+  "summary": {
+    "provider": "google",
+    "model": "gemini-flash-latest"
+  }
+}

@@ -38,6 +38,11 @@ src/app/page.tsx
 src/app/components/
 .agent_loop/specs/*_spec.md
 !.agent_loop/specs/memory_architecture_upgrade_spec.md
+!.agent_loop/specs/anti-slop-rule-set_spec.md
+!.agent_loop/specs/loop_engine_spec.md
+!.agent_loop/specs/aedafddc-2c32-4848-875b-7d4667c15f84_spec.md
+!.agent_loop/specs/2026-07-25-multi-agent-profiles-moa_spec.md
+!.agent_loop/specs/2026-07-25-model-economy_spec.md
 graphify-out/cache/
 graphify-out/2026-*/
 figma-agent-core/graphify-out/
