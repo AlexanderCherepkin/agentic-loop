@@ -99,36 +99,52 @@ class PremiumDesignEngine:
         checks: list[AntiSlopCheck] = []
         any_fail = False
 
+        # Precompute helper dicts once.
+        colors_section = tokens.get("colors", {})
+        fonts_section = tokens.get("fonts", {})
+        font_family_section = tokens.get("fontFamily", {})
+        spacing_section = tokens.get("spacing", {})
+        motion_section = tokens.get("motion", {})
+        components_section = tokens.get("components", {})
+
         for rule in self.config.anti_slop_rules:
             check_id = rule["id"]
             name = rule["name"]
             status = "pass"
             reason = "OK"
 
+            allowed_if = rule.get("allowed_if", [])
+            allowed_present = any(a.lower() in lower_text for a in allowed_if)
+
             if check_id == "fonts":
-                # Check font families only, not fallback stacks or prose.
                 font_families: list[str] = []
-                fonts_section = tokens.get("fonts", {})
                 if isinstance(fonts_section, dict):
                     for role_cfg in fonts_section.values():
                         if isinstance(role_cfg, dict) and role_cfg.get("family"):
                             font_families.append(str(role_cfg["family"]).strip())
-                # Also inspect explicit fontFamily keys in design tokens if present.
                 for key in ("display_font", "body_font", "accent_font", "mono_font"):
                     if key in tokens and isinstance(tokens[key], str):
                         font_families.append(tokens[key].strip())
+                if isinstance(font_family_section, dict):
+                    for role_token in font_family_section.values():
+                        if isinstance(role_token, dict):
+                            stack = role_token.get("$value", "")
+                            if isinstance(stack, str):
+                                # In DTCG fontFamily tokens the first family is the primary choice.
+                                first_family = stack.split(",")[0].strip().strip("'\"")
+                                font_families.append(first_family)
 
-                forbidden_found = []
+                forbidden_found: list[str] = []
+                forbidden_lower_to_original = {f.lower(): f for f in self.config.forbidden_fonts}
                 for family in font_families:
                     family_lower = family.lower()
-                    for forbidden in self.config.forbidden_fonts:
-                        # Match exact font name or whole-word token; avoid matching substrings inside longer names.
-                        if family_lower == forbidden.lower() or re.search(
-                            rf"(?<![a-z0-9\-]){re.escape(forbidden.lower())}(?![a-z0-9\-])",
+                    for forbidden_lower, forbidden_original in forbidden_lower_to_original.items():
+                        if family_lower == forbidden_lower or re.search(
+                            rf"(?<![a-z0-9\-]){re.escape(forbidden_lower)}(?![a-z0-9\-])",
                             family_lower,
                         ):
-                            forbidden_found.append(forbidden)
-                forbidden_found = list(dict.fromkeys(forbidden_found))  # preserve order, dedupe
+                            forbidden_found.append(forbidden_original)
+                forbidden_found = list(dict.fromkeys(forbidden_found))
                 if forbidden_found:
                     status = "fail"
                     reason = f"Forbidden/default fonts found: {', '.join(forbidden_found[:5])}"
@@ -138,33 +154,35 @@ class PremiumDesignEngine:
 
             elif check_id == "card_shadows":
                 patterns = rule.get("forbidden_patterns", [])
-                # Normalize JSON escaping (rgba(0,0,0 -> rgba(0, 0, 0) and allow spaces.
                 normalized_text = combined_text.replace(",", ", ").replace("  ", " ")
                 matches = [p for p in patterns if re.search(p, normalized_text, re.IGNORECASE)]
                 if matches:
                     status = "fail"
-                    reason = f"Decorative card shadows detected: {matches}"
-                    self.result.refinement_actions.append("Remove decorative box-shadows from card concepts; use elevation only for focus/interaction states.")
+                    reason = f"Decorative/generic shadows detected: {matches[:3]}"
+                    self.result.refinement_actions.append("Use distinct elevation shadows; generic 8px/card shadows are banned.")
 
             elif check_id == "centered_buttons":
                 forbidden = [p for p in rule.get("forbidden_phrases", []) if p.lower() in lower_text]
-                if forbidden:
-                    allowed = rule.get("allowed_if", [])
-                    if not any(a.lower() in lower_text for a in allowed):
-                        status = "fail"
-                        reason = f"Centered button language without hierarchy rationale: {forbidden}"
-                        self.result.refinement_actions.append("Add hierarchy/asymmetry rationale for centered CTAs or align them within the grid.")
+                if forbidden and not allowed_present:
+                    status = "fail"
+                    reason = f"Centered button language without hierarchy rationale: {forbidden[:3]}"
+                    self.result.refinement_actions.append("Add hierarchy/asymmetry rationale for centered CTAs or align them within the grid.")
 
             elif check_id == "gradient_blobs":
-                forbidden = [p for p in rule.get("forbidden_phrases", []) if p.lower() in lower_text]
-                if forbidden:
+                forbidden_phrases = rule.get("forbidden_phrases", [])
+                forbidden_patterns = rule.get("forbidden_patterns", [])
+                phrase_hits = [p for p in forbidden_phrases if p.lower() in lower_text]
+                pattern_hits = [
+                    p for p in forbidden_patterns
+                    if re.search(p, combined_text, re.IGNORECASE)
+                ]
+                if (phrase_hits or pattern_hits) and not allowed_present:
                     status = "fail"
-                    reason = f"Meaningless gradient blobs: {forbidden}"
-                    self.result.refinement_actions.append("Remove decorative gradient blobs or give them functional meaning (data viz, depth).")
+                    reason = f"Meaningless gradient blobs: {phrase_hits[:3] + pattern_hits[:3]}"
+                    self.result.refinement_actions.append("Remove decorative gradient blobs or justify them as functional (data viz, depth, brand gradient).")
 
             elif check_id == "uniform_padding":
-                spacing = tokens.get("spacing", {})
-                scale = spacing.get("scale", [])
+                scale = spacing_section.get("scale", []) if isinstance(spacing_section, dict) else []
                 if len(set(str(x) for x in scale)) < rule.get("min_distinct_levels", 3):
                     status = "fail"
                     reason = "Spacing scale has too few distinct rhythmic levels"
@@ -178,10 +196,30 @@ class PremiumDesignEngine:
                         reason = "Generic 3-column layout without asymmetry/disruption rule"
                         self.result.refinement_actions.append("Add asymmetric grid rule or intentional disruption to 3-column layout concept.")
 
+            elif check_id == "generic_3col_cards":
+                forbidden_phrases = rule.get("forbidden_phrases", [])
+                card_mentions = [p for p in forbidden_phrases[:5] if p.lower() in lower_text]
+                padding_mentions = [p for p in forbidden_phrases[5:8] if p.lower() in lower_text]
+                icon_mentions = [p for p in forbidden_phrases[8:] if p.lower() in lower_text]
+                if card_mentions and (padding_mentions or icon_mentions) and not allowed_present:
+                    status = "fail"
+                    reason = f"Generic 3 equal cards with icon top: {card_mentions[:2]}"
+                    self.result.refinement_actions.append("Break 3-card symmetry: vary card sizes, use a bento grid, or remove icon-as-decoration pattern.")
+
+            elif check_id == "single_hero_section":
+                forbidden_phrases = rule.get("forbidden_phrases", [])
+                trigger_phrases = rule.get("trigger_phrases", [])
+                hero_present = any(p.lower() in lower_text for p in forbidden_phrases)
+                button_present = any(p.lower() in lower_text for p in trigger_phrases)
+                if hero_present and button_present and not allowed_present:
+                    status = "fail"
+                    reason = "Single centered hero section with one button detected"
+                    self.result.refinement_actions.append("Add asymmetry, split layout, or off-center headline; single centered hero + one button is banned unless justified.")
+
             elif check_id == "gray_on_white":
+                flat_gray_values = [v.lower() for v in rule.get("flat_gray_values", [])]
                 text_re = rule.get("forbidden_combo", {}).get("text", "")
                 bg_re = rule.get("forbidden_combo", {}).get("bg", "")
-                colors = tokens.get("colors", {})
 
                 def _collect_strings(obj: Any) -> list[str]:
                     out: list[str] = []
@@ -195,8 +233,6 @@ class PremiumDesignEngine:
                             out.extend(_collect_strings(item))
                     return out
 
-                text_colors = [s for s in _collect_strings(colors) if "text" in str(colors).lower()]
-                # More precise: collect values nested under keys containing 'text'.
                 def _collect_under_key(obj: Any, key_filter: str) -> list[str]:
                     out: list[str] = []
                     if isinstance(obj, dict):
@@ -207,27 +243,26 @@ class PremiumDesignEngine:
                                 out.extend(_collect_under_key(v, key_filter))
                     return out
 
-                text_colors = _collect_under_key(colors, "text")
-                bg_colors = _collect_under_key(colors, "background") + _collect_under_key(colors, "bg")
+                text_colors = _collect_under_key(colors_section, "text")
+                bg_colors = _collect_under_key(colors_section, "background") + _collect_under_key(colors_section, "bg")
                 gray_text = any(re.search(text_re, str(c), re.IGNORECASE) for c in text_colors)
+                flat_gray_text = any(str(c).lower() in flat_gray_values for c in text_colors)
                 pure_white_bg = any(re.search(bg_re, str(c), re.IGNORECASE) for c in bg_colors)
-                if gray_text and pure_white_bg:
+                if (gray_text or flat_gray_text) and pure_white_bg:
                     status = "fail"
                     reason = "Flat gray text on pure white background detected"
                     self.result.refinement_actions.append("Shift body text to warm/cool off-white palette or invert contrast; avoid flat mid-gray on #fff.")
 
             elif check_id == "layout_animations":
-                motion = tokens.get("motion", {})
-                allowed = set(motion.get("allowed_properties", []))
+                allowed = set(motion_section.get("allowed_properties", [])) if isinstance(motion_section, dict) else set()
                 forbidden = set(rule.get("forbidden_properties", []))
                 if forbidden.intersection(allowed):
                     status = "fail"
-                    reason = "Layout properties (width/height/top/left) listed as animatable"
+                    reason = "Layout properties (width/height/top/left/margin/padding) listed as animatable"
                     self.result.refinement_actions.append("Restrict motion tokens to transform, opacity, filter, clip-path only.")
 
             elif check_id == "hover_banality":
-                components = tokens.get("components", {})
-                hover_text = json.dumps(components.get("button", {})).lower()
+                hover_text = json.dumps(components_section.get("button", {})).lower() if isinstance(components_section, dict) else ""
                 if "opacity" in hover_text and not any(x in hover_text for x in ("transform", "translate", "scale", "color shift", "underline")):
                     status = "fail"
                     reason = "Hover relies only on opacity change"
@@ -235,12 +270,10 @@ class PremiumDesignEngine:
 
             elif check_id == "mass_fade_in":
                 forbidden = [p for p in rule.get("forbidden_phrases", []) if p.lower() in lower_text]
-                if forbidden:
-                    allowed = rule.get("allowed_if", [])
-                    if not any(a.lower() in lower_text for a in allowed):
-                        status = "fail"
-                        reason = f"Mass fade-in scroll trigger without stagger/transform: {forbidden}"
-                        self.result.refinement_actions.append("Replace blanket fade-in with staggered transform-based animations with easing.")
+                if forbidden and not allowed_present:
+                    status = "fail"
+                    reason = f"Mass fade-in scroll trigger without stagger/transform: {forbidden[:3]}"
+                    self.result.refinement_actions.append("Replace blanket fade-in with staggered transform-based animations with easing.")
 
             checks.append(AntiSlopCheck(id=check_id, name=name, status=status, reason=reason))
             if status == "fail":

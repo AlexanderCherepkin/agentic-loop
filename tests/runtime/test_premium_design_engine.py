@@ -183,3 +183,92 @@ def test_engine_fails_on_layout_animation(tmp_path):
 
     assert result.status == "fail"
     assert any("transform" in a.lower() for a in result.refinement_actions)
+
+
+def test_engine_fails_single_hero_section(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    design_md = _design_md().replace(
+        "## Layout Grid\n12-column grid, 30px gutter, base module 10px.",
+        "## Layout Grid\nFull viewport hero section with centered headline and single centered CTA button."
+    )
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(design_md, _valid_tokens())
+
+    assert result.status == "fail"
+    assert any("hero" in a.lower() for a in result.refinement_actions)
+    assert any(c.id == "single_hero_section" and c.status == "fail" for c in result.anti_slop_checks)
+
+
+def test_engine_passes_single_hero_with_asymmetry(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    design_md = _design_md().replace(
+        "## Layout Grid\n12-column grid, 30px gutter, base module 10px.",
+        "## Layout Grid\nSplit hero with off-center headline and asymmetric grid; one CTA aligned to the left column."
+    )
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(design_md, _valid_tokens())
+
+    assert all(c.id != "single_hero_section" or c.status == "pass" for c in result.anti_slop_checks)
+
+
+def test_engine_fails_generic_3col_cards(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    design_md = _design_md().replace(
+        "## Components Concept\nButton: sharp rectangle with 2px border; hover uses transform translateX(4px) + color shift.",
+        "## Components Concept\nThree feature cards with equal padding and icon on top; one CTA each."
+    )
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(design_md, _valid_tokens())
+
+    assert result.status == "fail"
+    assert any("3-card" in a.lower() or "symmetry" in a.lower() for a in result.refinement_actions)
+    assert any(c.id == "generic_3col_cards" and c.status == "fail" for c in result.anti_slop_checks)
+
+
+def test_engine_fails_gradient_blob(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    design_md = _design_md().replace(
+        "## Mood & References\nink, oversized type, grid, contrast, restraint. References: Swiss International Style, Tmag, Area 17.",
+        "## Mood & References\nBlurred gradient orb top left; soft pastel hero blob."
+    )
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(design_md, _valid_tokens())
+
+    assert result.status == "fail"
+    assert any("gradient" in a.lower() for a in result.refinement_actions)
+    assert any(c.id == "gradient_blobs" and c.status == "fail" for c in result.anti_slop_checks)
+
+
+def test_engine_fails_generic_shadow_radius_8(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    tokens = _valid_tokens()
+    tokens["components"]["card"] = {"shadow": "0 8px 16px rgba(0,0,0,0.08)"}
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(_design_md(), tokens)
+
+    assert result.status == "fail"
+    assert any("shadow" in a.lower() for a in result.refinement_actions)
+
+
+def test_engine_fails_unfriendly_animation(tmp_path):
+    root = tmp_path / "project"
+    root.mkdir()
+    tokens = _valid_tokens()
+    tokens["motion"]["allowed_properties"] = ["width", "height", "opacity"]
+
+    engine = PremiumDesignEngine(root)
+    result = engine.write_artifacts(_design_md(), tokens)
+
+    assert result.status == "fail"
+    assert any("transform" in a.lower() for a in result.refinement_actions)
+    assert any(c.id == "layout_animations" and c.status == "fail" for c in result.anti_slop_checks)

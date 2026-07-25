@@ -28,17 +28,20 @@ Hard-gate validator that inspects a premium design system's `DESIGN.md` and `des
 ## Decision Flow
 
 1. **Load artifacts** — read `DESIGN.md` and `design_tokens.json`. If either is missing, fail immediately with `blocked=true`.
-2. **Run 10 hard-gate checks**:
-   1. **Fonts** — no forbidden font appears; base UI font is not Inter/Roboto/Arial/Space Grotesk/Open Sans/Helvetica/Segoe UI/San Francisco/Myriad Pro/Calibri/Verdana/Century Gothic.
-   2. **Card shadows** — no standard decorative shadows (`0 4px 6px`, `0 10px 15px`, etc.) in tokens or prose. Focus/elevation shadows are allowed if explicitly justified.
-   3. **Centered buttons** — `DESIGN.md` components section must not specify "centered CTA" without hierarchy/asymmetry rationale. Brutalist asymmetry is the only accepted default for centered buttons.
-   4. **Gradient blobs** — no meaningless background gradient blobs in color system or mood. Gradients must serve a function (heatmap, depth, data viz).
+2. **Run 18 hard-gate checks**:
+   1. **Fonts** — no forbidden font appears as primary typeface; base UI font is not Inter/Roboto/Arial/Space Grotesk/Open Sans/Helvetica/Segoe UI/San Francisco/Myriad Pro/Calibri/Verdana/Century Gothic.
+   2. **Card shadows** — no standard decorative shadows (`0 4px 6px`, `0 8px …`, `0 10px 15px`, `0 20px 25px`, `shadow-sm/md/lg`) in tokens or prose. Distinct elevation shadows are allowed if explicitly justified.
+   3. **Centered buttons** — `DESIGN.md` components section must not specify "centered CTA" / "single button" without hierarchy/asymmetry rationale. Brutalist asymmetry or split layout is the only accepted default.
+   4. **Gradient blobs** — no meaningless background gradient blobs (radial-gradient ellipse, decorative linear-gradient) in color system or mood. Gradients must serve a function (heatmap, depth, data viz, brand gradient).
    5. **Uniform padding** — spacing scale must have ≥ 3 distinct rhythmic levels; no one-size-fits-all section padding.
    6. **Generic 3-column** — if a 3-column layout is mentioned, it must include asymmetric grid or intentional disruption rule; otherwise fail.
-   7. **Gray on white** — body text color must not be flat mid-gray (`#666`–`#999`) on `#ffffff`. Accept off-white base, warm/cool gray, or inverted.
-   8. **Layout animations** — motion tokens must forbid animating `width`/`height`/`top`/`left`. Only `transform`, `opacity`, `filter`, `clip-path` allowed.
-   9. **Hover banality** — component concepts must require more than `opacity: 0.8` on hover; must include transform, color shift, or underline logic.
-   10. **Mass fade-in** — scroll animations must be staggered/transform-based with easing; no blanket fade-in of all content.
+   7. **Generic 3-column cards** — no "three cards / 3 cards / feature cards" with "equal padding" and "icon top" unless asymmetric/bento/disruption is declared.
+   8. **Single hero section** — no full-viewport hero with centered headline and single centered button unless asymmetry/split/off-center/editorial/brutalist/grid is declared.
+   9. **Gray on white** — body text color must not be flat mid-gray (`#666666`–`#999999`) on `#ffffff`. Accept off-white base, warm/cool gray, or inverted.
+   10. **Layout animations** — motion tokens must forbid animating `width`/`height`/`top`/`left`/`right`/`bottom`/`margin`/`padding`. Only `transform`, `opacity`, `filter`, `clip-path` allowed.
+   11. **Hover banality** — component concepts must require more than `opacity: 0.8` on hover; must include transform, color shift, or underline logic.
+   12. **Mass fade-in** — scroll animations must be staggered/cascade/sequential/transform-based with easing; no blanket fade-in/fade-up of all content.
+   13–18. Reserved for future direction-specific and source-vetted rules (e.g., Brutalist contrast floor, Swiss grid purity, Editorial type pairing).
 3. **Aggregate verdict** — any `fail` check makes overall `verdict=fail` and `blocked=true`.
 4. **Build refinement_actions** — for each failed check, emit a concrete instruction (e.g. "Replace Inter with Adisan Richard in base_ui font", "Remove `box-shadow: 0 4px 6px` from card concept", "Add asymmetric grid rule to 3-column layout").
 5. **Update tokens** — if pass, set `design_tokens.json` `anti_slop.verdict=pass` and append check list.

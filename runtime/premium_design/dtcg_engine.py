@@ -583,12 +583,22 @@ def detect_slop_tokens(tokens: dict[str, Any]) -> list[dict[str, Any]]:
     colors = tokens.get("color", {})
     if isinstance(colors, dict):
         muted = colors.get("muted", {}).get("$value", "")
-        if muted and muted.lower() in ("#777777", "#808080", "#888888", "#999999"):
+        if muted and muted.lower() in ("#666666", "#777777", "#808080", "#888888", "#999999"):
             violations.append({"rule": "flat_gray_on_white", "token": "color.muted"})
+
+        # Decorative gradient blobs inside color tokens.
+        gradient_blob_re = re.compile(
+            r"(?:radial-gradient\s*\([^)]*ellipse[^)]*\)|linear-gradient\s*\([^)]*deg[^)]*\))",
+            re.IGNORECASE,
+        )
+        for name, token in colors.items():
+            value = token.get("$value", "") if isinstance(token, dict) else str(token)
+            if gradient_blob_re.search(str(value)):
+                violations.append({"rule": "gradient_blob", "token": f"color.{name}"})
 
     shadows = tokens.get("shadow", {})
     generic_shadows = re.compile(
-        r"0\s+4px\s+6px|0\s+10px\s+15px|0\s+20px\s+25px|shadow-md|shadow-lg",
+        r"0\s+4px\s+6px|0\s+8px\s+.*px|0\s+10px\s+15px|0\s+20px\s+25px|shadow-sm|shadow-md|shadow-lg",
         re.IGNORECASE,
     )
     for name, token in shadows.items():

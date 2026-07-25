@@ -124,6 +124,26 @@ def test_detect_slop_flags_layout_animation():
     assert any(v["rule"] == "layout_animation" for v in violations)
 
 
+def test_detect_slop_flags_gradient_blob_in_tokens():
+    tokens = {
+        "color": {
+            "background": {"$value": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)", "$type": "color"}
+        }
+    }
+    violations = detect_slop_tokens(tokens)
+    assert any(v["rule"] == "gradient_blob" for v in violations)
+
+
+def test_detect_slop_flags_generic_shadow_8px():
+    tokens = {
+        "shadow": {
+            "card": {"$value": "0 8px 16px rgba(0,0,0,0.08)", "$type": "shadow"}
+        }
+    }
+    violations = detect_slop_tokens(tokens)
+    assert any(v["rule"] == "generic_shadow" for v in violations)
+
+
 def test_tailwind_patch_is_serializable(engine: DtcgTokenEngine):
     result = engine.generate("SaaS landing page")
     patch = result.tailwind_config_patch
