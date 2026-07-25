@@ -20,6 +20,21 @@ The loop engine turns one-off agent tasks into repeatable, self-improving workfl
 | `/loop 10m` | Repeating check on a schedule. |
 | `/workflows` or `ultracode:` | Parallel multi-agent orchestration for audits, migrations, large refactors. |
 
+### `/goal` skill
+
+The `/goal` skill is materialized at `.claude/skills/goal/SKILL.md` and wired into `.claude/CLAUDE.md`. It is the fast entry point for `goal_planner_v2.md`:
+
+1. Parses the verifiable goal and optional criteria.
+2. Defaults to trust level L1 and runs `loop_trust_levels.md`.
+3. Estimates cost via `loop_cost_estimator.py` and aborts if the budget is exceeded.
+4. Dispatches cheap `claude-haiku-4-5` workers for evidence gathering.
+5. Verifies with `loop_verifier.py` running ≥2 adversarial `claude-opus-4-8` critics.
+6. On approval, records reusable constraints and optionally exports to wiki/skills.
+
+See also:
+- [[goal-skill]] — the `/goal` SKILL.md entry point.
+- [[goal-core-tests-health]] — example verified workflow from a successful `/goal` run.
+
 ## Trust Levels
 
 | Level | Mode | When to use |
