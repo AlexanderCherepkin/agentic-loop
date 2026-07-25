@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 from pathlib import Path
 from typing import Any
 
@@ -263,9 +263,15 @@ class WikiEngine:
         union = words_a | words_b
         return len(intersection) / len(union)
 
-    def _parse_date(self, value: str) -> datetime | None:
+    def _parse_date(self, value: str | datetime | date) -> datetime | None:
         if not value:
             return None
+        if isinstance(value, datetime):
+            if value.tzinfo is None:
+                return value.replace(tzinfo=timezone.utc)
+            return value
+        if isinstance(value, date):
+            return datetime.combine(value, time(), tzinfo=timezone.utc)
         for fmt in ("%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S%z"):
             try:
                 return datetime.strptime(value, fmt)

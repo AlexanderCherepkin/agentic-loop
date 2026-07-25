@@ -202,7 +202,7 @@ CATEGORY_TOOLS: dict[str, list[str]] = {
 
 
 def create_registry(workspace_root: str = ".", eager: bool = False) -> MCPRegistry:
-    """Create and populate the MCP registry with all 21 servers.
+    """Create and populate the MCP registry with all MCP server categories.
 
     Args:
         workspace_root: project root path.

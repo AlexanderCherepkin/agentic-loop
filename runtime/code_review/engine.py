@@ -158,7 +158,7 @@ class CodeReviewer:
                 temperature=0.2,
             )
             corrected = _extract_json(raw)
-            if isinstance(corrected, dict):
+            if isinstance(corrected, dict) and "raw_output" not in corrected:
                 result.corrected_codebase = {str(k): str(v) for k, v in corrected.items()}
         return result
 
@@ -175,15 +175,24 @@ class CodeReviewer:
         )
 
 
-def _extract_json(text: str) -> dict[str, Any]:
-    """Extract the first JSON object from an LLM response."""
-    match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
+def _extract_json(text: str) -> dict[str, Any] | list[Any]:
+    """Extract the first JSON object or array from an LLM response."""
+    # Try fenced JSON block first.
+    match = re.search(r"```json\s*(.*?)\s*```", text, re.DOTALL)
     if match:
-        candidate = match.group(1)
+        candidate = match.group(1).strip()
     else:
-        start = text.find("{")
-        end = text.rfind("}")
-        if start == -1 or end == -1 or end <= start:
+        # Fall back to the first balanced JSON token.
+        start_obj = text.find("{")
+        start_arr = text.find("[")
+        if start_obj == -1 and start_arr == -1:
+            return {"raw_output": text}
+        if start_arr == -1 or (start_obj != -1 and start_obj < start_arr):
+            start, end_char = start_obj, "}"
+        else:
+            start, end_char = start_arr, "]"
+        end = text.rfind(end_char)
+        if end == -1 or end <= start:
             return {"raw_output": text}
         candidate = text[start : end + 1]
     try:

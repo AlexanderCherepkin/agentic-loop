@@ -104,7 +104,7 @@ def test_create_registry_lazy_does_not_build_servers() -> None:
 
         registry = bootstrap.create_registry(workspace_root=".", eager=False)
 
-        assert registry.server_count == 25
+        assert registry.server_count == len(bootstrap.CATEGORY_TOOLS)
         mock_build.assert_not_called()
 
         # Even metadata and category listing must stay lazy.
