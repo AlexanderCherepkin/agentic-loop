@@ -6,6 +6,19 @@ This repository implements a multi-agent AI system with hierarchical safety-firs
 It contains agent specs across hierarchical layers, plus runtime code and MCP servers that expose those agents over JSON-RPC.
 Any change must preserve the three-circuit safety model (`safety-control → mutual_check → control`) and the ReAct cycle decomposition.
 
+## SystemArchitect Protocol
+
+All requests to build, design, or redesign a website, web application, SaaS, mobile app, frontend, backend, or any digital product must follow the `system-architect` protocol (`.claude/skills/system-architect/SKILL.md`) as the highest-priority orchestration rule.
+
+The protocol enforces four locked phases. Do not proceed to the next phase without user approval:
+
+1. **Phase 1 — Discovery**: ask up to 5 brief questions (business goal, audience, stack preferences, design references, hard constraints).
+2. **Phase 2 — UX Logic & Architecture**: propose DB schema, technology stack with rationale, user flow, and text wireframes for key pages.
+3. **Phase 3 — UI Concept & Graphics**: define visual direction, typography, color palette, motion system, and optional Midjourney/DALL-E prompts.
+4. **Phase 4 — Iterative Development**: set up environment, write frontend components, build API/backend, and provide integration instructions per block.
+
+This protocol does not replace the anti-slop hard gate, premium-design pipeline, Lighthouse hard gate, or spec-approval gates. It runs before them and shapes how the bot interviews, plans, and sequences work. No product code may be generated until the user has confirmed the architecture direction and the visual direction.
+
 ## Conventions
 
 - **Agent specs** live under `.agent_loop/` and follow the Algorithmic template: `Role`, `Contract` (`Receives` / `Returns` / `Side effects`), `Decision Flow`, `Failure Modes`.

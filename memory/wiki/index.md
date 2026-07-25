@@ -6,6 +6,7 @@
 
 ## Tools
 
+- [[system-architect]] — Highest-priority master protocol for building websites, web apps, SaaS, frontend/backend, or any digital product.
 - [[anti-slop-rule-set]] — Deterministic banned-pattern rule set for premium AI-generated design.
 - [[loop-engine]] — Self-improving /goal, /loop, /workflows orchestration with trust levels and cost guard.
 

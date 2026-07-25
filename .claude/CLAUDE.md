@@ -1,3 +1,7 @@
+# system-architect
+- **system-architect** (`.claude/skills/system-architect/SKILL.md`) - highest-priority protocol for building websites, web apps, SaaS, frontend/backend, or any digital product. Trigger: `/system-architect` or any request to build/design/redesign a site, app, frontend, backend, or product.
+When the user asks to build/design/redesign a website, web app, SaaS, mobile app, frontend, backend, or any digital product, invoke the Skill tool with `skill: "system-architect"` before doing anything else. If the request also mentions premium/anti-slop concerns, continue with the `anti-slop` skill after `system-architect`.
+
 # graphify
 - **graphify** (`.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
 When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.
