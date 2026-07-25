@@ -1,0 +1,42 @@
+id: ci_sweeper
+name: CI Sweeper
+description: Monitors CI runs, retries flaky failures, and escalates persistent real bugs to humans while keeping the main branch green.
+goal: Keep the main branch green by distinguishing flaky CI noise from genuine regressions.
+trust_level: L1
+max_iterations: 10
+schedule: "0 9 * * 1-5"
+executor_model: claude-haiku-4-5
+verifier_model: claude-opus-4-8
+min_critics: 2
+human_zones:
+  - git push
+  - deploy
+  - rm -rf
+  - DB migrations
+exit_conditions:
+  - CI status is green after retry
+  - Persistent failure is escalated to a human
+  - Max iterations reached
+  - Budget exhausted
+verification_plan:
+  - Fetch latest CI run status and logs
+  - Classify failure as flaky or genuine
+  - Retry failed jobs up to a safe retry cap
+  - Compare retry logs to confirm flake vs regression
+  - Escalate genuine bugs with a concise report
+steps:
+  - name: fetch_ci_status
+    tool: tools_runcom/command_executor
+    description: Pull the latest CI run status and raw logs for the default branch.
+  - name: classify_failure
+    agent: tooll_subagents/self_correction/quality_evaluator_agent.md
+    description: Label each failure as flake, infrastructure error, or genuine regression.
+  - name: retry_flaky_job
+    tool: tools_runcom/command_executor
+    description: Re-run jobs classified as flaky, respecting CI rate limits.
+  - name: verify_retry_outcome
+    agent: tooll_subagents/self_correction/consistency_validator.md
+    description: Compare original and retry logs to confirm flakiness or persistence.
+  - name: escalate_genuine_bug
+    tool: tools_manangr/notification_dispatcher
+    description: Open or update an issue and notify the channel when a failure is genuine.

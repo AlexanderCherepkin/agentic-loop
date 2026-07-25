@@ -1,0 +1,42 @@
+id: anti_slop_sweeper
+name: Anti-Slop Sweeper
+description: Audits generated code and design artifacts against banned patterns using cheap deterministic detectors and an expensive adversarial verifier, recording findings in the project constraints and anti-slop rule set.
+goal: Detect and record banned anti-slop patterns so the design system stays clean.
+trust_level: L1
+max_iterations: 5
+schedule: "0 11 * * *"
+executor_model: claude-haiku-4-5
+verifier_model: claude-opus-4-8
+min_critics: 2
+human_zones:
+  - git push
+  - deploy
+  - rm -rf
+  - DB migrations
+exit_conditions:
+  - No banned patterns found
+  - New banned patterns recorded in CONSTRAINTS.md
+  - Max iterations reached
+  - Budget exhausted
+verification_plan:
+  - Load the current anti-slop rule set from the wiki
+  - Scan changed design/code artifacts with PremiumDesignEngine
+  - Verify findings with anti_slop_validator using at least 2 critics
+  - Append verified new rules via constraints_manager
+  - Propose wiki rule-set updates
+steps:
+  - name: load_anti_slop_rules
+    tool: memory/wiki/tool/anti-slop-rule-set.md
+    description: Load the current anti-slop rule set from the LLM wiki.
+  - name: detect_banned_patterns
+    tool: runtime/premium_design/PremiumDesignEngine
+    description: Run deterministic banned-pattern detectors over changed design and code artifacts.
+  - name: verify_detections
+    agent: tooll_subagents/self_correction/anti_slop_validator.md
+    description: Adversarially verify detector findings with Opus-grade review and at least 2 independent critics.
+  - name: record_constraints
+    tool: runtime/loop_engine/constraints_manager.py
+    description: Append verified new banned patterns to .agent_loop/CONSTRAINTS.md.
+  - name: propose_wiki_update
+    tool: memory/wiki/tool/anti-slop-rule-set.md
+    description: Propose updates to the anti-slop rule set wiki page for human approval.

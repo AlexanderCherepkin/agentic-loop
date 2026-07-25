@@ -1,0 +1,45 @@
+id: dependency_sweeper
+name: Dependency Sweeper
+description: Scans project dependencies for CVEs, outdated versions, and license risks, then proposes safe update plans without auto-applying breaking changes.
+goal: Keep the dependency tree secure and current without auto-applying breaking changes.
+trust_level: L1
+max_iterations: 6
+schedule: "0 10 * * 1"
+executor_model: claude-haiku-4-5
+verifier_model: claude-opus-4-8
+min_critics: 2
+human_zones:
+  - git push
+  - deploy
+  - rm -rf
+  - DB migrations
+exit_conditions:
+  - No critical CVEs remain unplanned
+  - Update plan drafted for actionable risks
+  - Max iterations reached
+  - Budget exhausted
+verification_plan:
+  - Read lockfiles and manifests
+  - Query vulnerability and outdated-package databases
+  - Rank risks by severity and exploitability
+  - Draft a compatibility-aware update plan
+  - Verify the plan does not touch human-zone operations
+steps:
+  - name: read_lockfiles
+    tool: tools_read/file_reader
+    description: Read package-lock.json, requirements.txt, and other dependency manifests.
+  - name: run_vulnerability_scan
+    tool: tools_web/security_advisory_api
+    description: Query advisory databases for known CVEs in locked dependency versions.
+  - name: check_outdated_packages
+    tool: tools_web/package_registry_api
+    description: Identify dependencies behind latest stable releases.
+  - name: assess_license_risk
+    agent: tooll_subagents/mutual_check/compliance_checker.md
+    description: Flag dependencies with incompatible or high-risk licenses.
+  - name: draft_update_plan
+    agent: tooll_subagents/planning/project_manager_brief_agent.md
+    description: Produce a prioritized update plan grouped by breaking vs safe changes.
+  - name: report_findings
+    tool: tools_manangr/notification_dispatcher
+    description: Deliver the dependency report to the agreed channel.

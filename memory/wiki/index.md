@@ -7,6 +7,7 @@
 ## Tools
 
 - [[anti-slop-rule-set]] — Deterministic banned-pattern rule set for premium AI-generated design.
+- [[loop-engine]] — Self-improving /goal, /loop, /workflows orchestration with trust levels and cost guard.
 
 ## Sources
 

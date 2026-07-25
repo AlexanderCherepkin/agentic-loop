@@ -1,0 +1,42 @@
+id: pr_babysitter
+name: PR Babysitter
+description: Watches open pull requests, drafts summaries, and flags stalled, conflicted, or review-starved PRs that need human attention.
+goal: Surface PRs that are stalled, conflicted, or missing review without auto-merging.
+trust_level: L1
+max_iterations: 8
+schedule: "0 */2 * * 1-5"
+executor_model: claude-haiku-4-5
+verifier_model: claude-opus-4-8
+min_critics: 2
+human_zones:
+  - git push
+  - deploy
+  - rm -rf
+  - DB migrations
+exit_conditions:
+  - All open PRs summarized
+  - Stalled or blocked PRs flagged
+  - Max iterations reached
+  - Budget exhausted
+verification_plan:
+  - List open pull requests with metadata
+  - Detect merge conflicts and stale review requests
+  - Draft a short per-PR summary
+  - Flag PRs needing human attention
+  - Post the report to the agreed channel
+steps:
+  - name: list_open_prs
+    tool: tools_web/github_api
+    description: Query open pull requests, reviewers, labels, and last activity.
+  - name: detect_conflicts
+    tool: tools_web/github_api
+    description: Identify PRs with merge conflicts or failing checks.
+  - name: check_review_status
+    agent: tooll_subagents/mutual_check/consistency_validator.md
+    description: Cross-check reviewer assignments and required approvals.
+  - name: draft_summary
+    agent: tooll_subagents/planning/project_manager_brief_agent.md
+    description: Compose a concise summary of each PR's state and next action.
+  - name: flag_attention_needed
+    tool: tools_manangr/notification_dispatcher
+    description: Highlight PRs that are stalled, conflicted, or missing required reviews.
