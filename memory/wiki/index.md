@@ -4,6 +4,10 @@
 
 - [[llm-wiki]] — Karpathy-method LLM Wiki overview and conventions.
 
+## Tools
+
+- [[anti-slop-rule-set]] — Deterministic banned-pattern rule set for premium AI-generated design.
+
 ## Sources
 
 - [[llm-wiki]] — Karpathy-method LLM Wiki overview and conventions.
