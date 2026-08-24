@@ -1,0 +1,223 @@
+{
+  "name": "TechMarket Belarus Component Registry",
+  "version": "0.1.0",
+  "components": [
+    {
+      "name": "Header",
+      "path": "src/app/sections/Header.tsx",
+      "type": "section",
+      "dependencies": ["Logo", "SearchBar", "IconButton", "CategoryNav"],
+      "props": ["categories", "cartTotal", "phone"]
+    },
+    {
+      "name": "CategoryNav",
+      "path": "src/app/components/CategoryNav.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["categories"]
+    },
+    {
+      "name": "Hero",
+      "path": "src/app/sections/Hero.tsx",
+      "type": "section",
+      "dependencies": ["Button"],
+      "props": ["slides"]
+    },
+    {
+      "name": "Collections",
+      "path": "src/app/sections/Collections.tsx",
+      "type": "section",
+      "dependencies": ["CollectionCard"],
+      "props": ["collections"]
+    },
+    {
+      "name": "CollectionCard",
+      "path": "src/app/components/CollectionCard.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["title", "image", "href"]
+    },
+    {
+      "name": "FeaturedProducts",
+      "path": "src/app/sections/FeaturedProducts.tsx",
+      "type": "section",
+      "dependencies": ["ProductCard"],
+      "props": ["title", "products", "viewAllHref"]
+    },
+    {
+      "name": "ProductCard",
+      "path": "src/app/components/ProductCard.tsx",
+      "type": "component",
+      "dependencies": ["StarRating", "Button"],
+      "props": ["product"]
+    },
+    {
+      "name": "StarRating",
+      "path": "src/app/components/StarRating.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["rating", "reviews"]
+    },
+    {
+      "name": "SplitBanner",
+      "path": "src/app/sections/SplitBanner.tsx",
+      "type": "section",
+      "dependencies": ["ProductCard"],
+      "props": ["image", "products", "title"]
+    },
+    {
+      "name": "ValueProposition",
+      "path": "src/app/sections/ValueProposition.tsx",
+      "type": "section",
+      "dependencies": [],
+      "props": ["title", "items"]
+    },
+    {
+      "name": "ProductShowcase",
+      "path": "src/app/sections/ProductShowcase.tsx",
+      "type": "section",
+      "dependencies": ["ProductCard"],
+      "props": ["image", "badge", "product"]
+    },
+    {
+      "name": "BenefitsStrip",
+      "path": "src/app/sections/BenefitsStrip.tsx",
+      "type": "section",
+      "dependencies": [],
+      "props": ["benefits"]
+    },
+    {
+      "name": "Reviews",
+      "path": "src/app/sections/Reviews.tsx",
+      "type": "section",
+      "dependencies": ["ReviewCard"],
+      "props": ["reviews"]
+    },
+    {
+      "name": "ReviewCard",
+      "path": "src/app/components/ReviewCard.tsx",
+      "type": "component",
+      "dependencies": ["StarRating"],
+      "props": ["review"]
+    },
+    {
+      "name": "News",
+      "path": "src/app/sections/News.tsx",
+      "type": "section",
+      "dependencies": ["ArticleCard"],
+      "props": ["articles"]
+    },
+    {
+      "name": "ArticleCard",
+      "path": "src/app/components/ArticleCard.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["article"]
+    },
+    {
+      "name": "FAQ",
+      "path": "src/app/sections/FAQ.tsx",
+      "type": "section",
+      "dependencies": ["Accordion"],
+      "props": ["items"]
+    },
+    {
+      "name": "Accordion",
+      "path": "src/app/components/Accordion.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["items"]
+    },
+    {
+      "name": "InstagramGallery",
+      "path": "src/app/sections/InstagramGallery.tsx",
+      "type": "section",
+      "dependencies": [],
+      "props": ["images"]
+    },
+    {
+      "name": "Subscribe",
+      "path": "src/app/sections/Subscribe.tsx",
+      "type": "section",
+      "dependencies": ["Button"],
+      "props": ["title", "description"]
+    },
+    {
+      "name": "Footer",
+      "path": "src/app/sections/Footer.tsx",
+      "type": "section",
+      "dependencies": ["Logo"],
+      "props": ["columns", "legal", "payments"]
+    },
+    {
+      "name": "Button",
+      "path": "src/app/components/ui/Button.tsx",
+      "type": "ui",
+      "dependencies": [],
+      "props": ["variant", "size", "children", "onClick"]
+    },
+    {
+      "name": "Logo",
+      "path": "src/app/components/Logo.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": []
+    },
+    {
+      "name": "SearchBar",
+      "path": "src/app/components/SearchBar.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["placeholder"]
+    },
+    {
+      "name": "IconButton",
+      "path": "src/app/components/ui/IconButton.tsx",
+      "type": "ui",
+      "dependencies": [],
+      "props": ["icon", "badge", "onClick"]
+    },
+    {
+      "name": "FilterSidebar",
+      "path": "src/app/catalog/components/FilterSidebar.tsx",
+      "type": "component",
+      "dependencies": ["Checkbox", "RangeSlider"],
+      "props": ["filters", "onChange"]
+    },
+    {
+      "name": "ProductGrid",
+      "path": "src/app/catalog/components/ProductGrid.tsx",
+      "type": "component",
+      "dependencies": ["ProductCard"],
+      "props": ["products"]
+    },
+    {
+      "name": "ProductGallery",
+      "path": "src/app/product/components/ProductGallery.tsx",
+      "type": "component",
+      "dependencies": [],
+      "props": ["images"]
+    },
+    {
+      "name": "ProductInfo",
+      "path": "src/app/product/components/ProductInfo.tsx",
+      "type": "component",
+      "dependencies": ["StarRating", "Button"],
+      "props": ["product"]
+    },
+    {
+      "name": "CartDrawer",
+      "path": "src/app/components/CartDrawer.tsx",
+      "type": "component",
+      "dependencies": ["Button"],
+      "props": ["isOpen", "onClose"]
+    },
+    {
+      "name": "CheckoutForm",
+      "path": "src/app/checkout/components/CheckoutForm.tsx",
+      "type": "component",
+      "dependencies": ["Button", "Input"],
+      "props": ["step", "onSubmit"]
+    }
+  ]
+}

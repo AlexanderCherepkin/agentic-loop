@@ -1,0 +1,74 @@
+{
+  "name": "GadgetFlow",
+  "version": "1.0.0",
+  "direction": "minimal_tech",
+  "tokens": {
+    "color": {
+      "background": { "value": "#FFFFFF", "usage": "main background" },
+      "surface": { "value": "#F6F6F6", "usage": "gray sections, cards" },
+      "surface-muted": { "value": "#F8F9FA", "usage": "hover backgrounds, badges" },
+      "text": { "value": "#0A0A0A", "usage": "primary text" },
+      "text-secondary": { "value": "#525252", "usage": "captions, descriptions" },
+      "text-muted": { "value": "#737373", "usage": "placeholder, disabled" },
+      "accent": { "value": "#2563EB", "usage": "CTA, links, active states" },
+      "accent-hover": { "value": "#1D4ED8", "usage": "CTA hover" },
+      "accent-subtle": { "value": "#EBF2FF", "usage": "badge backgrounds" },
+      "border": { "value": "#E5E5E5", "usage": "borders, dividers" },
+      "success": { "value": "#16A34A", "usage": "in stock, success" },
+      "warning": { "value": "#EAB308", "usage": "sale, attention" },
+      "error": { "value": "#DC2626", "usage": "out of stock, errors" }
+    },
+    "font": {
+      "ui": { "family": "Geist Sans, system-ui, sans-serif", "usage": "UI and body" },
+      "display": { "family": "Playfair Display, Georgia, serif", "usage": "hero and display headings" }
+    },
+    "font-size": {
+      "xs": { "value": "12px", "usage": "badges, captions" },
+      "sm": { "value": "14px", "usage": "secondary text" },
+      "base": { "value": "16px", "usage": "body" },
+      "lg": { "value": "18px", "usage": "lead text" },
+      "xl": { "value": "20px", "usage": "subsection titles" },
+      "2xl": { "value": "24px", "usage": "section titles mobile" },
+      "3xl": { "value": "30px", "usage": "section titles desktop" },
+      "4xl": { "value": "36px", "usage": "large section titles" },
+      "5xl": { "value": "48px", "usage": "hero title mobile" },
+      "6xl": { "value": "60px", "usage": "hero title desktop" }
+    },
+    "spacing": {
+      "section-y": { "value": "96px", "usage": "vertical section padding desktop" },
+      "section-y-sm": { "value": "64px", "usage": "vertical section padding mobile" },
+      "container": { "value": "1280px", "usage": "max container width" },
+      "gap": { "value": "24px", "usage": "grid gap" },
+      "gap-lg": { "value": "32px", "usage": "large grid gap" }
+    },
+    "radius": {
+      "card": { "value": "16px", "usage": "cards" },
+      "button": { "value": "9999px", "usage": "pill buttons" },
+      "input": { "value": "12px", "usage": "inputs" }
+    },
+    "shadow": {
+      "card": { "value": "0 4px 24px rgba(0,0,0,0.06)", "usage": "cards and images" },
+      "hover": { "value": "0 12px 32px rgba(0,0,0,0.10)", "usage": "hover lift" }
+    },
+    "motion": {
+      "easing": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "usage": "all transitions" },
+      "duration-fast": { "value": "0.2s", "usage": "micro interactions" },
+      "duration-base": { "value": "0.3s", "usage": "hover, focus" },
+      "duration-slow": { "value": "0.5s", "usage": "scroll reveals" },
+      "stagger": { "value": "0.1s", "usage": "stagger delay" }
+    },
+    "breakpoint": {
+      "sm": { "value": "640px" },
+      "md": { "value": "768px" },
+      "lg": { "value": "1024px" },
+      "xl": { "value": "1280px" },
+      "2xl": { "value": "1536px" }
+    }
+  },
+  "lighthouse": {
+    "performance": 90,
+    "accessibility": 95,
+    "best-practices": 95,
+    "seo": 95
+  }
+}
