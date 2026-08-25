@@ -1,0 +1,211 @@
+,      ,        :      ,     -- , ,   .
+        ,          .
+ 
+  « -     ».
+ ,       ,        -   ,      .   ,  , ,         .        ,     ,            .  ... +1
+  :              --                . ...
+       e-commerce,    «     ».
+
+      GadgetFlow
+
+GADGETFLOW
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+KZ/AM
+
+
+
+
+
+
+
+
+
+
+
+ / 
+
+
+
+Fulfillment 
+
+          .
+ .
+:
+  
+  
+ 
+
+  
+  
+ 
+--       .
+         «   ».     ,  ,    .
+      ,  
+ A -- 
+   .
+  
+GadgetFlow /   
+  /  / KZ / AM
+    .
+
+ B -- 
+     .
+:
+  
+ 
+         .
+      ,          production-      .
+      
+   
+country = BY currency = BYN
+    « ».
+    :
+Country Currency TaxProfile PaymentProfile DeliveryProfile LegalProfile ConsumerProtectionProfile
+:
+BY RU KZ AM
+:
+
+BYN RUB KZT AMD
+          .
+    production-:
+enabled paymentEnabled deliveryEnabled ordersEnabled
+  :
+RU: enabled: true paymentEnabled: false deliveryEnabled: false ordersEnabled: false
+  ,    .        .
+    
+ :  BYN ×   =  RUB
+      .    :
+basePrice baseCurrency
+ :
+marketPrice marketCurrency
+       :
+
+;  ; ;  ;  ;  ;   .
+:
+Product  price.BY = 149.00  price.RU = 4290  price.KZ = 25990  price.AM = 18900
+     frontend.
+Checkout    
+:
+Country 
+City / Region 
+Delivery method 
+Currency 
+Payment methods 
+Tax rules 
+Final price 
+Order
+    :
+market currency paymentProvider deliveryProvider
+
+   checkout-form.tsx       .
+
+      
+   : bePaid + 2Checkout +  gateway +  +  .    .  :
+
+
+BYN   payment gateway       
+  country module:
+
+
+RUB         delivery RU   /
+
+
+
+ KZ.  AM.
+
+       
+:
+
+«  -- ,      /$/RUB  ..»
+ .
+             compliance,          .      , ,     .
+       :
+foreignCurrency = true  always manual currency control
+ :
+foreignSettlement bankComplianceRequired contractReference settlementCurrency paymentProvider
+  compliance-     .
+ :      bePaid
+        .
+  :
+«bePaid          ».
+  : 1.   ; 2.   ; 3. ; 4.   ; 5.    ; 6.  ; 7. /-;
+
+8. ; 9.  ; 10.  .       2024-2025 ,      2026-.
+         
+   ,                       .
+ ...
+   :
+  
+ 
+ 
+   :
+checkout  RUB  payment  receipt
+       B2C     .
+        .
+     GadgetFlow  
+ 1 -- 
+ 
+  -
+
+             GadgetFlow     ,       .
+ 2 -- 
+  :
+BY --    RU -- ,    legal/payment review KZ -- ,    legal/payment review AM -- ,    legal/payment review
+ 3 -- 
+BYN RUB KZT AMD
+  backend- ,   float     .     integer minor units:
+14900 BYN minor units 429000 RUB minor units 2599000 KZT minor units
+     .
+ 4 -- 
+   :
+
+supplierId supplierSku warehouseCountry warehouseRegion stock purchasePrice currency deliverySla warranty complianceDocuments
+        Shopify- dropshipping engine.
+    
+  SKU     :
+EAEU compliance Certificate / Declaration Manufacturer Importer Country of origin Warranty Marking EAN HS / TN VED code
+    «  »      --  .
+    ,         ,        .
+   -     --     
+ :
+China 
+supplier/importer
+
+ Belarus warehouse
+ GadgetFlow
+ EAEU customer
+ :
+China 
+GadgetFlow 
+customer
+     dropshipping,   GadgetFlow     .
+ 
+      GadgetFlow  :
+GadgetFlow --  -     ,    .        , ,   ,  BYN/RUB/KZT/AMD,  ,   ,  ,      -   .    production-  ,     ,       , ,    .
+      ,   « »,      .
+    :   2026         ,         .
+  +1
+,        ,   GadgetFlow EAEU Architecture & Legal Specification v1.0 .       -, , , ,  , , , CMS, checkout, payment abstraction, , delivery engine,
+
+returns, compliance , SEO     BY  RU  KZ  AM.
+    ,               .
+
+
