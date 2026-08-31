@@ -1,0 +1,463 @@
+{
+  "total": 8124,
+  "by_category": {
+    "smartfony": 6185,
+    "aksessuary": 1489,
+    "umnyy-dom": 17,
+    "noutbuki": 11,
+    "audio": 367,
+    "smart-chasy": 55
+  },
+  "sample": [
+    {
+      "category": "ТЕЛЕФОНЫ",
+      "name": "Монитор жидкокристаллический Philips 24E1N1300AE 23.8'' 16:9 1920х1080(FHD) IPS, 100 Hz черный",
+      "available": true,
+      "price_cash": 10900,
+      "price_cashless": 10900,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BL7000 8Gb/256Gb Black (6.78\"/50+32МП/NFC/7500mAh)",
+      "available": true,
+      "price_cash": 18790,
+      "price_cashless": 19699,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BL7000 8Gb/256Gb Orange (6.78\"/50+32МП/NFC/7500mAh)",
+      "available": true,
+      "price_cash": 18790,
+      "price_cashless": 19699,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV4800 Pro 4Gb/128Gb Black (6,56\"/13МП/IP68/4G/NFC/5180mAh)",
+      "available": true,
+      "price_cash": 9260,
+      "price_cashless": 9599,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV4800 Pro 4Gb/128Gb Green (6,56\"/13МП/IP68/4G/NFC/5180mAh)",
+      "available": true,
+      "price_cash": 9260,
+      "price_cashless": 9599,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV4800 Pro 4Gb/128Gb Orange (6,56\"/13МП/IP68/4G/NFC/5180mAh)",
+      "available": true,
+      "price_cash": 9260,
+      "price_cashless": 9599,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV4800 SE 4Gb/64Gb Green (6,56\"/13МП/IP68/4G/NFC/5180mAh)",
+      "available": true,
+      "price_cash": 7699,
+      "price_cashless": 7940,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV6200 Plus 8Gb/128Gb Black (6,56\"/13МП/IP68/4G/NFC/11000mAh)",
+      "available": true,
+      "price_cash": 11299,
+      "price_cashless": 11699,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV6200 Plus 8Gb/128Gb Green (6,56\"/13МП/IP68/4G/NFC/11000mAh)",
+      "available": true,
+      "price_cash": 11299,
+      "price_cashless": 11699,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV6200 Plus 8Gb/128Gb Orange (6,56\"/13МП/IP68/4G/NFC/11000mAh)",
+      "available": true,
+      "price_cash": 11299,
+      "price_cashless": 11699,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV7300 6Gb/256Gb Black (6,67\"/50МП/IP68,IP69/4G/NFC/15000mAh)",
+      "available": true,
+      "price_cash": 15440,
+      "price_cashless": 15999,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV8200 12Gb/256Gb Black (6,5\"/50МП/IP68,69K/4G/NFC/8800mAh)",
+      "available": true,
+      "price_cash": 19999,
+      "price_cashless": 20990,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV8200 12Gb/256Gb Green (6,5\"/50МП/IP68,69K/4G/NFC/8800mAh)",
+      "available": true,
+      "price_cash": 19999,
+      "price_cashless": 20990,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW BV8900 8Gb/256Gb Black (6,56\"/64МП/IP68/4G/NFC/10000mAh)",
+      "available": true,
+      "price_cash": 19999,
+      "price_cashless": 20850,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW FORT1 6Gb/256Gb Orange (6.56\"/16МП/NFC/10000mAh)",
+      "available": true,
+      "price_cash": 12299,
+      "price_cashless": 12880,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW FORT100 8Gb/128Gb Black (6.56\"/13МП/NFC/5000mAh)",
+      "available": true,
+      "price_cash": 10899,
+      "price_cashless": 11330,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны Blackview",
+      "name": "Смартфон защищенный BLACKVIEW FORT100 8Gb/128Gb White (6.56\"/13МП/NFC/5000mAh)",
+      "available": true,
+      "price_cash": 10899,
+      "price_cashless": 11330,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1416 Circle синий (1,39\"/0,8МП/1000mAh)",
+      "available": true,
+      "price_cash": 1450,
+      "price_cashless": 1508,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1800L One красный (1,77\"/без камеры/950mAh)",
+      "available": true,
+      "price_cash": 1390,
+      "price_cashless": 1446,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1800L One синий (1,77\"/без камеры/950mAh)",
+      "available": true,
+      "price_cash": 1390,
+      "price_cashless": 1446,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1800L One черный (1,77\"/без камеры/950mAh)",
+      "available": true,
+      "price_cash": 1390,
+      "price_cashless": 1446,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1842 Tank mini темно-зеленый (1,77\"/камера/1200mAh)",
+      "available": true,
+      "price_cash": 1275,
+      "price_cashless": 1326,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1842 Tank mini темно-синий (1,77\"/камера/1200mAh)",
+      "available": true,
+      "price_cash": 1275,
+      "price_cashless": 1326,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1842 Tank mini черный (1,77\"/камера/1200mAh)",
+      "available": true,
+      "price_cash": 1275,
+      "price_cashless": 1326,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1846 One Power белый+красный (1,7\"/0,1МП/2000mAh)",
+      "available": true,
+      "price_cash": 950,
+      "price_cashless": 988,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1846 One Power черный+оранжевый (1,7\"/0,1МП/2000mAh)",
+      "available": true,
+      "price_cash": 950,
+      "price_cashless": 988,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1846 One Power черный+серый (1,7\"/0,1МП/2000mAh)",
+      "available": true,
+      "price_cash": 950,
+      "price_cashless": 988,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1846 One Power черный+синий (1,7\"/0,1МП/2000mAh)",
+      "available": true,
+      "price_cash": 950,
+      "price_cashless": 988,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ белый+красный (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ белый+синий (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ красный+черный (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ черный  (без ЗУ) (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 760,
+      "price_cashless": 790,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ черный (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ черный+зеленый (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ черный+красный (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1848 Step+ черный+синий (1,77\"/600mAh)",
+      "available": true,
+      "price_cash": 799,
+      "price_cashless": 831,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1851 Respect зеленый (1,77\"/камера/1000mAh)",
+      "available": true,
+      "price_cash": 1080,
+      "price_cashless": 1123,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1851 Respect красный (1,77\"/камера/1000mAh)",
+      "available": true,
+      "price_cash": 1080,
+      "price_cashless": 1123,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1851 Respect синий (1,77\"/камера/1000mAh)",
+      "available": true,
+      "price_cash": 1080,
+      "price_cashless": 1123,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1851 Respect черный (1,77\"/камера/1000mAh)",
+      "available": true,
+      "price_cash": 1080,
+      "price_cashless": 1123,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1853 Life белый (1.77\"/600mAh)",
+      "available": true,
+      "price_cash": 890,
+      "price_cashless": 926,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1853 Life красный+черный (1.77\"/600mAh)",
+      "available": true,
+      "price_cash": 890,
+      "price_cashless": 926,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1853 Life черный+зеленый (1.77\"/600mAh)",
+      "available": true,
+      "price_cash": 890,
+      "price_cashless": 926,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1853 Life черный+красный (1.77\"/600mAh)",
+      "available": true,
+      "price_cash": 890,
+      "price_cashless": 926,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1853 Life черный+оранжевый (1.77\"/600mAh)",
+      "available": true,
+      "price_cash": 890,
+      "price_cashless": 926,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1858 Barrel зеленый+черный (1,77\"/камер/800mAh)",
+      "available": true,
+      "price_cash": 930,
+      "price_cashless": 967,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1858 Barrel фиолетовый+черный (1,77\"/камер/800mAh)",
+      "available": true,
+      "price_cash": 930,
+      "price_cashless": 967,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1858 Barrel черный+золотой (1,77\"/камер/800mAh)",
+      "available": true,
+      "price_cash": 930,
+      "price_cashless": 967,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1858 Barrel черный+серебристый (1,77\"/камер/800mAh)",
+      "available": true,
+      "price_cash": 930,
+      "price_cashless": 967,
+      "qty": "",
+      "site_category": "smartfony"
+    },
+    {
+      "category": "Телефоны BQ",
+      "name": "Мобильный телефон BQ 1860 Gem серый (1,77\"/без камеры/без СЗУ/1000mAh)",
+      "available": true,
+      "price_cash": 829,
+      "price_cashless": 865,
+      "qty": "",
+      "site_category": "smartfony"
+    }
+  ]
+}
