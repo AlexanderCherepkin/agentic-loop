@@ -8,7 +8,9 @@ Heavily improved parser:
 """
 
 import argparse
+import json
 import re
+import urllib.request
 import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -16,6 +18,7 @@ from typing import Optional
 
 DEFAULT_LIMIT_PER_CATEGORY = 6
 DEFAULT_MAX_ROW = 20000
+DEFAULT_FALLBACK_RUB_TO_BYN = 0.0351
 
 # Map supplier category group names to site categories.
 # Order matters: more specific groups should come before generic ones.
@@ -131,6 +134,21 @@ IMAGE_MAP = {
 }
 
 
+def fetch_rub_to_byn_rate() -> float:
+    """Fetch RUB to BYN conversion rate from exchangerate.host."""
+    try:
+        url = "https://api.exchangerate.host/convert?from=RUB&to=BYN"
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+        rate = data.get("result") or data.get("info", {}).get("rate")
+        if isinstance(rate, (int, float)) and rate > 0:
+            print(f"Fetched RUB->BYN rate: {rate}")
+            return float(rate)
+    except Exception as exc:
+        print(f"Currency API failed ({exc}); using fallback rate {DEFAULT_FALLBACK_RUB_TO_BYN}")
+    return DEFAULT_FALLBACK_RUB_TO_BYN
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Import supplier price list into GadgetFlow products.ts")
     parser.add_argument("--input", "-i", default="praise_5.xlsx", help="Path to .xlsx price list")
@@ -139,6 +157,8 @@ def parse_args():
                         help="Maximum products per site category")
     parser.add_argument("--max-row", type=int, default=DEFAULT_MAX_ROW,
                         help="Last row to scan in sheet1.xml")
+    parser.add_argument("--rate", "-r", type=float, default=None,
+                        help="RUB to BYN conversion rate (default: fetch from API)")
     parser.add_argument("--dry-run", action="store_true", help="Print stats without writing products.ts")
     return parser.parse_args()
 
@@ -408,12 +428,14 @@ def format_specs(specs: dict[str, str]) -> str:
     return "\n".join(lines)
 
 
-def generate_products_ts(selected: list, output_path: str):
+def generate_products_ts(selected: list, output_path: str, rate: float):
     lines = [
         'import { Product } from "./index";',
         "export type { Product };",
         "",
-        "// Products imported from praise_5.xlsx supplier price list",
+        "// Products imported from praise_5.xlsx supplier price list.",
+        "// Prices are in Belarusian rubles (BYN), converted from Russian rubles (RUB).",
+        f"// Conversion rate used: RUB->BYN = {rate}.",
         "export const products: Product[] = [",
     ]
 
@@ -425,13 +447,18 @@ def generate_products_ts(selected: list, output_path: str):
         short = escape_ts_string(item["short_description"])
         specs_block = format_specs(item["specs"])
 
+        # Convert supplier RUB prices to BYN for the catalog.
+        price_byn = round(item["price_cash"] * rate * 100) / 100
+        price_cashless_byn = round(item["price_cashless"] * rate * 100) / 100
+
         lines.append("  {")
         lines.append(f'    id: "p{idx + 1}",')
         lines.append(f'    name: "{name}",')
         lines.append(f'    slug: "{slug}",')
         lines.append(f'    category: "{category}",')
         lines.append(f'    brand: "{brand}",')
-        lines.append(f'    price: {item["price_cash"]},')
+        lines.append(f'    price: {price_byn},')
+        lines.append(f'    oldPrice: {price_cashless_byn},')
         lines.append("    rating: 4.5,")
         lines.append("    reviews: 0,")
         lines.append(f'    image: "{IMAGE_MAP[category]}",')
@@ -473,17 +500,20 @@ def generate_products_ts(selected: list, output_path: str):
 
 def main():
     args = parse_args()
+    rate = args.rate if args.rate is not None else fetch_rub_to_byn_rate()
+
     catalog = read_sheet(args.input, args.max_row)
     selected, counts = select_products(catalog, args.limit_per_category)
 
     print(f"Parsed {len(catalog)} products from {args.input}")
+    print(f"Conversion rate: RUB->BYN = {rate}")
     print(f"Selected {len(selected)} products by category: {counts}")
 
     if args.dry_run:
         return
 
-    generate_products_ts(selected, args.output)
-    print(f"Wrote {len(selected)} products to {args.output}")
+    generate_products_ts(selected, args.output, rate)
+    print(f"Wrote {len(selected)} products to {args.output} (prices in BYN)")
 
 
 if __name__ == "__main__":
